@@ -3,6 +3,8 @@ using System.IO;
 using Xamarin.Forms;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System.Linq;
+using System.Reflection;
 
 namespace Xamarin.RSControls
 {
@@ -38,7 +40,10 @@ namespace Xamarin.RSControls
             if (string.IsNullOrEmpty(Source))
                 return;
 
-            using (Stream stream = GetType().Assembly.GetManifestResourceStream(Source))
+            var assemblyName = Source.Substring(0, Source.IndexOf("/", StringComparison.CurrentCulture));
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(a => a.GetName().Name == assemblyName);
+
+            using (Stream stream = assembly.GetManifestResourceStream(Source.Replace("/", ".")))
             {
                 SkiaSharp.Extended.Svg.SKSvg svg = new SkiaSharp.Extended.Svg.SKSvg();
                 svg.Load(stream);

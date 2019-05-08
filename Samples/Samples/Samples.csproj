@@ -13,5 +13,28 @@
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="3.6.0.264807" />
     <PackageReference Include="Xamarin.Essentials" Version="1.0.1" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="1.68.0" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Data\SVG\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\API\Xamarin.RSControls\Xamarin.RSControls.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Data\SVG\agenda.svg" />
+    <None Remove="Data\SVG\arrow.svg" />
+    <None Remove="Data\SVG\calendar.svg" />
+    <None Remove="Data\SVG\calendarAndTime.svg" />
+    <None Remove="Data\SVG\time.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\SVG\agenda.svg" />
+    <EmbeddedResource Include="Data\SVG\arrow.svg" />
+    <EmbeddedResource Include="Data\SVG\calendar.svg" />
+    <EmbeddedResource Include="Data\SVG\calendarAndTime.svg" />
+    <EmbeddedResource Include="Data\SVG\time.svg" />
   </ItemGroup>
 </Project>
