@@ -7,8 +7,12 @@
 
     <StackLayout>
         
-       
         <rs:RSSvgImage Source="Samples/Data/SVG/calendar.svg" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+
+        <rs:RSNumericEntry Placeholder="RSNumericEntry"></rs:RSNumericEntry>
+
+        <rs:RSEntry Placeholder="RSEntry"></rs:RSEntry>
+
         
     </StackLayout>
 
