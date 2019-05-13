@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Samples"
-             xmlns:rs="clr-namespace:Xamarin.RSControls;assembly=Xamarin.RSControls"
+             xmlns:rs="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
     <StackLayout>

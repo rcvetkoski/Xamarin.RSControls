@@ -6,7 +6,7 @@ using SkiaSharp.Views.Forms;
 using System.Linq;
 using System.Reflection;
 
-namespace Xamarin.RSControls
+namespace Xamarin.RSControls.Controls
 {
     public class RSSvgImage : SKCanvasView
     {
