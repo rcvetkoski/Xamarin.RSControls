@@ -71,14 +71,17 @@ namespace Xamarin.RSControls.Controls
 
             base.OnPropertyChanged(propertyName);
         }
-        private void RSNumericEntry_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-
-        }
 
         string tempText = string.Empty;
+        bool canUpdateProperty = true;
+
         private void UpdateTextProperty(string propertyName)
         {
+            if (!canUpdateProperty)
+                return;
+
+            canUpdateProperty = false;
+
             if (propertyName == "IsFocused")
             {
                 if (IsFocused)
@@ -125,14 +128,14 @@ namespace Xamarin.RSControls.Controls
             }
             else if (propertyName == "Text")
             {
-                if (UpdateSourceTrigger == Enums.UpdateSourceTriggerEnum.OnFocusLost)
+                if (UpdateSourceTrigger == Enums.UpdateSourceTriggerEnum.Default)
                     this.Value = this.Text.ToNullableDouble();
             }
             else if (propertyName == "Value")
             {
                 if (IsFocused)
                 {
-                    if (Value.ToString() == "0")
+                    if (Value == null || Value.ToString() == "0")
                         this.Text = "";
                     else
                     {
@@ -153,7 +156,7 @@ namespace Xamarin.RSControls.Controls
                 SetTextUnfocused();
             }
 
-            this.PropertyChanged += RSNumericEntry_PropertyChanged;
+            canUpdateProperty = true;
         }
 
         private void SetTextUnfocused()

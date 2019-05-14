@@ -16,6 +16,7 @@ namespace Samples
         public MainPage()
         {
             InitializeComponent();
+            this.BindingContext = new MainPageViewModel();
         }
     }
 }

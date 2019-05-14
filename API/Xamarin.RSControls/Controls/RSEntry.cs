@@ -12,6 +12,4 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(UpdateSourceTriggerProperty, value); }
         }
     }
-
-
 }
