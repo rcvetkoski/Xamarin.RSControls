@@ -1,11 +1,11 @@
 ﻿using Android.Content;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using Xamarin.RSControls.Android.Controls;
+using Xamarin.RSControls.Droid.Controls;
 using Xamarin.RSControls.Controls;
 
 [assembly: ExportRenderer(typeof(RSEntry), typeof(RSEntryRenderer))]
-namespace Xamarin.RSControls.Android.Controls
+namespace Xamarin.RSControls.Droid.Controls
 {
     public class RSEntryRenderer : EntryRenderer
     {
@@ -23,6 +23,9 @@ namespace Xamarin.RSControls.Android.Controls
 
             var nativeEditText = (global::Android.Widget.EditText)Control;
             nativeEditText.SetSingleLine(true);
+
+            //Set border
+            Extensions.ViewExtensions.DrawBorder(nativeEditText, Context);
         }
     }
 }

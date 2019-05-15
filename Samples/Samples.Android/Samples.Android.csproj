@@ -97,6 +97,10 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\API\Xamarin.RSControls.Android\Xamarin.RSControls.Android.csproj">
+      <Project>{36fe7bc6-b0d9-4483-be67-3bab756e6398}</Project>
+      <Name>Xamarin.RSControls.Android</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Samples\Samples.csproj">
       <Project>{2A85B3E2-70DC-4E62-98B1-674FBA341514}</Project>
       <Name>Samples</Name>
