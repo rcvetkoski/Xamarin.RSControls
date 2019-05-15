@@ -172,9 +172,9 @@ namespace Xamarin.RSControls.Controls
                 if (IsFocused)
                     this.Value = str.ToNullableDouble();
 
-                if (HideTrailingZeros)
+                str = str.TrimEnd(' ');
+                if (HideTrailingZeros && NumberDecimalDigits > 0)
                 {
-                    str = str.TrimEnd(' ');
                     str = str.TrimEnd('0');
                     str = str.TrimEnd('.');
                 }

@@ -12,7 +12,7 @@
         <Label Text="{Binding NumericEntryValue}"></Label>
 
 
-        <rs:RSNumericEntry Placeholder="RSNumericEntry" Value="{Binding NumericEntryValue}" NumberDecimalDigits="2" HideTrailingZeros="True"></rs:RSNumericEntry>
+        <rs:RSNumericEntry Placeholder="RSNumericEntry" Value="{Binding NumericEntryValue}" NumberDecimalDigits="2" CustomUnit="$" HideTrailingZeros="True"></rs:RSNumericEntry>
 
         <rs:RSEntry Placeholder="RSEntry"></rs:RSEntry>
 
