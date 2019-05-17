@@ -10,7 +10,7 @@ namespace Xamarin.RSControls.Validators
 
         public bool Validate(string value)
         {
-            return string.IsNullOrEmpty(value);
+            return string.IsNullOrEmpty(value) ? false : true;
         }
     }
 }

@@ -15,15 +15,18 @@
 
         <rs:RSNumericEntry Placeholder="RSNumericEntry" Value="{Binding NumericEntryValue}" NumberDecimalDigits="2" CustomUnit="$" HideTrailingZeros="True">
             <rs:RSNumericEntry.Behaviors>
+
                 <validators:ValidationBehaviour PropertyName="Value">
                     <validators:ValidationBehaviour.Validators>
+
                         <validators:RequiredValidation/>
+                        <validators:FormatValidation Format="^[0-9]{6}$"/>
+
                     </validators:ValidationBehaviour.Validators>
                 </validators:ValidationBehaviour>
+
             </rs:RSNumericEntry.Behaviors>
         </rs:RSNumericEntry>
-
-        <rs:RSEntry Placeholder="RSEntry"></rs:RSEntry>
 
     </StackLayout>
 

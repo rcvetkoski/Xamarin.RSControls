@@ -20,16 +20,16 @@ namespace Xamarin.RSControls.Validators
         {
             foreach(IValidation validation in Validators)
             {
-                bool isNotValid = true;
+                bool isValid = false;
                 var value = view.GetType().GetProperty(PropertyName).GetValue(view);
 
                 if (value != null)
-                    isNotValid = validation.Validate(value.ToString());
+                    isValid = validation.Validate(value.ToString());
                 else
-                    isNotValid = true;
+                    isValid = false;
 
 
-                if (isNotValid)
+                if (!isValid)
                 {
                     view.BackgroundColor = Color.Red;
                     return;
