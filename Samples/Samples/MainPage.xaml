@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Samples"
              xmlns:rs="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls"
+             xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
     <StackLayout>
@@ -12,12 +13,18 @@
         <Label Text="{Binding NumericEntryValue}"></Label>
 
 
-        <rs:RSNumericEntry Placeholder="RSNumericEntry" Value="{Binding NumericEntryValue}" NumberDecimalDigits="2" CustomUnit="$" HideTrailingZeros="True"></rs:RSNumericEntry>
+        <rs:RSNumericEntry Placeholder="RSNumericEntry" Value="{Binding NumericEntryValue}" NumberDecimalDigits="2" CustomUnit="$" HideTrailingZeros="True">
+            <rs:RSNumericEntry.Behaviors>
+                <validators:ValidationBehaviour PropertyName="Value">
+                    <validators:ValidationBehaviour.Validators>
+                        <validators:RequiredValidation/>
+                    </validators:ValidationBehaviour.Validators>
+                </validators:ValidationBehaviour>
+            </rs:RSNumericEntry.Behaviors>
+        </rs:RSNumericEntry>
 
         <rs:RSEntry Placeholder="RSEntry"></rs:RSEntry>
 
-
-        
     </StackLayout>
 
 </ContentPage>
