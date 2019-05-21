@@ -42,9 +42,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
-    <Reference Include="Xamarin.Forms.Platform.Android">
-      <HintPath>..\..\..\..\..\..\..\ProgramData\Xamarin\NuGet\xamarin.forms\3.6.0.264807\lib\MonoAndroid81\Xamarin.Forms.Platform.Android.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\RSEntryRenderer.cs" />

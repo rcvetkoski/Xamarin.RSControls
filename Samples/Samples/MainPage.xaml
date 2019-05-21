@@ -6,7 +6,7 @@
              xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
-    <StackLayout>
+    <StackLayout Margin="20">
         
         <rs:RSSvgImage Source="Samples/Data/SVG/calendar.svg" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
 
@@ -20,7 +20,6 @@
                     <validators:ValidationBehaviour.Validators>
 
                         <validators:RequiredValidation/>
-                        <validators:FormatValidation Format="^[0-9]{6}$"/>
 
                     </validators:ValidationBehaviour.Validators>
                 </validators:ValidationBehaviour>

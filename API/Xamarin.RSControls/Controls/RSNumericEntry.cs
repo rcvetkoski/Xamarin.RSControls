@@ -96,7 +96,7 @@ namespace Xamarin.RSControls.Controls
                         else
                         {
                             if (NumberDecimalDigits != 0)
-                                this.Text = Value != null ? Math.Round(Convert.ToDecimal(Value.ToString()), NumberDecimalDigits).ToString() : "";
+                                this.Text = Value != null ? Math.Round(Convert.ToDouble(Value.ToString()), NumberDecimalDigits).ToString() : "";
                             else
                                 this.Text = Value.ToString();
                         }
@@ -117,7 +117,7 @@ namespace Xamarin.RSControls.Controls
                         else
                         {
                             if (NumberDecimalDigits != 0 && this.Text != "")
-                                this.Value = Math.Round(Convert.ToDecimal(this.Text), NumberDecimalDigits);
+                                this.Value = Math.Round(Convert.ToDouble(this.Text), NumberDecimalDigits);
                             else
                                 this.Value = this.Text.ToNullableDouble();
                         }

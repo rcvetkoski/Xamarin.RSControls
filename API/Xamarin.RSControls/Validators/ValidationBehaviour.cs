@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
+using Xamarin.RSControls.Helpers;
 
 namespace Xamarin.RSControls.Validators
 {
@@ -18,25 +19,51 @@ namespace Xamarin.RSControls.Validators
 
         private void Validate(View view)
         {
-            foreach(IValidation validation in Validators)
+            IRSControl rsControl = view as IRSControl;
+
+            Layout<View> parent = view.Parent as Layout<View>;
+
+
+            if (rsControl != null)
             {
-                bool isValid = false;
-                var value = view.GetType().GetProperty(PropertyName).GetValue(view);
-
-                if (value != null)
-                    isValid = validation.Validate(value.ToString());
-                else
-                    isValid = false;
-
-
-                if (!isValid)
+                foreach (IValidation validation in Validators)
                 {
-                    view.BackgroundColor = Color.Red;
-                    return;
-                }
-            }
+                    bool isValid = false;
+                    var value = rsControl.GetType().GetProperty(PropertyName).GetValue(rsControl);
 
-            view.BackgroundColor = Color.Transparent;
+                    if (value != null)
+                        isValid = validation.Validate(value.ToString());
+                    else
+                        isValid = false;
+
+
+                    if (!isValid)
+                    {
+                        view.PropertyChanged -= View_PropertyChanged;
+
+                        rsControl.TextColor = Color.Red;
+                        rsControl.BorderColor = Color.Red;
+
+                        view.HeightRequest = view.Height * 2;
+
+                        //StackLayout stackLayout = new StackLayout();
+                        //Label labelMessage = new Label() { Text = "Test", TextColor = Color.Red };
+                        //stackLayout.Children.Add(view);
+                        //stackLayout.Children.Add(labelMessage);
+
+                        //var index = parent.Children.IndexOf(view);
+                        //parent.Children.Remove(view);
+                        //parent.Children.Insert(index, stackLayout);
+
+                        view.PropertyChanged += View_PropertyChanged;
+
+                        return;
+                    }
+                }
+
+                rsControl.TextColor = Color.Black;
+                rsControl.BorderColor = Color.Black;
+            }
         }
 
         protected override void OnAttachedTo(View view)
