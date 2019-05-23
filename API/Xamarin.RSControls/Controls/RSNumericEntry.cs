@@ -13,7 +13,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //https://bugzilla.xamarin.com/show_bug.cgi?id=52708
-        public static readonly BindableProperty ValueProperty = BindableProperty.Create("Value", typeof(object), typeof(RSNumericEntry), default(object), BindingMode.TwoWay);
+        public static readonly BindableProperty ValueProperty = BindableProperty.Create("Value", typeof(object), typeof(RSNumericEntry), default, BindingMode.TwoWay);
         public object Value
         {
             get { return (object)GetValue(ValueProperty); }

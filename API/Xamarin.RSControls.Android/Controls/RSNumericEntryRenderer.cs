@@ -11,5 +11,9 @@ namespace Xamarin.RSControls.Droid.Controls
         public RSNumericEntryRenderer(Context context) : base(context)
         {
         }
+
+        public RSNumericEntryRenderer(Context context, global::Android.Util.IAttributeSet attrs) : base(context)
+        {
+        }
     }
 }

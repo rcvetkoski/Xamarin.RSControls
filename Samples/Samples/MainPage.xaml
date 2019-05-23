@@ -7,25 +7,11 @@
              x:Class="Samples.MainPage">
 
     <StackLayout Margin="20">
-        
-        <rs:RSSvgImage Source="Samples/Data/SVG/calendar.svg" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
-
-        <Label Text="{Binding NumericEntryValue}"></Label>
 
 
-        <rs:RSNumericEntry Placeholder="RSNumericEntry" Value="{Binding NumericEntryValue}" NumberDecimalDigits="2" CustomUnit="$" HideTrailingZeros="True">
-            <rs:RSNumericEntry.Behaviors>
-
-                <validators:ValidationBehaviour PropertyName="Value">
-                    <validators:ValidationBehaviour.Validators>
-
-                        <validators:RequiredValidation/>
-
-                    </validators:ValidationBehaviour.Validators>
-                </validators:ValidationBehaviour>
-
-            </rs:RSNumericEntry.Behaviors>
-        </rs:RSNumericEntry>
+        <rs:RSEntry Text="Lol" Placeholder="Entry normal" PlaceholderColor="Black" BorderColor="Red"></rs:RSEntry>
+        <rs:RSEntryInputLayout Text="Lol" Placeholder="Entry input layout" BorderColor="Green"></rs:RSEntryInputLayout>
+        <rs:RSNumericEntryInputLayout Value="256" NumberDecimalDigits="2" CustomUnit="€" Placeholder="Numeric Entry"></rs:RSNumericEntryInputLayout>
 
     </StackLayout>
 

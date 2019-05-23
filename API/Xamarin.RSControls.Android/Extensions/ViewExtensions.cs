@@ -13,6 +13,7 @@ namespace Xamarin.RSControls.Droid.Extensions
     {
         public static void DrawBorder(View nativeView, Context context, Color borderColor)
         {
+            //Rekt Shape
             var shape = new ShapeDrawable(new RectShape());
             shape.Paint.Color = borderColor;
             shape.Paint.StrokeWidth = 2;
@@ -23,7 +24,16 @@ namespace Xamarin.RSControls.Droid.Extensions
             shape.Paint.AntiAlias = true;
             shape.Paint.Flags = PaintFlags.AntiAlias;
 
-            nativeView.SetBackground(shape);
+
+            //Rounded shape
+            GradientDrawable gd = new GradientDrawable();
+            gd.SetCornerRadius(12);
+            gd.SetShape(ShapeType.Rectangle);
+            gd.SetColor(Color.White);
+            gd.SetStroke(2, Color.Gray);
+
+
+            nativeView.SetBackground(gd);
         }
     }
 }
