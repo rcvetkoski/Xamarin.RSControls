@@ -6,13 +6,13 @@
              xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
-    <StackLayout Margin="20">
+    <ScrollView Orientation="Vertical">
+        <StackLayout Margin="20" x:Name="stack">
+            
+            <rs:RSNumericEntryInputLayout Value="256" NumberDecimalDigits="2" CustomUnit="€" Placeholder="Numeric Entry"></rs:RSNumericEntryInputLayout>
 
+        </StackLayout>
+    </ScrollView>
 
-        <rs:RSEntry Text="Lol" Placeholder="Entry normal" PlaceholderColor="Black" BorderColor="Red"></rs:RSEntry>
-        <rs:RSEntryInputLayout Text="Lol" Placeholder="Entry input layout" BorderColor="Green"></rs:RSEntryInputLayout>
-        <rs:RSNumericEntryInputLayout Value="256" NumberDecimalDigits="2" CustomUnit="€" Placeholder="Numeric Entry"></rs:RSNumericEntryInputLayout>
-
-    </StackLayout>
 
 </ContentPage>

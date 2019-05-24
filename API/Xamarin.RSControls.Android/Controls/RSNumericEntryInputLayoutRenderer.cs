@@ -32,10 +32,17 @@ namespace Xamarin.RSControls.Droid.Controls
             renderer.Control.LayoutParameters = new LinearLayout.LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent);
             textInputLayout.AddView(renderer.Control);
             textInputLayout.Hint = renderer.Element.Placeholder;
+            textInputLayout.Error = "Name cannot be empty !";
+            Element.IsPassword = true;
+            textInputLayout.PasswordVisibilityToggleEnabled = true;
+
 
             SetNativeControl(textInputLayout);
+        }
 
-            Control.ToString();
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
         }
     }
 }
