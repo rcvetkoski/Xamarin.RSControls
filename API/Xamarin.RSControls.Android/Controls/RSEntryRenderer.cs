@@ -10,8 +10,6 @@ namespace Xamarin.RSControls.Droid.Controls
 {
     public class RSEntryRenderer : EntryRenderer
     {
-        //private RSFormsEditText nativeEditText;
-
         public RSEntryRenderer(Context context) : base(context)
         {
 

@@ -37,4 +37,9 @@
     <EmbeddedResource Include="Data\SVG\calendarAndTime.svg" />
     <EmbeddedResource Include="Data\SVG\time.svg" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Page1.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

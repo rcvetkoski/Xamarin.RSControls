@@ -2,6 +2,7 @@
 using Xamarin.Forms;
 using Xamarin.RSControls.Droid.Controls;
 using Xamarin.RSControls.Controls;
+using Android.Support.Design.Widget;
 
 [assembly: ExportRenderer(typeof(RSNumericEntry), typeof(RSNumericEntryRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
@@ -12,8 +13,9 @@ namespace Xamarin.RSControls.Droid.Controls
         {
         }
 
-        public RSNumericEntryRenderer(Context context, global::Android.Util.IAttributeSet attrs) : base(context)
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
         }
     }
 }

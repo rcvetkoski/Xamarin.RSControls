@@ -19,7 +19,7 @@ namespace Samples
             InitializeComponent();
             this.BindingContext = new MainPageViewModel();
 
-            //for (int i = 0; i < 1000; i++)
+            //for (int i = 0; i < 1; i++)
             //{
             //    RSNumericEntryInputLayout rSNumericEntryInputLayout = new RSNumericEntryInputLayout() { CustomUnit = "KG", Value = "i", Placeholder = i.ToString() };
 
@@ -32,6 +32,11 @@ namespace Samples
 
             //    stack.Children.Add(entry);
             //}
+        }
+
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new Page1());
         }
     }
 }

@@ -1,23 +1,23 @@
 ﻿using Xamarin.Forms;
 using Xamarin.RSControls.Enums;
-using Xamarin.RSControls.Helpers;
+using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Controls
 {
-    public class RSEntry : Entry, IRSControl
+    public class RSEntry : Entry, IHaveError
     {
-        public static readonly BindableProperty BorderColorProperty = BindableProperty.Create("BorderColor", typeof(Color), typeof(RSEntry), Color.Black);
-        public Color BorderColor
-        {
-            get { return (Color)GetValue(BorderColorProperty); }
-            set { SetValue(BorderColorProperty, value); }
-        }
-
         public static readonly BindableProperty UpdateSourceTriggerProperty = BindableProperty.Create("UpdateSourceTrigger", typeof(UpdateSourceTriggerEnum), typeof(RSEntry), null);
         public UpdateSourceTriggerEnum UpdateSourceTrigger
         {
             get { return (UpdateSourceTriggerEnum)GetValue(UpdateSourceTriggerProperty); }
             set { SetValue(UpdateSourceTriggerProperty, value); }
+        }
+
+        public static readonly BindableProperty ErrorProperty = BindableProperty.Create("Error", typeof(string), typeof(RSEntry), null);
+        public string Error
+        {
+            get { return (string)GetValue(ErrorProperty); }
+            set { SetValue(ErrorProperty, value); }
         }
     }
 }

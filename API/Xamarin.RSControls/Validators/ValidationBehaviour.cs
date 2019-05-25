@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms;
-using Xamarin.RSControls.Helpers;
+using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Validators
 {
@@ -19,7 +18,7 @@ namespace Xamarin.RSControls.Validators
 
         private void Validate(View view)
         {
-            IRSControl rsControl = view as IRSControl;
+            IHaveError rsControl = view as IHaveError;
 
             Layout<View> parent = view.Parent as Layout<View>;
 
@@ -39,30 +38,12 @@ namespace Xamarin.RSControls.Validators
 
                     if (!isValid)
                     {
-                        view.PropertyChanged -= View_PropertyChanged;
-
-                        rsControl.TextColor = Color.Red;
-                        rsControl.BorderColor = Color.Red;
-
-                        view.HeightRequest = view.Height * 2;
-
-                        //StackLayout stackLayout = new StackLayout();
-                        //Label labelMessage = new Label() { Text = "Test", TextColor = Color.Red };
-                        //stackLayout.Children.Add(view);
-                        //stackLayout.Children.Add(labelMessage);
-
-                        //var index = parent.Children.IndexOf(view);
-                        //parent.Children.Remove(view);
-                        //parent.Children.Insert(index, stackLayout);
-
-                        view.PropertyChanged += View_PropertyChanged;
-
+                        rsControl.Error = validation.Message;
                         return;
                     }
                 }
 
-                rsControl.TextColor = Color.Black;
-                rsControl.BorderColor = Color.Black;
+                rsControl.Error = null;
             }
         }
 

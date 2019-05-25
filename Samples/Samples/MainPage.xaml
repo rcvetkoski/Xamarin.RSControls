@@ -8,11 +8,30 @@
 
     <ScrollView Orientation="Vertical">
         <StackLayout Margin="20" x:Name="stack">
-            
-            <rs:RSNumericEntryInputLayout Value="256" NumberDecimalDigits="2" CustomUnit="€" Placeholder="Numeric Entry"></rs:RSNumericEntryInputLayout>
+
+            <rs:RSNumericEntryInputLayout NumberDecimalDigits="2" CustomUnit="€" Placeholder="Numeric Entry">
+                <rs:RSNumericEntryInputLayout.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSNumericEntryInputLayout.Behaviors> 
+            </rs:RSNumericEntryInputLayout>
+
+            <rs:RSEntryInputLayout>
+                <rs:RSEntryInputLayout.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSEntryInputLayout.Behaviors>
+            </rs:RSEntryInputLayout>
+
+            <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
 
         </StackLayout>
     </ScrollView>
-
 
 </ContentPage>
