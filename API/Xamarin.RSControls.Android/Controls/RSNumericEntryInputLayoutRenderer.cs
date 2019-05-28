@@ -33,13 +33,14 @@ namespace Xamarin.RSControls.Droid.Controls
             renderer.SetElement(Element);
             renderer.Control.RemoveFromParent();
             renderer.Control.LayoutParameters = new LinearLayout.LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent);
+            renderer.SetIsTextInputLayout(true); //Avoid having double warning message in edittext when error enabled in simple control
             textInputLayout.AddView(renderer.Control);
 
             //Hint
             textInputLayout.Hint = renderer.Element.Placeholder;
 
             //Error-Validation
-            if(this.Element.Behaviors.Any(x=> x is Validators.ValidationBehaviour))
+            if (this.Element.Behaviors.Any(x=> x is Validators.ValidationBehaviour))
                 textInputLayout.ErrorEnabled = true;
 
             //Set field as Password

@@ -55,7 +55,7 @@ namespace Xamarin.RSControls.Validators
 
         private void View_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == this.PropertyName)
+            if(e.PropertyName == this.PropertyName || e.PropertyName == "IsFocused" && (sender as View).IsFocused)
             {
                 Validate(sender as View);
             }

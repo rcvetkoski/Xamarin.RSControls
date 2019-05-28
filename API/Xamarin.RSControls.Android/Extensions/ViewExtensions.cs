@@ -29,11 +29,11 @@ namespace Xamarin.RSControls.Droid.Extensions
             GradientDrawable gd = new GradientDrawable();
             gd.SetCornerRadius(12);
             gd.SetShape(ShapeType.Rectangle);
-            gd.SetColor(Color.White);
+            gd.SetColor(Color.Transparent);
             gd.SetStroke(2, Color.Gray);
 
 
-            nativeView.SetBackground(gd);
+            nativeView.SetBackground(shape);
         }
     }
 }

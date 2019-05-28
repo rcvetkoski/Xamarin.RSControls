@@ -10,6 +10,8 @@ namespace Xamarin.RSControls.Droid.Controls
 {
     public class RSEntryRenderer : EntryRenderer
     {
+        private bool isTextInputLayout;
+
         public RSEntryRenderer(Context context) : base(context)
         {
 
@@ -21,6 +23,19 @@ namespace Xamarin.RSControls.Droid.Controls
 
             if (e.OldElement != null)
                 return;
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            if (e.PropertyName == "Error" && !isTextInputLayout)
+                this.Control.Error = (this.Element as RSEntry).Error;
+        }
+
+        internal void SetIsTextInputLayout(bool value)
+        {
+            isTextInputLayout = value;
         }
     }
 }

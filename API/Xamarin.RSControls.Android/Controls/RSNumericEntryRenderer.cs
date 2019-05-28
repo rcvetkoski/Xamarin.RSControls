@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using Xamarin.RSControls.Droid.Controls;
 using Xamarin.RSControls.Controls;
 using Android.Support.Design.Widget;
+using System.ComponentModel;
 
 [assembly: ExportRenderer(typeof(RSNumericEntry), typeof(RSNumericEntryRenderer))]
 namespace Xamarin.RSControls.Droid.Controls

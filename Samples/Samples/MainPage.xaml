@@ -9,25 +9,39 @@
     <ScrollView Orientation="Vertical">
         <StackLayout Margin="20" x:Name="stack">
 
-            <rs:RSNumericEntryInputLayout NumberDecimalDigits="2" CustomUnit="€" Placeholder="Numeric Entry">
+            <rs:RSNumericEntryInputLayout NumberDecimalDigits="2" CustomUnit="€" Placeholder="Input text layout Numeric Entry">
                 <rs:RSNumericEntryInputLayout.Behaviors>
                     <validators:ValidationBehaviour PropertyName="Text">
                         <validators:ValidationBehaviour.Validators>
                             <validators:RequiredValidation/>
                         </validators:ValidationBehaviour.Validators>
                     </validators:ValidationBehaviour>
-                </rs:RSNumericEntryInputLayout.Behaviors> 
+                </rs:RSNumericEntryInputLayout.Behaviors>
             </rs:RSNumericEntryInputLayout>
 
-            <rs:RSEntryInputLayout>
-                <rs:RSEntryInputLayout.Behaviors>
+            <rs:RSNumericEntry Placeholder="Numeric Entry" CustomUnit="KG" NumberDecimalDigits="3">
+                <rs:RSNumericEntry.Behaviors>
                     <validators:ValidationBehaviour PropertyName="Text">
                         <validators:ValidationBehaviour.Validators>
                             <validators:RequiredValidation/>
                         </validators:ValidationBehaviour.Validators>
                     </validators:ValidationBehaviour>
-                </rs:RSEntryInputLayout.Behaviors>
-            </rs:RSEntryInputLayout>
+                </rs:RSNumericEntry.Behaviors>
+            </rs:RSNumericEntry>
+
+            <rs:RSEntry Placeholder="Entry">
+                <rs:RSEntry.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSEntry.Behaviors>
+            </rs:RSEntry>
+
+            <rs:RSDatePicker DateSelectionMode="MonthYear" IsClearable="True" HasBorder="True">
+                
+            </rs:RSDatePicker>
 
             <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
 

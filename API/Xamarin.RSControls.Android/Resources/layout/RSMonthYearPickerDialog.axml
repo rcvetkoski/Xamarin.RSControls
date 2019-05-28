@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:background="?android:attr/colorAccent"
+		android:paddingTop="15dp"
+		android:paddingBottom="15dp"
+        android:gravity="top">
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:layout_gravity="center_horizontal">
+
+			<TextView
+				android:id="@+id/headerMonthTitle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAlignment="center"
+				android:layout_weight="1"
+				android:layout_marginLeft="10dp"
+				android:layout_marginRight="10dp"
+				android:textColor="@color/rspickercolorstatelist"
+				android:text="February"
+				android:textStyle="bold"
+				android:textSize="26sp"
+				android:visibility="gone"/>
+			<TextView
+				android:id="@+id/headerYearTitle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAlignment="center"
+				android:layout_marginLeft="10dp"
+				android:layout_marginRight="10dp"
+				android:textColor="@color/rspickercolorstatelist"
+				android:layout_weight="1"
+				android:text="2019"
+				android:textStyle="bold"
+				android:textSize="26sp"
+				android:visibility="gone"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="270dp"
+        android:layout_height="250dp"
+		android:layout_gravity="start"
+		android:orientation="vertical">
+
+	    <ListView
+			android:id="@+id/yearView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:visibility="gone"
+			android:divider="@android:color/transparent"/>
+
+		<RelativeLayout
+			android:id="@+id/monthView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<Button 
+				android:id="@+id/leftButton"
+				android:layout_width="40dp"
+				android:layout_height="40dp"
+				android:rotation="270"
+				android:layout_marginTop="10dp"
+				android:layout_marginLeft="20dp"
+				android:layout_alignParentLeft="true"
+				android:background="@drawable/rschevron"/>
+
+			<android.support.v4.view.ViewPager
+				android:id="@+id/viewPager"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+				<android.support.v4.view.PagerTitleStrip
+					android:id="@+id/pager_title_strip"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:paddingTop="15dp"
+					android:paddingBottom="5dp"
+					android:layout_gravity="top"
+					android:textAppearance="@style/PagerTabStripText"/>
+
+			</android.support.v4.view.ViewPager>
+
+			<Button 
+				android:id="@+id/rightButton"
+				android:layout_width="40dp"
+				android:layout_height="40dp"
+				android:rotation="90"
+				android:layout_marginTop="10dp"
+				android:layout_marginRight="20dp"
+				android:layout_alignParentRight="true"
+				android:background="@drawable/rschevron"/>
+
+		</RelativeLayout>
+
+	</LinearLayout>
+
+    <LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:gravity="bottom"
+		android:background="@android:color/darker_gray"/>
+	
+</LinearLayout>
