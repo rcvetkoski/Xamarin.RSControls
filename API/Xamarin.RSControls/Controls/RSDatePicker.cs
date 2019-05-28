@@ -1,10 +1,11 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.RSControls.Enums;
+using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Controls
 {
-    public class RSDatePicker : DatePicker
+    public class RSDatePicker : DatePicker, IHaveError
     {
         public RSDatePicker()
         {
@@ -90,6 +91,13 @@ namespace Xamarin.RSControls.Controls
         {
             get { return (DateSelectionModeEnum)GetValue(DateSelectionModeProperty); }
             set { SetValue(DateSelectionModeProperty, value); }
+        }
+
+        public static readonly BindableProperty ErrorProperty = BindableProperty.Create("Error", typeof(string), typeof(RSDatePicker), null);
+        public string Error
+        {
+            get { return (string)GetValue(ErrorProperty); }
+            set { SetValue(ErrorProperty, value); }
         }
 
         protected override void OnPropertyChanged(string propertyName = null)

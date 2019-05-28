@@ -18,7 +18,7 @@ namespace Xamarin.RSControls.Droid.Extensions
             shape.Paint.Color = borderColor;
             shape.Paint.StrokeWidth = 2;
             shape.Paint.SetStyle(Paint.Style.Stroke);
-            int upDown = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 6, context.Resources.DisplayMetrics);
+            int upDown = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, context.Resources.DisplayMetrics);
             int leftRight = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, context.Resources.DisplayMetrics);
             shape.SetPadding(leftRight, upDown, leftRight, upDown);
             shape.Paint.AntiAlias = true;

@@ -20,9 +20,10 @@ using static Android.Views.View;
 [assembly: ExportRenderer(typeof(RSDatePicker), typeof(RSDatePickerRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSDatePickerRenderer : ViewRenderer<RSDatePicker, EditText>, IOnClickListener, AdapterView.IOnItemClickListener
+    public class RSDatePickerRenderer : ViewRenderer<RSDatePicker, FormsEditText>, IOnClickListener, AdapterView.IOnItemClickListener
     {
         DatePickerDialog _dialog;
+        private bool isTextInputLayout;
 
         //For custom dialogs
         private AlertDialog alert;
@@ -37,7 +38,7 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnElementChanged(e);
 
-            var nativeEditText = new global::Android.Widget.EditText(Context);
+            var nativeEditText = new FormsEditText(Context);
             this.SetNativeControl(nativeEditText);
 
             if (Control == null || e.NewElement == null)
@@ -55,8 +56,9 @@ namespace Xamarin.RSControls.Droid.Controls
             //Set placeholder text
             SetPlaceHolderText();
 
-            //Click operations
+            //Show datepicker
             this.Control.Click += OnPickerClick;
+            this.Control.FocusChange += OnPickerFocusChange;
 
             //Set correct value for nulabledate if greater than max date or smaller than min date
             if (this.Element.NullableDate.HasValue)
@@ -70,8 +72,6 @@ namespace Xamarin.RSControls.Droid.Controls
             this.Control.KeyListener = null;
             this.Control.Enabled = Element.IsEnabled;
             this.Control.SetTextSize(ComplexUnitType.Dip, (float)Element.FontSize);
-
-            this.Control.FocusableInTouchMode = false;
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -82,7 +82,15 @@ namespace Xamarin.RSControls.Droid.Controls
                 SetText();
             }
 
+            if (e.PropertyName == "Error" && !isTextInputLayout)
+                this.Control.Error = (this.Element as RSDatePicker).Error;
+
             base.OnElementPropertyChanged(sender, e);
+        }
+
+        internal void SetIsTextInputLayout(bool value)
+        {
+            isTextInputLayout = value;
         }
 
         private void SetPlaceHolderText()
@@ -129,9 +137,16 @@ namespace Xamarin.RSControls.Droid.Controls
             nativeEditText.SetCompoundDrawablesRelativeWithIntrinsicBounds(null, null, drawable, null);
         }
 
-        void OnPickerClick(object sender, EventArgs e)
+        private void OnPickerClick(object sender, EventArgs e)
         {
-            ShowDatePicker();
+            if(this.Control.HasFocus)
+                ShowDatePicker();
+        }
+
+        private void OnPickerFocusChange(object sender, FocusChangeEventArgs e)
+        {
+            if (e.HasFocus)
+                ShowDatePicker();
         }
 
         void SetText()
@@ -212,7 +227,6 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 view.Date = e.Date;
                 ((IElementController)view).SetValueFromRenderer(VisualElement.IsFocusedProperty, false);
-                Control.ClearFocus();
 
                 _dialog = null;
             }, year, month - 1, day);
@@ -802,7 +816,7 @@ namespace Xamarin.RSControls.Droid.Controls
             if (Control != null)
             {
                 this.Control.Click -= OnPickerClick;
-                //this.Control.FocusChange -= OnPickerFocusChange;
+                this.Control.FocusChange -= OnPickerFocusChange;
 
                 if (_dialog != null)
                 {
