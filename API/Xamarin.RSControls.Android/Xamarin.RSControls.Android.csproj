@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\RSDatePickerInputLayoutRenderer.cs" />
     <Compile Include="Controls\RSDatePickerRenderer.cs" />
     <Compile Include="Controls\RSEntryInputLayoutRenderer.cs" />
     <Compile Include="Controls\RSEntryRenderer.cs" />

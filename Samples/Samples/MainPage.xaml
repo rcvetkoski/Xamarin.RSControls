@@ -10,13 +10,7 @@
         <StackLayout Margin="20" x:Name="stack">
 
             <rs:RSNumericEntryInputLayout NumberDecimalDigits="2" CustomUnit="€" Placeholder="Input text layout Numeric Entry">
-                <rs:RSNumericEntryInputLayout.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSNumericEntryInputLayout.Behaviors>
+
             </rs:RSNumericEntryInputLayout>
 
             <rs:RSNumericEntry Placeholder="Numeric Entry" CustomUnit="KG" NumberDecimalDigits="3">
@@ -49,7 +43,16 @@
                 </rs:RSDatePicker.Behaviors>
             </rs:RSDatePicker>
 
-
+            <rs:RSDatePickerInputLayout DateSelectionMode="MonthYear" IsClearable="True">
+                <rs:RSDatePickerInputLayout.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="NullableDate">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSDatePickerInputLayout.Behaviors>
+            </rs:RSDatePickerInputLayout>
+            
             <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
 
         </StackLayout>

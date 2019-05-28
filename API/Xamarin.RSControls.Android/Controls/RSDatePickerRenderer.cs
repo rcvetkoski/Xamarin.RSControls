@@ -153,8 +153,12 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             if (!Element.NullableDate.HasValue)
             {
-                this.Control.Text = Element.Placeholder;
-                this.Control.SetTextColor(Element.PlaceholderColor.ToAndroid());
+                this.Control.Text = "";
+                if(!isTextInputLayout)
+                {
+                    this.Control.Hint = this.Element.Placeholder;
+                    this.Control.SetHintTextColor(this.Element.PlaceholderColor.ToAndroid());
+                }
             }
             else
             {
@@ -247,8 +251,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 _dialog.SetButton2("Clear", (sender, e) =>
                 {
                     this.Element.CleanDate();
-                    Control.Text = this.Element.Placeholder;
-                    this.Control.SetTextColor(Element.PlaceholderColor.ToAndroid());
+                    SetText();
                     this.Element.DoInvalidate(); // TODO resize if set to auto
                 });
             }
@@ -762,8 +765,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 dialog.SetNegativeButton("Clear", (sender, e) =>
                 {
                     this.Element.CleanDate();
-                    Control.Text = this.Element.Placeholder;
-                    this.Control.SetTextColor(Element.PlaceholderColor.ToAndroid());
+                    SetText();
                     this.Element.DoInvalidate(); // TODO resize if set to auto
                 });
             }
