@@ -38,7 +38,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Icon Width
-        public static readonly BindableProperty IconWidthProperty = BindableProperty.Create("IconWidth", typeof(double), typeof(RSDatePicker), 15.0);
+        public static readonly BindableProperty IconWidthProperty = BindableProperty.Create("IconWidth", typeof(double), typeof(RSDatePicker), 20.0);
         public double IconWidth
         {
             get { return (double)GetValue(IconWidthProperty); }
@@ -46,7 +46,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Icon Height
-        public static readonly BindableProperty IconHeightProperty = BindableProperty.Create("IconHeight", typeof(double), typeof(RSDatePicker), 15.0);
+        public static readonly BindableProperty IconHeightProperty = BindableProperty.Create("IconHeight", typeof(double), typeof(RSDatePicker), 20.0);
         public double IconHeight
         {
             get { return (double)GetValue(IconHeightProperty); }
