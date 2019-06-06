@@ -4,8 +4,10 @@ using System.Linq;
 using Android.App;
 using Android.Content;
 using Android.Content.Res;
+using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Support.V4.View;
+using Android.Support.V7.Widget;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
@@ -20,7 +22,7 @@ using static Android.Views.View;
 [assembly: ExportRenderer(typeof(RSDatePicker), typeof(RSDatePickerRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSDatePickerRenderer : ViewRenderer<RSDatePicker, FormsEditText>, IOnClickListener, AdapterView.IOnItemClickListener
+    public class RSDatePickerRenderer : ViewRenderer<RSDatePicker, AppCompatEditText>, IOnClickListener, AdapterView.IOnItemClickListener
     {
         DatePickerDialog _dialog;
         private bool isTextInputLayout;
@@ -38,13 +40,14 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnElementChanged(e);
 
-            var nativeEditText = new FormsEditText(Context);
+            var nativeEditText = new AppCompatEditText(Context);
             this.SetNativeControl(nativeEditText);
 
             if (Control == null || e.NewElement == null)
                 return;
 
             nativeEditText.SetSingleLine(true);
+
 
             //Draw border or not
             if (Element.HasBorder)
@@ -118,23 +121,36 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void SetIcon(global::Android.Widget.EditText nativeEditText)
         {
-            string iconPath = string.Empty;
+            string rightPath = string.Empty;
+            string leftPath = string.Empty;
+            Drawable rightDrawable = null;
+            Drawable leftDrawable = null;
 
-            if (Element.Icon == null)
-                iconPath = "Samples/Data/SVG/calendar.svg";
+            //Right Icon
+            if (Element.RightIcon == null)
+                rightPath = "Samples/Data/SVG/calendar.svg";
             else
-                iconPath = Element.Icon;
+                rightPath = Element.RightIcon;
 
-            double pixel = (double)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)Element.IconHeight, Context.Resources.DisplayMetrics);
-            RSSvgImage svgIcon = new RSSvgImage() { Source = iconPath, HeightRequest = pixel, WidthRequest = pixel, Color = Element.IconColor };
+            int pixel = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)Element.IconHeight, Context.Resources.DisplayMetrics);
+            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = rightPath, HeightRequest = pixel, WidthRequest = pixel, Color = Element.IconColor };
+            var convertedRightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new Rectangle(), Context);
+            rightDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedRightView, pixel, pixel));
 
-            var convertedView = ConvertFormsToNative(svgIcon, new Rectangle(), Context);
-            convertedView.DrawingCacheEnabled = true;
-            convertedView.BuildDrawingCache();
-            Drawable drawable = new BitmapDrawable(Context.Resources, convertedView.GetDrawingCache(true));
 
+            //Left Icon
+            if (Element.LeftIcon != null)
+            {
+                leftPath = Element.LeftIcon;
+                RSSvgImage leftSvgIcon = new RSSvgImage() { Source = leftPath, HeightRequest = pixel, WidthRequest = pixel, Color = Element.IconColor };
+                var convertedLeftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new Rectangle(), Context);
+                leftDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedLeftView, pixel, pixel));
+            }
+
+
+            //Set Drawable to control
             nativeEditText.CompoundDrawablePadding = 15;
-            nativeEditText.SetCompoundDrawablesRelativeWithIntrinsicBounds(null, null, drawable, null);
+            nativeEditText.SetCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, rightDrawable, null);
         }
 
         private void OnPickerClick(object sender, EventArgs e)
@@ -832,19 +848,6 @@ namespace Xamarin.RSControls.Droid.Controls
             rightButton.Click -= rightButton_Click;
 
             base.Dispose(disposing);
-        }
-
-        //Conver xamarin forms view to native view
-        public static global::Android.Views.View ConvertFormsToNative(Xamarin.Forms.View view, Rectangle size, Context context)
-        {
-            var vRenderer = Platform.CreateRendererWithContext(view, context);
-            var androidView = vRenderer.View;
-            vRenderer.Tracker.UpdateLayout();
-            var layoutParams = new ViewGroup.LayoutParams((int)size.Width, (int)size.Height);
-            androidView.LayoutParameters = layoutParams;
-            view.Layout(size);
-            androidView.Layout(0, 0, (int)view.WidthRequest, (int)view.HeightRequest);
-            return androidView;
         }
     }
 }

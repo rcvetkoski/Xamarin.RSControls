@@ -33,7 +33,7 @@
                 </rs:RSEntry.Behaviors>
             </rs:RSEntry>
 
-            <rs:RSDatePicker DateSelectionMode="MonthYear" IsClearable="True">
+            <rs:RSDatePicker DateSelectionMode="MonthYear" IsClearable="True" HasBorder="True">
                 <rs:RSDatePicker.Behaviors>
                     <validators:ValidationBehaviour PropertyName="NullableDate">
                         <validators:ValidationBehaviour.Validators>
@@ -44,13 +44,7 @@
             </rs:RSDatePicker>
 
             <rs:RSDatePickerInputLayout DateSelectionMode="MonthYear" IsClearable="True">
-                <rs:RSDatePickerInputLayout.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="NullableDate">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSDatePickerInputLayout.Behaviors>
+
             </rs:RSDatePickerInputLayout>
             
             <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>

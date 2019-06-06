@@ -32,7 +32,10 @@ namespace Xamarin.RSControls.Droid.Controls
             RSNumericEntryRenderer renderer = new RSNumericEntryRenderer(Context);
             renderer.SetElement(Element);
             renderer.Control.RemoveFromParent();
+            int paddingLeftRight = Extensions.ViewExtensions.IntToDip(10, Context);
+
             renderer.Control.LayoutParameters = new LinearLayout.LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent);
+            renderer.Control.SetPadding(paddingLeftRight, renderer.Control.PaddingTop, paddingLeftRight, renderer.Control.PaddingBottom);
             renderer.SetIsTextInputLayout(true); //Avoid having double warning message in edittext when error enabled in simple control
             textInputLayout.AddView(renderer.Control);
 
@@ -49,6 +52,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 Element.IsPassword = true;
                 textInputLayout.PasswordVisibilityToggleEnabled = true;
             }
+
 
             SetNativeControl(textInputLayout);
         }

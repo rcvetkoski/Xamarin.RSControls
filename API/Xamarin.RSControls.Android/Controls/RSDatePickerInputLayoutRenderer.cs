@@ -36,10 +36,10 @@ namespace Xamarin.RSControls.Droid.Controls
             renderer.SetElement(Element);
             renderer.Control.RemoveFromParent();
             renderer.Control.LayoutParameters = new LinearLayout.LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent);
-
-            int pixel = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 30, Context.Resources.DisplayMetrics);
-            renderer.Control.SetPadding(pixel, renderer.Control.PaddingTop, pixel, renderer.Control.PaddingBottom);
+            int paddingLeftRight = Extensions.ViewExtensions.IntToDip(10, Context);
+            renderer.Control.SetPadding(paddingLeftRight, renderer.Control.PaddingTop, paddingLeftRight, renderer.Control.PaddingBottom);
             renderer.SetIsTextInputLayout(true); //Avoid having double warning message in edittext when error enabled in simple control
+
             textInputLayout.AddView(renderer.Control);
 
             //Hint

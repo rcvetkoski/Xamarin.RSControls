@@ -18,8 +18,8 @@ namespace Xamarin.RSControls.Droid.Extensions
             shape.Paint.Color = borderColor;
             shape.Paint.StrokeWidth = 2;
             shape.Paint.SetStyle(Paint.Style.Stroke);
-            int upDown = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, context.Resources.DisplayMetrics);
-            int leftRight = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, context.Resources.DisplayMetrics);
+            int upDown = IntToDip(8, context);
+            int leftRight = IntToDip(8, context);
             shape.SetPadding(leftRight, upDown, leftRight, upDown);
             shape.Paint.AntiAlias = true;
             shape.Paint.Flags = PaintFlags.AntiAlias;
@@ -34,6 +34,48 @@ namespace Xamarin.RSControls.Droid.Extensions
 
 
             nativeView.SetBackground(shape);
+        }
+
+
+
+        public static Bitmap CreateBitmapFromView(global::Android.Views.View view, int width, int height)
+        {
+            if (width > 0 && height > 0)
+            {
+                view.Measure(View.MeasureSpec.MakeMeasureSpec(width, MeasureSpecMode.Exactly), View.MeasureSpec.MakeMeasureSpec(height, MeasureSpecMode.Exactly));
+            }
+
+            view.Layout(0, 0, view.MeasuredWidth, view.MeasuredHeight);
+
+            Bitmap bitmap = Bitmap.CreateBitmap(view.MeasuredWidth, view.MeasuredHeight, Bitmap.Config.Argb8888);
+            Canvas canvas = new Canvas(bitmap);
+            Drawable background = view.Background;
+
+            if (background != null)
+            {
+                background.Draw(canvas);
+            }
+            view.Draw(canvas);
+
+            return bitmap;
+        }
+
+        public static global::Android.Views.View ConvertFormsToNative(Xamarin.Forms.View view, Xamarin.Forms.Rectangle size, Context context)
+        {
+            var vRenderer = Platform.CreateRendererWithContext(view, context);
+            var androidView = vRenderer.View;
+            vRenderer.Tracker.UpdateLayout();
+            var layoutParams = new ViewGroup.LayoutParams((int)size.Width, (int)size.Height);
+            androidView.LayoutParameters = layoutParams;
+            view.Layout(size);
+            androidView.Layout(0, 0, (int)view.WidthRequest, (int)view.HeightRequest);
+            return androidView;
+        }
+
+
+        public static int IntToDip (int value, global::Android.Content.Context context)
+        {
+           return (int)global::Android.Util.TypedValue.ApplyDimension(global::Android.Util.ComplexUnitType.Dip, value, context.Resources.DisplayMetrics);
         }
     }
 }

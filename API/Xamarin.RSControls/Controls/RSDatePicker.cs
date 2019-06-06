@@ -14,11 +14,18 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Icon
-        public static readonly BindableProperty IconProperty = BindableProperty.Create("Icon", typeof(string), typeof(RSDatePicker), null);
-        public string Icon
+        public static readonly BindableProperty LeftIconProperty = BindableProperty.Create("LeftIcon", typeof(string), typeof(RSDatePicker), null);
+        public string LeftIcon
         {
-            get { return (string)GetValue(IconProperty); }
-            set { SetValue(IconProperty, value); }
+            get { return (string)GetValue(LeftIconProperty); }
+            set { SetValue(LeftIconProperty, value); }
+        }
+
+        public static readonly BindableProperty RightIconProperty = BindableProperty.Create("RightIcon", typeof(string), typeof(RSDatePicker), null);
+        public string RightIcon
+        {
+            get { return (string)GetValue(RightIconProperty); }
+            set { SetValue(RightIconProperty, value); }
         }
 
         //Icon Color

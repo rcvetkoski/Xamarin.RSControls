@@ -24,6 +24,10 @@ namespace Xamarin.RSControls.Droid.Controls
             base.OnElementChanged(e);
             if (e.OldElement != null)
                 return;
+
+            //Set padding to edittext
+            int paddingLeftRight = Extensions.ViewExtensions.IntToDip(10, Context);
+            this.Control.SetPadding(paddingLeftRight, this.Control.PaddingTop, paddingLeftRight, this.Control.PaddingBottom);
         }
     }
 }

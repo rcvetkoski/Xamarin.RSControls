@@ -36,7 +36,10 @@
   </style>
 
   <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-    <item name="colorAccent">#fff</item>
+    <item name="boxStrokeColor">#fff</item>
+    <item name="boxStrokeWidth">2dp</item>
+    <item name="android:layout_marginStart">10dp</item>
+    <item name="android:layout_marginEnd">10dp</item>
   </style>
 
 </resources>
