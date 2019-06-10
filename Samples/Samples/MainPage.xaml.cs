@@ -19,24 +19,55 @@ namespace Samples
             InitializeComponent();
             this.BindingContext = new MainPageViewModel();
 
-            //for (int i = 0; i < 1; i++)
+            //for (int i = 0; i < 1000; i++)
             //{
-            //    RSNumericEntryInputLayout rSNumericEntryInputLayout = new RSNumericEntryInputLayout() { CustomUnit = "KG", Value = "i", Placeholder = i.ToString() };
+            //    RSDatePickerInputLayout rSNumericEntryInputLayout = new RSDatePickerInputLayout() { NullableDate = DateTime.Now, Placeholder = "Date" + i.ToString() };
 
             //    stack.Children.Add(rSNumericEntryInputLayout);
             //}
 
             //for (int i = 0; i < 1000; i++)
             //{
-            //    Entry entry = new Entry() { Text = "i", Placeholder = i.ToString() };
+            //    RSDatePicker rSNumericEntryInputLayout = new RSDatePicker() { NullableDate = DateTime.Now, Placeholder = "Date" + i.ToString(), HasBorder = true };
 
-            //    stack.Children.Add(entry);
+            //    stack.Children.Add(rSNumericEntryInputLayout);
+            //}
+
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    DatePicker rSNumericEntryInputLayout = new DatePicker() { Date = DateTime.Now };
+
+            //    stack.Children.Add(rSNumericEntryInputLayout);
+            //}
+
+
+
+
+
+
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    Entry rSNumericEntryInputLayout = new Entry() { Text = "lol" };
+
+            //    stack.Children.Add(rSNumericEntryInputLayout);
+            //}
+
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    RSEntry rSNumericEntryInputLayout = new RSEntry() { Text = "lol" };
+
+            //    stack.Children.Add(rSNumericEntryInputLayout);
             //}
         }
 
         private void Button_Clicked(object sender, EventArgs e)
         {
             Navigation.PushAsync(new Page1());
+        }
+
+        private void Button_Clicked2(object sender, EventArgs e)
+        {
+            (this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(1);
         }
     }
 }

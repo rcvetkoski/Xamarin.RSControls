@@ -19,5 +19,12 @@ namespace Xamarin.RSControls.Controls
             get { return (string)GetValue(ErrorProperty); }
             set { SetValue(ErrorProperty, value); }
         }
+
+        public static readonly BindableProperty HasBorderProperty = BindableProperty.Create("HasBorder", typeof(bool), typeof(RSEntry), false);
+        public bool HasBorder
+        {
+            get { return (bool)GetValue(HasBorderProperty); }
+            set { SetValue(HasBorderProperty, value); }
+        }
     }
 }

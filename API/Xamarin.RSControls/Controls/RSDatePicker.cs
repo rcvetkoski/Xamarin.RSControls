@@ -29,7 +29,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Icon Color
-        public static readonly BindableProperty IconColorProperty = BindableProperty.Create("IconColor", typeof(Color), typeof(RSDatePicker), Color.Transparent);
+        public static readonly BindableProperty IconColorProperty = BindableProperty.Create("IconColor", typeof(Color), typeof(RSDatePicker), Color.DimGray);
         public Color IconColor
         {
             get { return (Color)GetValue(IconColorProperty); }

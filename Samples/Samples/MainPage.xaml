@@ -4,24 +4,11 @@
              xmlns:local="clr-namespace:Samples"
              xmlns:rs="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls"
              xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls"
+             xmlns:enums="clr-namespace:Xamarin.RSControls.Enums;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
     <ScrollView Orientation="Vertical">
         <StackLayout Margin="20" x:Name="stack">
-
-            <rs:RSNumericEntryInputLayout NumberDecimalDigits="2" CustomUnit="€" Placeholder="Input text layout Numeric Entry">
-
-            </rs:RSNumericEntryInputLayout>
-
-            <rs:RSNumericEntry Placeholder="Numeric Entry" CustomUnit="KG" NumberDecimalDigits="3">
-                <rs:RSNumericEntry.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSNumericEntry.Behaviors>
-            </rs:RSNumericEntry>
 
             <rs:RSEntry Placeholder="Entry">
                 <rs:RSEntry.Behaviors>
@@ -33,21 +20,46 @@
                 </rs:RSEntry.Behaviors>
             </rs:RSEntry>
 
-            <rs:RSDatePicker DateSelectionMode="MonthYear" IsClearable="True" HasBorder="True">
-                <rs:RSDatePicker.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="NullableDate">
+            <rs:RSNumericEntry Placeholder="Numeric Entry" CustomUnit="KG" NumberDecimalDigits="3" HasBorder="True">
+                <rs:RSNumericEntry.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
                         <validators:ValidationBehaviour.Validators>
                             <validators:RequiredValidation/>
                         </validators:ValidationBehaviour.Validators>
                     </validators:ValidationBehaviour>
-                </rs:RSDatePicker.Behaviors>
+                </rs:RSNumericEntry.Behaviors>
+            </rs:RSNumericEntry>
+
+            
+            <rs:RSNumericEntryInputLayout NumberDecimalDigits="2" CustomUnit="€" Placeholder="Input text layout Numeric Entry">
+
+            </rs:RSNumericEntryInputLayout>
+
+            
+            <rs:RSEnumPicker x:TypeArguments="enums:DateSelectionModeEnum" Placeholder="Date selection mode" HasBorder="True">
+                
+            </rs:RSEnumPicker>
+
+            <rs:RSDatePicker HasBorder="True" DateSelectionMode="MonthYear">
+                
             </rs:RSDatePicker>
 
-            <rs:RSDatePickerInputLayout DateSelectionMode="MonthYear" IsClearable="True">
-
+            <rs:RSDatePickerInputLayout>
+                
             </rs:RSDatePickerInputLayout>
-            
+
+
+            <rs:RSPicker x:Name="rsPicker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Select a Person">
+
+            </rs:RSPicker>
+
+            <Label Text="{Binding SelectedPerson.Name}"/>
+
+
             <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
+
+            <Button Text="Remove item" Clicked="Button_Clicked2"></Button>
+
 
         </StackLayout>
     </ScrollView>

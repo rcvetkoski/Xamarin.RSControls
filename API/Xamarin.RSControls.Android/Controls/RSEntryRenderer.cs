@@ -31,6 +31,10 @@ namespace Xamarin.RSControls.Droid.Controls
 
             if (e.PropertyName == "Error" && !isTextInputLayout)
                 this.Control.Error = (this.Element as RSEntry).Error;
+
+            //Draw border or not
+            if ((this.Element as RSEntry).HasBorder)
+                Extensions.ViewExtensions.DrawBorder(this.Control, Context, global::Android.Graphics.Color.Black);
         }
 
         internal void SetIsTextInputLayout(bool value)
