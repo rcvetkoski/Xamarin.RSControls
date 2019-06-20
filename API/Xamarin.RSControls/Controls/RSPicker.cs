@@ -7,6 +7,7 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.RSControls.Enums;
+using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Controls
 {
@@ -111,9 +112,6 @@ namespace Xamarin.RSControls.Controls
         }
     }
 
-
-
-
     public class RSEnumPicker<T> : RSPickerBase where T : struct
     {
         public RSEnumPicker()
@@ -131,19 +129,21 @@ namespace Xamarin.RSControls.Controls
                 items.Add(value);
             }
 
-            foreach (T value in items.OrderBy(i => i.ToString()))
-            {
-                itemsSource.Add(value);
-            }
+            if(this.OrderBy == OrderByEnum.Ascending)
+                foreach (T value in items.OrderBy(i => i.ToString()))
+                    itemsSource.Add(value);
+            else if(this.OrderBy == OrderByEnum.Descending)
+                foreach (T value in items.OrderByDescending(i => i.ToString()))
+                    itemsSource.Add(value);
+            else
+                foreach (T value in items)
+                    itemsSource.Add(value);
 
             ItemsSource = itemsSource;
         }
     }
 
-
-    
-
-    public class RSPickerBase : Picker
+    public class RSPickerBase : Picker, IHaveError
     {
         public RSPickerBase()
         {
@@ -211,6 +211,14 @@ namespace Xamarin.RSControls.Controls
         {
             get { return (Color)GetValue(PlaceholderColorProperty); }
             set { SetValue(PlaceholderColorProperty, value); }
+        }
+
+        //Error
+        public static readonly BindableProperty ErrorProperty = BindableProperty.Create("Error", typeof(string), typeof(RSPickerBase), null);
+        public string Error
+        {
+            get { return (string)GetValue(ErrorProperty); }
+            set { SetValue(ErrorProperty, value); }
         }
 
         //Order

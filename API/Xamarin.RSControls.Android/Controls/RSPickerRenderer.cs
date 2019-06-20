@@ -1,8 +1,11 @@
 ﻿using Android.Content;
+using Android.Database;
 using Android.Graphics.Drawables;
 using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Util;
+using Android.Views;
+using Android.Widget;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -18,6 +21,7 @@ namespace Xamarin.RSControls.Droid.Controls
     {
         private AlertDialog alertDialog;
         private Xamarin.Forms.ListView listView;
+        private bool isTextInputLayout;
 
         public RSPickerRenderer(Context context) : base(context)
         {
@@ -59,6 +63,11 @@ namespace Xamarin.RSControls.Droid.Controls
             this.Control.SetTextSize(ComplexUnitType.Dip, (float)Element.FontSize);
         }
 
+        internal void SetIsTextInputLayout(bool value)
+        {
+            isTextInputLayout = value;
+        }
+
         private void SetPlaceHolderText()
         {
             this.Control.Hint = this.Element.Placeholder;
@@ -75,46 +84,28 @@ namespace Xamarin.RSControls.Droid.Controls
                         this.Control.Text = Helpers.TypeExtensions.GetPropValue(Element.SelectedItem, (Element as RSPicker).DisplayMemberPath).ToString();
                     else
                         this.Control.Text = Element.SelectedItem.ToString();
-
-                    if (this.Control.Enabled)
-                        this.Control.SetTextColor(Element.TextColor.ToAndroid());
-                    else
-                        this.Control.SetTextColor(Element.PlaceholderColor.ToAndroid());
                 }
                 else
                 {
-                    if (this.Control.Enabled)
+                    this.Control.Text = "";
+                    if (!isTextInputLayout)
                     {
-                        this.Control.Text = Element.Placeholder != string.Empty ? Element.Placeholder : "";
-                        this.Control.SetTextColor(Element.PlaceholderColor.ToAndroid());
-                    }
-                    else
-                    {
-                        this.Control.Text = "";
+                        this.Control.Hint = this.Element.Placeholder;
+                        this.Control.SetHintTextColor(this.Element.PlaceholderColor.ToAndroid());
                     }
                 }
             }
             else
             {
                 if (Element.SelectedItem != null)
-                {
                     this.Control.Text = Element.SelectedItem.ToString();
-
-                    if (this.Control.Enabled)
-                        this.Control.SetTextColor(Element.TextColor.ToAndroid());
-                    else
-                        this.Control.SetTextColor(Element.PlaceholderColor.ToAndroid());
-                }
                 else
                 {
-                    if (this.Control.Enabled)
+                    this.Control.Text = "";
+                    if (!isTextInputLayout)
                     {
-                        this.Control.Text = Element.Placeholder != string.Empty ? Element.Placeholder : "";
-                        this.Control.SetTextColor(Element.PlaceholderColor.ToAndroid());
-                    }
-                    else
-                    {
-                        this.Control.Text = "";
+                        this.Control.Hint = this.Element.Placeholder;
+                        this.Control.SetHintTextColor(this.Element.PlaceholderColor.ToAndroid());
                     }
                 }
             }
@@ -147,7 +138,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 var convertedLeftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new Rectangle(), Context);
                 leftDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedLeftView, pixel, pixel));
             }
-            
+
 
             //Set Drawable to control
             //nativeEditText.CompoundDrawablePadding = 5;
@@ -176,12 +167,27 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 //Convert Xamarin forms view to android view
                 var convertedList = Extensions.ViewExtensions.ConvertFormsToNative(listView, new Rectangle(), Context);
+                
                 dialog.SetView(convertedList);
             }
             else
             {
-                dialog.SetTitle(Element.Title);
                 dialog.SetSingleChoiceItems(Element.Items.ToArray(), Element.SelectedIndex, Selection);
+                dialog.SetTitle(Element.Title);
+
+
+                AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(Context);
+                autoCompleteTextView.Hint = "Search Person";
+                autoCompleteTextView.LayoutParameters = new LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent);
+                autoCompleteTextView.Adapter = new ArrayAdapter(Context, Resource.Layout.RSAutoCompleteListItem, Element.Items.ToArray());
+
+                //global::Android.Support.V7.Widget.SearchView searchView = new global::Android.Support.V7.Widget.SearchView(Context);
+                global::Android.Support.V7.Widget.SearchView.SearchAutoComplete searchAutoComplete = new global::Android.Support.V7.Widget.SearchView.SearchAutoComplete(Context);
+                searchAutoComplete.LayoutParameters = new LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent);
+                searchAutoComplete.Adapter = new ArrayAdapter(Context, Resource.Layout.RSAutoCompleteListItem, Element.Items.ToArray());
+                searchAutoComplete.Hint = "Select Person";
+                
+                dialog.SetView(searchAutoComplete);
             }
 
             dialog.SetPositiveButton("Done", (senderAlert, args) =>
@@ -228,6 +234,18 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 SetText();
             }
+
+            if (e.PropertyName == "Error" && !isTextInputLayout)
+                this.Control.Error = (this.Element as RSPickerBase).Error;
         }
+    }
+
+    public class MySearch : global::Android.Support.V7.Widget.SearchView.SearchAutoComplete
+    {
+        public MySearch(Context context) : base(context)
+        {
+        }
+
+        public override bool HasFocus => base.HasFocus;
     }
 }

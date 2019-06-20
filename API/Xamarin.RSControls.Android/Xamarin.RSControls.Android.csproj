@@ -50,7 +50,9 @@
     <Compile Include="Controls\RSEntryRenderer.cs" />
     <Compile Include="Controls\RSNumericEntryInputLayoutRenderer.cs" />
     <Compile Include="Controls\RSNumericEntryRenderer.cs" />
+    <Compile Include="Controls\RSPickerInputLayoutRenderer.cs" />
     <Compile Include="Controls\RSPickerRenderer.cs" />
+    <Compile Include="Controls\RSSearchViewRenderer.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -136,6 +138,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values-sw360dp\dimens.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\RSAutoCompleteListItem.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

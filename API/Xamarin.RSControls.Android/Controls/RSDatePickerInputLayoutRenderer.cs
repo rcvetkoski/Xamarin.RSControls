@@ -3,18 +3,18 @@ using System.Linq;
 using Android.Content;
 using Android.Content.Res;
 using Android.Support.Design.Widget;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using Xamarin.Forms.Platform.Android.AppCompat;
 using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Droid.Controls;
 
 [assembly: ExportRenderer(typeof(RSDatePickerInputLayout), typeof(RSDatePickerInputLayoutRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSDatePickerInputLayoutRenderer : ViewRenderer<RSDatePickerInputLayout, TextInputLayout>
+    public class RSDatePickerInputLayoutRenderer : Forms.Platform.Android.AppCompat.ViewRenderer<RSDatePickerInputLayout, TextInputLayout>
     {
         private TextInputLayout textInputLayout;
         private RSDatePickerRenderer renderer;

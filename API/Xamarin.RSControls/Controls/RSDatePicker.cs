@@ -100,6 +100,7 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(DateSelectionModeProperty, value); }
         }
 
+        //Error
         public static readonly BindableProperty ErrorProperty = BindableProperty.Create("Error", typeof(string), typeof(RSDatePicker), null);
         public string Error
         {
