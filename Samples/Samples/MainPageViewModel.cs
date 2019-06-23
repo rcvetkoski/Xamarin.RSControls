@@ -18,9 +18,13 @@ namespace Samples
 
             var list = new List<DateSelectionModeEnum>() { DateSelectionModeEnum.Default, DateSelectionModeEnum.Month, DateSelectionModeEnum.MonthYear, DateSelectionModeEnum.Year};
 
+
             obsCollectionPicker = new ObservableCollection<string>() { "Tom", "Jerry", "Buldog" };
 
             listPickerEnum = list.OrderBy(x => x);
+
+            selectedDateMode = DateSelectionModeEnum.Month;
+
         }
 
         private double numericEntryValue;
@@ -77,6 +81,20 @@ namespace Samples
             {
                 listPickerEnum = value;
                 OnPropertyChanged("ListPickerEnum");
+            }
+        }
+
+        private DateSelectionModeEnum selectedDateMode;
+        public DateSelectionModeEnum SelectedDateMode
+        {
+            get
+            {
+                return selectedDateMode;
+            }
+            set
+            {
+                selectedDateMode = value;
+                OnPropertyChanged("SelectedDateMode");
             }
         }
 

@@ -174,20 +174,6 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 dialog.SetSingleChoiceItems(Element.Items.ToArray(), Element.SelectedIndex, Selection);
                 dialog.SetTitle(Element.Title);
-
-
-                AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(Context);
-                autoCompleteTextView.Hint = "Search Person";
-                autoCompleteTextView.LayoutParameters = new LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent);
-                autoCompleteTextView.Adapter = new ArrayAdapter(Context, Resource.Layout.RSAutoCompleteListItem, Element.Items.ToArray());
-
-                //global::Android.Support.V7.Widget.SearchView searchView = new global::Android.Support.V7.Widget.SearchView(Context);
-                global::Android.Support.V7.Widget.SearchView.SearchAutoComplete searchAutoComplete = new global::Android.Support.V7.Widget.SearchView.SearchAutoComplete(Context);
-                searchAutoComplete.LayoutParameters = new LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent);
-                searchAutoComplete.Adapter = new ArrayAdapter(Context, Resource.Layout.RSAutoCompleteListItem, Element.Items.ToArray());
-                searchAutoComplete.Hint = "Select Person";
-                
-                dialog.SetView(searchAutoComplete);
             }
 
             dialog.SetPositiveButton("Done", (senderAlert, args) =>
@@ -238,14 +224,5 @@ namespace Xamarin.RSControls.Droid.Controls
             if (e.PropertyName == "Error" && !isTextInputLayout)
                 this.Control.Error = (this.Element as RSPickerBase).Error;
         }
-    }
-
-    public class MySearch : global::Android.Support.V7.Widget.SearchView.SearchAutoComplete
-    {
-        public MySearch(Context context) : base(context)
-        {
-        }
-
-        public override bool HasFocus => base.HasFocus;
     }
 }

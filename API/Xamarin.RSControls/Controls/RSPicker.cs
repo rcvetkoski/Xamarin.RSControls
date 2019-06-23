@@ -61,6 +61,20 @@ namespace Xamarin.RSControls.Controls
 
 
 
+            IOrderedEnumerable<object> orderedDataSource = null;
+            if (this.OrderBy == OrderByEnum.Ascending)
+                orderedDataSource = itemsSource.OrderBy(p => p.GetType().GetProperty(DisplayMemberPath).GetValue(p, null));
+            else if (this.OrderBy == OrderByEnum.Descending)
+                orderedDataSource = itemsSource.OrderByDescending(p => p.GetType().GetProperty(DisplayMemberPath).GetValue(p, null));
+
+
+            if (this.OrderBy == OrderByEnum.Default)
+                base.ItemsSource = itemsSource.ToList();
+            else
+                base.ItemsSource = orderedDataSource.ToList();
+
+
+
             foreach (var item in this.ItemsSource)
             {
                 if (!string.IsNullOrEmpty(DisplayMemberPath))
@@ -72,17 +86,10 @@ namespace Xamarin.RSControls.Controls
             }
 
 
-            IOrderedEnumerable<object> orderedDataSource = null;
-            if (this.OrderBy == OrderByEnum.Ascending)
-                orderedDataSource = itemsSource.OrderBy(p => p.GetType().GetProperty(DisplayMemberPath).GetValue(p, null));
-            else if(this.OrderBy == OrderByEnum.Descending)
-                orderedDataSource = itemsSource.OrderByDescending(p => p.GetType().GetProperty(DisplayMemberPath).GetValue(p, null));
 
 
-            if(this.OrderBy == OrderByEnum.Default)
-                base.ItemsSource = itemsSource.ToList();
-            else
-                base.ItemsSource = orderedDataSource.ToList();
+
+            base.ItemsSource = itemsSource as ObservableCollection<object>;
         }
 
         private void ObservableDataSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
