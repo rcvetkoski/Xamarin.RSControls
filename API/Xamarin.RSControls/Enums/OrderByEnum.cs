@@ -10,4 +10,10 @@ namespace Xamarin.RSControls.Enums
         Ascending,
         Descending
     }
+
+    public enum PickerSelectionModeEnum
+    {
+        Single,
+        Multiple
+    }
 }

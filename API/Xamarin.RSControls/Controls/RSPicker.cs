@@ -60,21 +60,7 @@ namespace Xamarin.RSControls.Controls
                 itemsSource = new List<object>();
 
 
-
-            IOrderedEnumerable<object> orderedDataSource = null;
-            if (this.OrderBy == OrderByEnum.Ascending)
-                orderedDataSource = itemsSource.OrderBy(p => p.GetType().GetProperty(DisplayMemberPath).GetValue(p, null));
-            else if (this.OrderBy == OrderByEnum.Descending)
-                orderedDataSource = itemsSource.OrderByDescending(p => p.GetType().GetProperty(DisplayMemberPath).GetValue(p, null));
-
-
-            if (this.OrderBy == OrderByEnum.Default)
-                base.ItemsSource = itemsSource.ToList();
-            else
-                base.ItemsSource = orderedDataSource.ToList();
-
-
-
+            IList<object> tempItemsSource = new List<object>();
             foreach (var item in this.ItemsSource)
             {
                 if (!string.IsNullOrEmpty(DisplayMemberPath))
@@ -82,14 +68,65 @@ namespace Xamarin.RSControls.Controls
                     ItemDisplayBinding = new Binding(DisplayMemberPath);
                 }
 
-                itemsSource.Add(item);
+                tempItemsSource.Add(item);
+            }
+
+            if (this.OrderBy == OrderByEnum.Default)
+            {
+                foreach (var item in tempItemsSource)
+                {
+                    if (!string.IsNullOrEmpty(DisplayMemberPath))
+                        ItemDisplayBinding = new Binding(DisplayMemberPath);
+
+                    itemsSource.Add(item);
+                }
+            }
+            else
+            {
+                if (this.OrderBy == OrderByEnum.Ascending)
+                {
+                    if (!string.IsNullOrEmpty(DisplayMemberPath))
+                    {
+                        foreach (var item in tempItemsSource.OrderBy(p => p.GetType().GetProperty(DisplayMemberPath).GetValue(p, null)))
+                        {
+                            ItemDisplayBinding = new Binding(DisplayMemberPath);
+                            itemsSource.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in tempItemsSource.OrderBy(p => p.ToString()))
+                        {
+                            itemsSource.Add(item);
+                        }
+                    }
+                }
+
+                else if (this.OrderBy == OrderByEnum.Descending)
+                {
+                    if (!string.IsNullOrEmpty(DisplayMemberPath))
+                    {
+                        foreach (var item in tempItemsSource.OrderByDescending(p => p.GetType().GetProperty(DisplayMemberPath).GetValue(p, null)))
+                        {
+                            ItemDisplayBinding = new Binding(DisplayMemberPath);
+                            itemsSource.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in tempItemsSource.OrderByDescending(p => p.ToString()))
+                        {
+                            itemsSource.Add(item);
+                        }
+                    }
+                }
             }
 
 
-
-
-
-            base.ItemsSource = itemsSource as ObservableCollection<object>;
+            if (this.ItemsSource is INotifyCollectionChanged)
+                base.ItemsSource = itemsSource as ObservableCollection<object>;
+            else
+                base.ItemsSource = itemsSource as List<object>;
         }
 
         private void ObservableDataSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -165,12 +202,14 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(LeftIconProperty, value); }
         }
 
+
         public static readonly BindableProperty RightIconProperty = BindableProperty.Create("RightIcon", typeof(string), typeof(RSPickerBase), null);
         public string RightIcon
         {
             get { return (string)GetValue(RightIconProperty); }
             set { SetValue(RightIconProperty, value); }
         }
+
 
         //Icon Color
         public static readonly BindableProperty IconColorProperty = BindableProperty.Create("IconColor", typeof(Color), typeof(RSPickerBase), Color.DimGray);
@@ -180,6 +219,7 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(IconColorProperty, value); }
         }
 
+
         //Icon Width
         public static readonly BindableProperty IconWidthProperty = BindableProperty.Create("IconWidth", typeof(double), typeof(RSPickerBase), 30.0);
         public double IconWidth
@@ -187,6 +227,7 @@ namespace Xamarin.RSControls.Controls
             get { return (double)GetValue(IconWidthProperty); }
             set { SetValue(IconWidthProperty, value); }
         }
+
 
         //Icon Height
         public static readonly BindableProperty IconHeightProperty = BindableProperty.Create("IconHeight", typeof(double), typeof(RSPickerBase), 30.0);
@@ -196,6 +237,7 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(IconHeightProperty, value); }
         }
 
+
         //Has Border
         public static readonly BindableProperty HasBorderProperty = BindableProperty.Create("HasBorder", typeof(bool), typeof(RSPickerBase), false);
         public bool HasBorder
@@ -203,6 +245,7 @@ namespace Xamarin.RSControls.Controls
             get { return (bool)GetValue(HasBorderProperty); }
             set { SetValue(HasBorderProperty, value); }
         }
+
 
         //Placeholder
         public static readonly BindableProperty PlaceholderProperty = BindableProperty.Create("Placeholder", typeof(string), typeof(RSPickerBase), "");
@@ -212,6 +255,7 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(PlaceholderProperty, value); }
         }
 
+
         //Placeholder color
         public static readonly BindableProperty PlaceholderColorProperty = BindableProperty.Create("PlaceholderColor", typeof(Color), typeof(RSPickerBase), Color.Gray);
         public Color PlaceholderColor
@@ -219,6 +263,7 @@ namespace Xamarin.RSControls.Controls
             get { return (Color)GetValue(PlaceholderColorProperty); }
             set { SetValue(PlaceholderColorProperty, value); }
         }
+
 
         //Error
         public static readonly BindableProperty ErrorProperty = BindableProperty.Create("Error", typeof(string), typeof(RSPickerBase), null);
@@ -228,6 +273,7 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(ErrorProperty, value); }
         }
 
+
         //Order
         public static readonly BindableProperty OrderByProperty = BindableProperty.Create("OrderBy", typeof(OrderByEnum), typeof(RSPickerBase), OrderByEnum.Default);
         public OrderByEnum OrderBy
@@ -236,12 +282,71 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(OrderByProperty, value); }
         }
 
+
+        //Selection mode
+        public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create("SelectionMode", typeof(PickerSelectionModeEnum), typeof(RSPickerBase), PickerSelectionModeEnum.Single);
+        public PickerSelectionModeEnum SelectionMode
+        {
+            get { return (PickerSelectionModeEnum)GetValue(SelectionModeProperty); }
+            set { SetValue(SelectionModeProperty, value); }
+        }
+
+
+        //SelectedItems
+        public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create("SelectedItems", typeof(IList), typeof(RSPickerBase), null, propertyChanged: OnSelectedItemsChanged);
+        public IList SelectedItems
+        {
+            get => (IList)GetValue(SelectedItemsProperty);
+            set => SetValue(SelectedItemsProperty, value);
+        }
+
+
         //Items Template
         public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create(nameof(ItemTemplate), typeof(DataTemplate), typeof(RSPickerBase), null);
         public DataTemplate ItemTemplate
         {
             get => (DataTemplate)GetValue(ItemTemplateProperty);
             set => SetValue(ItemTemplateProperty, value);
+        }
+
+
+
+        private static void OnSelectedItemsChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var list = (RSPickerBase)bindable;
+
+            list.OnSelectedItemsChanged();
+        }
+
+        internal void OnSelectedItemsChanged()
+        {
+            if (this.SelectedItems == null)
+                return;
+
+
+            if (this.SelectedItems is INotifyCollectionChanged observableDataSource)
+            {
+                observableDataSource.CollectionChanged -= ObservableDataSource_CollectionChanged;
+                observableDataSource.CollectionChanged += ObservableDataSource_CollectionChanged;
+            }
+        }
+
+        private void ObservableDataSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    OnPropertyChanged("SelectedItems");
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    OnPropertyChanged("SelectedItems");
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    OnPropertyChanged("SelectedItems");
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

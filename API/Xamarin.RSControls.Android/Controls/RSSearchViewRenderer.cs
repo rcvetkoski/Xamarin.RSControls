@@ -16,8 +16,6 @@ namespace Xamarin.RSControls.Droid.Controls
 {
     public class RSSearchViewRenderer : SearchBarRenderer, global::Android.Widget.AdapterView.IOnItemClickListener
     {
-        global::Android.Support.V7.Widget.SearchView.SearchAutoComplete searchAutoComplete;
-
         private List<object> objectList;
         private List<string> arrayList;
         AutoCompleteTextView searchBox;
@@ -27,36 +25,16 @@ namespace Xamarin.RSControls.Droid.Controls
         {
         }
 
-
-        //protected override void OnElementChanged(ElementChangedEventArgs<RSSearchView> e)
-        //{
-        //    base.OnElementChanged(e);
-
-        //    List<string> list = new List<string>(){ "Emmanuel", "Olayemi", "Henrry", "Mark", "Steve", "Ayomide", "David", "Anthony", "Adekola", "Adenuga" };
-        //    AutoCompleteTextViewAdapter<string> dataAdapter = new AutoCompleteTextViewAdapter<string>(Context, Resource.Layout.RSAutoCompleteListItem, Resource.Id.auto_complete_textView, list.ToArray());
-
-
-        //    AppCompatAutoCompleteTextView appCompatMultiAutoCompleteTextView = new AppCompatAutoCompleteTextView(Context);
-        //    appCompatMultiAutoCompleteTextView.Adapter = dataAdapter;
-
-
-        //    SearchView searchView = new SearchView(Context);
-        //    //searchView.SetIconifiedByDefault(false); //Force view to show hint at start and no just search icon
-        //    searchAutoComplete = (SearchView.SearchAutoComplete)searchView.FindViewById(Resource.Id.search_src_text);
-        //    //appCompatMultiAutoCompleteTextView.Hint = this.Element.Placeholder;
-        //    //appCompatMultiAutoCompleteTextView.SetHintTextColor(this.Element.PlaceholderColor.ToAndroid());
-        //    searchAutoComplete.Adapter = dataAdapter;
-        //    searchAutoComplete.OnItemClickListener = this;
-        //    this.SetNativeControl(searchView);
-
-        //}
-
         protected override void OnElementChanged(ElementChangedEventArgs<SearchBar> e)
         {
             base.OnElementChanged(e);
 
             if (e.OldElement != null)
                 return;
+
+            //Fix dropdown not showing or hiding behind softkeyboard
+            var window = ((global::Android.App.Activity)Context).Window;
+            window.SetSoftInputMode(SoftInput.AdjustResize);
 
             rSSearchView = this.Element as RSSearchView;
            
@@ -83,7 +61,7 @@ namespace Xamarin.RSControls.Droid.Controls
             searchBox.Adapter = dataAdapter;
             searchBox.OnItemClickListener = this;
             searchBox.Threshold = 1; //Start searching after how many character typed
-            searchBox.ImeOptions = ((global::Android.Views.InputMethods.ImeAction)global::Android.Views.InputMethods.ImeFlags.NoExtractUi | global::Android.Views.InputMethods.ImeAction.Search);
+            searchBox.ImeOptions = (global::Android.Views.InputMethods.ImeAction)global::Android.Views.InputMethods.ImeFlags.NoExtractUi | global::Android.Views.InputMethods.ImeAction.Search;
 
 
             //Eliminate extra space on left and right sides
@@ -93,11 +71,17 @@ namespace Xamarin.RSControls.Droid.Controls
             p.LeftMargin = 0;
             p.RightMargin = 0;
 
-            //Draw border for simple SearchView
-            //int searchPlateId = this.Control.Resources.GetIdentifier("android:id/search_plate", null, null);
-            //var searchPlate = this.Control.FindViewById(searchPlateId);
-            //searchPlate.SetBackgroundColor(global::Android.Graphics.Color.Transparent);
-            //Extensions.ViewExtensions.DrawBorder(this.Control, Context, global::Android.Graphics.Color.Black);
+
+            // Draw border for simple SearchView
+            if(rSSearchView.HasBorder)
+            {
+                int searchPlateId = this.Control.Resources.GetIdentifier("android:id/search_plate", null, null);
+                var searchPlate = this.Control.FindViewById(searchPlateId);
+                searchPlate.SetBackgroundColor(global::Android.Graphics.Color.Transparent);
+                this.Control.SetBackgroundResource(Resource.Drawable.RSRectangleBorderShape);
+                //Extensions.ViewExtensions.DrawBorder(this.Control, Context, global::Android.Graphics.Color.Black);
+            }
+
 
             SetText(rSSearchView);
         }
@@ -106,10 +90,17 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnElementPropertyChanged(sender, e);
 
-            if(e.PropertyName == "Text")
+            if (e.PropertyName == "Text")
             {
                 if (this.Control.Query == "")
                     rSSearchView.SelectedItem = null;
+            }
+            else if (rSSearchView.HasBorder && e.PropertyName == "IsFocused")
+            {
+                if (this.Element.IsFocused)
+                    this.Control.SetBackgroundResource(Resource.Drawable.RSRectangleBorderShapeFocused);
+                else
+                    this.Control.SetBackgroundResource(Resource.Drawable.RSRectangleBorderShape);
             }
         }
 
@@ -139,8 +130,6 @@ namespace Xamarin.RSControls.Droid.Controls
             int originalIndex = Array.IndexOf(arrayList.ToArray(), searchBox.Text);
             rSSearchView.SelectedItem = objectList[originalIndex];
             rSSearchView.Unfocus();
-
-            //searchAutoComplete.Text = parent.GetItemAtPosition(position).ToString();
         }
     }
 

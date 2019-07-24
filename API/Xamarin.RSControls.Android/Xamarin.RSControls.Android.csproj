@@ -52,6 +52,7 @@
     <Compile Include="Controls\RSNumericEntryRenderer.cs" />
     <Compile Include="Controls\RSPickerInputLayoutRenderer.cs" />
     <Compile Include="Controls\RSPickerRenderer.cs" />
+    <Compile Include="Controls\RSSearchViewInputLayoutRenderer.cs" />
     <Compile Include="Controls\RSSearchViewRenderer.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
@@ -143,6 +144,21 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\RSAutoCompleteListItem.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\RSRectangleBorderShape.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\RSRectangleBorderShapeFocused.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\color\RSRectangleBorderShapeColorStateList.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

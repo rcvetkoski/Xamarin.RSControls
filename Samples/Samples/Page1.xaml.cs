@@ -10,14 +10,14 @@ namespace Samples
         public Page1()
         {
             InitializeComponent();
-            this.BindingContext = new Page1ViewModel();
+            this.BindingContext = new MainPageViewModel();
 
-            for (int i = 0; i < 1; i++)
-            {
-                RSNumericEntryInputLayout rSNumericEntryInputLayout = new RSNumericEntryInputLayout() { CustomUnit = "KG", Value = "i", Placeholder = i.ToString() };
+            //for (int i = 0; i < 1; i++)
+            //{
+            //    RSNumericEntryInputLayout rSNumericEntryInputLayout = new RSNumericEntryInputLayout() { CustomUnit = "KG", Value = "i", Placeholder = i.ToString() };
 
-                stack.Children.Add(rSNumericEntryInputLayout);
-            }
+            //    stack.Children.Add(rSNumericEntryInputLayout);
+            //}
         }
     }
 }

@@ -3,11 +3,60 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:rs="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls"
+             xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls"
+             xmlns:enums="clr-namespace:Xamarin.RSControls.Enums;assembly=Xamarin.RSControls"
              mc:Ignorable="d"
              x:Class="Samples.Page1">
     <ContentPage.Content>
         <ScrollView Orientation="Vertical">
             <StackLayout x:Name="stack" Margin="20">
+
+                <rs:RSPicker x:Name="rsPicker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Ascending" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" HasBorder="True">
+                    <rs:RSPicker.Behaviors>
+                        <validators:ValidationBehaviour PropertyName="SelectedItem">
+                            <validators:ValidationBehaviour.Validators>
+                                <validators:RequiredValidation/>
+                            </validators:ValidationBehaviour.Validators>
+                        </validators:ValidationBehaviour>
+                    </rs:RSPicker.Behaviors>
+                    <rs:RSPicker.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="15,10,15,10">
+                                <Label Text="{Binding Name}" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0"/>
+                                <Label Text="America" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1"/>
+                                <Label Text="2019" FontSize="Default" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="Red" Grid.Column="2"/>
+                            </Grid>
+                        </DataTemplate>
+                    </rs:RSPicker.ItemTemplate>
+                </rs:RSPicker>
+
+                
+                
+                <rs:RSPickerInputLayout ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Descending" SelectedItem="{Binding SelectedPerson}" Placeholder="Single with border" HasBorder="True">
+                    <rs:RSPicker.Behaviors>
+                        <validators:ValidationBehaviour PropertyName="SelectedItem">
+                            <validators:ValidationBehaviour.Validators>
+                                <validators:RequiredValidation/>
+                            </validators:ValidationBehaviour.Validators>
+                        </validators:ValidationBehaviour>
+                    </rs:RSPicker.Behaviors>
+                </rs:RSPickerInputLayout>
+
+                <rs:RSPickerInputLayout ItemsSource="{Binding ObsCollectionPicker}" OrderBy="Ascending" SelectionMode="Multiple" SelectedItems="{Binding ObsCollectionPickerSelectedItems}" Placeholder="Multiple observable items" HasBorder="True">
+                    <rs:RSPicker.Behaviors>
+                        <validators:ValidationBehaviour PropertyName="SelectedItems">
+                            <validators:ValidationBehaviour.Validators>
+                                <validators:RequiredValidation/>
+                            </validators:ValidationBehaviour.Validators>
+                        </validators:ValidationBehaviour>
+                    </rs:RSPicker.Behaviors>
+                </rs:RSPickerInputLayout>
+
+                <rs:RSEnumPickerInputLayout x:TypeArguments="enums:DateSelectionModeEnum" SelectedItem="{Binding SelectedDateMode}" Placeholder="Single enum source with border" HasBorder="True"/>
+
+                <rs:RSEnumPickerInputLayout x:TypeArguments="enums:DateSelectionModeEnum" SelectionMode="Multiple" SelectedItems="{Binding ListPickerEnumSelectedItems}" Placeholder="Multiple Enum source with border" HasBorder="True"/>
+
 
             </StackLayout>
         </ScrollView>
