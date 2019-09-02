@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using UIKit;
+using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.iOS.Controls;
@@ -15,13 +16,19 @@ namespace Xamarin.RSControls.iOS.Controls
             if (e.OldElement != null)
                 return;
 
-            //RSEntry entry = (RSEntry)Element;
+            RSEntry entry = (RSEntry)Element;
             //if (!entry.HasBorder)
             //{
             //    Control.BorderStyle = UITextBorderStyle.None;
             //    //Control.Layer.CornerRadius = 10;
             //    Control.TextColor = UIColor.White;
             //}
+        }
+
+        //Fix for bug ios not loading dll
+        public static void Initialize()
+        {
+
         }
     }
 }

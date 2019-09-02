@@ -39,16 +39,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.0.0.425677</Version>
+      <Version>4.1.0.673156</Version>
     </PackageReference>
-    <PackageReference Condition="'$(CreateUITestProject)' == true" Include="Xamarin.TestCloud.Agent" Version="0.21.7" />
+    <PackageReference Condition="'$(CreateUITestProject)' == true" Include="Xamarin.TestCloud.Agent" Version="0.21.8" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\RSEntryRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Controls\RSPickerRenderer.cs" />
+    <Compile Include="Extensions\ViewExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.RSControls\Xamarin.RSControls.csproj">

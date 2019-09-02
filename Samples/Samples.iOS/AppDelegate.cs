@@ -22,9 +22,13 @@ namespace Samples.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            //Fix ios destroys dll so this will make sure it stays
+            Xamarin.RSControls.iOS.Controls.RSEntryRenderer.Initialize();
+
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 
+            
             return base.FinishedLaunching(app, options);
         }
     }

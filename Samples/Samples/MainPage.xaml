@@ -79,6 +79,24 @@
 
             <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
 
+
+                        <rs:RSNumericEntry Placeholder="Numeric Entry" CustomUnit="KG" NumberDecimalDigits="3" HasBorder="False">
+                <rs:RSNumericEntry.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSNumericEntry.Behaviors>
+            </rs:RSNumericEntry>
+
+
+            <rs:RSPicker x:Name="rsPicker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Ascending" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" HasBorder="True">
+
+            </rs:RSPicker>
+
+            <Picker ItemsSource="{Binding ListPicker}"></Picker>
+
         </StackLayout>
     </ScrollView>
 
