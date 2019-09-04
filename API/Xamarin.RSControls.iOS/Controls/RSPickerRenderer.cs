@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using CoreGraphics;
 using Foundation;
@@ -49,6 +50,16 @@ namespace Xamarin.RSControls.iOS.Controls
             });
 
             Control.AddGestureRecognizer(uIGesture);
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            if (e.PropertyName == "SelectedItem" || e.PropertyName == "SelectedItems")
+            {
+                SetText();
+            }
         }
 
         public void SetText()
@@ -213,16 +224,40 @@ namespace Xamarin.RSControls.iOS.Controls
             var spaceButton = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace, null, null);
             var cancelButton = new UIBarButtonItem("Clear", UIBarButtonItemStyle.Plain, ((sender, ev) =>
             {
-                renderer.Element.SelectedItems.Clear();
+                if(renderer.Element.SelectedItems != null)
+                    renderer.Element.SelectedItems.Clear();
+
+                renderer.Element.SelectedItem = null;
+                renderer.SetText();
 
                 Dismiss(true);
             }));
             var newItems = new List<UIBarButtonItem>();
             newItems.Insert(0, cancelButton);
+
+
+            //SearchBar
+            UISearchBar uISearchBar;
+            if (UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.LandscapeLeft && UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.LandscapeRight)
+                uISearchBar = new UISearchBar(new CGRect(x: 0, y: 0, width: toolBar.Frame.Width - 150, height: toolBar.Frame.Height));
+            else
+                uISearchBar = new UISearchBar(new CGRect(x: 0, y: 0, width: toolBar.Frame.Width - 250, height: toolBar.Frame.Height));
+
+            //uISearchBar.BackgroundColor = UIColor.Clear;
+            uISearchBar.AutoresizingMask = UIViewAutoresizing.FlexibleWidth;
+            uISearchBar.ShowsCancelButton = false;
+            uISearchBar.Translucent = false;
+            uISearchBar.SearchBarStyle = UISearchBarStyle.Minimal;
+            uISearchBar.Placeholder = "Search";
+            UIBarButtonItem textfieldBarButton = new UIBarButtonItem(customView: uISearchBar);
+
             newItems.Insert(1, spaceButton);
-            newItems.Insert(2, doneButton);
+            newItems.Insert(2, textfieldBarButton);
+            newItems.Insert(3, spaceButton);
+            newItems.Insert(4, doneButton);
             toolBar.Items = newItems.ToArray();
             toolBar.SetNeedsDisplay();
+
 
             // List
             list = new UITableView(new CGRect(x: 0, y: separatorLineView.Frame.Height + toolBar.Frame.Height, width: dialogViewWidth, height: 210));
@@ -231,11 +266,37 @@ namespace Xamarin.RSControls.iOS.Controls
             //list.AllowsMultipleSelectionDuringEditing = true;
             list.Source = new TableSource(renderer.Element.Items.ToArray(), renderer);
 
-            UIPickerView uIPickerView = new UIPickerView(CGRect.Empty);
-            //uIPickerView.AutoresizingMask = UIViewAutoresizing.FlexibleHeight;
-            uIPickerView.ShowSelectionIndicator = true;
-            var examplePVM = new CustomUIPickerViewModel(renderer.Element.Items);
-            uIPickerView.Model = examplePVM;
+
+
+            // UIPicker
+            //
+            // Empty is used, since UIPickerViews have auto-sizing,
+            // all that is required is the origin
+            //
+            UIPickerView uIPickerView = new UIPickerView(CGRect.Empty)
+            {
+                ShowSelectionIndicator = true,
+                Model = new CustomUIPickerViewModel(renderer.Element.ItemsSource, renderer.Element, renderer),
+                BackgroundColor = UIColor.LightGray
+            };
+            // Now update it:
+            uIPickerView.Frame = new CGRect(0f, separatorLineView.Frame.Height + toolBar.Frame.Height, dialogViewWidth, uIPickerView.Frame.Height);
+            //Fixes selectedindicator not showing
+            if(renderer.Element.SelectedIndex != -1)
+                uIPickerView.Select(renderer.Element.SelectedIndex, 0, false);
+            //DialogView.AddSubview(uIPickerView);
+
+
+
+
+            //UIStackView uIStackView = new UIStackView();
+            //uIStackView.Axis = UILayoutConstraintAxis.Horizontal;
+            //uIStackView.Distribution = UIStackViewDistribution.FillEqually;
+            //uIStackView.Spacing = 0;
+            //uIStackView.Frame = new CGRect(0f, separatorLineView.Frame.Height + toolBar.Frame.Height, dialogViewWidth, uIPickerView.Frame.Height);
+            //uIStackView.AddArrangedSubview(uIPickerView);
+            //uIStackView.AddArrangedSubview(uIPickerView2);
+            //uIStackView.AddArrangedSubview(uIPickerView3);
 
             DialogView.AddSubview(uIPickerView);
 
@@ -245,7 +306,7 @@ namespace Xamarin.RSControls.iOS.Controls
             DialogViewFrame.Location = new CGPoint(x: 0, y: Frame.Height);
             DialogViewFrame.Size = new CGSize(width: Frame.Width, height: dialogViewHeight);
             DialogView.Frame = DialogViewFrame;
-            DialogView.BackgroundColor = UIColor.White;
+            DialogView.BackgroundColor = UIColor.Clear;
             DialogView.ClipsToBounds = true;
             AddSubview(DialogView);
 
@@ -363,21 +424,30 @@ namespace Xamarin.RSControls.iOS.Controls
         }
     }
 
-
-
     public class CustomUIPickerViewModel : UIPickerViewModel
     {
-        private IList<string> _myItems;
+        private IList<object> myItems;
         protected int selectedIndex = 0;
+        private RSPickerBase rsPicker;
+        private RSPickerRenderer renderer;
 
-        public CustomUIPickerViewModel(IList<string> items)
+        public CustomUIPickerViewModel(System.Collections.IEnumerable items, RSPickerBase rsPicker, RSPickerRenderer renderer)
         {
-            _myItems = items;
+            this.rsPicker = rsPicker;
+            this.renderer = renderer;
+
+            if (myItems == null)
+                myItems = new List<object>();
+
+            myItems.Clear();
+
+            foreach (object item in items)
+                myItems.Add(item);
         }
 
-        public string SelectedItem
+        public object SelectedItem
         {
-            get { return _myItems[selectedIndex]; }
+            get { return myItems[selectedIndex]; }
         }
 
         public override nint GetComponentCount(UIPickerView picker)
@@ -387,19 +457,22 @@ namespace Xamarin.RSControls.iOS.Controls
 
         public override nint GetRowsInComponent(UIPickerView picker, nint component)
         {
-            return _myItems.Count;
+            return myItems.Count;
         }
 
         public override string GetTitle(UIPickerView picker, nint row, nint component)
         {
-            return _myItems[(int)row];
+            if ((this.rsPicker != null && rsPicker is RSPicker) && !string.IsNullOrEmpty((rsPicker as RSPicker).DisplayMemberPath))
+                return  Helpers.TypeExtensions.GetPropValue(myItems[(int)row], (rsPicker as RSPicker).DisplayMemberPath).ToString();
+            else
+                return this.myItems[(int)row].ToString();
         }
 
         public override void Selected(UIPickerView picker, nint row, nint component)
         {
             selectedIndex = (int)row;
+            rsPicker.SelectedItem = this.SelectedItem;
+            this.renderer.SetText();
         }
     }
-
-
 }

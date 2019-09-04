@@ -140,6 +140,8 @@
     <ProjectReference Include="..\..\API\Xamarin.RSControls.iOS\Xamarin.RSControls.iOS.csproj">
       <Project>{BAF664D2-26A7-447C-9E53-D89EE9D97628}</Project>
       <Name>Xamarin.RSControls.iOS</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
   </ItemGroup>
 </Project>

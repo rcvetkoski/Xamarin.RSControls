@@ -97,6 +97,8 @@
 
             <Picker ItemsSource="{Binding ListPicker}"></Picker>
 
+            <DatePicker></DatePicker>
+
         </StackLayout>
     </ScrollView>
 
