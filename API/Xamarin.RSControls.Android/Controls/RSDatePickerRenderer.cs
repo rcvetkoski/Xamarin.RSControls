@@ -59,6 +59,10 @@ namespace Xamarin.RSControls.Droid.Controls
             //Set placeholder text
             SetPlaceHolderText();
 
+            //Set date format
+            if (!this.Element.HasCustomFormat())
+                SetDateFormat();
+
             //Show datepicker
             this.Control.Click += OnPickerClick;
             this.Control.FocusChange += OnPickerFocusChange;
@@ -66,8 +70,8 @@ namespace Xamarin.RSControls.Droid.Controls
             //Set correct value for nulabledate if greater than max date or smaller than min date
             if (this.Element.NullableDate.HasValue)
                 this.Element.NullableDate = CorrectMinMaxDateSelectedValue(this.Element.NullableDate.Value);
-            else
-                this.Element.NullableDate = CorrectMinMaxDateSelectedValue(DateTime.Now);
+            //else
+            //    this.Element.NullableDate = CorrectMinMaxDateSelectedValue(DateTime.Now);
 
             //Set picker text
             SetText();
@@ -82,6 +86,14 @@ namespace Xamarin.RSControls.Droid.Controls
             //Update picker text if binding value changes
             if (e.PropertyName == "NullableDate")
             {
+                //Reset value if not in allowed range
+                if (this.Element.NullableDate.HasValue)
+                {
+                    if (!IsCorrectMinMaxDateSelectedValue(this.Element.NullableDate.Value))
+                        this.Element.NullableDate = CorrectMinMaxDateSelectedValue(this.Element.NullableDate.Value);
+
+                }
+
                 SetText();
             }
 
@@ -205,6 +217,31 @@ namespace Xamarin.RSControls.Droid.Controls
             }
         }
 
+        public bool IsCorrectMinMaxDateSelectedValue(DateTime date)
+        {
+            if (this.Element.MinimumDate <= date && this.Element.MaximumDate >= date)
+                return true;
+            else
+                return false;
+        }
+
+        private void SetDateFormat()
+        {
+            if (this.Element.DateSelectionMode == DateSelectionModeEnum.MonthYear)
+            {
+                this.Element.Format = "MMMM yyyy";
+            }
+            else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Year)
+            {
+                this.Element.Format = "yyyy";
+
+            }
+            else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Month)
+            {
+                this.Element.Format = "MMMM";
+            }
+        }
+
         private void ShowDatePicker(DateTime? dateTime = null)
         {
             if (this.Element.DateSelectionMode == DateSelectionModeEnum.Default)
@@ -281,27 +318,21 @@ namespace Xamarin.RSControls.Droid.Controls
         // Years used im month and year selection
         private int[] years;
         private int selectedYearIndex = 0;
-        private void SetYears()
+        private void SetYears(DateTime? intDate)
         {
+            years = Enumerable.Range(this.Element.MinimumDate.Year, this.Element.MaximumDate.Year - this.Element.MinimumDate.Year + 1).ToArray();
+
             if (this.Element != null && this.Element.DateSelectionMode != DateSelectionModeEnum.Month)
             {
-                years = Enumerable.Range(this.Element.MinimumDate.Year, this.Element.MaximumDate.Year - this.Element.MinimumDate.Year + 1).ToArray();
-
-                if (this.Element != null && this.Element.NullableDate.HasValue)
-                    selectedYearIndex = Array.IndexOf(years, this.Element.NullableDate.Value.Year);
-                else
-                    selectedYearIndex = Array.IndexOf(years, DateTime.Now.Year);
+                selectedYearIndex = Array.IndexOf(years, intDate.Value.Year);
             }
             else
             {
-                if (this.Element != null && this.Element.NullableDate.HasValue)
-                    years = new int[] { this.Element.NullableDate.Value.Year };
-                else
-                    years = new int[] { DateTime.Now.Year };
-
+                years = new int[] { years[Array.IndexOf(years, intDate.Value.Year)] };
                 selectedYearIndex = 0;
             }
         }
+
 
         // Set when dae is picked before pressing ok button
         private DateTime? internalDate;
@@ -361,6 +392,7 @@ namespace Xamarin.RSControls.Droid.Controls
             var adapter = new MonthViewPagerAdapter(Context, years, this);
             viewPager.Adapter = adapter;
             viewPager.AddOnPageChangeListener(adapter);
+            
             viewPager.CurrentItem = selectedYearIndex;
         }
 
@@ -719,7 +751,7 @@ namespace Xamarin.RSControls.Droid.Controls
             var monthYearPickerDialogView = LayoutInflater.From(Context).Inflate(Resource.Layout.RSMonthYearPickerDialog, null);
 
             // Set years selection array
-            SetYears();
+            SetYears(intDate);
 
             //Set internal date
             internalDate = intDate;

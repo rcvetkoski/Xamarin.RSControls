@@ -10,16 +10,16 @@ using Xamarin.Forms.Platform.iOS;
 using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.iOS.Controls;
 
-[assembly: ExportRenderer(typeof(RSPicker), typeof(RSPickerRenderer))]
+[assembly: ExportRenderer(typeof(RSPickerBase), typeof(RSPickerRenderer))]
 namespace Xamarin.RSControls.iOS.Controls
 {
-    public class RSPickerRenderer : ViewRenderer<RSPicker, UITextField>
+    public class RSPickerRenderer : ViewRenderer<RSPickerBase, UITextField>
     {
         public RSPickerRenderer()
         {
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<RSPicker> e)
+        protected override void OnElementChanged(ElementChangedEventArgs<RSPickerBase> e)
         {
             base.OnElementChanged(e);
 
@@ -37,10 +37,14 @@ namespace Xamarin.RSControls.iOS.Controls
             Control.Layer.BorderColor = UIColor.LightGray.CGColor;
             Control.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
 
-
             //Set icon
             SetIcon();
 
+            //Set placeholder text
+            SetPlaceHolderText();
+
+            //Set Text
+            SetText();
 
             //Create and add gesture to control
             UITapGestureRecognizer uIGesture = new UITapGestureRecognizer((obj) =>
@@ -60,6 +64,16 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 SetText();
             }
+            
+            if(e.PropertyName == "SelectedIndex")
+            {
+                var lol = this.Element.SelectedIndex;
+            }
+        }
+
+        private void SetPlaceHolderText()
+        {
+            this.Control.AttributedPlaceholder = new NSAttributedString(this.Element.Placeholder, null, this.Element.PlaceholderColor.ToUIColor());
         }
 
         public void SetText()
@@ -170,8 +184,6 @@ namespace Xamarin.RSControls.iOS.Controls
         }
     }
 
-
-
     public interface IModal
     {
         void Show(bool animated);
@@ -281,11 +293,14 @@ namespace Xamarin.RSControls.iOS.Controls
             };
             // Now update it:
             uIPickerView.Frame = new CGRect(0f, separatorLineView.Frame.Height + toolBar.Frame.Height, dialogViewWidth, uIPickerView.Frame.Height);
-            //Fixes selectedindicator not showing
-            if(renderer.Element.SelectedIndex != -1)
-                uIPickerView.Select(renderer.Element.SelectedIndex, 0, false);
-            //DialogView.AddSubview(uIPickerView);
 
+            DialogView.AddSubview(uIPickerView);
+
+            //Fixes selectedindicator not showing
+            if (renderer.Element.SelectedItem != null)
+                uIPickerView.Select(renderer.Element.SelectedIndex, 0, true);
+
+            //DialogView.AddSubview(uIPickerView);
 
 
 
@@ -298,7 +313,6 @@ namespace Xamarin.RSControls.iOS.Controls
             //uIStackView.AddArrangedSubview(uIPickerView2);
             //uIStackView.AddArrangedSubview(uIPickerView3);
 
-            DialogView.AddSubview(uIPickerView);
 
             // DialogView
             var dialogViewHeight = toolBar.Frame.Height + uIPickerView.Frame.Height;
@@ -317,7 +331,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
             BackgroundView.AddGestureRecognizer(didTappedOnBackgroundView);
         }
-
 
         // Animation part
         public void Dismiss(bool animated)
@@ -384,7 +397,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 tableItemsSource.Add(item);
             }
         }
-
 
         public override nint RowsInSection(UITableView tableview, nint section)
         {
@@ -463,14 +475,43 @@ namespace Xamarin.RSControls.iOS.Controls
         public override string GetTitle(UIPickerView picker, nint row, nint component)
         {
             if ((this.rsPicker != null && rsPicker is RSPicker) && !string.IsNullOrEmpty((rsPicker as RSPicker).DisplayMemberPath))
-                return  Helpers.TypeExtensions.GetPropValue(myItems[(int)row], (rsPicker as RSPicker).DisplayMemberPath).ToString();
+                return Helpers.TypeExtensions.GetPropValue(myItems[(int)row], (rsPicker as RSPicker).DisplayMemberPath).ToString();
             else
                 return this.myItems[(int)row].ToString();
+        }
+
+        //View reuse is buged IOS bug
+        public override UIView GetView(UIPickerView pickerView, nint row, nint component, UIView view)
+        {
+            if (rsPicker.ItemTemplate == null)
+            {
+                UILabel label = new UILabel(new CGRect(0.0f, 0.0f, pickerView.RowSizeForComponent(component).Width, pickerView.RowSizeForComponent(component).Height));
+                label.TextAlignment = UITextAlignment.Center;
+                label.Text = GetTitle(pickerView, row, component);
+                label.Font = UIFont.SystemFontOfSize(22);
+
+                return label;
+            }
+            else
+            {
+                Xamarin.Forms.View formsView = rsPicker.ItemTemplate.CreateContent() as Xamarin.Forms.View;
+                formsView.BindingContext = myItems[(int)row];
+                var renderer = Platform.CreateRenderer(formsView);
+                renderer.NativeView.Frame = new CGRect(0, 0, pickerView.RowSizeForComponent(component).Width, pickerView.RowSizeForComponent(component).Height);
+                renderer.NativeView.AutoresizingMask = UIViewAutoresizing.All;
+                renderer.NativeView.ContentMode = UIViewContentMode.ScaleToFill;
+                renderer.Element.Layout(new CGRect(0, 0, pickerView.RowSizeForComponent(component).Width, pickerView.RowSizeForComponent(component).Height).ToRectangle());
+                var nativeView = renderer.NativeView;
+                nativeView.SetNeedsLayout();
+
+                return nativeView;
+            }
         }
 
         public override void Selected(UIPickerView picker, nint row, nint component)
         {
             selectedIndex = (int)row;
+            picker.Select(row, component, false);
             rsPicker.SelectedItem = this.SelectedItem;
             this.renderer.SetText();
         }

@@ -80,7 +80,7 @@
             <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
 
 
-                        <rs:RSNumericEntry Placeholder="Numeric Entry" CustomUnit="KG" NumberDecimalDigits="3" HasBorder="False">
+            <rs:RSNumericEntry Placeholder="Numeric Entry" CustomUnit="KG" NumberDecimalDigits="3" HasBorder="False">
                 <rs:RSNumericEntry.Behaviors>
                     <validators:ValidationBehaviour PropertyName="Text">
                         <validators:ValidationBehaviour.Validators>
@@ -91,13 +91,30 @@
             </rs:RSNumericEntry>
 
 
-            <rs:RSPicker x:Name="rsPicker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Ascending" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" HasBorder="True">
+            <rs:RSPicker x:Name="rsPicker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Descending" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" HasBorder="True">
+            </rs:RSPicker>
 
+            <rs:RSPicker  ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Default" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" HasBorder="True">
+                <rs:RSPicker.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Label Text="{Binding Name}" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0"/>
+                            <Label Text="America" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1"/>
+                            <Label Text="2019" FontSize="Default" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="Red" Grid.Column="2"/>
+                        </Grid>
+                    </DataTemplate>
+                </rs:RSPicker.ItemTemplate>
             </rs:RSPicker>
 
             <Picker ItemsSource="{Binding ListPicker}"></Picker>
 
-            <DatePicker></DatePicker>
+            <rs:RSDatePicker MaximumDate="{Binding MaxDate}" Placeholder="Select Date Month" DateSelectionMode="Month" HasBorder="True" TextColor="Green"></rs:RSDatePicker>
+            <rs:RSDatePickerInputLayout NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" Placeholder="Select Date Year" DateSelectionMode="Year" TextColor="Purple"></rs:RSDatePickerInputLayout>
+            <rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date MonthYear" DateSelectionMode="MonthYear"></rs:RSDatePicker>
+            <rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date Default" DateSelectionMode="Default" IsClearable="False"></rs:RSDatePicker>
+
+            <DatePicker Date="{Binding SomeDate}"></DatePicker>
+
 
         </StackLayout>
     </ScrollView>

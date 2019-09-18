@@ -45,9 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\RSDatePickerRenderer.cs" />
     <Compile Include="Controls\RSEntryRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controls\RSPickerRenderer.cs" />

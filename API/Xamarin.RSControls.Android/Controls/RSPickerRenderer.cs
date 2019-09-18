@@ -367,8 +367,6 @@ namespace Xamarin.RSControls.Droid.Controls
         }
     }
 
-
-
     public class CustomBaseAdapter<T> : BaseAdapter<T>, IFilterable
     {
         private Context context;
@@ -459,6 +457,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     Xamarin.Forms.View view = rsPicker.ItemTemplate.CreateContent() as Xamarin.Forms.View;
                     var renderer = Platform.CreateRendererWithContext(view, context);
+                    renderer.Element.HeightRequest = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 30, context.Resources.DisplayMetrics); ;
                     Platform.SetRenderer(view, renderer);
                     convertView = new ViewCellContainer(this.context, view, renderer);
                 }
@@ -582,8 +581,6 @@ namespace Xamarin.RSControls.Droid.Controls
             }
         }
     }
-
-
 
     public class JavaHolder : Java.Lang.Object
     {

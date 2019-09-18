@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -35,6 +36,10 @@ namespace Samples
 
             selectedDateMode = DateSelectionModeEnum.Month;
 
+
+            SomeDate = new DateTime(2012, 3, 16);
+            MaxDate = new DateTime(2011, 6, 12);
+            MinDate = new DateTime(2009, 7, 9);
         }
 
         private double numericEntryValue;
@@ -163,6 +168,24 @@ namespace Samples
                 OnPropertyChanged("ObsCollectionPickerSelectedItems");
             }
         }
+
+
+        private DateTime? someDate;
+        public DateTime? SomeDate
+        {
+            get
+            {
+                return someDate;
+            }
+            set
+            {
+                someDate = value;
+                OnPropertyChanged("SomeDate");
+            }
+        }
+
+        public DateTime MaxDate { get; set; }
+        public DateTime MinDate { get; set; }
 
 
         public event PropertyChangedEventHandler PropertyChanged;

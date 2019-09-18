@@ -10,7 +10,7 @@ namespace Xamarin.RSControls.Controls
         public RSDatePicker()
         {
             this.TextColor = Color.Black;
-            this.Format = "dd/MM/yyyy";
+            this.hasCustomFormat = false;
         }
 
         //Icon
@@ -59,6 +59,9 @@ namespace Xamarin.RSControls.Controls
             get { return (double)GetValue(IconHeightProperty); }
             set { SetValue(IconHeightProperty, value); }
         }
+
+        //Has Custom Format
+        private bool hasCustomFormat { get; set; }
 
         //Placeholder
         public static readonly BindableProperty PlaceholderProperty = BindableProperty.Create("Placeholder", typeof(string), typeof(RSDatePicker), null);
@@ -111,7 +114,11 @@ namespace Xamarin.RSControls.Controls
         protected override void OnPropertyChanged(string propertyName = null)
         {
             base.OnPropertyChanged(propertyName);
-
+            
+            if( propertyName == FormatProperty.PropertyName)
+            {
+                hasCustomFormat = true;
+            }
             //Update or set NullableDate when Date binded instead of NullableDate
             //if (propertyName == DateProperty.PropertyName)
             //{
@@ -136,6 +143,11 @@ namespace Xamarin.RSControls.Controls
         public void AssignValue()
         {
             NullableDate = Date;
+        }
+
+        public bool HasCustomFormat()
+        {
+            return hasCustomFormat;
         }
 
         //Resize control when width or height set to auto and text changes
