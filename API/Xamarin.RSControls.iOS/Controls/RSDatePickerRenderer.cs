@@ -17,8 +17,7 @@ namespace Xamarin.RSControls.iOS.Controls
     public class RSDatePickerRenderer : ViewRenderer<RSDatePicker, UITextField>
     {
         private UIDatePicker uIDatePicker;
-        private UIPickerView uIPickerViewYears;
-        private UIPickerView uIPickerViewMonths;
+        private UIPickerView uIPickerViewMonthsYears;
         private UITextField entry;
 
         protected override void OnElementChanged(ElementChangedEventArgs<RSDatePicker> e)
@@ -65,7 +64,7 @@ namespace Xamarin.RSControls.iOS.Controls
                     SetDateFormat();
 
                 //Set correct value for nulabledate if greater than max date or smaller than min date
-                if (this.Element.NullableDate.HasValue)
+                if (this.Element.NullableDate.HasValue && !IsCorrectMinMaxDateSelectedValue(this.Element.NullableDate.Value))
                     this.Element.NullableDate = CorrectMinMaxDateSelectedValue(this.Element.NullableDate.Value);
                 else
                 {
@@ -113,7 +112,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 clearCancelButton = new UIBarButtonItem("Clear", UIBarButtonItemStyle.Plain, (sender, ev) =>
                 {
                     this.Element.CleanDate();
-                    this.SetPickerSelectedIndicator();
+                    //this.SetPickerSelectedIndicator();
                     SetText(entry);
                     entry.ResignFirstResponder();
                 });
@@ -166,60 +165,44 @@ namespace Xamarin.RSControls.iOS.Controls
         private void CreateMonthYearPicker(UITextField entry)
         {
             //Years
-            var years = Enumerable.Range(this.Element.MinimumDate.Year, this.Element.MaximumDate.Year - this.Element.MinimumDate.Year + 1);
-            var yearsList = years.ToList();
-            uIPickerViewYears = new UIPickerView(CGRect.Empty)
-            {
-                ShowSelectionIndicator = true,
-                Model = new CustomUIDatePickerViewModel(years, this.Element, this, DateModeSelector.Year),
-                BackgroundColor = UIColor.Clear
-            };
-
+            var years = Enumerable.Range(this.Element.MinimumDate.Year, this.Element.MaximumDate.Year - this.Element.MinimumDate.Year + 1).ToArray();
             //Months
             string[] months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthGenitiveNames.Where(x => x.ToString() != string.Empty).ToArray();
-            uIPickerViewMonths = new UIPickerView(CGRect.Empty)
+
+            uIPickerViewMonthsYears = new UIPickerView(CGRect.Empty)
             {
                 ShowSelectionIndicator = true,
-                Model = new CustomUIDatePickerViewModel(months, this.Element, this, DateModeSelector.Month),
+                Model = new CustomUIDatePickerViewModel(years, months, this.Element, this),
                 BackgroundColor = UIColor.Clear
             };
 
-
-            UIStackView uIStackView = new UIStackView();
-            uIStackView.Axis = UILayoutConstraintAxis.Horizontal;
-            uIStackView.Distribution = UIStackViewDistribution.FillEqually;
-            uIStackView.AddArrangedSubview(uIPickerViewMonths);
-            uIStackView.AddArrangedSubview(uIPickerViewYears);
-
-
-            entry.InputView = uIStackView;
+            entry.InputView = uIPickerViewMonthsYears;
         }
 
         private void CreateYearPicker(UITextField entry)
         {
-            var years = Enumerable.Range(this.Element.MinimumDate.Year, this.Element.MaximumDate.Year - this.Element.MinimumDate.Year + 1);
-            var yearsList = years.ToList();
-            uIPickerViewYears = new UIPickerView(CGRect.Empty)
+            var years = Enumerable.Range(this.Element.MinimumDate.Year, this.Element.MaximumDate.Year - this.Element.MinimumDate.Year + 1).ToArray();
+            uIPickerViewMonthsYears = new UIPickerView(CGRect.Empty)
             {
                 ShowSelectionIndicator = true,
-                Model = new CustomUIDatePickerViewModel(years, this.Element, this, DateModeSelector.Year),
+                Model = new CustomUIDatePickerViewModel(years, new string[0], this.Element, this),
                 BackgroundColor = UIColor.Clear
             };
 
-            entry.InputView = uIPickerViewYears;
+            entry.InputView = uIPickerViewMonthsYears;
         }
 
         private void CreateMonthPicker(UITextField entry)
         {
             string[] months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthGenitiveNames.Where(x=> x.ToString() != string.Empty).ToArray();
-            uIPickerViewMonths = new UIPickerView(CGRect.Empty)
+            uIPickerViewMonthsYears = new UIPickerView(CGRect.Empty)
             {
                 ShowSelectionIndicator = true,
-                Model = new CustomUIDatePickerViewModel(months, this.Element, this, DateModeSelector.Month),
+                Model = new CustomUIDatePickerViewModel(new int[0], months, this.Element, this),
                 BackgroundColor = UIColor.Clear
             };
 
-            entry.InputView = uIPickerViewMonths;
+            entry.InputView = uIPickerViewMonthsYears;
         }
 
         private void CreateUISearchBar()
@@ -292,7 +275,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             RSSvgImage rightSvgIcon = new RSSvgImage() { Source = rightPath, HeightRequest = Element.IconHeight, WidthRequest = Element.IconHeight, Color = Element.IconColor };
             var convertedRightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new CGRect(x: 0, y: 0, width: Element.IconHeight, height: Element.IconHeight));
-            var outerView = new UIView(new CGRect(x: 0, y: 0, width: Element.IconHeight, height: Element.IconHeight));
+            var outerView = new UIView(new CGRect(x: 0, y: 0, width: Element.IconHeight + 7, height: Element.IconHeight));
             outerView.AddSubview(convertedRightView);
             entry.RightView = outerView;
             entry.RightViewMode = UITextFieldViewMode.Always;
@@ -303,7 +286,7 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 RSSvgImage leftSvgIcon = new RSSvgImage() { Source = leftPath, HeightRequest = Element.IconHeight, WidthRequest = Element.IconHeight, Color = Element.IconColor };
                 var convertedLeftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new CGRect(x: 0, y: 0, width: Element.IconHeight, height: Element.IconHeight));
-                var outerView2 = new UIView(new CGRect(x: 0, y: 0, width: Element.IconHeight, height: Element.IconHeight));
+                var outerView2 = new UIView(new CGRect(x: 0, y: 0, width: Element.IconHeight + 7, height: Element.IconHeight));
                 outerView2.AddSubview(convertedLeftView);
                 entry.LeftView = outerView;
                 entry.LeftViewMode = UITextFieldViewMode.Always;
@@ -316,36 +299,35 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 if(dateTime != null)
                 {
-                    uIPickerViewYears.Select((uIPickerViewYears.Model as CustomUIDatePickerViewModel).PickerItems.IndexOf(dateTime.Value.Year), 0, true);
-                    uIPickerViewMonths.Select(dateTime.Value.Month - 1, 0, true);
+                    uIPickerViewMonthsYears.Select(dateTime.Value.Month - 1, 0, true);
+                    uIPickerViewMonthsYears.Select(Array.IndexOf((uIPickerViewMonthsYears.Model as CustomUIDatePickerViewModel).Years, dateTime.Value.Year), 1, true);
                 }
                 else
                 {
-                    uIPickerViewYears.Select((uIPickerViewYears.Model as CustomUIDatePickerViewModel).PickerItems.IndexOf(DateTime.Now.Year), 0, true);
-                    uIPickerViewMonths.Select(DateTime.Now.Month - 1, 0, true);
+                    uIPickerViewMonthsYears.Select(DateTime.Now.Month - 1, 0, true);
+                    uIPickerViewMonthsYears.Select(DateTime.Now.Year, 1, true);
                 }
             }
             else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Year)
             {
                 if (dateTime != null)
                 {
-                    var index = (uIPickerViewYears.Model as CustomUIDatePickerViewModel).PickerItems.IndexOf(dateTime.Value.Year);
-                    uIPickerViewYears.Select(index, 0, true);
+                    uIPickerViewMonthsYears.Select(Array.IndexOf((uIPickerViewMonthsYears.Model as CustomUIDatePickerViewModel).Years, dateTime.Value.Year), 0, true);
                 }
                 else
                 {
-                    uIPickerViewYears.Select((uIPickerViewYears.Model as CustomUIDatePickerViewModel).PickerItems.IndexOf(DateTime.Now.Year), 0, true);
+                    uIPickerViewMonthsYears.Select(Array.IndexOf((uIPickerViewMonthsYears.Model as CustomUIDatePickerViewModel).Years, DateTime.Now.Year), 0, true);
                 }
             }
             else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Month)
             {
                 if (dateTime != null)
                 {
-                    uIPickerViewMonths.Select(dateTime.Value.Month - 1, 0, true);
+                    uIPickerViewMonthsYears.Select(dateTime.Value.Month - 1, 0, true);
                 }
                 else
                 {
-                    uIPickerViewMonths.Select(DateTime.Now.Month - 1, 0, true);
+                    uIPickerViewMonthsYears.Select(DateTime.Now.Month - 1, 0, true);
                 }
             }
             else
@@ -403,81 +385,98 @@ namespace Xamarin.RSControls.iOS.Controls
 
     public class CustomUIDatePickerViewModel : UIPickerViewModel
     {
-        public IList<object> PickerItems;
+        public int[] Years;
+        public string[] Months;
         protected int selectedIndex = 0;
         private RSDatePicker rsDatePicker;
         private RSDatePickerRenderer renderer;
-        private DateModeSelector dateModeSelector;
         private DateTime dateTime;
 
-        public CustomUIDatePickerViewModel(System.Collections.IEnumerable items, RSDatePicker rsDatePicker, RSDatePickerRenderer renderer, DateModeSelector dateModeSelector)
+        public CustomUIDatePickerViewModel(int[] years, string[] months, RSDatePicker rsDatePicker, RSDatePickerRenderer renderer)
         {
             this.rsDatePicker = rsDatePicker;
             this.renderer = renderer;
-            this.dateModeSelector = dateModeSelector;
 
-            if (PickerItems == null)
-                PickerItems = new List<object>();
-
-            PickerItems.Clear();
-
-            foreach (object item in items)
-                PickerItems.Add(item);
+            this.Years = years;
+            this.Months = months;
         }
 
-        public object SelectedItem
-        {
-            get { return PickerItems[selectedIndex]; }
-        }
+        public object SelectedItem { get; set; }
+
 
         public override nint GetComponentCount(UIPickerView picker)
         {
-            return 1;
+            if(this.rsDatePicker.DateSelectionMode == DateSelectionModeEnum.MonthYear)
+                return 2;
+            else
+                return 1;
         }
 
         public override nint GetRowsInComponent(UIPickerView picker, nint component)
         {
-            return PickerItems.Count;
+            if (component == 0)
+            {
+                if (Months.Any())
+                    return Months.Length;
+                else
+                    return Years.Length;
+            }
+            else
+                return Years.Length;
         }
 
         public override string GetTitle(UIPickerView picker, nint row, nint component)
         {
-            return this.PickerItems[(int)row].ToString();
+            if(component == 0)
+            {
+                if(this.Months.Any())
+                    return this.Months[(int)row].ToString();
+                else
+                    return this.Years[(int)row].ToString();
+            }
+            else
+                return this.Years[(int)row].ToString();
         }
 
         public override NSAttributedString GetAttributedTitle(UIPickerView pickerView, nint row, nint component)
         {
+            var selectedRow = pickerView.SelectedRowInComponent(component);
+
             if (rsDatePicker.NullableDate.HasValue)
                 dateTime = rsDatePicker.NullableDate.Value;
             else
                 dateTime = DateTime.Now;
 
-            if (this.dateModeSelector == DateModeSelector.Month)
+            if (component == 0)
             {
                 dateTime = new DateTime(dateTime.Year, (int)row + 1, dateTime.Day);
 
                 if (!this.renderer.IsCorrectMinMaxDateSelectedValue(dateTime))
                 {
-                    return new NSAttributedString(this.PickerItems[(int)row].ToString(), null, UIColor.Gray);
+                    return new NSAttributedString(this.Months[(int)row].ToString(), null, UIColor.Gray);
                 }
                 else
-                    return new NSAttributedString(this.PickerItems[(int)row].ToString(), null, UIColor.Black);
+                    return new NSAttributedString(this.Months[(int)row].ToString(), null, UIColor.Black);
             }
             else
             {
-                dateTime = new DateTime((int)PickerItems[(int)row], dateTime.Month, dateTime.Day);
+                dateTime = new DateTime((int)Years[(int)row], dateTime.Month, dateTime.Day);
 
                 if (!this.renderer.IsCorrectMinMaxDateSelectedValue(dateTime))
                 {
-                    return new NSAttributedString(this.PickerItems[(int)row].ToString(), null, UIColor.Gray);
+                    return new NSAttributedString(this.Years[(int)row].ToString() + " gray", null, UIColor.Gray);
                 }
                 else
-                    return new NSAttributedString(this.PickerItems[(int)row].ToString(), null, UIColor.Black);
+                    return new NSAttributedString(this.Years[(int)row].ToString() + " black", null, UIColor.Black);
+
             }
         }
 
+
         public override void Selected(UIPickerView picker, nint row, nint component)
         {
+            var selectedDate = dateTime;
+
             selectedIndex = (int)row;
 
             if (rsDatePicker.NullableDate.HasValue)
@@ -486,23 +485,29 @@ namespace Xamarin.RSControls.iOS.Controls
                 dateTime = DateTime.Now;
 
 
-            if (this.dateModeSelector == DateModeSelector.Year)
+            if (this.GetComponentCount(picker) > 1)
             {
-                dateTime = new DateTime((int)PickerItems[(int)row], dateTime.Month, dateTime.Day);
+                if(component == 0)
+                    dateTime = new DateTime(dateTime.Year, (int)row + 1, dateTime.Day);
+                else if (component == 1)
+                    dateTime = new DateTime((int)Years[(int)row], dateTime.Month, dateTime.Day);
             }
-            else if (this.dateModeSelector == DateModeSelector.Month)
+            else 
             {
-                dateTime = new DateTime(dateTime.Year, (int)row + 1, dateTime.Day);
-            }
-            else
-            {
-                dateTime = new DateTime((int)PickerItems[(int)row], (int)row, dateTime.Day);
+                if (this.Months.Any())
+                    dateTime = new DateTime(dateTime.Year, (int)row + 1, dateTime.Day);
+                else 
+                    dateTime = new DateTime((int)Years[(int)row], dateTime.Month, dateTime.Day);
             }
 
-            if(!this.renderer.IsCorrectMinMaxDateSelectedValue(dateTime))
+
+            if (!this.renderer.IsCorrectMinMaxDateSelectedValue(dateTime))
             {
                 dateTime = this.renderer.CorrectMinMaxDateSelectedValue(dateTime);
-                this.renderer.SetPickerSelectedIndicator(dateTime);
+
+                if (this.rsDatePicker.NullableDate.HasValue && selectedDate != this.rsDatePicker.NullableDate)
+                    this.renderer.SetPickerSelectedIndicator(dateTime);
+
                 this.renderer.SetDate(this.renderer.CorrectMinMaxDateSelectedValue(dateTime));
             }
             else
@@ -510,11 +515,5 @@ namespace Xamarin.RSControls.iOS.Controls
 
             this.renderer.SetText(renderer.Control);
         }
-    }
-
-    public enum DateModeSelector
-    {
-        Year,
-        Month,
     }
 }

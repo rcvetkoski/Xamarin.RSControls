@@ -243,7 +243,8 @@ namespace Xamarin.RSControls.Droid.Controls
             if(Element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
             {
                 listViewAndroid.ChoiceMode = ChoiceMode.Single;
-                listViewAndroid.SetItemChecked(Element.SelectedIndex, true);
+                //listViewAndroid.SetItemChecked(Element.SelectedIndex, true);
+                listViewAndroid.SetSelection(Element.SelectedIndex);
 
                 if (Element.SelectedIndex != -1)
                     adapter.CheckedItems.Add(Element.ItemsSource[Element.SelectedIndex]);
@@ -457,7 +458,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     Xamarin.Forms.View view = rsPicker.ItemTemplate.CreateContent() as Xamarin.Forms.View;
                     var renderer = Platform.CreateRendererWithContext(view, context);
-                    renderer.Element.HeightRequest = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 30, context.Resources.DisplayMetrics); ;
+                    //renderer.Element.HeightRequest = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, context.Resources.DisplayMetrics); ;
                     Platform.SetRenderer(view, renderer);
                     convertView = new ViewCellContainer(this.context, view, renderer);
                 }

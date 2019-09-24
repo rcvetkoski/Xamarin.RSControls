@@ -37,9 +37,9 @@ namespace Samples
             selectedDateMode = DateSelectionModeEnum.Month;
 
 
-            SomeDate = new DateTime(2012, 3, 16);
-            MaxDate = new DateTime(2011, 6, 12);
-            MinDate = new DateTime(2009, 7, 9);
+            SomeDate = new DateTime(2011, 1, 1);
+            MaxDate = new DateTime(2011, 6, 1);
+            MinDate = new DateTime(2009, 7, 1);
         }
 
         private double numericEntryValue;

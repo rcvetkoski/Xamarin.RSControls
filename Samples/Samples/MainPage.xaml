@@ -98,7 +98,7 @@
                 <rs:RSPicker.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Label Text="{Binding Name}" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0"/>
+                            <Label Text="{Binding Name}" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" HeightRequest="40" Grid.Column="0"/>
                             <Label Text="America" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1"/>
                             <Label Text="2019" FontSize="Default" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="Red" Grid.Column="2"/>
                         </Grid>
@@ -108,10 +108,10 @@
 
             <Picker ItemsSource="{Binding ListPicker}"></Picker>
 
-            <rs:RSDatePicker MaximumDate="{Binding MaxDate}" Placeholder="Select Date Month" DateSelectionMode="Month" HasBorder="True" TextColor="Green"></rs:RSDatePicker>
-            <rs:RSDatePickerInputLayout NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" Placeholder="Select Date Year" DateSelectionMode="Year" TextColor="Purple"></rs:RSDatePickerInputLayout>
+            <!--<rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" Placeholder="Select Date Month" DateSelectionMode="Month" HasBorder="True"></rs:RSDatePicker>
+            <rs:RSDatePickerInputLayout NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" Placeholder="Select Date Year" DateSelectionMode="Year" TextColor="Purple"></rs:RSDatePickerInputLayout>-->
             <rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date MonthYear" DateSelectionMode="MonthYear"></rs:RSDatePicker>
-            <rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date Default" DateSelectionMode="Default" IsClearable="False"></rs:RSDatePicker>
+            <!--<rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date Default" DateSelectionMode="Default" IsClearable="False"></rs:RSDatePicker>-->
 
             <DatePicker Date="{Binding SomeDate}"></DatePicker>
 
