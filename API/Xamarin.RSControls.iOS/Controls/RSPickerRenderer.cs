@@ -382,8 +382,12 @@ namespace Xamarin.RSControls.iOS.Controls
 
         public TableSource(string[] items, RSPickerRenderer Renderer)
         {
-            tableItems = items;
             renderer = Renderer;
+
+            if (renderer.Element.ItemsSource == null)
+                return;
+
+            tableItems = items;
 
             if (tableItemsSource == null)
                 tableItemsSource = new List<object>();
@@ -445,8 +449,12 @@ namespace Xamarin.RSControls.iOS.Controls
 
         public CustomUIPickerViewModel(System.Collections.IEnumerable items, RSPickerBase rsPicker, RSPickerRenderer renderer)
         {
-            this.rsPicker = rsPicker;
             this.renderer = renderer;
+
+            if (this.renderer.Element.ItemsSource == null)
+                return;
+
+            this.rsPicker = rsPicker;
 
             if (myItems == null)
                 myItems = new List<object>();

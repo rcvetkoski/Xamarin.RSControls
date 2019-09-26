@@ -58,7 +58,7 @@
                 </rs:RSPickerInputLayout.Behaviors>
             </rs:RSPickerInputLayout>
 
-
+2   
             <rs:RSEnumPickerInputLayout x:TypeArguments="enums:DateSelectionModeEnum" Placeholder="Test enum input layout">
                 
             </rs:RSEnumPickerInputLayout>
@@ -77,7 +77,7 @@
 
             <Entry></Entry>-->
 
-            <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
+            <!--<Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
 
 
             <rs:RSNumericEntry Placeholder="Numeric Entry" CustomUnit="KG" NumberDecimalDigits="3" HasBorder="False">
@@ -98,7 +98,7 @@
                 <rs:RSPicker.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Label Text="{Binding Name}" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" HeightRequest="40" Grid.Column="0"/>
+                            <Label Text="{Binding Name}" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0"/>
                             <Label Text="America" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1"/>
                             <Label Text="2019" FontSize="Default" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="Red" Grid.Column="2"/>
                         </Grid>
@@ -108,12 +108,38 @@
 
             <Picker ItemsSource="{Binding ListPicker}"></Picker>
 
-            <!--<rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" Placeholder="Select Date Month" DateSelectionMode="Month" HasBorder="True"></rs:RSDatePicker>
-            <rs:RSDatePickerInputLayout NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" Placeholder="Select Date Year" DateSelectionMode="Year" TextColor="Purple"></rs:RSDatePickerInputLayout>-->
+            <rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" Placeholder="Select Date Month" DateSelectionMode="Month" HasBorder="True"></rs:RSDatePicker>
+            <rs:RSDatePickerInputLayout NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" Placeholder="Select Date Year" DateSelectionMode="Year" TextColor="Purple"></rs:RSDatePickerInputLayout>
             <rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date MonthYear" DateSelectionMode="MonthYear"></rs:RSDatePicker>
-            <!--<rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date Default" DateSelectionMode="Default" IsClearable="False"></rs:RSDatePicker>-->
+            <rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date Default" DateSelectionMode="Default" IsClearable="False"></rs:RSDatePicker>
 
-            <DatePicker Date="{Binding SomeDate}"></DatePicker>
+            <DatePicker Date="{Binding SomeDate}"></DatePicker>-->
+
+
+            <rs:RSEntryInputLayout Text="Trolol" FontSize="50"  Placeholder="Test" BackgroundColor="Cyan">
+                <rs:RSEntryInputLayout.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSEntryInputLayout.Behaviors>
+            </rs:RSEntryInputLayout>
+
+
+            <rs:RSEntryInputLayout Text="Trolol"  Placeholder="Test" BackgroundColor="Cyan">
+                <rs:RSEntryInputLayout.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSEntryInputLayout.Behaviors>
+            </rs:RSEntryInputLayout>
+
+            <rs:RSEntry Text="Just a test"></rs:RSEntry>
+
+            <!--<rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date MonthYear" DateSelectionMode="MonthYear"></rs:RSDatePicker>-->
 
 
         </StackLayout>
