@@ -18,12 +18,21 @@ namespace Xamarin.RSControls.iOS.Controls
     {
         protected override UITextField CreateNativeControl()
         {
-            return new RSUITextField(this.Element.FontSize, 1, Color.LightGray.ToUIColor(), this.Element.BackgroundColor.ToCGColor(), this.Element.Behaviors.Any());
+            return new RSUITextField(this.Element as RSEntryInputLayout, 1, Color.LightGray.ToUIColor(), this.Element.BackgroundColor.ToCGColor(), this.Element.Behaviors.Any());
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)
         {
             base.OnElementChanged(e);
+
+            if (Control == null)
+                return;
+
+            //(Control as RSUITextField).AttributedPlaceholder = new NSAttributedString(Control.Placeholder, null, UIColor.Clear);
+
+            NSRange range;
+            var color = Control.AttributedPlaceholder.GetAttribute("NSColor", 0, out range) as UIColor;
+            (Control as RSUITextField).PlaceholderColor = color;
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -36,7 +45,6 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -46,13 +54,12 @@ namespace Xamarin.RSControls.iOS.Controls
 
     public class RSUITextField : UITextField
     {
+        private RSEntryInputLayout rSEntryInputLayout;
         private CALayer border;
         private CALayer masklayer;
-        private CATextLayer floatingHintCAText;
         private UILabel floatingHint;
         private UILabel errorLabel;
         private bool errorEnabled;
-
         public string ErrorMessage
         {
             get
@@ -66,12 +73,12 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 bool animationCompleted = false;
 
-                if(!string.IsNullOrEmpty(value))
+                if (!string.IsNullOrEmpty(value))
                 {
                     errorEnabled = true;
                     errorLabel.Text = value;
 
-                    Animate(0.1f, 0, UIViewAnimationOptions.CurveEaseIn, (() =>
+                    Animate(0.2f, 0, UIViewAnimationOptions.CurveEaseIn, (() =>
                     {
                         errorLabel.Frame = new CGRect(errorLabel.Frame.X, errorLabel.Frame.Y + 5, errorLabel.Frame.Width, errorLabel.Frame.Height);
                         errorLabel.Alpha = 1.0f;
@@ -86,7 +93,7 @@ namespace Xamarin.RSControls.iOS.Controls
                     Animate(0.3f, 0, UIViewAnimationOptions.CurveEaseOut, (() =>
                     {
                         errorLabel.Alpha = 0.0f;
-                        if(this.IsEditing)
+                        if (this.IsEditing)
                         {
                             border.BorderColor = this.activeColor.CGColor;
                             floatingHint.TextColor = this.activeColor;
@@ -97,7 +104,7 @@ namespace Xamarin.RSControls.iOS.Controls
                             floatingHint.TextColor = UIColor.DarkTextColor;
                         }
 
-                    }), completion: ()=> { animationCompleted = true; } ) ;
+                    }), completion: () => { animationCompleted = true; });
 
                     if (animationCompleted)
                         errorLabel.Text = value;
@@ -105,26 +112,24 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-
         //Graphics
         private UIColor activeColor;
         private UIColor borderColor;
-        private CGColor backgroundColor;
         private nfloat borderWidth;
+        public UIColor PlaceholderColor { get; set; }
 
-
-        NSLayoutConstraint floatingHintLeadingAnchorConstraintFloating;
-        NSLayoutConstraint floatingHintCenterYAnchorConstraintFloating;
-        NSLayoutConstraint floatingHintLeadingAnchorConstraint;
-        NSLayoutConstraint floatingHintCenterYAnchorConstraint;
+        NSLayoutConstraint leadingConstraintFloating;
+        NSLayoutConstraint centerYAnchorConstraintFloating;
+        NSLayoutConstraint leadingConstraintNonFloating;
+        NSLayoutConstraint centerYAnchorConstraintNonFloating;
 
 
         //Constructor
-        public RSUITextField(double fontSize, nfloat borderWidth, UIColor borderColor, CGColor backgroundColor, bool hasError)
+        public RSUITextField(RSEntryInputLayout rSEntryInputLayout, nfloat borderWidth, UIColor borderColor, CGColor backgroundColor, bool hasError)
         {
+            this.rSEntryInputLayout = rSEntryInputLayout;
             this.borderColor = borderColor;
             this.borderWidth = borderWidth;
-            this.backgroundColor = backgroundColor;
             this.activeColor = UIColor.SystemBlueColor;
 
             if (hasError)
@@ -148,29 +153,22 @@ namespace Xamarin.RSControls.iOS.Controls
                 this.border.BorderColor = this.activeColor.CGColor;
             }
 
-            this.LayoutIfNeeded();
-            Animate(0.3f, 0, UIViewAnimationOptions.CurveEaseOut, (() =>
-            {
-                UpdateFloatingLabel();
-                this.LayoutIfNeeded();
-            }), null);
+            UpdateFloatingLabel();
         }
-
 
         private void RSUITextField_Ended(object sender, EventArgs e)
         {
             if (!errorEnabled)
             {
-                this.floatingHint.TextColor = UIColor.DarkTextColor;
+                if (IsFloating())
+                    this.floatingHint.TextColor = UIColor.DarkTextColor;
+                else
+                    this.floatingHint.TextColor = PlaceholderColor;
+
                 this.border.BorderColor = this.borderColor.CGColor;
             }
 
-            this.LayoutIfNeeded();
-            Animate(0.3f, 0, UIViewAnimationOptions.CurveEaseOut, (() =>
-            {
-                UpdateFloatingLabel();
-                this.LayoutIfNeeded();
-            }), null);
+            UpdateFloatingLabel();
         }
 
         private bool IsFloating()
@@ -189,11 +187,10 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 BorderColor = this.borderColor.CGColor,
                 BorderWidth = this.borderWidth,
-                BackgroundColor = UIColor.Yellow.CGColor,
+                BackgroundColor = UIColor.Clear.CGColor,
                 CornerRadius = 6,
                 ZPosition = -1 // So its behind floating label
             };
-
 
             //Mask
             masklayer = new CALayer();
@@ -207,47 +204,23 @@ namespace Xamarin.RSControls.iOS.Controls
         //Create floatingHint
         private void CreateFloatingHint()
         {
-            //floatingHintCAText = new CATextLayer()
-            //{
-            //    String = "Test",
-            //    FontSize = 12,
-            //    ForegroundColor = UIColor.Green.CGColor,
-            //    ContentsScale = UIScreen.MainScreen.Scale,
-            //    Frame = new CGRect(0, 0, 50, 30),
-            //    ZPosition = 1
-            //};
-            //this.Layer.AddSublayer(floatingHintCAText);
-
             floatingHint = new UILabel()
             {
                 Font = UIFont.SystemFontOfSize(12),
                 TextColor = UIColor.DarkTextColor,
                 BackgroundColor = UIColor.Clear,
-                Text = "Test",
+                Text = this.rSEntryInputLayout.Placeholder,
                 TranslatesAutoresizingMaskIntoConstraints = false,
             };
 
             this.AddSubview(floatingHint);
 
-            //Constraints floating
-            floatingHintLeadingAnchorConstraintFloating = floatingHint.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 11f); //With left padding of 11
-            floatingHintCenterYAnchorConstraintFloating = floatingHint.CenterYAnchor.ConstraintEqualTo(this.TopAnchor, 5f); //Move 5 to match border position
 
-            //Constraints non floating
-            floatingHintLeadingAnchorConstraint = floatingHint.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 11f); //With left padding of 11
-            floatingHintCenterYAnchorConstraint = floatingHint.BottomAnchor.ConstraintEqualTo(this.BottomAnchor, -25f); //Give bottomAnchor and move it by bottom margin
+            leadingConstraintFloating = floatingHint.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 11f);
+            centerYAnchorConstraintFloating = floatingHint.CenterYAnchor.ConstraintEqualTo(this.TopAnchor, 5f);
 
-
-            if (IsFloating())
-            {
-                floatingHintLeadingAnchorConstraintFloating.Active = true;
-                floatingHintCenterYAnchorConstraintFloating.Active = true;
-            }
-            else
-            {
-                floatingHintLeadingAnchorConstraint.Active = true;
-                floatingHintCenterYAnchorConstraint.Active = true;
-            }
+            leadingConstraintNonFloating = floatingHint.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 8f);
+            centerYAnchorConstraintNonFloating = floatingHint.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor, -5f);
         }
 
         //Create error label
@@ -296,53 +269,107 @@ namespace Xamarin.RSControls.iOS.Controls
                 maskPath.AddRect(new CGRect(x: border.Frame.X, y: this.Frame.Y, width: border.Frame.Width - floatingHint.Frame.Width, height: this.borderWidth));
 
 
-            borderMask.FillRule = new NSString("kCAFillRuleEvenOdd");
+            //borderMask.FillRule = new NSString("kCAFillRuleEvenOdd");
             borderMask.Path = maskPath;
             border.Mask = borderMask;
+        }
+
+        private void FloatingHintInitPlacement()
+        {
+            if (IsFloating())
+            {
+                floatingHint.Font = UIFont.SystemFontOfSize(12);
+                leadingConstraintFloating.Active = true;
+                centerYAnchorConstraintFloating.Active = true;
+            }
+            else
+            {
+                floatingHint.Hidden = true;
+                this.floatingHint.TextColor = PlaceholderColor;
+                leadingConstraintNonFloating.Active = true;
+                centerYAnchorConstraintNonFloating.Active = true;
+            }
+        }
+
+        private void FloatingHintFramePlacement()
+        {
+            if (IsFloating())
+            {
+                nfloat x = this.Frame.X + 11; //Place at left, than add padding of 11
+                nfloat y = this.Frame.Y + 5 - (floatingHint.Frame.Height / 2); //First set to border top y then move by hint half height to be in middle
+                nfloat w = floatingHint.Frame.Width;
+                nfloat h = floatingHint.Frame.Height;
+
+                this.LayoutIfNeeded();
+                Animate(0.3f, 0, UIViewAnimationOptions.CurveEaseOut, (() =>
+                {
+                    floatingHint.Frame = new CGRect(x, y, w, h);
+                }), null);
+            }
+            else
+            {
+                nfloat x = this.Frame.X + 11; //Place at left, than add padding of 11
+                nfloat y = this.Frame.GetMidY() + 5 - (floatingHint.Frame.Height / 2); //First set to border top y then move by hint half height to be in middle
+                nfloat w = floatingHint.Frame.Width;
+                nfloat h = floatingHint.Frame.Height;
+
+                this.LayoutIfNeeded();
+                Animate(0.3f, 0, UIViewAnimationOptions.CurveEaseOut, (() =>
+                {
+                    floatingHint.Frame = new CGRect(x, y, w, h);
+                }), null);
+            }
+        }
+
+        private void FloatingHintConstraintsPlacement()
+        {
+            if (IsFloating())
+            {
+                if (leadingConstraintNonFloating != null && centerYAnchorConstraintNonFloating != null)
+                {
+                    leadingConstraintNonFloating.Active = false;
+                    centerYAnchorConstraintNonFloating.Active = false;
+                }
+                this.Placeholder = "";
+                floatingHint.Hidden = false;
+                floatingHint.Font = UIFont.SystemFontOfSize(12);
+                leadingConstraintFloating.Active = true;
+                centerYAnchorConstraintFloating.Active = true;
+
+                //Animate
+                Animate(0.3f, 0, UIViewAnimationOptions.CurveEaseOut, (() =>
+                {
+                    this.LayoutIfNeeded();
+                }), null);
+            }
+            else
+            {
+                if (leadingConstraintFloating != null && centerYAnchorConstraintFloating != null)
+                {
+                    leadingConstraintFloating.Active = false;
+                    centerYAnchorConstraintFloating.Active = false;
+                }
+                floatingHint.Font = UIFont.SystemFontOfSize(this.Font.PointSize);
+                leadingConstraintNonFloating.Active = true;
+                centerYAnchorConstraintNonFloating.Active = true;
+
+                //Animate
+                Animate(0.3f, 0, UIViewAnimationOptions.CurveEaseOut, () =>
+                {
+                    this.LayoutIfNeeded();
+                },
+                completion: () =>
+                {
+                    floatingHint.Hidden = true;
+                    this.Placeholder = floatingHint.Text;
+                });
+            }
         }
 
         //Update floating hint
         private void UpdateFloatingLabel()
         {
-            if (IsFloating())
-            {
-                floatingHintLeadingAnchorConstraint.Active = false;
-                floatingHintCenterYAnchorConstraint.Active = false;
-
-                floatingHintLeadingAnchorConstraintFloating.Active = true;
-                floatingHintCenterYAnchorConstraintFloating.Active = true;
-
-                //floatingHint.Font = UIFont.SystemFontOfSize(12);
-                this.LayoutIfNeeded();
-                Animate(0.3f, 0, UIViewAnimationOptions.CurveEaseOut, (() =>
-                {
-                    floatingHint.Transform = CGAffineTransform.MakeScale(1.0f, 1.0f);
-
-                    this.LayoutIfNeeded();
-                }), null);
-
-                this.AttributedPlaceholder = new NSAttributedString(this.Placeholder, null, UIColor.Clear);
-            }
-            else
-            {
-                floatingHintLeadingAnchorConstraintFloating.Active = false;
-                floatingHintCenterYAnchorConstraintFloating.Active = false;
-
-                floatingHintLeadingAnchorConstraint.Active = true;
-                floatingHintCenterYAnchorConstraint.Active = true;
-
-                var scaleFactor = this.Font.PointSize / 12;
-                this.LayoutIfNeeded();
-                Animate(0.3f, 0, UIViewAnimationOptions.CurveEaseOut, (() =>
-                {
-                    floatingHint.Transform = CGAffineTransform.MakeScale(scaleFactor, scaleFactor);
-
-                    this.LayoutIfNeeded();
-                }), null);
-
-                //floatingHint.Font = UIFont.SystemFontOfSize(this.Font.PointSize);
-                this.AttributedPlaceholder = new NSAttributedString(this.Placeholder, null, UIColor.Clear);
-            }
+            FloatingHintConstraintsPlacement();
 
             SetBorder();
         }
@@ -380,9 +407,9 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             base.Draw(rect);
 
-            UpdateFloatingLabel();
+            //Init here because text property not yet set in create floatinghint method
+            FloatingHintInitPlacement();
         }
-
 
         protected override void Dispose(bool disposing)
         {

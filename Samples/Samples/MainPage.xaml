@@ -116,7 +116,9 @@
             <DatePicker Date="{Binding SomeDate}"></DatePicker>-->
 
 
-            <rs:RSEntryInputLayout Text="Trolol" FontSize="50" BackgroundColor="Cyan"  Placeholder="Test">
+            <rs:RSEntryInputLayout Text="Lol" FontSize="50" Placeholder="Test" BackgroundColor="Cyan"/>
+
+            <rs:RSEntryInputLayout Text="Trolol" FontSize="75" Placeholder="Test">
                 <rs:RSEntryInputLayout.Behaviors>
                     <validators:ValidationBehaviour PropertyName="Text">
                         <validators:ValidationBehaviour.Validators>
@@ -127,21 +129,11 @@
             </rs:RSEntryInputLayout>
 
 
-            <rs:RSEntryInputLayout Placeholder="Test">
-                <rs:RSEntryInputLayout.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSEntryInputLayout.Behaviors>
+            <rs:RSEntryInputLayout Placeholder="Test" FontSize="36">
+
             </rs:RSEntryInputLayout>
 
-            <rs:RSEntryInputLayout Placeholder="Test no error"/>
-
-            <rs:RSEntry Text="Just a test" BackgroundColor="Transparent"></rs:RSEntry>
-
-            <rs:RSEntryInputLayout Text="FF7" FontSize="75" Placeholder="Test no error"/>
+            <rs:RSEntryInputLayout Placeholder="Test no error" PlaceholderColor="Red"/>
 
 
             <!--<rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date MonthYear" DateSelectionMode="MonthYear"></rs:RSDatePicker>-->
