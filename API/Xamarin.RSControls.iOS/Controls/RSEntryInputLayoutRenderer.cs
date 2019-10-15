@@ -18,17 +18,26 @@ namespace Xamarin.RSControls.iOS.Controls
     {
         protected override UITextField CreateNativeControl()
         {
-            return new RSUITextField(this.Element as RSEntryInputLayout, 1, Color.LightGray.ToUIColor(), this.Element.BackgroundColor.ToCGColor(), this.Element.Behaviors.Any());
+            return new RSUITextField(
+                (this.Element as RSEntryInputLayout).Placeholder,
+                (this.Element as RSEntryInputLayout).Helper,
+                (this.Element as RSEntryInputLayout).CounterMaxLength,
+                1, Color.Gray.ToUIColor(),
+                this.Element.BackgroundColor.ToCGColor(),
+                this.Element.Behaviors.Any());
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)
         {
             base.OnElementChanged(e);
 
+
+            
             if (Control == null)
                 return;
 
-            //(Control as RSUITextField).AttributedPlaceholder = new NSAttributedString(Control.Placeholder, null, UIColor.Clear);
+            
+
 
             NSRange range;
             var color = Control.AttributedPlaceholder.GetAttribute("NSColor", 0, out range) as UIColor;
@@ -54,11 +63,16 @@ namespace Xamarin.RSControls.iOS.Controls
 
     public class RSUITextField : UITextField
     {
-        private RSEntryInputLayout rSEntryInputLayout;
+        private string placeholder;
         private CALayer border;
         private CALayer masklayer;
         private UILabel floatingHint;
         private UILabel errorLabel;
+        private UILabel helperLabel;
+        private UILabel counterLabel;
+        private int counterMaxLength;
+        private int counter;
+        public string HelperText { get; set; }
         private bool errorEnabled;
         public string ErrorMessage
         {
@@ -71,15 +85,19 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             set
             {
+                errorLabel.Text = value;
+
                 bool animationCompleted = false;
 
                 if (!string.IsNullOrEmpty(value))
                 {
                     errorEnabled = true;
-                    errorLabel.Text = value;
 
                     Animate(0.2f, 0, UIViewAnimationOptions.CurveEaseIn, (() =>
                     {
+                        if(!string.IsNullOrEmpty(HelperText))
+                            helperLabel.Alpha = 0.0f;
+
                         errorLabel.Frame = new CGRect(errorLabel.Frame.X, errorLabel.Frame.Y + 5, errorLabel.Frame.Width, errorLabel.Frame.Height);
                         errorLabel.Alpha = 1.0f;
                         border.BorderColor = UIColor.SystemRedColor.CGColor;
@@ -92,7 +110,14 @@ namespace Xamarin.RSControls.iOS.Controls
 
                     Animate(0.3f, 0, UIViewAnimationOptions.CurveEaseOut, (() =>
                     {
+                        if (!string.IsNullOrEmpty(HelperText))
+                        {
+                            helperLabel.Frame = new CGRect(helperLabel.Frame.X, helperLabel.Frame.Y + 5, helperLabel.Frame.Width, helperLabel.Frame.Height);
+                            helperLabel.Alpha = 1.0f;
+                        }
+
                         errorLabel.Alpha = 0.0f;
+
                         if (this.IsEditing)
                         {
                             border.BorderColor = this.activeColor.CGColor;
@@ -101,7 +126,7 @@ namespace Xamarin.RSControls.iOS.Controls
                         else
                         {
                             border.BorderColor = this.borderColor.CGColor;
-                            floatingHint.TextColor = UIColor.DarkTextColor;
+                            floatingHint.TextColor = this.borderColor;
                         }
 
                     }), completion: () => { animationCompleted = true; });
@@ -118,6 +143,7 @@ namespace Xamarin.RSControls.iOS.Controls
         private nfloat borderWidth;
         public UIColor PlaceholderColor { get; set; }
 
+        //Floating hint constraints
         NSLayoutConstraint leadingConstraintFloating;
         NSLayoutConstraint centerYAnchorConstraintFloating;
         NSLayoutConstraint leadingConstraintNonFloating;
@@ -125,26 +151,47 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
         //Constructor
-        public RSUITextField(RSEntryInputLayout rSEntryInputLayout, nfloat borderWidth, UIColor borderColor, CGColor backgroundColor, bool hasError)
+        public RSUITextField(string placeholder, string helperText, int counterMaxLength, nfloat borderWidth, UIColor borderColor, CGColor backgroundColor, bool hasError)
         {
-            this.rSEntryInputLayout = rSEntryInputLayout;
+            this.placeholder = placeholder;
+            this.HelperText = helperText;
+            this.counterMaxLength = counterMaxLength;
             this.borderColor = borderColor;
             this.borderWidth = borderWidth;
             this.activeColor = UIColor.SystemBlueColor;
 
+            this.AutocorrectionType = UITextAutocorrectionType.No;
+
+            //Counter needs to be called before CreateErrorLabel and CReateHelperLabel
+            if(this.counterMaxLength != -1)
+                CreateCounterLabel();
+
             if (hasError)
                 CreateErrorLabel();
 
+            if (!string.IsNullOrEmpty(HelperText))
+                CreateHelperLabel();
+
             CreateFloatingHint();
             CreateRoundedBorder();
+            CreatePassword();
 
+            //Edit text events
             this.Started += RSUITextField_Started;
             this.Ended += RSUITextField_Ended;
+            this.EditingChanged += RSUITextField_EditingChanged;
 
             //Set event for device orientation change so we can reset border frame and mask
             NSNotificationCenter.DefaultCenter.AddObserver(new NSString("UIDeviceOrientationDidChangeNotification"), DeviceRotated);
         }
 
+        private void RSUITextField_EditingChanged(object sender, EventArgs e)
+        {
+            if (this.counterMaxLength != -1)
+                SetCounter();
+        }
+
+        //Edit started
         private void RSUITextField_Started(object sender, EventArgs e)
         {
             if (!errorEnabled)
@@ -156,12 +203,13 @@ namespace Xamarin.RSControls.iOS.Controls
             UpdateFloatingLabel();
         }
 
+        //Edit finished
         private void RSUITextField_Ended(object sender, EventArgs e)
         {
             if (!errorEnabled)
             {
                 if (IsFloating())
-                    this.floatingHint.TextColor = UIColor.DarkTextColor;
+                    this.floatingHint.TextColor = this.borderColor;
                 else
                     this.floatingHint.TextColor = PlaceholderColor;
 
@@ -171,6 +219,7 @@ namespace Xamarin.RSControls.iOS.Controls
             UpdateFloatingLabel();
         }
 
+        //Return floating state
         private bool IsFloating()
         {
             if (!string.IsNullOrEmpty(this.Text) || errorEnabled || this.IsFirstResponder)
@@ -178,7 +227,6 @@ namespace Xamarin.RSControls.iOS.Controls
             else
                 return false;
         }
-
 
         //Rounded Border
         private void CreateRoundedBorder()
@@ -207,9 +255,9 @@ namespace Xamarin.RSControls.iOS.Controls
             floatingHint = new UILabel()
             {
                 Font = UIFont.SystemFontOfSize(12),
-                TextColor = UIColor.DarkTextColor,
+                TextColor = this.borderColor,
                 BackgroundColor = UIColor.Clear,
-                Text = this.rSEntryInputLayout.Placeholder,
+                Text = this.placeholder,
                 TranslatesAutoresizingMaskIntoConstraints = false,
             };
 
@@ -242,11 +290,114 @@ namespace Xamarin.RSControls.iOS.Controls
             //Constraints
             errorLabel.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 11f).Active = true;
             errorLabel.BottomAnchor.ConstraintEqualTo(this.BottomAnchor).Active = true;
+
+            if (counterLabel != null)
+                errorLabel.TrailingAnchor.ConstraintEqualTo(counterLabel.LeadingAnchor, -8f).Active = true;
+            else
+                errorLabel.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor, -11f).Active = true;
+        }
+
+        //Create helper label
+        private void CreateHelperLabel()
+        {
+
+            helperLabel = new UILabel()
+            {
+                Font = UIFont.SystemFontOfSize(12),
+                TextColor = this.borderColor,
+                Text = this.HelperText,
+                BackgroundColor = UIColor.Clear,
+                Alpha = 1.0f,
+                TranslatesAutoresizingMaskIntoConstraints = false,
+            };
+
+            this.AddSubview(helperLabel);
+
+            //Constraints
+            helperLabel.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 11f).Active = true;
+            helperLabel.BottomAnchor.ConstraintEqualTo(this.BottomAnchor).Active = true;
+
+            if(counterLabel != null)
+                helperLabel.TrailingAnchor.ConstraintEqualTo(counterLabel.LeadingAnchor, - 8f).Active = true;
+            else
+                helperLabel.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor, -11f).Active = true;
+        }
+
+        //Create helper label
+        private void CreateCounterLabel()
+        {
+
+            counterLabel = new UILabel()
+            {
+                Font = UIFont.SystemFontOfSize(12),
+                TextColor = this.borderColor,
+                BackgroundColor = UIColor.Clear,
+                Alpha = 1.0f,
+                TextAlignment = UITextAlignment.Right,
+                TranslatesAutoresizingMaskIntoConstraints = false,
+            };
+
+            this.AddSubview(counterLabel);
+
+            //Constraints
+            counterLabel.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor, -11f).Active = true;
+            counterLabel.BottomAnchor.ConstraintEqualTo(this.BottomAnchor).Active = true;
+        }
+
+        //Set Counter
+        private void SetCounter()
+        {
+            this.counter = this.Text.Length;
+            counterLabel.Text = string.Format("{0}/{1}", this.counter, this.counterMaxLength);
+
+            if(this.counter > this.counterMaxLength)
+            {
+                counterLabel.TextColor = UIColor.SystemRedColor;
+                this.border.BorderColor = UIColor.SystemRedColor.CGColor;
+                this.floatingHint.TextColor = UIColor.SystemRedColor;
+                this.errorEnabled = true;
+            }
+            else
+            {
+                counterLabel.TextColor = this.borderColor;
+
+
+                if(string.IsNullOrEmpty(this.ErrorMessage) && this.IsFirstResponder)
+                {
+                    this.border.BorderColor = this.activeColor.CGColor;
+                    this.floatingHint.TextColor = this.activeColor;
+                    this.errorEnabled = false;
+                }
+                else if (string.IsNullOrEmpty(this.ErrorMessage) && !this.IsFirstResponder)
+                {
+                    this.border.BorderColor = this.borderColor.CGColor;
+                    this.floatingHint.TextColor = this.borderColor;
+                    this.errorEnabled = false;
+                }
+                else
+                {
+                    this.border.BorderColor = UIColor.SystemRedColor.CGColor;
+                    this.floatingHint.TextColor = UIColor.SystemRedColor;
+                    this.errorEnabled = true;
+                }
+            }
+        }
+
+        //Create Password
+        private void CreatePassword()
+        {
+            
         }
 
         //Set border frame and mask
         public void SetBorder()
         {
+            nfloat padding;
+            if (!string.IsNullOrEmpty(this.placeholder))
+                padding = 5;
+            else
+                padding = 0;
+
             //Border frame
             //We set bottom padding to 25 so we leave 5 for errollabel at bottom
             border.Frame = new CGRect(this.Frame.X, this.Frame.Y + 5, this.Frame.Width, this.Frame.Height - 20);
@@ -259,10 +410,10 @@ namespace Xamarin.RSControls.iOS.Controls
             maskPath.AddRect(new CGRect(x: border.Frame.X, y: this.Frame.Y + this.borderWidth, width: border.Frame.Width, height: border.Frame.Height - this.borderWidth));
 
             //Top border right of floating label area
-            maskPath.AddRect(new CGRect(x: (floatingHint.Frame.X + floatingHint.Frame.Width) + 5, y: this.Frame.Y, width: border.Frame.Width - floatingHint.Frame.Width, height: this.borderWidth));
+            maskPath.AddRect(new CGRect(x: (floatingHint.Frame.X + floatingHint.Frame.Width) + padding, y: this.Frame.Y, width: border.Frame.Width - floatingHint.Frame.Width, height: this.borderWidth));
 
             //Left border
-            maskPath.AddRect(new CGRect(border.Frame.X, this.Frame.Y, floatingHint.Frame.X - 5, this.borderWidth));
+            maskPath.AddRect(new CGRect(border.Frame.X, this.Frame.Y, floatingHint.Frame.X - padding, this.borderWidth));
 
             //Top border libne full
             if (!IsFloating())
@@ -274,6 +425,7 @@ namespace Xamarin.RSControls.iOS.Controls
             border.Mask = borderMask;
         }
 
+        //Only set at start to place hint
         private void FloatingHintInitPlacement()
         {
             if (IsFloating())
@@ -289,8 +441,15 @@ namespace Xamarin.RSControls.iOS.Controls
                 leadingConstraintNonFloating.Active = true;
                 centerYAnchorConstraintNonFloating.Active = true;
             }
+
+            //Update placement
+            this.LayoutIfNeeded();
+
+            //Draw border
+            SetBorder();
         }
 
+        //Not used
         private void FloatingHintFramePlacement()
         {
             if (IsFloating())
@@ -321,10 +480,12 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
+        //Floating hint placement at runtime
         private void FloatingHintConstraintsPlacement()
         {
             if (IsFloating())
             {
+                this.LayoutIfNeeded();
                 if (leadingConstraintNonFloating != null && centerYAnchorConstraintNonFloating != null)
                 {
                     leadingConstraintNonFloating.Active = false;
@@ -344,6 +505,7 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             else
             {
+                this.LayoutIfNeeded();
                 if (leadingConstraintFloating != null && centerYAnchorConstraintFloating != null)
                 {
                     leadingConstraintFloating.Active = false;
@@ -392,25 +554,51 @@ namespace Xamarin.RSControls.iOS.Controls
                 rect.Height - insets.Top - insets.Bottom);
         }
 
-        //Overides
+        //Text padding
         public override CGRect TextRect(CGRect forBounds)
         {
             return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(16, 8, 25, 8));
         }
 
+        //Edit rectangle padding
         public override CGRect EditingRect(CGRect forBounds)
         {
             return InsetRect(base.EditingRect(forBounds), new UIEdgeInsets(16, 8, 25, 8));
         }
 
+        //Right view padding
+        public override CGRect RightViewRect(CGRect forBounds)
+        {
+            return new CGRect(
+                base.RightViewRect(forBounds).X - 8,
+                this.Center.Y - 5 - (base.RightViewRect(forBounds).Height / 2),
+                base.RightViewRect(forBounds).Width,
+                base.RightViewRect(forBounds).Height);
+        }
+
+        //Left view padding
+        public override CGRect LeftViewRect(CGRect forBounds)
+        {
+            return new CGRect(
+                base.LeftViewRect(forBounds).X + 8,
+                this.Center.Y - 5 - (base.LeftViewRect(forBounds).Height / 2),
+                base.LeftViewRect(forBounds).Width,
+                base.LeftViewRect(forBounds).Height);
+        }
+
+        //Draw method
         public override void Draw(CGRect rect)
         {
             base.Draw(rect);
 
             //Init here because text property not yet set in create floatinghint method
             FloatingHintInitPlacement();
+
+            if (this.counterMaxLength != -1)
+                SetCounter();
         }
 
+        //Remove any events when closed
         protected override void Dispose(bool disposing)
         {
             //Remove observer
@@ -419,6 +607,7 @@ namespace Xamarin.RSControls.iOS.Controls
             //Remove events
             this.Started -= RSUITextField_Started;
             this.Ended -= RSUITextField_Ended;
+            this.EditingChanged -= RSUITextField_EditingChanged;
 
             base.Dispose(disposing);
         }

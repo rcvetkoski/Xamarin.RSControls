@@ -26,5 +26,26 @@ namespace Xamarin.RSControls.Controls
             get { return (bool)GetValue(HasBorderProperty); }
             set { SetValue(HasBorderProperty, value); }
         }
+
+        public static readonly BindableProperty HelperProperty = BindableProperty.Create("Helper", typeof(string), typeof(RSEntry), string.Empty);
+        public string Helper
+        {
+            get { return (string)GetValue(HelperProperty); }
+            set { SetValue(HelperProperty, value); }
+        }
+
+        public static readonly BindableProperty CounterProperty = BindableProperty.Create("Counter", typeof(int), typeof(RSEntry), 0);
+        public int Counter
+        {
+            get { return (int)GetValue(CounterProperty); }
+            set { SetValue(CounterProperty, value); }
+        }
+
+        public static readonly BindableProperty CounterMaxLengthProperty = BindableProperty.Create("CounterMaxLength", typeof(int), typeof(RSEntry), -1);
+        public int CounterMaxLength
+        {
+            get { return (int)GetValue(CounterMaxLengthProperty); }
+            set { SetValue(CounterMaxLengthProperty, value); }
+        }
     }
 }

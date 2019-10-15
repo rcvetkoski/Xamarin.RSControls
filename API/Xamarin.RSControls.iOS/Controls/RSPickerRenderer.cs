@@ -28,14 +28,15 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
             //Create uitextfield and set it as control
-            var nativeEditText = new UITextField();
+            var nativeEditText = CreateNativeControl();
+            nativeEditText.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
             this.SetNativeControl(nativeEditText);
 
 
             //Set uitextfield style
-            this.Control.BorderStyle = UITextBorderStyle.RoundedRect;
-            Control.Layer.BorderColor = UIColor.LightGray.CGColor;
-            Control.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
+            //this.Control.BorderStyle = UITextBorderStyle.RoundedRect;
+            //Control.Layer.BorderColor = UIColor.LightGray.CGColor;
+            //Control.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
 
             //Set icon
             SetIcon();
@@ -163,24 +164,33 @@ namespace Xamarin.RSControls.iOS.Controls
             else
                 rightPath = Element.RightIcon;
 
-            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = rightPath, HeightRequest = Element.IconHeight, WidthRequest = Element.IconHeight, Color = Element.IconColor };
-            var convertedRightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new CGRect(x: 0, y: 0, width: Element.IconHeight, height: Element.IconHeight));
-            var outerView = new UIView(new CGRect(x: 0, y: 0, width: Element.IconHeight, height: Element.IconHeight));
-            outerView.AddSubview(convertedRightView);
-            this.Control.RightView = outerView;
+            var size = Control.Font.LineHeight;
+
+            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = rightPath, HeightRequest = size, WidthRequest = size, Color = Element.IconColor };
+            var convertedRightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new CGRect(x: 0, y: 0, width: size, height: size));
+            this.Control.RightView = convertedRightView;
             this.Control.RightViewMode = UITextFieldViewMode.Always;
 
-
             //Left Icon
-            if (Element.LeftIcon != null)
+            if (this.Element.LeftIcon != null)
             {
-                RSSvgImage leftSvgIcon = new RSSvgImage() { Source = leftPath, HeightRequest = Element.IconHeight, WidthRequest = Element.IconHeight, Color = Element.IconColor };
-                var convertedLeftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new CGRect(x: 0, y: 0, width: Element.IconHeight, height: Element.IconHeight));
-                var outerView2 = new UIView(new CGRect(x: 0, y: 0, width: Element.IconHeight, height: Element.IconHeight));
-                outerView2.AddSubview(convertedLeftView);
-                this.Control.LeftView = outerView;
+                RSSvgImage leftSvgIcon = new RSSvgImage() { Source = leftPath, HeightRequest = size, WidthRequest = size, Color = Element.IconColor };
+                var convertedLeftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new CGRect(x: 0, y: 0, width: size, height: size));
+                this.Control.LeftView = convertedLeftView;
                 this.Control.LeftViewMode = UITextFieldViewMode.Always;
             }
+        }
+
+        protected override UITextField CreateNativeControl()
+        {
+            return new RSUITextField(
+                this.Element.Placeholder,
+                "",
+                -1,
+                1,
+                Color.Gray.ToUIColor(),
+                this.Element.BackgroundColor.ToCGColor(),
+                this.Element.Behaviors.Any());
         }
     }
 

@@ -43,6 +43,22 @@ namespace Xamarin.RSControls.Droid.Controls
             //Hint
             textInputLayout.Hint = renderer.Element.Placeholder;
 
+            if(this.Element.CounterMaxLength != -1)
+            {
+                textInputLayout.CounterEnabled = true;
+                textInputLayout.CounterMaxLength = 7;
+            }
+
+            if(!string.IsNullOrEmpty(this.Element.Helper))
+            {
+                textInputLayout.HelperText = this.Element.Helper;
+                textInputLayout.HelperTextEnabled = true;
+            }
+
+            //textInputLayout.BoxBackgroundColor = Color.Yellow.ToAndroid();
+            //textInputLayout.BoxStrokeColor = Color.Pink.ToAndroid();
+            //textInputLayout.SetBoxCornerRadii(50, 50, 50, 50);
+
             //Error-Validation
             if (this.Element.Behaviors.Any(x => x is Validators.ValidationBehaviour))
                 textInputLayout.ErrorEnabled = true;

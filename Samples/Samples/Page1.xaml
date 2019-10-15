@@ -12,7 +12,7 @@
         <ScrollView Orientation="Vertical">
             <StackLayout x:Name="stack" Margin="20">
 
-                <rs:RSPicker x:Name="rsPicker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Ascending" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" HasBorder="True">
+                <!--<rs:RSPicker x:Name="rsPicker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Ascending" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" HasBorder="True">
                     <rs:RSPicker.Behaviors>
                         <validators:ValidationBehaviour PropertyName="SelectedItem">
                             <validators:ValidationBehaviour.Validators>
@@ -55,8 +55,13 @@
 
                 <rs:RSEnumPickerInputLayout x:TypeArguments="enums:DateSelectionModeEnum" SelectedItem="{Binding SelectedDateMode}" Placeholder="Single enum source with border" HasBorder="True"/>
 
-                <rs:RSEnumPickerInputLayout x:TypeArguments="enums:DateSelectionModeEnum" SelectionMode="Multiple" SelectedItems="{Binding ListPickerEnumSelectedItems}" Placeholder="Multiple Enum source with border" HasBorder="True"/>
+                <rs:RSEnumPickerInputLayout x:TypeArguments="enums:DateSelectionModeEnum" SelectionMode="Multiple" SelectedItems="{Binding ListPickerEnumSelectedItems}" Placeholder="Multiple Enum source with border" HasBorder="True"/>-->
 
+                <rs:RSEntryInputLayout Text="Lol" FontSize="50" Placeholder="Test"/>
+
+            <rs:RSDatePicker HasBorder="True" DateSelectionMode="MonthYear" Placeholder="Enter date" >
+                
+            </rs:RSDatePicker>
 
             </StackLayout>
         </ScrollView>
