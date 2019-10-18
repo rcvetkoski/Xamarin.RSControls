@@ -13,6 +13,13 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(UpdateSourceTriggerProperty, value); }
         }
 
+        public static readonly BindableProperty RSEntryStyleProperty = BindableProperty.Create("RSEntryStyle", typeof(RSEntryStyleSelectionEnum), typeof(RSEntry), RSEntryStyleSelectionEnum.RoundedBorder);
+        public RSEntryStyleSelectionEnum RSEntryStyle
+        {
+            get { return (RSEntryStyleSelectionEnum)GetValue(RSEntryStyleProperty); }
+            set { SetValue(RSEntryStyleProperty, value); }
+        }
+
         public static readonly BindableProperty ErrorProperty = BindableProperty.Create("Error", typeof(string), typeof(RSEntry), null);
         public string Error
         {

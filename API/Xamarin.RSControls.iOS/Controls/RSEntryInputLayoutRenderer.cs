@@ -3,12 +3,14 @@ using CoreAnimation;
 using CoreGraphics;
 using Foundation;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.RSControls.Controls;
+using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.iOS.Controls;
 
 [assembly: ExportRenderer(typeof(RSEntryInputLayout), typeof(RSEntryInputLayoutInputLayoutRenderer))]
@@ -22,8 +24,10 @@ namespace Xamarin.RSControls.iOS.Controls
                 (this.Element as RSEntryInputLayout).Placeholder,
                 (this.Element as RSEntryInputLayout).Helper,
                 (this.Element as RSEntryInputLayout).CounterMaxLength,
+                (this.Element as RSEntryInputLayout).IsPassword,
+                (this.Element as RSEntryInputLayout).RSEntryStyle,
                 1, Color.Gray.ToUIColor(),
-                this.Element.BackgroundColor.ToCGColor(),
+                this.Element.BackgroundColor.ToUIColor(),
                 this.Element.Behaviors.Any());
         }
 
@@ -64,7 +68,9 @@ namespace Xamarin.RSControls.iOS.Controls
     public class RSUITextField : UITextField
     {
         private string placeholder;
+        private bool isPassword;
         private CALayer border;
+        private CALayer filledBorder;
         private CALayer masklayer;
         private UILabel floatingHint;
         private UILabel errorLabel;
@@ -72,6 +78,7 @@ namespace Xamarin.RSControls.iOS.Controls
         private UILabel counterLabel;
         private int counterMaxLength;
         private int counter;
+        private RSEntryStyleSelectionEnum rsEntryStyle;
         public string HelperText { get; set; }
         private bool errorEnabled;
         public string ErrorMessage
@@ -140,6 +147,7 @@ namespace Xamarin.RSControls.iOS.Controls
         //Graphics
         private UIColor activeColor;
         private UIColor borderColor;
+        private UIColor backgroundColor;
         private nfloat borderWidth;
         public UIColor PlaceholderColor { get; set; }
 
@@ -150,15 +158,41 @@ namespace Xamarin.RSControls.iOS.Controls
         NSLayoutConstraint centerYAnchorConstraintNonFloating;
 
 
+        //Padding values
+        private nfloat topPadding;
+        private nfloat bottomPadding;
+        private nfloat underBorderSpaceHeight;
+
+        //Device orientation observer
+        private NSObject deviceRotationObserver;
+
+
         //Constructor
-        public RSUITextField(string placeholder, string helperText, int counterMaxLength, nfloat borderWidth, UIColor borderColor, CGColor backgroundColor, bool hasError)
+        public RSUITextField(string placeholder, string helperText, int counterMaxLength, bool isPassword, RSEntryStyleSelectionEnum rsEntryStyle, nfloat borderWidth, UIColor borderColor, UIColor backgroundColor, bool hasError)
         {
             this.placeholder = placeholder;
             this.HelperText = helperText;
+            this.isPassword = isPassword;
             this.counterMaxLength = counterMaxLength;
             this.borderColor = borderColor;
             this.borderWidth = borderWidth;
             this.activeColor = UIColor.SystemBlueColor;
+            this.rsEntryStyle = rsEntryStyle;
+            this.backgroundColor = backgroundColor;
+
+            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.RoundedBorder)
+            {
+                this.topPadding = 15;
+                this.bottomPadding = 25;
+                this.underBorderSpaceHeight = 20;
+            }
+            else if(this.rsEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
+            {
+                this.topPadding = 20;
+                this.bottomPadding = 20;
+                this.underBorderSpaceHeight = 15;
+            }
+
 
             this.AutocorrectionType = UITextAutocorrectionType.No;
 
@@ -172,9 +206,15 @@ namespace Xamarin.RSControls.iOS.Controls
             if (!string.IsNullOrEmpty(HelperText))
                 CreateHelperLabel();
 
+            if(this.isPassword)
+                CreatePassword();
+
             CreateFloatingHint();
-            CreateRoundedBorder();
-            CreatePassword();
+
+            if(this.rsEntryStyle == RSEntryStyleSelectionEnum.RoundedBorder)
+                CreateRoundedBorder();
+            else if(this.rsEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
+                CreateFilledBorder();
 
             //Edit text events
             this.Started += RSUITextField_Started;
@@ -182,7 +222,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.EditingChanged += RSUITextField_EditingChanged;
 
             //Set event for device orientation change so we can reset border frame and mask
-            NSNotificationCenter.DefaultCenter.AddObserver(new NSString("UIDeviceOrientationDidChangeNotification"), DeviceRotated);
+            deviceRotationObserver = NSNotificationCenter.DefaultCenter.AddObserver(new NSString("UIDeviceOrientationDidChangeNotification"), DeviceRotated);
         }
 
         private void RSUITextField_EditingChanged(object sender, EventArgs e)
@@ -194,6 +234,8 @@ namespace Xamarin.RSControls.iOS.Controls
         //Edit started
         private void RSUITextField_Started(object sender, EventArgs e)
         {
+            this.border.BorderWidth += 1;
+
             if (!errorEnabled)
             {
                 this.floatingHint.TextColor = this.activeColor;
@@ -206,6 +248,8 @@ namespace Xamarin.RSControls.iOS.Controls
         //Edit finished
         private void RSUITextField_Ended(object sender, EventArgs e)
         {
+            this.border.BorderWidth -= 1;
+
             if (!errorEnabled)
             {
                 if (IsFloating())
@@ -240,11 +284,35 @@ namespace Xamarin.RSControls.iOS.Controls
                 ZPosition = -1 // So its behind floating label
             };
 
+
             //Mask
             masklayer = new CALayer();
             masklayer.BorderColor = this.borderColor.CGColor;
             masklayer.BorderWidth = this.borderWidth;
 
+
+            this.Layer.AddSublayer(border);
+        }
+
+        //Rounded Border
+        private void CreateFilledBorder()
+        {
+            border = new CALayer()
+            {
+                BorderColor = this.borderColor.CGColor,
+                BorderWidth = this.borderWidth,
+                BackgroundColor =  UIColor.SystemGray6Color.CGColor,
+                CornerRadius = 6,
+                ZPosition = -1 // So its behind floating label
+            };
+
+            border.MaskedCorners = CACornerMask.MinXMinYCorner | CACornerMask.MaxXMinYCorner;
+
+
+            //Mask
+            masklayer = new CALayer();
+            masklayer.BorderColor = this.borderColor.CGColor;
+            masklayer.BorderWidth = this.borderWidth;
 
             this.Layer.AddSublayer(border);
         }
@@ -264,11 +332,15 @@ namespace Xamarin.RSControls.iOS.Controls
             this.AddSubview(floatingHint);
 
 
-            leadingConstraintFloating = floatingHint.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 11f);
-            centerYAnchorConstraintFloating = floatingHint.CenterYAnchor.ConstraintEqualTo(this.TopAnchor, 5f);
+            leadingConstraintFloating = floatingHint.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 8f);
+
+            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.RoundedBorder)
+                centerYAnchorConstraintFloating = floatingHint.CenterYAnchor.ConstraintEqualTo(this.TopAnchor, 5f);
+            else if (this.rsEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
+                centerYAnchorConstraintFloating = floatingHint.CenterYAnchor.ConstraintEqualTo(this.TopAnchor, 10f);
 
             leadingConstraintNonFloating = floatingHint.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 8f);
-            centerYAnchorConstraintNonFloating = floatingHint.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor, -5f);
+            centerYAnchorConstraintNonFloating = floatingHint.TopAnchor.ConstraintEqualTo(this.TopAnchor, this.topPadding);
         }
 
         //Create error label
@@ -288,13 +360,13 @@ namespace Xamarin.RSControls.iOS.Controls
             this.AddSubview(errorLabel);
 
             //Constraints
-            errorLabel.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 11f).Active = true;
+            errorLabel.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 8f).Active = true;
             errorLabel.BottomAnchor.ConstraintEqualTo(this.BottomAnchor).Active = true;
 
             if (counterLabel != null)
                 errorLabel.TrailingAnchor.ConstraintEqualTo(counterLabel.LeadingAnchor, -8f).Active = true;
             else
-                errorLabel.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor, -11f).Active = true;
+                errorLabel.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor, -8f).Active = true;
         }
 
         //Create helper label
@@ -314,13 +386,13 @@ namespace Xamarin.RSControls.iOS.Controls
             this.AddSubview(helperLabel);
 
             //Constraints
-            helperLabel.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 11f).Active = true;
+            helperLabel.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 8f).Active = true;
             helperLabel.BottomAnchor.ConstraintEqualTo(this.BottomAnchor).Active = true;
 
             if(counterLabel != null)
                 helperLabel.TrailingAnchor.ConstraintEqualTo(counterLabel.LeadingAnchor, - 8f).Active = true;
             else
-                helperLabel.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor, -11f).Active = true;
+                helperLabel.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor, -8f).Active = true;
         }
 
         //Create helper label
@@ -340,7 +412,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.AddSubview(counterLabel);
 
             //Constraints
-            counterLabel.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor, -11f).Active = true;
+            counterLabel.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor, -8f).Active = true;
             counterLabel.BottomAnchor.ConstraintEqualTo(this.BottomAnchor).Active = true;
         }
 
@@ -386,10 +458,45 @@ namespace Xamarin.RSControls.iOS.Controls
         //Create Password
         private void CreatePassword()
         {
-            
+            bool isVisible = false;
+
+            UIButton uIButtonPassword = new UIButton();
+
+            uIButtonPassword.SetImage(UIImage.FromBundle("EyeInvisible"), UIControlState.Normal);
+            uIButtonPassword.ImageView.TintColor = this.borderColor;
+            uIButtonPassword.TouchUpInside += (sender, e) =>
+            {
+                UIView.Transition(uIButtonPassword.ImageView, 0.2,
+                    UIViewAnimationOptions.TransitionCrossDissolve,
+                    () =>
+                    {
+                        if (isVisible)
+                        {
+                            this.SecureTextEntry = true;
+                            isVisible = false;
+                            uIButtonPassword.SetImage(UIImage.FromBundle("EyeInvisible"), UIControlState.Normal);
+                        }
+                        else
+                        {
+                            isVisible = true;
+                            this.SecureTextEntry = false;
+                            uIButtonPassword.SetImage(UIImage.FromBundle("EyeVisible"), UIControlState.Normal);
+                        }
+                    },
+                    null
+                );
+
+                //var colorAnimation = CABasicAnimation.FromKeyPath("backgroundColor");
+                //colorAnimation.SetFrom(UIColor.LightGray.CGColor);
+                //colorAnimation.Duration = 0.2f;  
+                //uIButtonPassword.Layer.AddAnimation(colorAnimation, "ColorPulse");
+            };
+
+            this.RightView = uIButtonPassword;
+            this.RightViewMode = UITextFieldViewMode.Always;
         }
 
-        //Set border frame and mask
+        //Set Rounded border frame and mask
         public void SetBorder()
         {
             nfloat padding;
@@ -398,29 +505,52 @@ namespace Xamarin.RSControls.iOS.Controls
             else
                 padding = 0;
 
+
             //Border frame
-            //We set bottom padding to 25 so we leave 5 for errollabel at bottom
-            border.Frame = new CGRect(this.Frame.X, this.Frame.Y + 5, this.Frame.Width, this.Frame.Height - 20);
+            border.Frame = new CGRect(0, 5, this.Frame.Width, this.Frame.Height - this.underBorderSpaceHeight);
 
 
             CAShapeLayer borderMask = new CAShapeLayer();
             CGPath maskPath = new CGPath();
 
             //Whole border except top (border width)
-            maskPath.AddRect(new CGRect(x: border.Frame.X, y: this.Frame.Y + this.borderWidth, width: border.Frame.Width, height: border.Frame.Height - this.borderWidth));
+            maskPath.AddRect(new CGRect(x: 0, y: this.borderWidth + 1, width: border.Frame.Width, height: border.Frame.Height));
 
             //Top border right of floating label area
-            maskPath.AddRect(new CGRect(x: (floatingHint.Frame.X + floatingHint.Frame.Width) + padding, y: this.Frame.Y, width: border.Frame.Width - floatingHint.Frame.Width, height: this.borderWidth));
+            maskPath.AddRect(new CGRect(x: (floatingHint.Frame.X + floatingHint.Frame.Width) + padding, y: 0, width: border.Frame.Width - floatingHint.Frame.Width, height: this.border.Frame.Height));
 
             //Left border
-            maskPath.AddRect(new CGRect(border.Frame.X, this.Frame.Y, floatingHint.Frame.X - padding, this.borderWidth));
+            maskPath.AddRect(new CGRect(0, 0, floatingHint.Frame.X - padding, border.Frame.Height));
 
             //Top border libne full
             if (!IsFloating())
-                maskPath.AddRect(new CGRect(x: border.Frame.X, y: this.Frame.Y, width: border.Frame.Width - floatingHint.Frame.Width, height: this.borderWidth));
+                maskPath.AddRect(new CGRect(x: 0, y: 0, width: border.Frame.Width, height: border.Frame.Height));
 
 
             //borderMask.FillRule = new NSString("kCAFillRuleEvenOdd");
+            borderMask.Path = maskPath;
+            border.Mask = borderMask;
+        }
+
+        //Set FIlled border frame
+        public void SetFilledBorder()
+        {
+            //Border frame
+            border.Frame = new CGRect(0, 0, this.Frame.Width, this.Frame.Height - this.underBorderSpaceHeight);
+
+            CAShapeLayer borderMask = new CAShapeLayer();
+            CGPath maskPath = new CGPath();
+
+            //Top rounded border mask
+            maskPath.AddRoundedRect(new CGRect(borderWidth + 1, borderWidth + 1, this.Frame.Width - (2 * borderWidth + 2), this.Frame.Height - this.underBorderSpaceHeight), 6, 6);
+
+            //Bottom edges make them straight
+            maskPath.AddRect(new CGRect(x: borderWidth + 1, y: this.border.Frame.Height / 2, width: this.Frame.Width - (2 * borderWidth + 2), height: this.border.Frame.Height));
+
+            //Bottom border
+            maskPath.AddRect(new CGRect(x: 0, y: this.border.Frame.Height, width: this.Frame.Width, height: this.borderWidth));
+
+
             borderMask.Path = maskPath;
             border.Mask = borderMask;
         }
@@ -446,7 +576,10 @@ namespace Xamarin.RSControls.iOS.Controls
             this.LayoutIfNeeded();
 
             //Draw border
-            SetBorder();
+            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.RoundedBorder)
+                SetBorder();
+            else if (this.rsEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
+                SetFilledBorder();
         }
 
         //Not used
@@ -522,7 +655,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 },
                 completion: () =>
                 {
-                    floatingHint.Hidden = true;
+                    floatingHint.Hidden = false;
                     this.Placeholder = floatingHint.Text;
                 });
             }
@@ -533,15 +666,20 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             FloatingHintConstraintsPlacement();
 
-            SetBorder();
+            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.RoundedBorder)
+                SetBorder();
+            else if (this.rsEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
+                SetFilledBorder();
         }
 
         //Device orientation change event
         private void DeviceRotated(NSNotification notification)
         {
             //Reset border frame and mask
-            if (UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.PortraitUpsideDown)
-                SetBorder();
+            //if (UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.PortraitUpsideDown)
+            // SetBorder();
+
+            SetNeedsDisplay();
         }
 
         //Helper
@@ -557,13 +695,13 @@ namespace Xamarin.RSControls.iOS.Controls
         //Text padding
         public override CGRect TextRect(CGRect forBounds)
         {
-            return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(16, 8, 25, 8));
+            return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(this.topPadding, 8, this.bottomPadding, 8));
         }
 
         //Edit rectangle padding
         public override CGRect EditingRect(CGRect forBounds)
         {
-            return InsetRect(base.EditingRect(forBounds), new UIEdgeInsets(16, 8, 25, 8));
+            return InsetRect(base.EditingRect(forBounds), new UIEdgeInsets(this.topPadding, 8, this.bottomPadding, 8));
         }
 
         //Right view padding
@@ -571,7 +709,7 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             return new CGRect(
                 base.RightViewRect(forBounds).X - 8,
-                this.Center.Y - 5 - (base.RightViewRect(forBounds).Height / 2),
+                base.RightViewRect(forBounds).Y - 5,
                 base.RightViewRect(forBounds).Width,
                 base.RightViewRect(forBounds).Height);
         }
@@ -602,7 +740,7 @@ namespace Xamarin.RSControls.iOS.Controls
         protected override void Dispose(bool disposing)
         {
             //Remove observer
-            NSNotificationCenter.DefaultCenter.RemoveObserver(new NSString("UIDeviceOrientationDidChangeNotification"));
+            NSNotificationCenter.DefaultCenter.RemoveObserver(deviceRotationObserver);
 
             //Remove events
             this.Started -= RSUITextField_Started;

@@ -3,5 +3,5 @@
         android:id="@+id/rsTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 </android.support.design.widget.TextInputLayout>

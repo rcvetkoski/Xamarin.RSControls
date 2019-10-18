@@ -8,6 +8,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.RSControls.Controls;
+using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.iOS.Controls;
 
 [assembly: ExportRenderer(typeof(RSPickerBase), typeof(RSPickerRenderer))]
@@ -15,6 +16,9 @@ namespace Xamarin.RSControls.iOS.Controls
 {
     public class RSPickerRenderer : ViewRenderer<RSPickerBase, UITextField>
     {
+        private UIPickerView uIPickerView;
+
+
         public RSPickerRenderer()
         {
         }
@@ -26,11 +30,14 @@ namespace Xamarin.RSControls.iOS.Controls
             if (Control != null)
                 return;
 
+            if (e.NewElement == null)
+                return;
+
 
             //Create uitextfield and set it as control
-            var nativeEditText = CreateNativeControl();
-            nativeEditText.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
-            this.SetNativeControl(nativeEditText);
+            var entry = CreateNativeControl();
+            entry.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
+            this.SetNativeControl(entry);
 
 
             //Set uitextfield style
@@ -47,14 +54,9 @@ namespace Xamarin.RSControls.iOS.Controls
             //Set Text
             SetText();
 
-            //Create and add gesture to control
-            UITapGestureRecognizer uIGesture = new UITapGestureRecognizer((obj) =>
-            {
-                CustomAlertView customAlertView = new CustomAlertView("", this);
-                customAlertView.Show(true);
-            });
+            entry.InputAccessoryView = CreateToolbar(entry);
+            entry.InputView = CrearteUIPickerView();
 
-            Control.AddGestureRecognizer(uIGesture);
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -69,6 +71,11 @@ namespace Xamarin.RSControls.iOS.Controls
             if(e.PropertyName == "SelectedIndex")
             {
                 var lol = this.Element.SelectedIndex;
+            }
+
+            if (e.PropertyName == "Error")
+            {
+                (this.Control as RSUITextField).ErrorMessage = this.Element.Error;
             }
         }
 
@@ -181,15 +188,64 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
+        private UIToolbar CreateToolbar(UITextField entry)
+        {
+            var width = UIScreen.MainScreen.Bounds.Width;
+            UIToolbar toolbar = new UIToolbar(new CGRect(0, 0, width, 44)) { BarStyle = UIBarStyle.Default, Translucent = true };
+            
+            //Clear cancel button
+            UIBarButtonItem clearCancelButton;
+
+            clearCancelButton = new UIBarButtonItem("Clear", UIBarButtonItemStyle.Plain, (sender, ev) =>
+            {
+                this.Element.SelectedItem = null;
+                SetText();
+                entry.ResignFirstResponder();
+            });
+
+
+            //Space
+            var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
+
+            //Done Button
+            var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, (sender, ev) =>
+            {
+                this.Element.SelectedItem = (uIPickerView.Model as CustomUIPickerViewModel).SelectedItem;
+                SetText();
+                entry.ResignFirstResponder();
+            });
+
+            toolbar.SetItems(new[] { clearCancelButton, spacer, doneButton }, false);
+
+            return toolbar;
+        }
+
+        private UIPickerView CrearteUIPickerView()
+        {
+            uIPickerView = new UIPickerView(CGRect.Empty)
+            {
+                ShowSelectionIndicator = true,
+                Model = new CustomUIPickerViewModel(this.Element.ItemsSource, this.Element, this),
+            };
+
+            //Fixes selectedindicator not showing
+            if (this.Element.SelectedItem != null)
+                uIPickerView.Select(this.Element.SelectedIndex, 0, true);
+
+            return uIPickerView;
+        }
+
         protected override UITextField CreateNativeControl()
         {
             return new RSUITextField(
                 this.Element.Placeholder,
                 "",
                 -1,
+                false,
+                RSEntryStyleSelectionEnum.FilledBorder,
                 1,
                 Color.Gray.ToUIColor(),
-                this.Element.BackgroundColor.ToCGColor(),
+                this.Element.BackgroundColor.ToUIColor(),
                 this.Element.Behaviors.Any());
         }
     }
@@ -309,19 +365,6 @@ namespace Xamarin.RSControls.iOS.Controls
             //Fixes selectedindicator not showing
             if (renderer.Element.SelectedItem != null)
                 uIPickerView.Select(renderer.Element.SelectedIndex, 0, true);
-
-            //DialogView.AddSubview(uIPickerView);
-
-
-
-            //UIStackView uIStackView = new UIStackView();
-            //uIStackView.Axis = UILayoutConstraintAxis.Horizontal;
-            //uIStackView.Distribution = UIStackViewDistribution.FillEqually;
-            //uIStackView.Spacing = 0;
-            //uIStackView.Frame = new CGRect(0f, separatorLineView.Frame.Height + toolBar.Frame.Height, dialogViewWidth, uIPickerView.Frame.Height);
-            //uIStackView.AddArrangedSubview(uIPickerView);
-            //uIStackView.AddArrangedSubview(uIPickerView2);
-            //uIStackView.AddArrangedSubview(uIPickerView3);
 
 
             // DialogView

@@ -876,8 +876,11 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
             }
 
-            leftButton.Click -= leftButton_Click;
-            rightButton.Click -= rightButton_Click;
+            if(leftButton != null)
+                leftButton.Click -= leftButton_Click;
+
+            if(leftButton != null)
+                rightButton.Click -= rightButton_Click;
 
             base.Dispose(disposing);
         }
