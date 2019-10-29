@@ -97,6 +97,9 @@ namespace Xamarin.RSControls.iOS.Controls
                     SetPickerSelectedIndicator(CorrectMinMaxDateSelectedValue(DateTime.Now));
 
                 SetText(entry);
+
+                if(this.Control is RSUITextField)
+                    (this.Control as RSUITextField).UpdateFloatingLabel();
             }
         }
 

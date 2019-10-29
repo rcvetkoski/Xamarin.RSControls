@@ -160,6 +160,8 @@ namespace Xamarin.RSControls.iOS.Controls
 
         //Padding values
         private nfloat topPadding;
+        private nfloat topPaddingPlaceholder;
+        private nfloat bottomPaddingPlaceholder;
         private nfloat bottomPadding;
         private nfloat underBorderSpaceHeight;
 
@@ -192,7 +194,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 this.bottomPadding = 20;
                 this.underBorderSpaceHeight = 15;
             }
-
+            this.topPaddingPlaceholder = 15;
+            this.bottomPaddingPlaceholder = 25;
 
             this.AutocorrectionType = UITextAutocorrectionType.No;
 
@@ -340,7 +343,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 centerYAnchorConstraintFloating = floatingHint.CenterYAnchor.ConstraintEqualTo(this.TopAnchor, 10f);
 
             leadingConstraintNonFloating = floatingHint.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 8f);
-            centerYAnchorConstraintNonFloating = floatingHint.TopAnchor.ConstraintEqualTo(this.TopAnchor, this.topPadding);
+            centerYAnchorConstraintNonFloating = floatingHint.TopAnchor.ConstraintEqualTo(this.TopAnchor, topPaddingPlaceholder);
         }
 
         //Create error label
@@ -655,14 +658,14 @@ namespace Xamarin.RSControls.iOS.Controls
                 },
                 completion: () =>
                 {
-                    floatingHint.Hidden = false;
+                    floatingHint.Hidden = true;
                     this.Placeholder = floatingHint.Text;
                 });
             }
         }
 
         //Update floating hint
-        private void UpdateFloatingLabel()
+        public void UpdateFloatingLabel()
         {
             FloatingHintConstraintsPlacement();
 
@@ -696,6 +699,11 @@ namespace Xamarin.RSControls.iOS.Controls
         public override CGRect TextRect(CGRect forBounds)
         {
             return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(this.topPadding, 8, this.bottomPadding, 8));
+        }
+
+        public override CGRect PlaceholderRect(CGRect forBounds)
+        {
+            return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(topPaddingPlaceholder, 8, bottomPaddingPlaceholder, 8));
         }
 
         //Edit rectangle padding

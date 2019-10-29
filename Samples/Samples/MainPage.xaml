@@ -142,19 +142,20 @@
 
 
             <rs:RSEntryInputLayout Placeholder="Test no error" PlaceholderColor="Red" CounterMaxLength="3" IsPassword="True"/>
-           
 
-            <rs:RSPicker  ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Default" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" HasBorder="True">
+            <rs:RSPicker ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Descending" SelectedItems="{Binding SelectedPersons}" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" SelectionMode="Multiple">
                 <rs:RSPicker.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <Label Text="{Binding Name}" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0"/>
                             <Label Text="America" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1"/>
-                            <Label Text="2019" FontSize="Default" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="Red" Grid.Column="2"/>
+                            <Label Text="20199999995648" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="Red" Grid.Column="2"/>
                         </Grid>
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>
             </rs:RSPicker>
+
+            <Picker ItemsSource="{Binding ListPicker}"></Picker>
 
             <rs:RSEntryInputLayout Placeholder="Password" Helper="Enter your password" IsPassword="True" RSEntryStyle="FilledBorder">
 
@@ -163,6 +164,17 @@
             <rs:RSEntryInputLayout Placeholder="Password" Helper="Enter your password" FontSize="46" BackgroundColor="LightGray" IsPassword="False" RSEntryStyle="FilledBorder">
 
             </rs:RSEntryInputLayout>
+
+            <rs:RSPickerInputLayout ItemsSource="{Binding ObsCollectionPicker}" Placeholder="Obs collection picker" >
+                <rs:RSPickerInputLayout.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="SelectedItem">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSPickerInputLayout.Behaviors>
+            </rs:RSPickerInputLayout>
+
 
             <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
 

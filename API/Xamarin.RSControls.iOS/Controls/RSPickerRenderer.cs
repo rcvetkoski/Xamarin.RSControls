@@ -17,7 +17,7 @@ namespace Xamarin.RSControls.iOS.Controls
     public class RSPickerRenderer : ViewRenderer<RSPickerBase, UITextField>
     {
         private UIPickerView uIPickerView;
-
+        private UITableView multipleSelectionList;
 
         public RSPickerRenderer()
         {
@@ -55,8 +55,37 @@ namespace Xamarin.RSControls.iOS.Controls
             SetText();
 
             entry.InputAccessoryView = CreateToolbar(entry);
-            entry.InputView = CrearteUIPickerView();
 
+            entry.InputAssistantItem.LeadingBarButtonGroups = new UIBarButtonItemGroup[0];
+            entry.InputAssistantItem.TrailingBarButtonGroups = new UIBarButtonItemGroup[0];
+
+            if (this.Element.SelectionMode == PickerSelectionModeEnum.Single)
+                entry.InputView = CrearteUIPickerView();
+            else
+                entry.InputView = CreateMultipleSelectionPicker();
+
+            entry.EditingDidBegin += Entry_EditingDidBegin;
+
+            //Set placeholder color for floating hint
+
+            if (Control is RSUITextField)
+            {
+                NSRange range;
+                var color = Control.AttributedPlaceholder.GetAttribute("NSColor", 0, out range) as UIColor;
+                (Control as RSUITextField).PlaceholderColor = color;
+            }
+        }
+
+        //If collection has changed meanwhile update the data on click
+        private void Entry_EditingDidBegin(object sender, EventArgs e)
+        {
+            if(uIPickerView != null)
+                uIPickerView.Model = new CustomUIPickerViewModel(this.Element.ItemsSource, this.Element, this);
+
+            if(multipleSelectionList != null)
+            {
+                multipleSelectionList.Source = new TableSource(this.Element.Items.ToArray(), this);
+            }
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -66,14 +95,10 @@ namespace Xamarin.RSControls.iOS.Controls
             if (e.PropertyName == "SelectedItem" || e.PropertyName == "SelectedItems")
             {
                 SetText();
-            }
-            
-            if(e.PropertyName == "SelectedIndex")
-            {
-                var lol = this.Element.SelectedIndex;
-            }
 
-            if (e.PropertyName == "Error")
+                (this.Control as RSUITextField).UpdateFloatingLabel();
+            }
+            else if (e.PropertyName == "Error")
             {
                 (this.Control as RSUITextField).ErrorMessage = this.Element.Error;
             }
@@ -192,15 +217,25 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             var width = UIScreen.MainScreen.Bounds.Width;
             UIToolbar toolbar = new UIToolbar(new CGRect(0, 0, width, 44)) { BarStyle = UIBarStyle.Default, Translucent = true };
-            
+            //UIToolbar toolbar = new UIToolbar() { BarStyle = UIBarStyle.Default, Translucent = true };
+            toolbar.AutoresizingMask = UIViewAutoresizing.FlexibleHeight;
+
             //Clear cancel button
             UIBarButtonItem clearCancelButton;
 
             clearCancelButton = new UIBarButtonItem("Clear", UIBarButtonItemStyle.Plain, (sender, ev) =>
             {
-                this.Element.SelectedItem = null;
+                if (this.Element.SelectionMode == PickerSelectionModeEnum.Single)
+                    this.Element.SelectedItem = null;
+                else
+                {
+                    this.Element.SelectedItems.Clear();
+                    multipleSelectionList.ReloadData();
+                }
+
                 SetText();
-                entry.ResignFirstResponder();
+                entry.EndEditing(true);
+                //entry.ResignFirstResponder();
             });
 
 
@@ -210,7 +245,9 @@ namespace Xamarin.RSControls.iOS.Controls
             //Done Button
             var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, (sender, ev) =>
             {
-                this.Element.SelectedItem = (uIPickerView.Model as CustomUIPickerViewModel).SelectedItem;
+                if(this.Element.SelectionMode == PickerSelectionModeEnum.Single)
+                    this.Element.SelectedItem = (uIPickerView.Model as CustomUIPickerViewModel).SelectedItem;
+
                 SetText();
                 entry.ResignFirstResponder();
             });
@@ -225,6 +262,7 @@ namespace Xamarin.RSControls.iOS.Controls
             uIPickerView = new UIPickerView(CGRect.Empty)
             {
                 ShowSelectionIndicator = true,
+                AutoresizingMask = UIViewAutoresizing.FlexibleHeight,
                 Model = new CustomUIPickerViewModel(this.Element.ItemsSource, this.Element, this),
             };
 
@@ -235,6 +273,32 @@ namespace Xamarin.RSControls.iOS.Controls
             return uIPickerView;
         }
 
+        private UITableView CreateMultipleSelectionPicker()
+        {
+            multipleSelectionList = new UITableView();
+            multipleSelectionList.AutoresizingMask = UIViewAutoresizing.FlexibleHeight;
+            //multipleSelectionList = new UITableView(new CGRect(0, 0, this.Frame.Width, 162));
+
+            multipleSelectionList.BackgroundColor = UIColor.Clear;
+
+
+            UIBlurEffect uIBlurEffect = new UIBlurEffect();
+            UIBlurEffect.FromStyle(UIBlurEffectStyle.Light);
+            UIVisualEffectView uIVisualEffectView = new UIVisualEffectView(uIBlurEffect);
+            uIVisualEffectView.TranslatesAutoresizingMaskIntoConstraints = false;
+
+            multipleSelectionList.AddSubview(uIVisualEffectView);
+
+            multipleSelectionList.AllowsMultipleSelection = true;
+
+            multipleSelectionList.SetEditing(true, true);
+            multipleSelectionList.AllowsMultipleSelectionDuringEditing = true;
+            multipleSelectionList.Source = new TableSource(this.Element.Items.ToArray(), this);
+
+
+            return multipleSelectionList;
+        }
+
         protected override UITextField CreateNativeControl()
         {
             return new RSUITextField(
@@ -242,14 +306,26 @@ namespace Xamarin.RSControls.iOS.Controls
                 "",
                 -1,
                 false,
-                RSEntryStyleSelectionEnum.FilledBorder,
+                RSEntryStyleSelectionEnum.RoundedBorder,
                 1,
                 Color.Gray.ToUIColor(),
                 this.Element.BackgroundColor.ToUIColor(),
                 this.Element.Behaviors.Any());
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if(disposing)
+            {
+                if(this.Control != null)
+                    this.Control.EditingDidBegin -= Entry_EditingDidBegin;
+            }
+        }
     }
 
+    //Not used
     public interface IModal
     {
         void Show(bool animated);
@@ -258,7 +334,6 @@ namespace Xamarin.RSControls.iOS.Controls
         UIView BackgroundView { get; set; }
         UIView DialogView { get; set; }
     }
-
     public class CustomAlertView : UIView, IModal
     {
         public UIView BackgroundView { get; set; } = new UIView();
@@ -426,6 +501,8 @@ namespace Xamarin.RSControls.iOS.Controls
         }
     }
 
+
+
     public class TableSource : UITableViewSource
     {
         private string[] tableItems;
@@ -465,30 +542,53 @@ namespace Xamarin.RSControls.iOS.Controls
             UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
             string item = tableItems[indexPath.Row];
 
-            //if there are no cells to reuse, create a new one
-            if (cell == null)
+
+            if (renderer.Element.ItemTemplate == null)
             {
-                cell = new UITableViewCell(UITableViewCellStyle.Default, cellIdentifier);
+                //if there are no cells to reuse, create a new one
+                if (cell == null)
+                {
+                    cell = new UITableViewCell(UITableViewCellStyle.Default, cellIdentifier) { BackgroundColor = UIColor.Clear };
+
+                    //Set new selected background so it wont higlight background but only tick left checkbox
+                    cell.SelectedBackgroundView = new UIView(cell.Frame);
+                    cell.SelectedBackgroundView.BackgroundColor = UIColor.Clear;
+                }
+
+                cell.TextLabel.Text = item;
+            }
+            else
+            {
+                //if there are no cells to reuse, create a new one
+                if (cell == null)
+                {
+                    Xamarin.Forms.View formsView = renderer.Element.ItemTemplate.CreateContent() as Xamarin.Forms.View;
+                    cell = new CustomCell(new NSString(cellIdentifier), formsView) { BackgroundColor = UIColor.Clear };
+                }
+
+                //Update bindings
+                (cell as CustomCell).formsView.BindingContext = tableItemsSource[indexPath.Row];
             }
 
-            cell.TextLabel.Text = item;
+            //Set selected
+            if (renderer.Element.SelectedItems.Contains(tableItemsSource.ElementAt(indexPath.Row)))
+            {
+                tableView.SelectRow(indexPath, false, UITableViewScrollPosition.None);
+            }
+
 
             return cell;
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
-            renderer.Element.SelectedItem = tableItemsSource[indexPath.Row];
-            //renderer.Element.SelectedItems.Add(selectedItem);
-            //renderer.CheckedItems[indexPath.Row] = true;
+            renderer.Element.SelectedItems.Add(tableItemsSource[indexPath.Row]);
             renderer.SetText();
         }
 
         public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
         {
-            var delectedItem = tableItemsSource[indexPath.Row];
-            //renderer.Element.SelectedItems.Remove(delectedItem);
-            //renderer.CheckedItems[indexPath.Row] = false;
+            renderer.Element.SelectedItems.Remove(tableItemsSource[indexPath.Row]);
             renderer.SetText();
         }
     }
@@ -498,13 +598,13 @@ namespace Xamarin.RSControls.iOS.Controls
         private IList<object> myItems;
         protected int selectedIndex = 0;
         private RSPickerBase rsPicker;
-        private RSPickerRenderer renderer;
+        private RSPickerRenderer rSPickerRenderer;
 
-        public CustomUIPickerViewModel(System.Collections.IEnumerable items, RSPickerBase rsPicker, RSPickerRenderer renderer)
+        public CustomUIPickerViewModel(System.Collections.IEnumerable items, RSPickerBase rsPicker, RSPickerRenderer rSPickerRenderer)
         {
-            this.renderer = renderer;
+            this.rSPickerRenderer = rSPickerRenderer;
 
-            if (this.renderer.Element.ItemsSource == null)
+            if (this.rSPickerRenderer.Element.ItemsSource == null)
                 return;
 
             this.rsPicker = rsPicker;
@@ -523,17 +623,17 @@ namespace Xamarin.RSControls.iOS.Controls
             get { return myItems[selectedIndex]; }
         }
 
-        public override nint GetComponentCount(UIPickerView picker)
+        public override nint GetComponentCount(UIPickerView pickerView)
         {
             return 1;
         }
 
-        public override nint GetRowsInComponent(UIPickerView picker, nint component)
+        public override nint GetRowsInComponent(UIPickerView pickerView, nint component)
         {
             return myItems.Count;
         }
 
-        public override string GetTitle(UIPickerView picker, nint row, nint component)
+        public override string GetTitle(UIPickerView pickerView, nint row, nint component)
         {
             if ((this.rsPicker != null && rsPicker is RSPicker) && !string.IsNullOrEmpty((rsPicker as RSPicker).DisplayMemberPath))
                 return Helpers.TypeExtensions.GetPropValue(myItems[(int)row], (rsPicker as RSPicker).DisplayMemberPath).ToString();
@@ -569,12 +669,61 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-        public override void Selected(UIPickerView picker, nint row, nint component)
+        public override void Selected(UIPickerView pickerView, nint row, nint component)
         {
             selectedIndex = (int)row;
-            picker.Select(row, component, false);
+            pickerView.Select(row, component, false);
             rsPicker.SelectedItem = this.SelectedItem;
-            this.renderer.SetText();
+            this.rSPickerRenderer.SetText();
+        }
+    }
+
+    public class CustomCell : UITableViewCell
+    {
+        public Forms.View formsView;
+        private IVisualElementRenderer renderer;
+         
+        public CustomCell(NSString cellId, Forms.View formsView) : base(UITableViewCellStyle.Default, cellId)
+        {
+            this.formsView = formsView;
+
+            this.ContentView.AddSubview(FormsToNativeView());
+
+            //Set new selected background so it wont higlight background but only tick left checkbox
+            this.SelectedBackgroundView = new UIView(this.Frame);
+            this.SelectedBackgroundView.BackgroundColor = UIColor.Clear;
+        }
+
+        private UIView FormsToNativeView()
+        {
+            renderer = Platform.CreateRenderer(formsView);
+            this.ContentView.AddSubview(renderer.NativeView);
+
+            return renderer.NativeView;
+        }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            //nativeView.Frame = new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height);
+            //nativeView.AutoresizingMask = UIViewAutoresizing.All;
+            //nativeView.ContentMode = UIViewContentMode.ScaleToFill;
+            renderer.Element.Layout(new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height).ToRectangle());
+        }
+    }
+
+    public class CustomUITableView : UITableView
+    {
+        public CustomUITableView(CGRect frame) : base(frame)
+        {
+        }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+
         }
     }
 }

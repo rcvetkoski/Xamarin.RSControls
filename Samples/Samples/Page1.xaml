@@ -63,6 +63,8 @@
                 
             </rs:RSDatePicker>
 
+            <DatePicker></DatePicker>
+
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
