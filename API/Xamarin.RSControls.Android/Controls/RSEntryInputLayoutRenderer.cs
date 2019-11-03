@@ -29,7 +29,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 return;
 
             textInputLayout = LayoutInflater.From(Context).Inflate(Resource.Layout.RSTextInputLayout, null) as TextInputLayout;
-
+            
             RSNumericEntryRenderer renderer = new RSNumericEntryRenderer(Context);
             renderer.SetElement(Element);
             renderer.Control.RemoveFromParent();

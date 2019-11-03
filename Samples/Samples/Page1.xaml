@@ -59,11 +59,6 @@
 
                 <rs:RSEntryInputLayout Text="Lol" FontSize="60" Placeholder="Test" IsPassword="True" RSEntryStyle="FilledBorder"/>
 
-            <rs:RSDatePicker HasBorder="True" DateSelectionMode="MonthYear" Placeholder="Enter date" >
-                
-            </rs:RSDatePicker>
-
-            <DatePicker></DatePicker>
 
             </StackLayout>
         </ScrollView>
