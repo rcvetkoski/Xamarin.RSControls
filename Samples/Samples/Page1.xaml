@@ -57,7 +57,7 @@
 
                 <rs:RSEnumPickerInputLayout x:TypeArguments="enums:DateSelectionModeEnum" SelectionMode="Multiple" SelectedItems="{Binding ListPickerEnumSelectedItems}" Placeholder="Multiple Enum source with border" HasBorder="True"/>
 
-                <rs:RSEntryInputLayout Text="Lol" FontSize="60" Placeholder="Test" IsPassword="True" RSEntryStyle="FilledBorder"/>
+                <rs:RSEntryInputLayout Text="Lol" FontSize="60" Placeholder="Test" PlaceholderColor="Green" IsPassword="True" RSEntryStyle="OutlinedBorder" CounterMaxLength="4" Helper="Helper"/>
 
 
             </StackLayout>

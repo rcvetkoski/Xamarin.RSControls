@@ -58,6 +58,21 @@ namespace Samples
 
             //    stack.Children.Add(rSNumericEntryInputLayout);
             //}
+
+
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    RSEntry rSNumericEntryInputLayout = new RSEntry() { Placeholder = "Test", Error = "Error", RSEntryStyle = Xamarin.RSControls.Enums.RSEntryStyleSelectionEnum.OutlinedBorder };
+
+            //    stack.Children.Add(rSNumericEntryInputLayout);
+            //}
+
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    RSEntryInputLayout rSNumericEntryInputLayout = new RSEntryInputLayout() { Placeholder = "Test", Error = "Error" };
+
+            //    stack.Children.Add(rSNumericEntryInputLayout);
+            //}
         }
 
         private void Button_Clicked(object sender, EventArgs e)

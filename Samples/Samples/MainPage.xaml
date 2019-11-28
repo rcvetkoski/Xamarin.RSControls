@@ -175,8 +175,37 @@
                 </rs:RSPickerInputLayout.Behaviors>
             </rs:RSPickerInputLayout>-->
 
-            <rs:RSEntry BackgroundColor="Cyan" FontSize="250"></rs:RSEntry>
-            
+
+
+            <rs:RSEntry Placeholder="Test" RSEntryStyle="FilledBorder" IsPassword="False" BorderRadius="40"/>
+
+            <rs:RSEntry Placeholder="Test" Helper="Helper message!" RSEntryStyle="OutlinedBorder" IsPassword="False" CounterMaxLength="9" BorderRadius="26"/>
+
+            <rs:RSEntry Placeholder="Error test" RSEntryStyle="OutlinedBorder" IsPassword="True" BackgroundColor="Transparent">
+                <rs:RSEntry.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSEntry.Behaviors>
+            </rs:RSEntry>
+
+            <rs:RSEntry Placeholder="Commodity" RSEntryStyle="OutlinedBorder" IsPassword="True"/>
+
+            <rs:RSEntry Placeholder="Counterpart" RSEntryStyle="OutlinedBorder" IsPassword="True"/>
+
+            <rs:RSEntry Placeholder="Test" Helper="Helper message!" RSEntryStyle="OutlinedBorder" IsPassword="True" CounterMaxLength="9" BorderRadius="0">
+                <rs:RSEntry.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSEntry.Behaviors>
+            </rs:RSEntry>
+
+
             <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
 
         </StackLayout>

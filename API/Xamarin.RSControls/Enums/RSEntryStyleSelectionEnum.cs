@@ -3,7 +3,7 @@
     public enum RSEntryStyleSelectionEnum
     {
         Default,
-        RoundedBorder,
+        OutlinedBorder,
         FilledBorder,
         Underline
     }
