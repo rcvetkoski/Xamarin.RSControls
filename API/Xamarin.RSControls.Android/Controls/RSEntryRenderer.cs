@@ -448,7 +448,7 @@ namespace Xamarin.RSControls.Droid.Controls
             var dr = Context.GetDrawable(RSControls.Droid.Resource.Drawable.avd_hide_password);
             dr.SetTint(global::Android.Graphics.Color.DarkGray);
             customDrawable = new CustomDrawable(dr, this);
-
+            
 
             //Set Drawable to control
             this.SetCompoundDrawables(this.leftDrawable, null, this.rightDrawable, null);
@@ -587,6 +587,7 @@ namespace Xamarin.RSControls.Droid.Controls
             customDrawable.drawable.SetBounds(textRect.Right - this.PaddingRight - 10 - customDrawable.IntrinsicWidth * 2, center, textRect.Right - this.PaddingRight - 10 - customDrawable.IntrinsicWidth, center2);
             customDrawable.SetBounds(textRect.Right - this.PaddingRight - 10 - customDrawable.IntrinsicWidth * 2, center, textRect.Right - this.PaddingRight - 10 - customDrawable.IntrinsicWidth, center2);
 
+            customDrawable.Callback = this;
             customDrawable.Draw(canvas);
             //Invalidate();
         }
@@ -903,7 +904,6 @@ namespace Xamarin.RSControls.Droid.Controls
             canvas.Restore();
 
             //this.drawable.Draw(canvas);
-
         }
 
         public override void SetAlpha(int alpha)
@@ -965,23 +965,25 @@ namespace Xamarin.RSControls.Droid.Controls
             if (radius <= this.drawable.IntrinsicWidth / 2 + 10)
             {
                 radius += divideRadiusValue;
-                InvalidateSelf();
+                //InvalidateSelf();
             }
             else
             {
                 if (ripplePaint.Alpha > 0)
                 {
                     ripplePaint.Alpha -= 15;
-                    InvalidateSelf();
+                    //InvalidateSelf();
                 }
                 else
                 {
                     ripplePaint.Alpha = 0;
                     radius = 0f;
                     ripple = false;
-                    InvalidateSelf();
+                    //InvalidateSelf();
                 }
             }
+
+            this.editText.PostInvalidate();
         }
     }
 }
