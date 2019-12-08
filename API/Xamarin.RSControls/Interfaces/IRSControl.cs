@@ -18,5 +18,11 @@ namespace Xamarin.RSControls.Interfaces
         bool HasError { get; }
         bool IsPassword { get; set; }
         float BorderRadius { get; set; }
+        string LeftIcon { get; set; }
+        string RightIcon { get; set; }
+        Color IconColor { get; set; }
+        double IconSize { get; set; }
+        Thickness Padding { get; set; }
+
     }
 }

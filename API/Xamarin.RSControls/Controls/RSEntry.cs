@@ -89,27 +89,26 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(IconColorProperty, value); }
         }
 
-        //Icon Width
-        public static readonly BindableProperty IconWidthProperty = BindableProperty.Create("IconWidth", typeof(double), typeof(RSEntry), 20.0);
-        public double IconWidth
-        {
-            get { return (double)GetValue(IconWidthProperty); }
-            set { SetValue(IconWidthProperty, value); }
-        }
-
         //Icon Height
-        public static readonly BindableProperty IconHeightProperty = BindableProperty.Create("IconHeight", typeof(double), typeof(RSEntry), 20.0);
-        public double IconHeight
+        public static readonly BindableProperty IconSizeProperty = BindableProperty.Create("IconSize", typeof(double), typeof(RSEntry), 20.0);
+        public double IconSize
         {
-            get { return (double)GetValue(IconHeightProperty); }
-            set { SetValue(IconHeightProperty, value); }
+            get { return (double)GetValue(IconSizeProperty); }
+            set { SetValue(IconSizeProperty, value); }
         }
 
-        public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSEntry), 14f);
+        public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSEntry), 16f);
         public float BorderRadius
         {
             get { return (float)GetValue(BorderRadiusProperty); }
             set { SetValue(BorderRadiusProperty, value); }
+        }
+
+        public static readonly BindableProperty PaddingProperty = BindableProperty.Create("Padding", typeof(Thickness), typeof(RSEntry), null);
+        public Thickness Padding
+        {
+            get { return (Thickness)GetValue(PaddingProperty); }
+            set { SetValue(PaddingProperty, value); }
         }
     }
 }
