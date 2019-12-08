@@ -306,7 +306,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 "",
                 -1,
                 false,
-                RSEntryStyleSelectionEnum.RoundedBorder,
+                RSEntryStyleSelectionEnum.OutlinedBorder,
                 1,
                 Color.Gray.ToUIColor(),
                 this.Element.BackgroundColor.ToUIColor(),

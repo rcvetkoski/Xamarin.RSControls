@@ -182,7 +182,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.rsEntryStyle = rsEntryStyle;
             this.backgroundColor = backgroundColor;
 
-            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.RoundedBorder)
+            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.OutlinedBorder)
             {
                 this.topPadding = 15;
                 this.bottomPadding = 25;
@@ -214,7 +214,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             CreateFloatingHint();
 
-            if(this.rsEntryStyle == RSEntryStyleSelectionEnum.RoundedBorder)
+            if(this.rsEntryStyle == RSEntryStyleSelectionEnum.OutlinedBorder)
                 CreateRoundedBorder();
             else if(this.rsEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
                 CreateFilledBorder();
@@ -337,7 +337,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             leadingConstraintFloating = floatingHint.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor, 8f);
 
-            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.RoundedBorder)
+            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.OutlinedBorder)
                 centerYAnchorConstraintFloating = floatingHint.CenterYAnchor.ConstraintEqualTo(this.TopAnchor, 5f);
             else if (this.rsEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
                 centerYAnchorConstraintFloating = floatingHint.CenterYAnchor.ConstraintEqualTo(this.TopAnchor, 10f);
@@ -579,7 +579,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.LayoutIfNeeded();
 
             //Draw border
-            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.RoundedBorder)
+            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.OutlinedBorder)
                 SetBorder();
             else if (this.rsEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
                 SetFilledBorder();
@@ -669,7 +669,7 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             FloatingHintConstraintsPlacement();
 
-            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.RoundedBorder)
+            if (this.rsEntryStyle == RSEntryStyleSelectionEnum.OutlinedBorder)
                 SetBorder();
             else if (this.rsEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
                 SetFilledBorder();

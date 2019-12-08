@@ -1,4 +1,5 @@
-﻿using UIKit;
+﻿using System.Linq;
+using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.RSControls.Controls;
@@ -23,6 +24,19 @@ namespace Xamarin.RSControls.iOS.Controls
             //    //Control.Layer.CornerRadius = 10;
             //    Control.TextColor = UIColor.White;
             //}
+        }
+
+        protected override UITextField CreateNativeControl()
+        {
+            return new RSUITextField(
+                (this.Element as RSEntry).Placeholder,
+                (this.Element as RSEntry).Helper,
+                (this.Element as RSEntry).CounterMaxLength,
+                (this.Element as RSEntry).IsPassword,
+                (this.Element as RSEntry).RSEntryStyle,
+                1, Color.Gray.ToUIColor(),
+                this.Element.BackgroundColor.ToUIColor(),
+                this.Element.Behaviors.Any());
         }
 
         //Fix for bug ios not loading dll
