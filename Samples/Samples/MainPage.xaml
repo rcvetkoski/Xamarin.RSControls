@@ -2,13 +2,15 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Samples"
+             x:Name="mainPage"
              xmlns:rs="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls"
              xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls"
              xmlns:enums="clr-namespace:Xamarin.RSControls.Enums;assembly=Xamarin.RSControls"
+             xmlns:helpers="clr-namespace:Xamarin.RSControls.Helpers;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
     <ScrollView Orientation="Vertical">
-        <StackLayout Margin="20" x:Name="stack">
+        <StackLayout Margin="10" x:Name="stack">
 
             <!--<rs:RSEntry Placeholder="Entry">
                 <rs:RSEntry.Behaviors>
@@ -176,13 +178,21 @@
             </rs:RSPickerInputLayout>-->
 
 
-            <rs:RSEntry Placeholder="No left icon" RSEntryStyle="FilledBorder" Helper="Helper message!" IsPassword="True" Text="Trolol"/>
+            <rs:RSEntry Placeholder="No left icon" Text="{Binding Lolo}" RSEntryStyle="FilledBorder" LeftIcon="Samples/Data/SVG/calendarAndTime.svg" Helper="Helper message!" IsPassword="False">
+                <rs:RSEntry.RightIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/agenda.svg" Command="TestMethod" CommandParameter="{Binding BindingContext.Lolo, Source={x:Reference mainPage}}">
+                        <helpers:RSEntryIcon.CommandParameters>
+                            <Binding Path="BindingContext.Lolo" Source="{x:Reference mainPage}"/>
+                        </helpers:RSEntryIcon.CommandParameters>
+                    </helpers:RSEntryIcon>
+                </rs:RSEntry.RightIcon>
+            </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Email" RSEntryStyle="FilledBorder" Helper="Enter your email address" IsPassword="True"/>
+            <!--<rs:RSEntry TrailingIcon="lol" Placeholder="Email" RSEntryStyle="FilledBorder" Helper="Enter your email address" IsPassword="False"/>
 
-            <rs:RSEntry Placeholder="Test" Helper="Helper message!" RSEntryStyle="OutlinedBorder" LeftIcon="Samples/Data/SVG/time.svg" IsPassword="False" CounterMaxLength="9"/>
+            <rs:RSEntry Placeholder="Test" PlaceholderColor="Green" Helper="Helper message!" RSEntryStyle="OutlinedBorder" LeftIcon="Samples/Data/SVG/time.svg" IsPassword="False" CounterMaxLength="9"/>
 
-            <rs:RSEntry Placeholder="Error test" RSEntryStyle="OutlinedBorder" IsPassword="True" BackgroundColor="Transparent">
+            <rs:RSEntry Placeholder="Error test" RSEntryStyle="OutlinedBorder" IsPassword="False" BackgroundColor="Transparent">
                 <rs:RSEntry.Behaviors>
                     <validators:ValidationBehaviour PropertyName="Text">
                         <validators:ValidationBehaviour.Validators>
@@ -192,11 +202,11 @@
                 </rs:RSEntry.Behaviors>
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Test" RSEntryStyle="OutlinedBorder" Text="Gasoil" IsPassword="True" Padding="10,30,10,30"/>
+            <rs:RSEntry LeftIcon="Samples/Data/SVG/agenda.svg" Placeholder="Counterpart" RSEntryStyle="OutlinedBorder" Text="Gasoil" IsPassword="False"/>
 
-            <rs:RSEntry Placeholder="Counterpart" RSEntryStyle="OutlinedBorder" IsPassword="True"/>
+            <rs:RSEntry Placeholder="Password" Helper="Enter your password" RSEntryStyle="OutlinedBorder" IsPassword="True"/>
 
-            <rs:RSEntry Placeholder="Test" Helper="Helper message!" RSEntryStyle="OutlinedBorder" IsPassword="True" CounterMaxLength="9" BorderRadius="0">
+            <rs:RSEntry Placeholder="Test" Helper="Helper message!" RSEntryStyle="OutlinedBorder" IsPassword="False" CounterMaxLength="9" BorderRadius="0">
                 <rs:RSEntry.Behaviors>
                     <validators:ValidationBehaviour PropertyName="Text">
                         <validators:ValidationBehaviour.Validators>
@@ -206,7 +216,7 @@
                 </rs:RSEntry.Behaviors>
             </rs:RSEntry>
 
-
+            <rs:RSDatePicker DateSelectionMode="MonthYear"></rs:RSDatePicker>-->
             <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
 
         </StackLayout>

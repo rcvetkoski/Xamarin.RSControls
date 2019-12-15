@@ -1,5 +1,6 @@
 ﻿using Xamarin.Forms;
 using Xamarin.RSControls.Enums;
+using Xamarin.RSControls.Helpers;
 using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Controls
@@ -67,6 +68,19 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Icon
+        public static readonly BindableProperty LeadingIconProperty = BindableProperty.Create("LeadingIcon", typeof(string), typeof(RSEntry), null);
+        public string LeadingIcon
+        {
+            get { return (string)GetValue(LeadingIconProperty); }
+            set { SetValue(LeadingIconProperty, value); }
+        }
+        public static readonly BindableProperty TrailingIconProperty = BindableProperty.Create("TrailingIconfwefew", typeof(string), typeof(RSEntry), null);
+        public string TrailingIcon
+        {
+            get { return (string)GetValue(TrailingIconProperty); }
+            set { SetValue(TrailingIconProperty, value); }
+        }
+
         public static readonly BindableProperty LeftIconProperty = BindableProperty.Create("LeftIcon", typeof(string), typeof(RSEntry), null);
         public string LeftIcon
         {
@@ -74,10 +88,10 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(LeftIconProperty, value); }
         }
 
-        public static readonly BindableProperty RightIconProperty = BindableProperty.Create("RightIcon", typeof(string), typeof(RSEntry), null);
-        public string RightIcon
+        public static readonly BindableProperty RightIconProperty = BindableProperty.Create("RightIcon", typeof(RSEntryIcon), typeof(RSEntry), null);
+        public RSEntryIcon RightIcon
         {
-            get { return (string)GetValue(RightIconProperty); }
+            get { return (RSEntryIcon)GetValue(RightIconProperty); }
             set { SetValue(RightIconProperty, value); }
         }
 
@@ -90,7 +104,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Icon Height
-        public static readonly BindableProperty IconSizeProperty = BindableProperty.Create("IconSize", typeof(double), typeof(RSEntry), 20.0);
+        public static readonly BindableProperty IconSizeProperty = BindableProperty.Create("IconSize", typeof(double), typeof(RSEntry), 22.0);
         public double IconSize
         {
             get { return (double)GetValue(IconSizeProperty); }
@@ -109,6 +123,28 @@ namespace Xamarin.RSControls.Controls
         {
             get { return (Thickness)GetValue(PaddingProperty); }
             set { SetValue(PaddingProperty, value); }
+        }
+
+        //Border Color
+        public static readonly BindableProperty BorderColorProperty = BindableProperty.Create("BorderColor", typeof(Color), typeof(RSEntry), Color.DimGray);
+        public Color BorderColor
+        {
+            get { return (Color)GetValue(BorderColorProperty); }
+            set { SetValue(BorderColorProperty, value); }
+        }
+        //Active Color
+        public static readonly BindableProperty ActiveColorProperty = BindableProperty.Create("ActiveColor", typeof(Color), typeof(RSEntry), Color.FromHex("#3F51B5"));
+        public Color ActiveColor
+        {
+            get { return (Color)GetValue(ActiveColorProperty); }
+            set { SetValue(ActiveColorProperty, value); }
+        }
+        //Error Color
+        public static readonly BindableProperty ErrorColorProperty = BindableProperty.Create("ErrorColor", typeof(Color), typeof(RSEntry), Color.FromHex("#f44336"));
+        public Color ErrorColor
+        {
+            get { return (Color)GetValue(ErrorColorProperty); }
+            set { SetValue(ErrorColorProperty, value); }
         }
     }
 }

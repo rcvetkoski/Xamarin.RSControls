@@ -25,7 +25,7 @@ namespace Samples
             SelectedPersons = new ObservableCollection<Person>();
             SelectedPersons.Add(listPicker.FirstOrDefault());
 
-            var list = new List<DateSelectionModeEnum>() { DateSelectionModeEnum.Default, DateSelectionModeEnum.Month, DateSelectionModeEnum.MonthYear, DateSelectionModeEnum.Year};
+            var list = new List<DateSelectionModeEnum>() { DateSelectionModeEnum.Default, DateSelectionModeEnum.Month, DateSelectionModeEnum.MonthYear, DateSelectionModeEnum.Year };
 
 
             obsCollectionPicker = new ObservableCollection<string>() { "Tom", "Jerry", "Buldog" };
@@ -40,6 +40,8 @@ namespace Samples
             SomeDate = new DateTime(2011, 1, 1);
             MaxDate = new DateTime(2011, 6, 1);
             MinDate = new DateTime(2009, 7, 1);
+
+            Lolo = "lolo";
         }
 
         private double numericEntryValue;
@@ -188,11 +190,22 @@ namespace Samples
         public DateTime MinDate { get; set; }
 
 
+        public string Lolo { get; set; }
+
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
+        public void TestMethod(string obj)
+        {
+
+        }
+
     }
 
 
