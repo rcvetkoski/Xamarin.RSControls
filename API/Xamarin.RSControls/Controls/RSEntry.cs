@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.Helpers;
 using Xamarin.RSControls.Interfaces;
@@ -68,23 +69,24 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Icon
-        public static readonly BindableProperty LeadingIconProperty = BindableProperty.Create("LeadingIcon", typeof(string), typeof(RSEntry), null);
-        public string LeadingIcon
+        public static readonly BindableProperty LeadingIconProperty = BindableProperty.Create("LeadingIcon", typeof(RSEntryIcon), typeof(RSEntry), null);
+        public RSEntryIcon LeadingIcon
         {
-            get { return (string)GetValue(LeadingIconProperty); }
+            get { return (RSEntryIcon)GetValue(LeadingIconProperty); }
             set { SetValue(LeadingIconProperty, value); }
         }
-        public static readonly BindableProperty TrailingIconProperty = BindableProperty.Create("TrailingIconfwefew", typeof(string), typeof(RSEntry), null);
-        public string TrailingIcon
+
+        public static readonly BindableProperty TrailingIconProperty = BindableProperty.Create("TrailingIcon", typeof(RSEntryIcon), typeof(RSEntry), null);
+        public RSEntryIcon TrailingIcon
         {
-            get { return (string)GetValue(TrailingIconProperty); }
+            get { return (RSEntryIcon)GetValue(TrailingIconProperty); }
             set { SetValue(TrailingIconProperty, value); }
         }
 
-        public static readonly BindableProperty LeftIconProperty = BindableProperty.Create("LeftIcon", typeof(string), typeof(RSEntry), null);
-        public string LeftIcon
+        public static readonly BindableProperty LeftIconProperty = BindableProperty.Create("LeftIcon", typeof(RSEntryIcon), typeof(RSEntry), null);
+        public RSEntryIcon LeftIcon
         {
-            get { return (string)GetValue(LeftIconProperty); }
+            get { return (RSEntryIcon)GetValue(LeftIconProperty); }
             set { SetValue(LeftIconProperty, value); }
         }
 
@@ -93,6 +95,20 @@ namespace Xamarin.RSControls.Controls
         {
             get { return (RSEntryIcon)GetValue(RightIconProperty); }
             set { SetValue(RightIconProperty, value); }
+        }
+
+        public static readonly BindableProperty LeftHelpingIconProperty = BindableProperty.Create("LeftHelpingIcon", typeof(RSEntryIcon), typeof(RSEntry), null);
+        public RSEntryIcon LeftHelpingIcon
+        {
+            get { return (RSEntryIcon)GetValue(LeftHelpingIconProperty); }
+            set { SetValue(LeftHelpingIconProperty, value); }
+        }
+
+        public static readonly BindableProperty RightHelpingIconProperty = BindableProperty.Create("RightHelpingIcon", typeof(RSEntryIcon), typeof(RSEntry), null);
+        public RSEntryIcon RightHelpingIcon
+        {
+            get { return (RSEntryIcon)GetValue(RightHelpingIconProperty); }
+            set { SetValue(RightHelpingIconProperty, value); }
         }
 
         //Icon Color
@@ -132,6 +148,13 @@ namespace Xamarin.RSControls.Controls
             get { return (Color)GetValue(BorderColorProperty); }
             set { SetValue(BorderColorProperty, value); }
         }
+        //Border Fill Color
+        public static readonly BindableProperty BorderFillColorProperty = BindableProperty.Create("BorderFillColor", typeof(Color), typeof(RSEntry), Color.FromHex("#OA000000"));
+        public Color BorderFillColor
+        {
+            get { return (Color)GetValue(BorderFillColorProperty); }
+            set { SetValue(BorderFillColorProperty, value); }
+        }
         //Active Color
         public static readonly BindableProperty ActiveColorProperty = BindableProperty.Create("ActiveColor", typeof(Color), typeof(RSEntry), Color.FromHex("#3F51B5"));
         public Color ActiveColor
@@ -145,6 +168,32 @@ namespace Xamarin.RSControls.Controls
         {
             get { return (Color)GetValue(ErrorColorProperty); }
             set { SetValue(ErrorColorProperty, value); }
+        }
+
+        public bool HasRighIconSeparator { get; set; }
+        public bool HasLeftIconSeparator { get; set; }
+
+        protected override void OnBindingContextChanged()
+        {
+            base.OnBindingContextChanged();
+
+            if(RightIcon != null)
+                RightIcon.BindingContext = this.BindingContext;
+
+            if(LeftIcon != null)
+                LeftIcon.BindingContext = this.BindingContext;
+
+            if (TrailingIcon != null)
+                TrailingIcon.BindingContext = this.BindingContext;
+
+            if (LeadingIcon != null)
+                LeadingIcon.BindingContext = this.BindingContext;
+
+            if (LeftHelpingIcon != null)
+                LeftHelpingIcon.BindingContext = this.BindingContext;
+
+            if (RightHelpingIcon != null)
+                RightHelpingIcon.BindingContext = this.BindingContext;
         }
     }
 }

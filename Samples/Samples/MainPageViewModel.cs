@@ -201,7 +201,11 @@ namespace Samples
         }
 
 
-        public void TestMethod(string obj)
+        public void TestMethod(object obj, string str)
+        {
+
+        }
+        public void TestMethod2(object obj)
         {
 
         }

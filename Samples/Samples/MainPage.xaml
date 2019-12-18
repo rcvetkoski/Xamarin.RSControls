@@ -10,7 +10,7 @@
              x:Class="Samples.MainPage">
 
     <ScrollView Orientation="Vertical">
-        <StackLayout Margin="10" x:Name="stack">
+        <StackLayout Grid.Row="1" Margin="10" x:Name="stack">
 
             <!--<rs:RSEntry Placeholder="Entry">
                 <rs:RSEntry.Behaviors>
@@ -178,14 +178,56 @@
             </rs:RSPickerInputLayout>-->
 
 
-            <rs:RSEntry Placeholder="No left icon" Text="{Binding Lolo}" RSEntryStyle="FilledBorder" LeftIcon="Samples/Data/SVG/calendarAndTime.svg" Helper="Helper message!" IsPassword="False">
-                <rs:RSEntry.RightIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/agenda.svg" Command="TestMethod" CommandParameter="{Binding BindingContext.Lolo, Source={x:Reference mainPage}}">
-                        <helpers:RSEntryIcon.CommandParameters>
-                            <Binding Path="BindingContext.Lolo" Source="{x:Reference mainPage}"/>
-                        </helpers:RSEntryIcon.CommandParameters>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.RightIcon>
+            <rs:RSEntry Padding="0, 13, 0, 4" Placeholder="No left icon" Text="{Binding Lolo}" RSEntryStyle="Underline" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
+
+
+            </rs:RSEntry>
+
+            <rs:RSEntry Placeholder="No left icon" Text="{Binding Lolo}" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
+                <rs:RSEntry.LeftIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                </rs:RSEntry.LeftIcon>
+
+                <rs:RSEntry.RightHelpingIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                </rs:RSEntry.RightHelpingIcon>
+
+            </rs:RSEntry>
+
+
+            <rs:RSEntry Placeholder="No left icon" Text="{Binding Lolo}" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
+
+                <rs:RSEntry.TrailingIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                </rs:RSEntry.TrailingIcon>
+                <rs:RSEntry.LeftHelpingIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                </rs:RSEntry.LeftHelpingIcon>
+                <rs:RSEntry.LeftIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                </rs:RSEntry.LeftIcon>
+
+                <rs:RSEntry.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSEntry.Behaviors>
+            </rs:RSEntry>
+
+            <rs:RSEntry Placeholder="No left icon" Text="{Binding Lolo}" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
+
+                <rs:RSEntry.TrailingIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                </rs:RSEntry.TrailingIcon>
+                <rs:RSEntry.LeftHelpingIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                </rs:RSEntry.LeftHelpingIcon>
+                <rs:RSEntry.LeftIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                </rs:RSEntry.LeftIcon>
+
             </rs:RSEntry>
 
             <!--<rs:RSEntry TrailingIcon="lol" Placeholder="Email" RSEntryStyle="FilledBorder" Helper="Enter your email address" IsPassword="False"/>
@@ -217,9 +259,10 @@
             </rs:RSEntry>
 
             <rs:RSDatePicker DateSelectionMode="MonthYear"></rs:RSDatePicker>-->
-            <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
+
+            <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
 
         </StackLayout>
-    </ScrollView>
 
+    </ScrollView>
 </ContentPage>
