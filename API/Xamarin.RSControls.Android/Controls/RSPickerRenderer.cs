@@ -16,11 +16,12 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Droid.Controls;
+using Xamarin.RSControls.Interfaces;
 
 [assembly: ExportRenderer(typeof(RSPickerBase), typeof(RSPickerRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSPickerRenderer : ViewRenderer<RSPickerBase, AppCompatEditText>, AdapterView.IOnItemClickListener, IDisposable
+    public class RSPickerRenderer : PickerRenderer, AdapterView.IOnItemClickListener, IDisposable
     {
         private AlertDialog alertDialog;
         private bool isTextInputLayout;
@@ -28,34 +29,24 @@ namespace Xamarin.RSControls.Droid.Controls
         private global::Android.Widget.ListView listViewAndroid;
         private global::Android.Widget.SearchView searchView;
         private List<object> originalItemsList;
+        private RSPickerBase ElementCasted;
 
         public RSPickerRenderer(Context context) : base(context)
         {
             originalItemsList = new List<object>();
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<RSPickerBase> e)
+
+        protected override void OnElementChanged(ElementChangedEventArgs<Picker> e)
         {
             base.OnElementChanged(e);
-
-            var nativeEditText = new AppCompatEditText(Context);
-            this.SetNativeControl(nativeEditText);
 
             if (Control == null || e.NewElement == null)
                 return;
 
-            nativeEditText.SetSingleLine(true);
+            ElementCasted = this.Element as RSPickerBase;
 
-
-            //Draw border or not
-            if (Element.HasBorder)
-                Extensions.ViewExtensions.DrawBorder(nativeEditText, Context, global::Android.Graphics.Color.Black);
-
-            //Set icon
-            SetIcon(nativeEditText);
-
-            //Set placeholder text
-            SetPlaceHolderText();
+           // this.Control.SetSingleLine(true);
 
             //Show datepicker
             this.Control.Click += OnPickerClick;
@@ -66,148 +57,97 @@ namespace Xamarin.RSControls.Droid.Controls
             SetText();
 
             this.Control.KeyListener = null;
-            this.Control.Enabled = Element.IsEnabled;
-            this.Control.SetTextSize(ComplexUnitType.Dip, (float)Element.FontSize);
+            //this.Control.Enabled = ElementCasted.IsEnabled;
         }
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            if (e.PropertyName == "SelectedItem" || e.PropertyName == "SelectedItems")
+            {
+                SetText();
+            }
+
+            if (e.PropertyName == "Error" && this.Control is CustomEditText && !isTextInputLayout)
+                (this.Control as CustomEditText).ErrorMessage = (this.Element as RSPickerBase).Error;
+        }
+
 
         internal void SetIsTextInputLayout(bool value)
         {
             isTextInputLayout = value;
         }
 
-        private void SetPlaceHolderText()
-        {
-            this.Control.Hint = this.Element.Placeholder;
-            this.Control.SetHintTextColor(this.Element.PlaceholderColor.ToAndroid());
-        }
-
         private void SetText()
         {
-            if (this.Element is RSPicker)
+            if (this.ElementCasted is RSPicker)
             {
-                if(this.Element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+                if(this.ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
                 {
-                    if (this.Element.SelectedItem != null)
+                    if (this.ElementCasted.SelectedItem != null)
                     {
-                        if (!string.IsNullOrEmpty((this.Element as RSPicker).DisplayMemberPath))
-                            this.Control.Text = Helpers.TypeExtensions.GetPropValue(this.Element.SelectedItem, (Element as RSPicker).DisplayMemberPath).ToString();
+                        if (!string.IsNullOrEmpty((this.ElementCasted as RSPicker).DisplayMemberPath))
+                            this.Control.Text = Helpers.TypeExtensions.GetPropValue(this.ElementCasted.SelectedItem, (ElementCasted as RSPicker).DisplayMemberPath).ToString();
                         else
-                            this.Control.Text = Element.SelectedItem.ToString();
+                            this.Control.Text = ElementCasted.SelectedItem.ToString();
                     }
                     else
                     {
                         this.Control.Text = "";
-                        if (!isTextInputLayout)
-                        {
-                            this.Control.Hint = this.Element.Placeholder;
-                            this.Control.SetHintTextColor(this.Element.PlaceholderColor.ToAndroid());
-                        }
                     }
                 }
                 else
                 {
                     this.Control.Text = "";
 
-                    if (this.Element.SelectedItems != null && this.Element.SelectedItems.Count >= 1)
+                    if (this.ElementCasted.SelectedItems != null && this.ElementCasted.SelectedItems.Count >= 1)
                     {
-                        foreach(object item in this.Element.SelectedItems)
+                        foreach(object item in this.ElementCasted.SelectedItems)
                         {
-                            if (!string.IsNullOrEmpty((this.Element as RSPicker).DisplayMemberPath))
-                                this.Control.Text += Helpers.TypeExtensions.GetPropValue(item, (this.Element as RSPicker).DisplayMemberPath).ToString();
+                            if (!string.IsNullOrEmpty((this.ElementCasted as RSPicker).DisplayMemberPath))
+                                this.Control.Text += Helpers.TypeExtensions.GetPropValue(item, (this.ElementCasted as RSPicker).DisplayMemberPath).ToString();
                             else
                                 this.Control.Text += item.ToString();
 
-                            if(this.Element.SelectedItems.IndexOf(item) < this.Element.SelectedItems.Count - 1)
+                            if(this.ElementCasted.SelectedItems.IndexOf(item) < this.ElementCasted.SelectedItems.Count - 1)
                                 this.Control.Text += ", ";
                         }
                     }
                     else
                     {
                         this.Control.Text = "";
-                        if (!isTextInputLayout)
-                        {
-                            this.Control.Hint = this.Element.Placeholder;
-                            this.Control.SetHintTextColor(this.Element.PlaceholderColor.ToAndroid());
-                        }
                     }
                 }
 
             }
             else
             {
-                if (this.Element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+                if (this.ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
                 {
-                    if (this.Element.SelectedItem != null)
-                        this.Control.Text = Element.SelectedItem.ToString();
+                    if (this.ElementCasted.SelectedItem != null)
+                        this.Control.Text = ElementCasted.SelectedItem.ToString();
                     else
                     {
                         this.Control.Text = "";
-                        if (!isTextInputLayout)
-                        {
-                            this.Control.Hint = this.Element.Placeholder;
-                            this.Control.SetHintTextColor(this.Element.PlaceholderColor.ToAndroid());
-                        }
                     }
                 }
                 else
                 {
                     this.Control.Text = "";
 
-                    if (this.Element.SelectedItems != null && this.Element.SelectedItems.Count >= 1)
+                    if (this.ElementCasted.SelectedItems != null && this.ElementCasted.SelectedItems.Count >= 1)
                     {
-                        foreach(object item in this.Element.SelectedItems)
+                        foreach(object item in this.ElementCasted.SelectedItems)
                         {
                             this.Control.Text += item.ToString();
 
-                            if (this.Element.SelectedItems.IndexOf(item) < this.Element.SelectedItems.Count - 1)
+                            if (this.ElementCasted.SelectedItems.IndexOf(item) < this.ElementCasted.SelectedItems.Count - 1)
                                 this.Control.Text += ", ";
                         }
                     }
-                    else
-                    {
-                        this.Control.Text = "";
-                        if (!isTextInputLayout)
-                        {
-                            this.Control.Hint = this.Element.Placeholder;
-                            this.Control.SetHintTextColor(this.Element.PlaceholderColor.ToAndroid());
-                        }
-                    }
+
                 }
             }
-        }
-
-        private void SetIcon(global::Android.Widget.EditText nativeEditText)
-        {
-            string rightPath = string.Empty;
-            string leftPath = string.Empty;
-            Drawable rightDrawable = null;
-            Drawable leftDrawable = null;
-
-            //Right Icon
-            if (Element.RightIcon == null)
-                rightPath = "Samples/Data/SVG/arrow.svg";
-            else
-                rightPath = Element.RightIcon;
-
-            int pixel = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)Element.IconHeight, Context.Resources.DisplayMetrics);
-            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = rightPath, HeightRequest = pixel, WidthRequest = pixel, Color = Element.IconColor };
-            var convertedRightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new Rectangle(), Context);
-            rightDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedRightView, pixel, pixel));
-
-
-            //Left Icon
-            if (Element.LeftIcon != null)
-            {
-                leftPath = Element.LeftIcon;
-                RSSvgImage leftSvgIcon = new RSSvgImage() { Source = leftPath, HeightRequest = pixel, WidthRequest = pixel, Color = Element.IconColor };
-                var convertedLeftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new Rectangle(), Context);
-                leftDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedLeftView, pixel, pixel));
-            }
-
-
-            //Set Drawable to control
-            //nativeEditText.CompoundDrawablePadding = 5;
-            nativeEditText.SetCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, rightDrawable, null);
         }
 
         private void CreatePickerDialog()
@@ -236,28 +176,28 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             //Listview Adapter
-            adapter = new CustomBaseAdapter<object>(Context, this.Element as RSPickerBase, Element.ItemsSource, listViewAndroid);
+            adapter = new CustomBaseAdapter<object>(Context, this.ElementCasted as RSPickerBase, ElementCasted.ItemsSource, listViewAndroid);
             listViewAndroid.Adapter = adapter;
 
             //Set selected item's
-            if(Element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+            if(ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
             {
                 listViewAndroid.ChoiceMode = ChoiceMode.Single;
-                //listViewAndroid.SetItemChecked(Element.SelectedIndex, true);
-                listViewAndroid.SetSelection(Element.SelectedIndex);
+                //listViewAndroid.SetItemChecked(ElementCasted.SelectedIndex, true);
+                listViewAndroid.SetSelection(ElementCasted.SelectedIndex);
 
-                if (Element.SelectedIndex != -1)
-                    adapter.CheckedItems.Add(Element.ItemsSource[Element.SelectedIndex]);
+                if (ElementCasted.SelectedIndex != -1)
+                    adapter.CheckedItems.Add(ElementCasted.ItemsSource[ElementCasted.SelectedIndex]);
             }
             else
             {
                 listViewAndroid.ChoiceMode = ChoiceMode.Multiple;
 
-                if (Element.SelectedItems != null)
+                if (ElementCasted.SelectedItems != null)
                 {
-                    foreach(object item in Element.SelectedItems)
+                    foreach(object item in ElementCasted.SelectedItems)
                     {
-                        if (Element.ItemsSource.Contains(item))
+                        if (ElementCasted.ItemsSource.Contains(item))
                             adapter.CheckedItems.Add(item);
                     }
                 }
@@ -270,7 +210,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //SetView to dialog
             dialog.SetView(layout);
-            dialog.SetTitle(Element.Title);
+            dialog.SetTitle(ElementCasted.Title);
 
 
 
@@ -280,11 +220,11 @@ namespace Xamarin.RSControls.Droid.Controls
             });
             dialog.SetNegativeButton("Clear Item", (senderAlert, args) =>
             {
-                Element.SelectedItem = null;
-                Element.SelectedIndex = -1;
+                ElementCasted.SelectedItem = null;
+                ElementCasted.SelectedIndex = -1;
                 adapter.CheckedItems.Clear();
-                if (this.Element.SelectedItems != null)
-                    this.Element.SelectedItems.Clear();
+                if (this.ElementCasted.SelectedItems != null)
+                    this.ElementCasted.SelectedItems.Clear();
 
                 SetText();
             });
@@ -294,7 +234,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void SearchView_QueryTextChange(object sender, global::Android.Widget.SearchView.QueryTextChangeEventArgs e)
         {
-            if(this.Element.ItemsSource != null)
+            if(this.ElementCasted.ItemsSource != null)
                 adapter.Filter.InvokeFilter(e.NewText);
         }
 
@@ -305,53 +245,48 @@ namespace Xamarin.RSControls.Droid.Controls
             var instance = instInfo.GetValue(obj, null);
 
 
-            if(this.Element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+            if(this.ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
             {
-                Element.SelectedItem = instance;
+                ElementCasted.SelectedItem = instance;
                 alertDialog.Dismiss();
             }
             else
             {
-                if(this.Element.SelectedItems != null)
+                if(this.ElementCasted.SelectedItems != null)
                 {
-                    if (this.Element.SelectedItems.Contains(instance))
+                    if (this.ElementCasted.SelectedItems.Contains(instance))
                     {
-                        this.Element.SelectedItems.Remove(instance);
+                        this.ElementCasted.SelectedItems.Remove(instance);
                         adapter.CheckedItems.Remove(instance);
                     }
                     else
                     {
-                        this.Element.SelectedItems.Add(instance);
+                        this.ElementCasted.SelectedItems.Add(instance);
                         adapter.CheckedItems.Add(instance);
                     }
                 }
             }
         }
-
         private void OnPickerClick(object sender, EventArgs e)
         {
             if (this.Control.HasFocus)
                 CreatePickerDialog();
         }
-
         private void OnPickerFocusChange(object sender, FocusChangeEventArgs e)
         {
             if (e.HasFocus)
                 CreatePickerDialog();
         }
 
-        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+
+        protected override EditText CreateNativeControl()
         {
-            base.OnElementPropertyChanged(sender, e);
+            if ((this.Element as IRSControl).RightIcon == null)
+                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon() { Path = "Samples/Data/SVG/arrow.svg" };
 
-            if (e.PropertyName == "SelectedItem" || e.PropertyName == "SelectedItems")
-            {
-                SetText();
-            }
-
-            if (e.PropertyName == "Error" && !isTextInputLayout)
-                this.Control.Error = (this.Element as RSPickerBase).Error;
+            return new CustomEditText(Context, this.Element as IRSControl);
         }
+
 
         protected override void Dispose(bool disposing)
         {
@@ -458,7 +393,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     Xamarin.Forms.View view = rsPicker.ItemTemplate.CreateContent() as Xamarin.Forms.View;
                     var renderer = Platform.CreateRendererWithContext(view, context);
-                    //renderer.Element.HeightRequest = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, context.Resources.DisplayMetrics); ;
+                    //renderer.ElementCasted.HeightRequest = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, context.Resources.DisplayMetrics); ;
                     Platform.SetRenderer(view, renderer);
                     convertView = new ViewCellContainer(this.context, view, renderer);
                 }
@@ -467,7 +402,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 var instInfo = obj.GetType().GetProperty("Instance");
                 var instance = instInfo.GetValue(obj, null);
                 (convertView as ViewCellContainer)._formsView.BindingContext = instance;
-                //(convertView as IVisualElementRenderer).Element.BindingContext = instance;
+                //(convertView as IVisualElementRenderer).ElementCasted.BindingContext = instance;
                 if (CheckedItems.Any())
                 {
                     if (CheckedItems.Contains(instance))

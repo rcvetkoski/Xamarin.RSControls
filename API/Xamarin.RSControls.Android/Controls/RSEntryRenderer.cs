@@ -44,7 +44,7 @@ namespace Xamarin.RSControls.Droid.Controls
             if (e.OldElement != null)
                 return;
 
-            if (this.Element is IRSControl && (this.Element as IRSControl).RSEntryStyle != Enums.RSEntryStyleSelectionEnum.Default)
+            if (this.Element is IRSControl)
                 this.Element.Placeholder = "";
         }
 
@@ -54,10 +54,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             if (e.PropertyName == "Error" && this.Control is CustomEditText && !isTextInputLayout)
                 (this.Control as CustomEditText).ErrorMessage = (this.Element as RSEntry).Error;
-
-            //Draw border or not
-            if ((this.Element as RSEntry).HasBorder)
-                Extensions.ViewExtensions.DrawBorder(this.Control, Context, global::Android.Graphics.Color.Black);
         }
 
         internal void SetIsTextInputLayout(bool value)
@@ -67,15 +63,10 @@ namespace Xamarin.RSControls.Droid.Controls
 
         protected override FormsEditText CreateNativeControl()
         {
-            if ((this.Element as IRSControl).RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Default)
-                return base.CreateNativeControl();
-            else
-            {
-                if((this.Element as IRSControl).RightIcon == null)
-                    (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon() { Path = "Samples/Data/SVG/calendarAndTime.svg" };
+            if ((this.Element as IRSControl).RightIcon == null)
+                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon() { Path = "Samples/Data/SVG/calendarAndTime.svg" };
 
-                return new CustomEditText(Context, this.Element as IRSControl);
-            }
+            return new CustomEditText(Context, this.Element as IRSControl);
         }
     }
 
@@ -116,7 +107,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private float floatingHintXPostionFloating;
         private float floatingHintXPostionNotFloating;
         private float floatingHintYPostion;
-        private float floatingHintYPostionWhenFloating;
+        private float floatingHintYPostionFloating;
         private float floatingHintYPostionNotFloating;
         private bool hasInitfloatingHintYPosition = false;
         private float errorYPosition;
@@ -238,47 +229,47 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void SetPaddingValues()
         {
+            int topPadding;
+            int bottomPadding;
+            int leftPadding;
+            int rightPadding;
+
+            //Top and bottomSpacing
+            topSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics);
+            if (this.rSControl.HasError || !string.IsNullOrEmpty(this.rSControl.Helper) || this.rSControl.CounterMaxLength != -1)
+                bottomSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics);
+            else
+                bottomSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics);
+
+
             if (this.rSControl.Padding.IsEmpty)
             {
                 if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
-                    this.rSControl.Padding = new Thickness(5, 12, 5, 12);
+                    this.rSControl.Padding = new Thickness(15 + this.PaddingLeft, 25 + topSpacing, 15 + this.PaddingRight, 25 + bottomSpacing);
                 else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
-                    this.rSControl.Padding = new Thickness(0, 13, 0, 4);
+                    this.rSControl.Padding = new Thickness(0, 30 + topSpacing, 10, 10 + bottomSpacing);
                 else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
-                    this.rSControl.Padding = new Thickness(5, 16, 5, 7);
+                    this.rSControl.Padding = new Thickness(15 + this.PaddingLeft, 35 + topSpacing, 15 + this.PaddingRight, 10 + bottomSpacing);
+            }
+            else
+            {
+                this.rSControl.Padding = new Thickness(rSControl.Padding.Left,
+                                                       rSControl.Padding.Top + topSpacing,
+                                                       rSControl.Padding.Right,
+                                                       rSControl.Padding.Bottom + bottomSpacing);
             }
 
             CustomPadding = this.rSControl.Padding;
 
 
-            int leftPadd = (int)CustomPadding.Left;
-            int topPadd = (int)CustomPadding.Top;
-            int rightPadd = (int)CustomPadding.Right;
-            int bottomPad = (int)CustomPadding.Bottom;
 
-
-            topSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics);
-
-            if (this.rSControl.HasError || !string.IsNullOrEmpty(this.rSControl.Helper) || this.rSControl.CounterMaxLength != -1)
-                bottomSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics);
-            else
-                bottomSpacing = 0;
-
-            leftSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, leftPadd, Context.Resources.DisplayMetrics);
-            rightSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, rightPadd, Context.Resources.DisplayMetrics);
-
-
-            //Fix for some devices paddings are wrong device related bug ? this is a hack, if it breaks on other devices just use default paddings
-            //var underTextLineHeight = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 1, Context.Resources.DisplayMetrics);
-            var topPadding = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, topPadd, Context.Resources.DisplayMetrics);
-            var bottomPadding = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, bottomPad, Context.Resources.DisplayMetrics);
 
 
             //Set Padding
-            this.SetPadding(this.PaddingLeft + leftSpacing,
-                            topPadding + topSpacing,
-                            this.PaddingRight + rightSpacing,
-                            bottomPadding + bottomSpacing);
+            this.SetPadding((int)CustomPadding.Left,
+                            (int)CustomPadding.Top,
+                            (int)CustomPadding.Right,
+                            (int)CustomPadding.Bottom);
         }
         private void SetColors()
         {
@@ -501,7 +492,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //Corrective Y
             if (rSControl.RSEntryStyle != Enums.RSEntryStyleSelectionEnum.Underline)
-                correctiveY = (float)Math.Abs(this.CustomPadding.Top - this.CustomPadding.Bottom) * 2;
+                correctiveY = (float)Math.Abs(Math.Abs(this.PaddingTop - topSpacing) - Math.Abs(this.PaddingBottom - bottomSpacing)) / 2;
             else
                 correctiveY = 0;
 
@@ -578,7 +569,7 @@ namespace Xamarin.RSControls.Droid.Controls
             var drawable = new CustomDrawable(bitmapDrawable, this, correctiveY);
             drawable.SetBounds(0, 0, bitmapDrawable.IntrinsicWidth + customDrawableClip, bitmapDrawable.IntrinsicHeight);
 
-            var source = (rSControl as RSEntry).BindingContext;
+            var source = (rSControl as Forms.View).BindingContext;
             MethodInfo methodInfo;
 
             if(commandParameters.Any())
@@ -654,17 +645,17 @@ namespace Xamarin.RSControls.Droid.Controls
                     floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
 
                     //Y
-                    floatingHintYPostionWhenFloating = -this.Paint.Ascent(); /*topSpacing + floatingHintBoundsFloating.Height();*/
+                    floatingHintYPostionFloating = -this.Paint.Ascent(); 
                     floatingHintYPostionNotFloating = (this.Height - bottomSpacing) / 2 - ((floatingHintBoundsNotFloating.Bottom + floatingHintBoundsNotFloating.Top) / 2);
                 }
                 else if(this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
                 {
                     //X
-                    floatingHintXPostionFloating = textRect.Left + initLeftPadding + leadingIconWidth;
+                    floatingHintXPostionFloating = textRect.Left + leftRightSpacingLabels + leadingIconWidth;
                     floatingHintXPostionNotFloating = textRect.Left + initLeftPadding + leftDrawableWidth + leadingIconWidth + leftDrawableClip;
 
                     //Y
-                    floatingHintYPostionWhenFloating = topSpacing + floatingHintBoundsFloating.Height() / 2;
+                    floatingHintYPostionFloating = topSpacing + floatingHintBoundsFloating.Height() / 2;
                     floatingHintYPostionNotFloating = this.Baseline;
                 }
                 else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
@@ -674,7 +665,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
 
                     //Y
-                    floatingHintYPostionWhenFloating = -this.Paint.Ascent(); /*topSpacing + floatingHintBoundsFloating.Height();*/
+                    floatingHintYPostionFloating = -this.Paint.Ascent(); /*topSpacing + floatingHintBoundsFloating.Height();*/
                     floatingHintYPostionNotFloating = this.Baseline;
                 }
 
@@ -683,7 +674,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     floatingHintPaint.TextSize = labelsTextSize;
                     floatingHintXPostion = floatingHintXPostionFloating;
-                    floatingHintYPostion = floatingHintYPostionWhenFloating;
+                    floatingHintYPostion = floatingHintYPostionFloating;
                 }
                 else
                 {
@@ -955,7 +946,7 @@ namespace Xamarin.RSControls.Droid.Controls
             floatingHintYPostion = (float)e.Animation.GetAnimatedValue("YPosition");
             Invalidate();
         }
-        private void AnimateFloatingHint()
+        public void AnimateFloatingHint()
         {
             isFloatingHintAnimating = true;
             float textSizeStart;
@@ -981,7 +972,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 xStart = floatingHintXPostionNotFloating;
                 xEnd = floatingHintXPostionFloating;
                 yStart = floatingHintYPostion;
-                yEnd = floatingHintYPostionWhenFloating;
+                yEnd = floatingHintYPostionFloating;
             }
 
             PropertyValuesHolder propertyTextSizeError = PropertyValuesHolder.OfFloat("textSize", textSizeStart, textSizeEnd);

@@ -2,7 +2,6 @@
 {
     public enum RSEntryStyleSelectionEnum
     {
-        Default,
         OutlinedBorder,
         FilledBorder,
         Underline

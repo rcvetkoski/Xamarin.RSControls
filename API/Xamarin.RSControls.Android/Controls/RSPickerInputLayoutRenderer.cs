@@ -44,8 +44,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             textInputLayout.AddView(renderer.Control);
 
-            //Hint
-            textInputLayout.Hint = renderer.Element.Placeholder;
 
             //Error-Validation
             if (this.Element.Behaviors.Any(x => x is Validators.ValidationBehaviour))
@@ -96,8 +94,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             textInputLayout.AddView(renderer.Control);
 
-            //Hint
-            textInputLayout.Hint = renderer.Element.Placeholder;
 
             //Error-Validation
             if ((this.Element as RSPickerBase).Behaviors.Any(x => x is Validators.ValidationBehaviour))

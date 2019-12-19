@@ -7,6 +7,7 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.RSControls.Enums;
+using Xamarin.RSControls.Helpers;
 using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Controls
@@ -187,74 +188,21 @@ namespace Xamarin.RSControls.Controls
         }
     }
 
-    public class RSPickerBase : Picker, IHaveError
+    public class RSPickerBase : Picker, IHaveError, IRSControl
     {
         public RSPickerBase()
         {
             this.TextColor = Color.Black;
         }
 
-        //Icon
-        public static readonly BindableProperty LeftIconProperty = BindableProperty.Create("LeftIcon", typeof(string), typeof(RSPickerBase), null);
-        public string LeftIcon
-        {
-            get { return (string)GetValue(LeftIconProperty); }
-            set { SetValue(LeftIconProperty, value); }
-        }
-
-
-        public static readonly BindableProperty RightIconProperty = BindableProperty.Create("RightIcon", typeof(string), typeof(RSPickerBase), null);
-        public string RightIcon
-        {
-            get { return (string)GetValue(RightIconProperty); }
-            set { SetValue(RightIconProperty, value); }
-        }
-
-
-        //Icon Color
-        public static readonly BindableProperty IconColorProperty = BindableProperty.Create("IconColor", typeof(Color), typeof(RSPickerBase), Color.DimGray);
-        public Color IconColor
-        {
-            get { return (Color)GetValue(IconColorProperty); }
-            set { SetValue(IconColorProperty, value); }
-        }
-
-
-        //Icon Width
-        public static readonly BindableProperty IconWidthProperty = BindableProperty.Create("IconWidth", typeof(double), typeof(RSPickerBase), 30.0);
-        public double IconWidth
-        {
-            get { return (double)GetValue(IconWidthProperty); }
-            set { SetValue(IconWidthProperty, value); }
-        }
-
-
-        //Icon Height
-        public static readonly BindableProperty IconHeightProperty = BindableProperty.Create("IconHeight", typeof(double), typeof(RSPickerBase), 30.0);
-        public double IconHeight
-        {
-            get { return (double)GetValue(IconHeightProperty); }
-            set { SetValue(IconHeightProperty, value); }
-        }
-
-
-        //Has Border
-        public static readonly BindableProperty HasBorderProperty = BindableProperty.Create("HasBorder", typeof(bool), typeof(RSPickerBase), false);
-        public bool HasBorder
-        {
-            get { return (bool)GetValue(HasBorderProperty); }
-            set { SetValue(HasBorderProperty, value); }
-        }
-
 
         //Placeholder
-        public static readonly BindableProperty PlaceholderProperty = BindableProperty.Create("Placeholder", typeof(string), typeof(RSPickerBase), "");
+        public static readonly BindableProperty PlaceholderProperty = BindableProperty.Create("Placeholder", typeof(string), typeof(RSPickerBase), null);
         public string Placeholder
         {
             get { return (string)GetValue(PlaceholderProperty); }
             set { SetValue(PlaceholderProperty, value); }
         }
-
 
         //Placeholder color
         public static readonly BindableProperty PlaceholderColorProperty = BindableProperty.Create("PlaceholderColor", typeof(Color), typeof(RSPickerBase), Color.Gray);
@@ -264,14 +212,176 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(PlaceholderColorProperty, value); }
         }
 
+        public static readonly BindableProperty UpdateSourceTriggerProperty = BindableProperty.Create("UpdateSourceTrigger", typeof(UpdateSourceTriggerEnum), typeof(RSPickerBase), null);
+        public UpdateSourceTriggerEnum UpdateSourceTrigger
+        {
+            get { return (UpdateSourceTriggerEnum)GetValue(UpdateSourceTriggerProperty); }
+            set { SetValue(UpdateSourceTriggerProperty, value); }
+        }
 
-        //Error
+        public static readonly BindableProperty RSEntryStyleProperty = BindableProperty.Create("RSEntryStyle", typeof(RSEntryStyleSelectionEnum), typeof(RSPickerBase), RSEntryStyleSelectionEnum.OutlinedBorder);
+        public RSEntryStyleSelectionEnum RSEntryStyle
+        {
+            get { return (RSEntryStyleSelectionEnum)GetValue(RSEntryStyleProperty); }
+            set { SetValue(RSEntryStyleProperty, value); }
+        }
+
         public static readonly BindableProperty ErrorProperty = BindableProperty.Create("Error", typeof(string), typeof(RSPickerBase), null);
         public string Error
         {
             get { return (string)GetValue(ErrorProperty); }
             set { SetValue(ErrorProperty, value); }
         }
+
+        public bool HasError
+        {
+            get
+            {
+                if (this.Behaviors.Count > 0)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public static readonly BindableProperty HasBorderProperty = BindableProperty.Create("HasBorder", typeof(bool), typeof(RSPickerBase), false);
+        public bool HasBorder
+        {
+            get { return (bool)GetValue(HasBorderProperty); }
+            set { SetValue(HasBorderProperty, value); }
+        }
+
+        public static readonly BindableProperty HelperProperty = BindableProperty.Create("Helper", typeof(string), typeof(RSPickerBase), string.Empty);
+        public string Helper
+        {
+            get { return (string)GetValue(HelperProperty); }
+            set { SetValue(HelperProperty, value); }
+        }
+
+        public static readonly BindableProperty CounterProperty = BindableProperty.Create("Counter", typeof(int), typeof(RSPickerBase), 0);
+        public int Counter
+        {
+            get { return (int)GetValue(CounterProperty); }
+            set { SetValue(CounterProperty, value); }
+        }
+
+        public static readonly BindableProperty CounterMaxLengthProperty = BindableProperty.Create("CounterMaxLength", typeof(int), typeof(RSPickerBase), -1);
+        public int CounterMaxLength
+        {
+            get { return (int)GetValue(CounterMaxLengthProperty); }
+            set { SetValue(CounterMaxLengthProperty, value); }
+        }
+
+        //Icon
+        public static readonly BindableProperty LeadingIconProperty = BindableProperty.Create("LeadingIcon", typeof(RSEntryIcon), typeof(RSPickerBase), null);
+        public RSEntryIcon LeadingIcon
+        {
+            get { return (RSEntryIcon)GetValue(LeadingIconProperty); }
+            set { SetValue(LeadingIconProperty, value); }
+        }
+
+        public static readonly BindableProperty TrailingIconProperty = BindableProperty.Create("TrailingIcon", typeof(RSEntryIcon), typeof(RSPickerBase), null);
+        public RSEntryIcon TrailingIcon
+        {
+            get { return (RSEntryIcon)GetValue(TrailingIconProperty); }
+            set { SetValue(TrailingIconProperty, value); }
+        }
+
+        public static readonly BindableProperty LeftIconProperty = BindableProperty.Create("LeftIcon", typeof(RSEntryIcon), typeof(RSPickerBase), null);
+        public RSEntryIcon LeftIcon
+        {
+            get { return (RSEntryIcon)GetValue(LeftIconProperty); }
+            set { SetValue(LeftIconProperty, value); }
+        }
+
+        public static readonly BindableProperty RightIconProperty = BindableProperty.Create("RightIcon", typeof(RSEntryIcon), typeof(RSPickerBase), null);
+        public RSEntryIcon RightIcon
+        {
+            get { return (RSEntryIcon)GetValue(RightIconProperty); }
+            set { SetValue(RightIconProperty, value); }
+        }
+
+        public static readonly BindableProperty LeftHelpingIconProperty = BindableProperty.Create("LeftHelpingIcon", typeof(RSEntryIcon), typeof(RSPickerBase), null);
+        public RSEntryIcon LeftHelpingIcon
+        {
+            get { return (RSEntryIcon)GetValue(LeftHelpingIconProperty); }
+            set { SetValue(LeftHelpingIconProperty, value); }
+        }
+
+        public static readonly BindableProperty RightHelpingIconProperty = BindableProperty.Create("RightHelpingIcon", typeof(RSEntryIcon), typeof(RSPickerBase), null);
+        public RSEntryIcon RightHelpingIcon
+        {
+            get { return (RSEntryIcon)GetValue(RightHelpingIconProperty); }
+            set { SetValue(RightHelpingIconProperty, value); }
+        }
+
+        //Icon Color
+        public static readonly BindableProperty IconColorProperty = BindableProperty.Create("IconColor", typeof(Color), typeof(RSPickerBase), Color.DimGray);
+        public Color IconColor
+        {
+            get { return (Color)GetValue(IconColorProperty); }
+            set { SetValue(IconColorProperty, value); }
+        }
+
+        //Icon Height
+        public static readonly BindableProperty IconSizeProperty = BindableProperty.Create("IconSize", typeof(double), typeof(RSPickerBase), 22.0);
+        public double IconSize
+        {
+            get { return (double)GetValue(IconSizeProperty); }
+            set { SetValue(IconSizeProperty, value); }
+        }
+
+        public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSPickerBase), 16f);
+        public float BorderRadius
+        {
+            get { return (float)GetValue(BorderRadiusProperty); }
+            set { SetValue(BorderRadiusProperty, value); }
+        }
+
+        public static readonly BindableProperty PaddingProperty = BindableProperty.Create("Padding", typeof(Thickness), typeof(RSPickerBase), null);
+        public Thickness Padding
+        {
+            get { return (Thickness)GetValue(PaddingProperty); }
+            set { SetValue(PaddingProperty, value); }
+        }
+
+        //Border Color
+        public static readonly BindableProperty BorderColorProperty = BindableProperty.Create("BorderColor", typeof(Color), typeof(RSPickerBase), Color.DimGray);
+        public Color BorderColor
+        {
+            get { return (Color)GetValue(BorderColorProperty); }
+            set { SetValue(BorderColorProperty, value); }
+        }
+        //Border Fill Color
+        public static readonly BindableProperty BorderFillColorProperty = BindableProperty.Create("BorderFillColor", typeof(Color), typeof(RSPickerBase), Color.FromHex("#OA000000"));
+        public Color BorderFillColor
+        {
+            get { return (Color)GetValue(BorderFillColorProperty); }
+            set { SetValue(BorderFillColorProperty, value); }
+        }
+        //Active Color
+        public static readonly BindableProperty ActiveColorProperty = BindableProperty.Create("ActiveColor", typeof(Color), typeof(RSPickerBase), Color.FromHex("#3F51B5"));
+        public Color ActiveColor
+        {
+            get { return (Color)GetValue(ActiveColorProperty); }
+            set { SetValue(ActiveColorProperty, value); }
+        }
+        //Error Color
+        public static readonly BindableProperty ErrorColorProperty = BindableProperty.Create("ErrorColor", typeof(Color), typeof(RSPickerBase), Color.FromHex("#f44336"));
+        public Color ErrorColor
+        {
+            get { return (Color)GetValue(ErrorColorProperty); }
+            set { SetValue(ErrorColorProperty, value); }
+        }
+
+        public bool HasRighIconSeparator { get; set; }
+        public bool HasLeftIconSeparator { get; set; }
+
+
+
+
+
+
 
 
         //Order
@@ -308,8 +418,7 @@ namespace Xamarin.RSControls.Controls
             get => (DataTemplate)GetValue(ItemTemplateProperty);
             set => SetValue(ItemTemplateProperty, value);
         }
-
-
+        public bool IsPassword { get; set; } = false;
 
         private static void OnSelectedItemsChanged(BindableObject bindable, object oldValue, object newValue)
         {

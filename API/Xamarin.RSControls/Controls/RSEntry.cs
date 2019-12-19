@@ -15,7 +15,7 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(UpdateSourceTriggerProperty, value); }
         }
 
-        public static readonly BindableProperty RSEntryStyleProperty = BindableProperty.Create("RSEntryStyle", typeof(RSEntryStyleSelectionEnum), typeof(RSEntry), RSEntryStyleSelectionEnum.Default);
+        public static readonly BindableProperty RSEntryStyleProperty = BindableProperty.Create("RSEntryStyle", typeof(RSEntryStyleSelectionEnum), typeof(RSEntry), RSEntryStyleSelectionEnum.OutlinedBorder);
         public RSEntryStyleSelectionEnum RSEntryStyle
         {
             get { return (RSEntryStyleSelectionEnum)GetValue(RSEntryStyleProperty); }
