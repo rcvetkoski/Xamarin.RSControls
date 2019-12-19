@@ -177,74 +177,19 @@
                 </rs:RSPickerInputLayout.Behaviors>
             </rs:RSPickerInputLayout>-->
 
-            <rs:RSEntry BackgroundColor="Cyan" Placeholder="No left icon" Text="{Binding Lolo}" RSEntryStyle="Underline" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
 
+            <rs:RSNumericUpDown TextColor="Red" IncrementValue="100" Maximum="1000" NumberDecimalDigits="2" CustomUnit="$" Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
 
-            </rs:RSEntry>
-
-            <rs:RSEntry Placeholder="No left icon" Text="{Binding Lolo}" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
-                <rs:RSEntry.LeftIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                </rs:RSEntry.LeftIcon>
-
-                <rs:RSEntry.RightHelpingIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                </rs:RSEntry.RightHelpingIcon>
-
-            </rs:RSEntry>
-
-            <rs:RSEntry Placeholder="No left icon" Text="{Binding Lolo}" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                <rs:RSEntry.TrailingIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                </rs:RSEntry.TrailingIcon>
-                <rs:RSEntry.LeftHelpingIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                </rs:RSEntry.LeftHelpingIcon>
-                <rs:RSEntry.LeftIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                </rs:RSEntry.LeftIcon>
-
-                <rs:RSEntry.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSEntry.Behaviors>
-            </rs:RSEntry>
-
-            <rs:RSEntry Placeholder="No left icon" Text="{Binding Lolo}" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                <rs:RSEntry.TrailingIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                </rs:RSEntry.TrailingIcon>
-                <rs:RSEntry.LeftHelpingIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                </rs:RSEntry.LeftHelpingIcon>
-                <rs:RSEntry.LeftIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                </rs:RSEntry.LeftIcon>
-
-            </rs:RSEntry>
-
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
+            <rs:RSPicker ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Descending" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" >
 
             </rs:RSPicker>
 
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="OutlinedBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-                <rs:RSPicker.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="SelectedItem">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSPicker.Behaviors>
-            </rs:RSPicker>
-
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="Underline" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
+            <rs:RSPicker ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Descending" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators">
 
             </rs:RSPicker>
+
+
+            <rs:RSEntry Placeholder="Troll"></rs:RSEntry>
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
 

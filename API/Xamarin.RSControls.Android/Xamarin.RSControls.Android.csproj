@@ -48,11 +48,9 @@
     <Compile Include="Controls\RSDatePickerRenderer.cs" />
     <Compile Include="Controls\RSEntryInputLayoutRenderer.cs" />
     <Compile Include="Controls\RSEntryRenderer.cs" />
-    <Compile Include="Controls\RSNumericEntryInputLayoutRenderer.cs" />
     <Compile Include="Controls\RSNumericEntryRenderer.cs" />
-    <Compile Include="Controls\RSPickerInputLayoutRenderer.cs" />
+    <Compile Include="Controls\RSNumericUpDownRenderer.cs" />
     <Compile Include="Controls\RSPickerRenderer.cs" />
-    <Compile Include="Controls\RSSearchViewInputLayoutRenderer.cs" />
     <Compile Include="Controls\RSSearchViewRenderer.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
     <Compile Include="Resources\Resource.designer.cs" />

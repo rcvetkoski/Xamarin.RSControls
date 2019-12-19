@@ -63,9 +63,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
         protected override FormsEditText CreateNativeControl()
         {
-            if ((this.Element as IRSControl).RightIcon == null)
-                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon() { Path = "Samples/Data/SVG/calendarAndTime.svg" };
-
             return new CustomEditText(Context, this.Element as IRSControl);
         }
     }
@@ -76,8 +73,6 @@ namespace Xamarin.RSControls.Droid.Controls
         private int initLeftPadding;
         private int topSpacing;
         private int bottomSpacing;
-        private int leftSpacing;
-        private int rightSpacing;
         private int leftRightSpacingLabels;
         private int borderWidth;
         private int borderWidthFocused;
@@ -113,7 +108,6 @@ namespace Xamarin.RSControls.Droid.Controls
         private float errorYPosition;
         private float helperYPosition;
         private float counterYPosition;
-        public Thickness CustomPadding;
         private Rect textRect;
 
         //icon drawables
@@ -229,11 +223,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void SetPaddingValues()
         {
-            int topPadding;
-            int bottomPadding;
-            int leftPadding;
-            int rightPadding;
-
             //Top and bottomSpacing
             topSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics);
             if (this.rSControl.HasError || !string.IsNullOrEmpty(this.rSControl.Helper) || this.rSControl.CounterMaxLength != -1)
@@ -245,11 +234,11 @@ namespace Xamarin.RSControls.Droid.Controls
             if (this.rSControl.Padding.IsEmpty)
             {
                 if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
-                    this.rSControl.Padding = new Thickness(15 + this.PaddingLeft, 25 + topSpacing, 15 + this.PaddingRight, 25 + bottomSpacing);
+                    this.rSControl.Padding = new Thickness(15 + this.PaddingLeft, 30 + topSpacing, 15 + this.PaddingRight, 30 + bottomSpacing);
                 else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
-                    this.rSControl.Padding = new Thickness(0, 30 + topSpacing, 10, 10 + bottomSpacing);
+                    this.rSControl.Padding = new Thickness(5, 35 + topSpacing, 10, 10 + bottomSpacing);
                 else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
-                    this.rSControl.Padding = new Thickness(15 + this.PaddingLeft, 35 + topSpacing, 15 + this.PaddingRight, 10 + bottomSpacing);
+                    this.rSControl.Padding = new Thickness(15 + this.PaddingLeft, 40 + topSpacing, 15 + this.PaddingRight, 10 + bottomSpacing);
             }
             else
             {
@@ -259,17 +248,12 @@ namespace Xamarin.RSControls.Droid.Controls
                                                        rSControl.Padding.Bottom + bottomSpacing);
             }
 
-            CustomPadding = this.rSControl.Padding;
-
-
-
-
 
             //Set Padding
-            this.SetPadding((int)CustomPadding.Left,
-                            (int)CustomPadding.Top,
-                            (int)CustomPadding.Right,
-                            (int)CustomPadding.Bottom);
+            this.SetPadding((int)rSControl.Padding.Left,
+                            (int)rSControl.Padding.Top,
+                            (int)rSControl.Padding.Right,
+                            (int)rSControl.Padding.Bottom);
         }
         private void SetColors()
         {
@@ -512,7 +496,7 @@ namespace Xamarin.RSControls.Droid.Controls
             //Leading Icon
             if (this.rSControl.LeadingIcon != null)
             {
-                this.leadingDrawable = CreateDrawable(rSControl.LeadingIcon.Path, rSControl.LeadingIcon.Command, rSControl.LeadingIcon.CommandParameter, rSControl.LeadingIcon.Bindings, 0);
+                this.leadingDrawable = CreateDrawable(rSControl.LeadingIcon.Path, rSControl.LeadingIcon.Command, rSControl.LeadingIcon.CommandParameter, rSControl.LeadingIcon.Bindings, 0, null, rSControl.LeadingIcon.Source);
                 leadingIconWidth = leadingDrawable.IntrinsicWidth + (this.CompoundDrawablePadding * 2);
                 this.SetPadding(this.PaddingLeft + leadingIconWidth, this.PaddingTop, this.PaddingRight, this.PaddingBottom);
             }
@@ -521,29 +505,29 @@ namespace Xamarin.RSControls.Droid.Controls
             if (rSControl.LeftIcon != null)
             {
                 if (rSControl.LeftHelpingIcon != null)
-                    leftHelpingDrawable = CreateDrawable(rSControl.LeftHelpingIcon.Path, rSControl.LeftHelpingIcon.Command, rSControl.LeftHelpingIcon.CommandParameter, rSControl.LeftHelpingIcon.Bindings, 0);
+                    leftHelpingDrawable = CreateDrawable(rSControl.LeftHelpingIcon.Path, rSControl.LeftHelpingIcon.Command, rSControl.LeftHelpingIcon.CommandParameter, rSControl.LeftHelpingIcon.Bindings, 0, null, rSControl.LeftHelpingIcon.Source);
 
                 leftDrawableClip = leftHelpingDrawable != null ? leftHelpingDrawable.IntrinsicWidth + iconsSpacing : 0;
 
-                this.leftDrawable = CreateDrawable(rSControl.LeftIcon.Path, rSControl.LeftIcon.Command, rSControl.LeftIcon.CommandParameter, rSControl.LeftIcon.Bindings, leftDrawableClip, "left");
+                this.leftDrawable = CreateDrawable(rSControl.LeftIcon.Path, rSControl.LeftIcon.Command, rSControl.LeftIcon.CommandParameter, rSControl.LeftIcon.Bindings, leftDrawableClip, "left", rSControl.LeftIcon.Source);
             }
 
             //Right Icon
             if (this.rSControl.RightIcon != null)
             {
                 //Custom Icon
-                if(rSControl.RightHelpingIcon != null)
-                    rightHelpingDrawable = CreateDrawable(rSControl.RightHelpingIcon.Path, rSControl.RightHelpingIcon.Command, rSControl.RightHelpingIcon.CommandParameter, rSControl.RightHelpingIcon.Bindings, 0);
+                if (rSControl.RightHelpingIcon != null)
+                    rightHelpingDrawable = CreateDrawable(rSControl.RightHelpingIcon.Path, rSControl.RightHelpingIcon.Command, rSControl.RightHelpingIcon.CommandParameter, rSControl.RightHelpingIcon.Bindings, 0, null, rSControl.RightHelpingIcon.Source);
 
                 rightDrawableClip = rightHelpingDrawable != null ? rightHelpingDrawable.IntrinsicWidth + iconsSpacing : 0;
 
-                this.rightDrawable = CreateDrawable(rSControl.RightIcon.Path, rSControl.RightIcon.Command, rSControl.RightIcon.CommandParameter, rSControl.RightIcon.Bindings, rightDrawableClip, "right");
+                this.rightDrawable = CreateDrawable(rSControl.RightIcon.Path, rSControl.RightIcon.Command, rSControl.RightIcon.CommandParameter, rSControl.RightIcon.Bindings, rightDrawableClip, "right", rSControl.RightIcon.Source);
             }
 
             //Trailing Icon
             if (rSControl.TrailingIcon != null)
             {
-                this.trailingDrawable = CreateDrawable(rSControl.TrailingIcon.Path, rSControl.TrailingIcon.Command, rSControl.TrailingIcon.CommandParameter, rSControl.TrailingIcon.Bindings, 0);
+                this.trailingDrawable = CreateDrawable(rSControl.TrailingIcon.Path, rSControl.TrailingIcon.Command, rSControl.TrailingIcon.CommandParameter, rSControl.TrailingIcon.Bindings, 0, null, rSControl.TrailingIcon.Source);
                 trailingIconWidth = trailingDrawable.IntrinsicWidth + (this.CompoundDrawablePadding * 2);
                 this.SetPadding(this.PaddingLeft, this.PaddingTop, this.PaddingRight + trailingIconWidth, this.PaddingBottom);
             }
@@ -554,7 +538,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             leftDrawableWidth = leftDrawable != null ? leftDrawable.IntrinsicWidth + this.CompoundDrawablePadding : 0;
         }
-        private CustomDrawable CreateDrawable(string path, string commandName, object commandParameter, IList<Binding> commandParameters, int customDrawableClip, string type = null)
+        private CustomDrawable CreateDrawable(string path, string commandName, object commandParameter, IList<Binding> commandParameters, int customDrawableClip, string type = null, object source = null)
         {
             int pixel = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rSControl.IconSize, Context.Resources.DisplayMetrics);
             RSSvgImage rightSvgIcon = new RSSvgImage() { Source = path, HeightRequest = pixel, WidthRequest = pixel, Color = rSControl.IconColor };
@@ -569,7 +553,9 @@ namespace Xamarin.RSControls.Droid.Controls
             var drawable = new CustomDrawable(bitmapDrawable, this, correctiveY);
             drawable.SetBounds(0, 0, bitmapDrawable.IntrinsicWidth + customDrawableClip, bitmapDrawable.IntrinsicHeight);
 
-            var source = (rSControl as Forms.View).BindingContext;
+            if(source == null)
+                 source = (rSControl as Forms.View).BindingContext;
+
             MethodInfo methodInfo;
 
             if(commandParameters.Any())
@@ -593,6 +579,14 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 methodInfo = source.GetType().GetMethod(commandName, new Type[] { commandParameter.GetType() });
                 drawable.Command = new Command<object>((x) => ExecuteCommand(methodInfo, source, commandParameter));
+            }
+            else
+            {
+                if (commandName != null)
+                {
+                    methodInfo = source.GetType().GetMethod(commandName, new Type[] { });
+                    drawable.Command = new Command<object>((x) => ExecuteCommand(methodInfo, source, commandParameter));
+                }
             }
 
             return drawable;

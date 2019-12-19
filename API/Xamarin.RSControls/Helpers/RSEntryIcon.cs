@@ -15,6 +15,8 @@ namespace Xamarin.RSControls.Helpers
 
         public string Path { get; set; }
         public string Command { get; set; }
+        public object Source { get; set; }
+
 
 
         public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create("CommandParameter", typeof(object), typeof(RSEntryIcon), default);

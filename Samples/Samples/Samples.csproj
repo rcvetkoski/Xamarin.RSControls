@@ -17,10 +17,6 @@
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Data\SVG\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\API\Xamarin.RSControls\Xamarin.RSControls.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +24,8 @@
     <None Remove="Data\SVG\arrow.svg" />
     <None Remove="Data\SVG\calendar.svg" />
     <None Remove="Data\SVG\calendarAndTime.svg" />
+    <None Remove="Data\SVG\minus.svg" />
+    <None Remove="Data\SVG\plus.svg" />
     <None Remove="Data\SVG\time.svg" />
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +33,8 @@
     <EmbeddedResource Include="Data\SVG\arrow.svg" />
     <EmbeddedResource Include="Data\SVG\calendar.svg" />
     <EmbeddedResource Include="Data\SVG\calendarAndTime.svg" />
+    <EmbeddedResource Include="Data\SVG\minus.svg" />
+    <EmbeddedResource Include="Data\SVG\plus.svg" />
     <EmbeddedResource Include="Data\SVG\time.svg" />
   </ItemGroup>
   <ItemGroup>
