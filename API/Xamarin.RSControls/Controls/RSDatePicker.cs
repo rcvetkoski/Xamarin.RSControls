@@ -28,13 +28,6 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(RightIconProperty, value); }
         }
 
-        //Icon Color
-        public static readonly BindableProperty IconColorProperty = BindableProperty.Create("IconColor", typeof(Color), typeof(RSDatePicker), Color.DimGray);
-        public Color IconColor
-        {
-            get { return (Color)GetValue(IconColorProperty); }
-            set { SetValue(IconColorProperty, value); }
-        }
 
         //Has Border
         public static readonly BindableProperty HasBorderProperty = BindableProperty.Create("HasBorder", typeof(bool), typeof(RSDatePicker), false);
@@ -42,22 +35,6 @@ namespace Xamarin.RSControls.Controls
         {
             get { return (bool)GetValue(HasBorderProperty); }
             set { SetValue(HasBorderProperty, value); }
-        }
-
-        //Icon Width
-        public static readonly BindableProperty IconWidthProperty = BindableProperty.Create("IconWidth", typeof(double), typeof(RSDatePicker), 20.0);
-        public double IconWidth
-        {
-            get { return (double)GetValue(IconWidthProperty); }
-            set { SetValue(IconWidthProperty, value); }
-        }
-
-        //Icon Height
-        public static readonly BindableProperty IconHeightProperty = BindableProperty.Create("IconHeight", typeof(double), typeof(RSDatePicker), 20.0);
-        public double IconHeight
-        {
-            get { return (double)GetValue(IconHeightProperty); }
-            set { SetValue(IconHeightProperty, value); }
         }
 
         //Has Custom Format

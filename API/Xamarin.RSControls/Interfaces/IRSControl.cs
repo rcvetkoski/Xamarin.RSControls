@@ -9,6 +9,7 @@ namespace Xamarin.RSControls.Interfaces
 {
     public interface IRSControl
     {
+        bool IsPlaceholderAlwaysFloating { get; set; }
         string Placeholder { get; set; }
         Color PlaceholderColor { get; set; }
         string Helper { get; set; }
@@ -31,8 +32,6 @@ namespace Xamarin.RSControls.Interfaces
         RSEntryIcon RightHelpingIcon { get; set; }
         bool HasRighIconSeparator { get; set; }
         bool HasLeftIconSeparator { get; set; }
-        Color IconColor { get; set; }
-        double IconSize { get; set; }
         Thickness Padding { get; set; }
     }
 }

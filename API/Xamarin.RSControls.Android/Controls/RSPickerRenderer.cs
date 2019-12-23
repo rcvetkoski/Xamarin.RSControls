@@ -46,7 +46,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             ElementCasted = this.Element as RSPickerBase;
 
-           // this.Control.SetSingleLine(true);
+            this.Control.SetSingleLine(true);
 
             //Show datepicker
             this.Control.Click += OnPickerClick;

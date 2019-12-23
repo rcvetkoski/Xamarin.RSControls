@@ -133,36 +133,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void SetIcon(global::Android.Widget.EditText nativeEditText)
         {
-            string rightPath = string.Empty;
-            string leftPath = string.Empty;
-            Drawable rightDrawable = null;
-            Drawable leftDrawable = null;
-
-            //Right Icon
-            if (Element.RightIcon == null)
-                rightPath = "Samples/Data/SVG/calendar.svg";
-            else
-                rightPath = Element.RightIcon;
-
-            int pixel = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)Element.IconHeight, Context.Resources.DisplayMetrics);
-            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = rightPath, HeightRequest = pixel, WidthRequest = pixel, Color = Element.IconColor };
-            var convertedRightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new Rectangle(), Context);
-            rightDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedRightView, pixel, pixel));
-
-
-            //Left Icon
-            if (Element.LeftIcon != null)
-            {
-                leftPath = Element.LeftIcon;
-                RSSvgImage leftSvgIcon = new RSSvgImage() { Source = leftPath, HeightRequest = pixel, WidthRequest = pixel, Color = Element.IconColor };
-                var convertedLeftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new Rectangle(), Context);
-                leftDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedLeftView, pixel, pixel));
-            }
-
-
-            //Set Drawable to control
-            nativeEditText.CompoundDrawablePadding = 15;
-            nativeEditText.SetCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, rightDrawable, null);
+            
         }
 
         private void OnPickerClick(object sender, EventArgs e)

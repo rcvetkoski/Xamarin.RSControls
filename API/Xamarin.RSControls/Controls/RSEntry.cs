@@ -8,6 +8,12 @@ namespace Xamarin.RSControls.Controls
 {
     public class RSEntry : Entry, IHaveError, IRSControl
     {
+        public static readonly BindableProperty IsPlaceholderAlwaysFloatingProperty = BindableProperty.Create("IsPlaceholderAlwaysFloating", typeof(bool), typeof(RSEntry), false);
+        public bool IsPlaceholderAlwaysFloating
+        {
+            get { return (bool)GetValue(IsPlaceholderAlwaysFloatingProperty); }
+            set { SetValue(IsPlaceholderAlwaysFloatingProperty, value); }
+        }
         public static readonly BindableProperty UpdateSourceTriggerProperty = BindableProperty.Create("UpdateSourceTrigger", typeof(UpdateSourceTriggerEnum), typeof(RSEntry), null);
         public UpdateSourceTriggerEnum UpdateSourceTrigger
         {
@@ -111,21 +117,6 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(RightHelpingIconProperty, value); }
         }
 
-        //Icon Color
-        public static readonly BindableProperty IconColorProperty = BindableProperty.Create("IconColor", typeof(Color), typeof(RSEntry), Color.DimGray);
-        public Color IconColor
-        {
-            get { return (Color)GetValue(IconColorProperty); }
-            set { SetValue(IconColorProperty, value); }
-        }
-
-        //Icon Height
-        public static readonly BindableProperty IconSizeProperty = BindableProperty.Create("IconSize", typeof(double), typeof(RSEntry), 22.0);
-        public double IconSize
-        {
-            get { return (double)GetValue(IconSizeProperty); }
-            set { SetValue(IconSizeProperty, value); }
-        }
 
         public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSEntry), 16f);
         public float BorderRadius

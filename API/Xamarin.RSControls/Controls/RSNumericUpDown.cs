@@ -15,20 +15,29 @@ namespace Xamarin.RSControls.Controls
         public void Increase()
         {
             if (Value == null)
-                Value = 0;
+                Value = Minimum > 0 ? Minimum : 0;
 
             var number = Convert.ToDouble(Value.ToString());
             number += IncrementValue;
+
+
+            if (number > Maximum)
+                number -= IncrementValue;
+
             Value = number;
         }
 
         public void Decrease()
         {
             if (Value == null)
-                Value = 0;
+                Value = Minimum > 0 ? Minimum : 0;
 
             var number = Convert.ToDouble(Value.ToString());
             number -= IncrementValue;
+
+            if (number < Minimum)
+                number += IncrementValue;
+
             Value = number;
         }
     }

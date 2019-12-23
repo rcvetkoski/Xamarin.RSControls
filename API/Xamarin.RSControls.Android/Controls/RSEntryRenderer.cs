@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Linq.Expressions;
 using System.Linq;
 using System.Collections.Generic;
+using Xamarin.RSControls.Helpers;
 
 [assembly: ExportRenderer(typeof(RSEntry), typeof(RSEntryRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
@@ -125,6 +126,9 @@ namespace Xamarin.RSControls.Droid.Controls
         private int leftDrawableClip;
         private int rightDrawableClip;
         private float correctiveY;
+        private bool shouldFloat;
+        private bool shouldNotFloat;
+        public bool IsFloating;
 
 
         //Animators
@@ -145,8 +149,8 @@ namespace Xamarin.RSControls.Droid.Controls
                     errorMessage = value;
 
                 //Force Animation because draw method executed after this setter
-                if (isFocused != this.IsFocused && !isFloatingHintAnimating)
-                    AnimateFloatingHint();
+                //if (isFocused != this.IsFocused && !isFloatingHintAnimating)
+                //    AnimateFloatingHint();
 
                 if (!string.IsNullOrEmpty(value))
                 {
@@ -234,11 +238,29 @@ namespace Xamarin.RSControls.Droid.Controls
             if (this.rSControl.Padding.IsEmpty)
             {
                 if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
-                    this.rSControl.Padding = new Thickness(15 + this.PaddingLeft, 30 + topSpacing, 15 + this.PaddingRight, 30 + bottomSpacing);
+                {
+                    this.rSControl.Padding = new Thickness((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + this.PaddingLeft,
+                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 12, Context.Resources.DisplayMetrics) + topSpacing,
+                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + this.PaddingRight,
+                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 12, Context.Resources.DisplayMetrics) + bottomSpacing);
+
+                                    }
                 else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
-                    this.rSControl.Padding = new Thickness(5, 35 + topSpacing, 10, 10 + bottomSpacing);
+                {
+                    this.rSControl.Padding = new Thickness((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 2, Context.Resources.DisplayMetrics),
+                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics) + topSpacing,
+                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Context.Resources.DisplayMetrics),
+                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + bottomSpacing);
+                    
+                }
                 else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
-                    this.rSControl.Padding = new Thickness(15 + this.PaddingLeft, 40 + topSpacing, 15 + this.PaddingRight, 10 + bottomSpacing);
+                {
+                    this.rSControl.Padding = new Thickness((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + this.PaddingLeft,
+                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics) + topSpacing,
+                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + this.PaddingRight,
+                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + bottomSpacing);
+                    
+                }
             }
             else
             {
@@ -265,23 +287,35 @@ namespace Xamarin.RSControls.Droid.Controls
                     borderPaint.Color = errorColor;
                     floatingHintPaint.Color = errorColor;
 
-                    if (rightDrawable != null)
+                    if (rightDrawable != null && rSControl.RightIcon.IconColor == Forms.Color.DimGray)
                         rightDrawable.drawable.SetTint(borderColor);
+                    else if(rightDrawable != null)
+                        rightDrawable.drawable.SetTint(rSControl.RightIcon.IconColor.ToAndroid());
 
-                    if (leftDrawable != null)
+                    if (leftDrawable != null && rSControl.LeftIcon.IconColor == Forms.Color.DimGray)
                         leftDrawable.drawable.SetTint(borderColor);
+                    else if (leftDrawable != null)
+                        leftDrawable.drawable.SetTint(rSControl.LeftIcon.IconColor.ToAndroid());
 
-                    if (leadingDrawable != null)
+                    if (leadingDrawable != null && rSControl.LeadingIcon.IconColor == Forms.Color.DimGray)
                         leadingDrawable.drawable.SetTint(borderColor);
+                    else if (leadingDrawable != null)
+                        leadingDrawable.drawable.SetTint(rSControl.LeadingIcon.IconColor.ToAndroid());
 
-                    if (trailingDrawable != null)
+                    if (trailingDrawable != null && rSControl.TrailingIcon.IconColor == Forms.Color.DimGray)
                         trailingDrawable.drawable.SetTint(borderColor);
+                    else if (trailingDrawable != null)
+                        trailingDrawable.drawable.SetTint(rSControl.TrailingIcon.IconColor.ToAndroid());
 
-                    if (rightHelpingDrawable != null)
+                    if (rightHelpingDrawable != null && rSControl.RightHelpingIcon.IconColor == Forms.Color.DimGray)
                         rightHelpingDrawable.drawable.SetTint(borderColor);
+                    else if (rightHelpingDrawable != null)
+                        rightHelpingDrawable.drawable.SetTint(rSControl.RightHelpingIcon.IconColor.ToAndroid());
 
-                    if (leftHelpingDrawable != null)
+                    if (leftHelpingDrawable != null && rSControl.LeftHelpingIcon.IconColor == Forms.Color.DimGray)
                         leftHelpingDrawable.drawable.SetTint(borderColor);
+                    else if (leftHelpingDrawable != null)
+                        leftHelpingDrawable.drawable.SetTint(rSControl.LeftHelpingIcon.IconColor.ToAndroid());
                 }
                 else
                 {
@@ -320,52 +354,74 @@ namespace Xamarin.RSControls.Droid.Controls
                     borderPaint.Color = borderColor;
                     floatingHintPaint.Color = borderColor;
 
-                    if (rightDrawable != null)
+                    if (rightDrawable != null && rSControl.RightIcon.IconColor == Forms.Color.DimGray)
                         rightDrawable.drawable.SetTint(borderColor);
+                    else if (rightDrawable != null)
+                        rightDrawable.drawable.SetTint(rSControl.RightIcon.IconColor.ToAndroid());
 
-                    if (leftDrawable != null)
+                    if (leftDrawable != null && rSControl.LeftIcon.IconColor == Forms.Color.DimGray)
                         leftDrawable.drawable.SetTint(borderColor);
+                    else if (leftDrawable != null)
+                        leftDrawable.drawable.SetTint(rSControl.LeftIcon.IconColor.ToAndroid());
 
-                    if (leadingDrawable != null)
+                    if (leadingDrawable != null && rSControl.LeadingIcon.IconColor == Forms.Color.DimGray)
                         leadingDrawable.drawable.SetTint(borderColor);
+                    else if (leadingDrawable != null)
+                        leadingDrawable.drawable.SetTint(rSControl.LeadingIcon.IconColor.ToAndroid());
 
-                    if (trailingDrawable != null)
+                    if (trailingDrawable != null && rSControl.TrailingIcon.IconColor == Forms.Color.DimGray)
                         trailingDrawable.drawable.SetTint(borderColor);
+                    else if (trailingDrawable != null)
+                        trailingDrawable.drawable.SetTint(rSControl.TrailingIcon.IconColor.ToAndroid());
 
-                    if (rightHelpingDrawable != null)
+                    if (rightHelpingDrawable != null && rSControl.RightHelpingIcon.IconColor == Forms.Color.DimGray)
                         rightHelpingDrawable.drawable.SetTint(borderColor);
+                    else if (rightHelpingDrawable != null)
+                        rightHelpingDrawable.drawable.SetTint(rSControl.RightHelpingIcon.IconColor.ToAndroid());
 
-                    if (leftHelpingDrawable != null)
+                    if (leftHelpingDrawable != null && rSControl.LeftHelpingIcon.IconColor == Forms.Color.DimGray)
                         leftHelpingDrawable.drawable.SetTint(borderColor);
+                    else if (leftHelpingDrawable != null)
+                        leftHelpingDrawable.drawable.SetTint(rSControl.LeftHelpingIcon.IconColor.ToAndroid());
                 }
             }
         }
-        private bool CanAnimate(bool focused)
+
+        private bool CanAnimate()
         {
-            if (focused)
+            if (IsFloating)
             {
-                if (IsFloating() && string.IsNullOrEmpty(this.Text) && !errorEnabled)
-                    return true;
-                else if (!IsFloating())
-                    return true;
+                if (string.IsNullOrEmpty(this.Text) && !errorEnabled && !this.IsFocused)
+                {
+                    shouldNotFloat = true;
+                }
                 else
-                    return false;
+                {
+                    shouldNotFloat = false;
+                }
             }
             else
             {
-                if (!IsFloating())
-                    return true;
+                if (!string.IsNullOrEmpty(this.Text) || errorEnabled || this.IsFocused)
+                {
+                    shouldFloat = true;
+                }
                 else
-                    return false;
+                    shouldFloat = false;
             }
-        }
-        private bool IsFloating()
-        {
-            if (!string.IsNullOrEmpty(this.Text) || errorEnabled || this.IsFocused)
+
+            if (shouldFloat || shouldNotFloat)
                 return true;
             else
                 return false;
         }
+        //private bool IsFloating()
+        //{
+        //    if (!string.IsNullOrEmpty(this.Text) || errorEnabled || this.IsFocused)
+        //        return true;
+        //    else
+        //        return false;
+        //}
         private void PasswordCommand()
         {
             if (this.InputType == InputTypes.TextVariationPassword)
@@ -389,7 +445,7 @@ namespace Xamarin.RSControls.Droid.Controls
             floatingHintBoundsFloating = new Rect();
             floatingHintBoundsNotFloating = new Rect();
 
-            floatingHintText = this.rSControl.Placeholder;
+            floatingHintText = this.rSControl.Placeholder != null ? rSControl.Placeholder : "";
             global::Android.Graphics.Color color = new global::Android.Graphics.Color(this.CurrentHintTextColor);
             floatingHintPaint.Color = color;
             floatingHintPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
@@ -496,7 +552,7 @@ namespace Xamarin.RSControls.Droid.Controls
             //Leading Icon
             if (this.rSControl.LeadingIcon != null)
             {
-                this.leadingDrawable = CreateDrawable(rSControl.LeadingIcon.Path, rSControl.LeadingIcon.Command, rSControl.LeadingIcon.CommandParameter, rSControl.LeadingIcon.Bindings, 0, null, rSControl.LeadingIcon.Source);
+                this.leadingDrawable = CreateDrawable(rSControl.LeadingIcon, 0, null);
                 leadingIconWidth = leadingDrawable.IntrinsicWidth + (this.CompoundDrawablePadding * 2);
                 this.SetPadding(this.PaddingLeft + leadingIconWidth, this.PaddingTop, this.PaddingRight, this.PaddingBottom);
             }
@@ -505,11 +561,11 @@ namespace Xamarin.RSControls.Droid.Controls
             if (rSControl.LeftIcon != null)
             {
                 if (rSControl.LeftHelpingIcon != null)
-                    leftHelpingDrawable = CreateDrawable(rSControl.LeftHelpingIcon.Path, rSControl.LeftHelpingIcon.Command, rSControl.LeftHelpingIcon.CommandParameter, rSControl.LeftHelpingIcon.Bindings, 0, null, rSControl.LeftHelpingIcon.Source);
+                    leftHelpingDrawable = CreateDrawable(rSControl.LeftHelpingIcon, 0, null);
 
                 leftDrawableClip = leftHelpingDrawable != null ? leftHelpingDrawable.IntrinsicWidth + iconsSpacing : 0;
 
-                this.leftDrawable = CreateDrawable(rSControl.LeftIcon.Path, rSControl.LeftIcon.Command, rSControl.LeftIcon.CommandParameter, rSControl.LeftIcon.Bindings, leftDrawableClip, "left", rSControl.LeftIcon.Source);
+                this.leftDrawable = CreateDrawable(rSControl.LeftIcon, leftDrawableClip, "left");
             }
 
             //Right Icon
@@ -517,17 +573,17 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 //Custom Icon
                 if (rSControl.RightHelpingIcon != null)
-                    rightHelpingDrawable = CreateDrawable(rSControl.RightHelpingIcon.Path, rSControl.RightHelpingIcon.Command, rSControl.RightHelpingIcon.CommandParameter, rSControl.RightHelpingIcon.Bindings, 0, null, rSControl.RightHelpingIcon.Source);
+                    rightHelpingDrawable = CreateDrawable(rSControl.RightHelpingIcon, 0, null);
 
                 rightDrawableClip = rightHelpingDrawable != null ? rightHelpingDrawable.IntrinsicWidth + iconsSpacing : 0;
 
-                this.rightDrawable = CreateDrawable(rSControl.RightIcon.Path, rSControl.RightIcon.Command, rSControl.RightIcon.CommandParameter, rSControl.RightIcon.Bindings, rightDrawableClip, "right", rSControl.RightIcon.Source);
+                this.rightDrawable = CreateDrawable(rSControl.RightIcon, rightDrawableClip, "right");
             }
 
             //Trailing Icon
             if (rSControl.TrailingIcon != null)
             {
-                this.trailingDrawable = CreateDrawable(rSControl.TrailingIcon.Path, rSControl.TrailingIcon.Command, rSControl.TrailingIcon.CommandParameter, rSControl.TrailingIcon.Bindings, 0, null, rSControl.TrailingIcon.Source);
+                this.trailingDrawable = CreateDrawable(rSControl.TrailingIcon, 0, null);
                 trailingIconWidth = trailingDrawable.IntrinsicWidth + (this.CompoundDrawablePadding * 2);
                 this.SetPadding(this.PaddingLeft, this.PaddingTop, this.PaddingRight + trailingIconWidth, this.PaddingBottom);
             }
@@ -538,10 +594,10 @@ namespace Xamarin.RSControls.Droid.Controls
 
             leftDrawableWidth = leftDrawable != null ? leftDrawable.IntrinsicWidth + this.CompoundDrawablePadding : 0;
         }
-        private CustomDrawable CreateDrawable(string path, string commandName, object commandParameter, IList<Binding> commandParameters, int customDrawableClip, string type = null, object source = null)
+        private CustomDrawable CreateDrawable(RSEntryIcon rsIcon, int customDrawableClip, string type = null)
         {
-            int pixel = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rSControl.IconSize, Context.Resources.DisplayMetrics);
-            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = path, HeightRequest = pixel, WidthRequest = pixel, Color = rSControl.IconColor };
+            int pixel = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rsIcon.IconSize, Context.Resources.DisplayMetrics);
+            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = rsIcon.Path, HeightRequest = pixel, WidthRequest = pixel, Color = rsIcon.IconColor };
             var convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new Rectangle(), Context);
             var bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, pixel, pixel));
 
@@ -553,12 +609,12 @@ namespace Xamarin.RSControls.Droid.Controls
             var drawable = new CustomDrawable(bitmapDrawable, this, correctiveY);
             drawable.SetBounds(0, 0, bitmapDrawable.IntrinsicWidth + customDrawableClip, bitmapDrawable.IntrinsicHeight);
 
-            if(source == null)
-                 source = (rSControl as Forms.View).BindingContext;
+            if(rsIcon.Source == null)
+                rsIcon.Source = (rSControl as Forms.View).BindingContext;
 
             MethodInfo methodInfo;
 
-            if(commandParameters.Any())
+            if(rsIcon.Bindings.Any())
             {
                 List<object> objects = new List<object>();
                 foreach (Binding binding in this.rSControl.RightIcon.Bindings)
@@ -572,20 +628,20 @@ namespace Xamarin.RSControls.Droid.Controls
                     types[i] = objects[i].GetType();
                 }
 
-                methodInfo = source.GetType().GetMethod(commandName, types);
-                drawable.Command = new Command<object>((x) => ExecuteCommand(methodInfo, source, objects.ToArray()));
+                methodInfo = rsIcon.Source.GetType().GetMethod(rsIcon.Command, types);
+                drawable.Command = new Command<object>((x) => ExecuteCommand(methodInfo, rsIcon.Source, objects.ToArray()));
             }
-            else if(commandParameter != null)
+            else if(rsIcon.CommandParameter != null)
             {
-                methodInfo = source.GetType().GetMethod(commandName, new Type[] { commandParameter.GetType() });
-                drawable.Command = new Command<object>((x) => ExecuteCommand(methodInfo, source, commandParameter));
+                methodInfo = rsIcon.Source.GetType().GetMethod(rsIcon.Command, new Type[] { rsIcon.CommandParameter.GetType() });
+                drawable.Command = new Command<object>((x) => ExecuteCommand(methodInfo, rsIcon.Source, rsIcon.CommandParameter));
             }
             else
             {
-                if (commandName != null)
+                if (rsIcon.Command != null)
                 {
-                    methodInfo = source.GetType().GetMethod(commandName, new Type[] { });
-                    drawable.Command = new Command<object>((x) => ExecuteCommand(methodInfo, source, commandParameter));
+                    methodInfo = rsIcon.Source.GetType().GetMethod(rsIcon.Command, new Type[] { });
+                    drawable.Command = new Command<object>((x) => ExecuteCommand(methodInfo, rsIcon.Source, rsIcon.CommandParameter));
                 }
             }
 
@@ -604,21 +660,27 @@ namespace Xamarin.RSControls.Droid.Controls
         }
         private void ExecuteCommand(MethodInfo methodInfo, object source, object[] parameters)
         {
-            if (parameters.Any())
+            if(methodInfo != null)
             {
-                methodInfo.Invoke(source, parameters);
+                if (parameters.Any())
+                {
+                    methodInfo.Invoke(source, parameters);
+                }
+                else
+                    methodInfo.Invoke(source, null);
             }
-            else
-                methodInfo.Invoke(source, null);
         }
         private void ExecuteCommand(MethodInfo methodInfo, object source, object parameter)
         {
-            if (parameter != null)
+            if(methodInfo != null)
             {
-                methodInfo.Invoke(source, new object[] { parameter });
+                if (parameter != null)
+                {
+                    methodInfo.Invoke(source, new object[] { parameter });
+                }
+                else
+                    methodInfo.Invoke(source, null);
             }
-            else
-                methodInfo.Invoke(source, null);
         }
 
 
@@ -632,6 +694,13 @@ namespace Xamarin.RSControls.Droid.Controls
             //Init floatingHint X and Y values
             if (!hasInitfloatingHintYPosition)
             {
+                if(rSControl.IsPlaceholderAlwaysFloating)
+                    IsFloating = true;
+                else if (this.IsFocused || !string.IsNullOrEmpty(this.Text) || errorEnabled)
+                    IsFloating = true;
+                else
+                    IsFloating = false;
+
                 if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
                 {
                     //X
@@ -646,7 +715,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     //X
                     floatingHintXPostionFloating = textRect.Left + leftRightSpacingLabels + leadingIconWidth;
-                    floatingHintXPostionNotFloating = textRect.Left + initLeftPadding + leftDrawableWidth + leadingIconWidth + leftDrawableClip;
+                    floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
 
                     //Y
                     floatingHintYPostionFloating = topSpacing + floatingHintBoundsFloating.Height() / 2;
@@ -664,7 +733,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
 
 
-                if (IsFloating())
+                if (IsFloating)
                 {
                     floatingHintPaint.TextSize = labelsTextSize;
                     floatingHintXPostion = floatingHintXPostionFloating;
@@ -696,17 +765,23 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 if (this.IsFocused)
                 {
-                    if (CanAnimate(this.IsFocused))
-                        AnimateFloatingHint();
+                    //IsFloating = true;
                 }
                 else
                 {
-                    if (CanAnimate(this.IsFocused))
-                        AnimateFloatingHint();
+                    //if (string.IsNullOrEmpty(this.Text) && !errorEnabled)
+                    //    IsFloating = false;
+                    //else
+                    //    IsFloating = true;
                 }
 
                 isFocused = this.IsFocused;
             }
+
+
+            if (CanAnimate() && !isFloatingHintAnimating && !rSControl.IsPlaceholderAlwaysFloating)
+                AnimateFloatingHint();
+
 
             //Update Colors
             SetColors();
@@ -844,7 +919,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 //Clip top border first and check if api < 26
                 canvas.Save();
 
-                if (IsFloating())
+                if (IsFloating)
                 {
                     if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
                     {
@@ -876,17 +951,17 @@ namespace Xamarin.RSControls.Droid.Controls
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
             {
                 canvas.DrawLine(textRect.Left + leadingIconWidth,
-                                textRect.Bottom - bottomSpacing - (borderPaint.StrokeWidth / borderPaint.StrokeWidth),
+                                textRect.Bottom - bottomSpacing - corectCorners - (borderPaint.StrokeWidth / borderPaint.StrokeWidth),
                                 textRect.Right - trailingIconWidth,
-                                textRect.Bottom - bottomSpacing,
+                                textRect.Bottom - bottomSpacing - corectCorners,
                                 borderPaint);
 
             }
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
             {
                 canvas.DrawLine(textRect.Left  + leadingIconWidth,
-                                textRect.Bottom - bottomSpacing - (borderPaint.StrokeWidth / borderPaint.StrokeWidth),
-                                textRect.Right - trailingIconWidth,
+                                textRect.Bottom - bottomSpacing - corectCorners - (borderPaint.StrokeWidth / borderPaint.StrokeWidth),
+                                textRect.Right - trailingIconWidth - corectCorners,
                                 textRect.Bottom - bottomSpacing,
                                 borderPaint);
 
@@ -932,6 +1007,8 @@ namespace Xamarin.RSControls.Droid.Controls
         private void FloatingHintAnimator_AnimationEnd(object sender, EventArgs e)
         {
             isFloatingHintAnimating = false;
+            shouldNotFloat = false;
+            shouldFloat = false;
         }
         private void FloatingHintAnimator_Update(object sender, AnimatorUpdateEventArgs e)
         {
@@ -940,7 +1017,7 @@ namespace Xamarin.RSControls.Droid.Controls
             floatingHintYPostion = (float)e.Animation.GetAnimatedValue("YPosition");
             Invalidate();
         }
-        public void AnimateFloatingHint()
+        public bool AnimateFloatingHint()
         {
             isFloatingHintAnimating = true;
             float textSizeStart;
@@ -950,7 +1027,7 @@ namespace Xamarin.RSControls.Droid.Controls
             float yStart;
             float yEnd;
 
-            if (!IsFloating())
+            if (shouldNotFloat)
             {
                 textSizeStart = labelsTextSize;
                 textSizeEnd = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)this.rSControl.FontSize, Context.Resources.DisplayMetrics);
@@ -958,8 +1035,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 xEnd = floatingHintXPostionNotFloating;
                 yStart = floatingHintYPostion;
                 yEnd = floatingHintYPostionNotFloating;
+
+                IsFloating = false;
             }
-            else
+            else if (shouldFloat)
             {
                 textSizeStart = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)this.rSControl.FontSize, Context.Resources.DisplayMetrics);
                 textSizeEnd = labelsTextSize;
@@ -967,7 +1046,11 @@ namespace Xamarin.RSControls.Droid.Controls
                 xEnd = floatingHintXPostionFloating;
                 yStart = floatingHintYPostion;
                 yEnd = floatingHintYPostionFloating;
+
+                IsFloating = true;
             }
+            else
+                return false;
 
             PropertyValuesHolder propertyTextSizeError = PropertyValuesHolder.OfFloat("textSize", textSizeStart, textSizeEnd);
             PropertyValuesHolder propertyXPositionError = PropertyValuesHolder.OfFloat("XPosition", xStart, xEnd);
@@ -977,6 +1060,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //Start animation
             floatingHintAnimator.Start();
+
+            return true;
         }
 
         //Animate error helper message
