@@ -68,9 +68,9 @@ namespace Xamarin.RSControls.Droid.Controls
         }
     }
 
-    public class CustomEditText : FormsEditText, IOnTouchListener
+    public class CustomEditText : FormsEditText
     {
-        IRSControl rSControl;
+        private IRSControl rSControl;
         private int initLeftPadding;
         private int topSpacing;
         private int bottomSpacing;
@@ -221,7 +221,7 @@ namespace Xamarin.RSControls.Droid.Controls
             CreateFloatingHintAnimator();
 
             //On touch listener
-            this.SetOnTouchListener(this);
+            //this.SetOnTouchListener(this);
         }
 
 
@@ -787,51 +787,51 @@ namespace Xamarin.RSControls.Droid.Controls
             SetColors();
 
             //Update Rounded border
-            UpdateBorder(canvas, textRect);
+            UpdateBorder(canvas);
 
             //Update Floating Hint
-            UpdateFloatingHint(canvas, textRect);
+            UpdateFloatingHint(canvas);
 
             //Update Error Message
             if (errorEnabled)
-                UpdateErrorMessage(canvas, textRect);
+                UpdateErrorMessage(canvas);
 
             //Update Helper Message
             if (!string.IsNullOrEmpty(this.rSControl.Helper))
-                UpdateHelperMessage(canvas, textRect);
+                UpdateHelperMessage(canvas);
 
             //Update Counter Message
             if (this.rSControl.CounterMaxLength != -1)
-                UpdateCounterMessage(canvas, textRect);
+                UpdateCounterMessage(canvas);
 
             //Update left helping drawable
             if(leftHelpingDrawable != null)
-                UpdateLeftHelpingIcon(canvas, textRect);
+                UpdateLeftHelpingIcon(canvas);
 
             //Update right helping drawable
             if (rightHelpingDrawable != null)
-                UpdateRightHelpingIcon(canvas, textRect);
+                UpdateRightHelpingIcon(canvas);
 
             //Update Right Separator
             if (rSControl.HasRighIconSeparator && this.rightHelpingDrawable != null)
-                UpdateRighIconSeparator(canvas, textRect);
+                UpdateRighIconSeparator(canvas);
 
             //Update Left Separator
             if (rSControl.HasLeftIconSeparator && this.leftHelpingDrawable != null)
-                UpdateLeftIconSeparator(canvas, textRect);
+                UpdateLeftIconSeparator(canvas);
 
             //Update leading drawable
             if (leadingDrawable != null)
-                UpdateLeadingIcon(canvas, textRect);
+                UpdateLeadingIcon(canvas);
 
             //Update trailing drawable
             if (trailingDrawable != null)
-                UpdateTrailingIcon(canvas, textRect);
+                UpdateTrailingIcon(canvas);
             
 
             base.OnDraw(canvas);
         }
-        private void UpdateLeftHelpingIcon(Canvas canvas, Rect textRect)
+        private void UpdateLeftHelpingIcon(Canvas canvas)
         {
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - leftHelpingDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + leftHelpingDrawable.IntrinsicHeight / 2;
@@ -842,7 +842,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             leftHelpingDrawable.Draw(canvas);
         }
-        private void UpdateRightHelpingIcon(Canvas canvas, Rect textRect)
+        private void UpdateRightHelpingIcon(Canvas canvas)
         {
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - rightHelpingDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + rightHelpingDrawable.IntrinsicHeight / 2;
@@ -853,7 +853,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             rightHelpingDrawable.Draw(canvas);
         }
-        private void UpdateLeftIconSeparator(Canvas canvas, Rect textRect)
+        private void UpdateLeftIconSeparator(Canvas canvas)
         {
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - leftDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + leftDrawable.IntrinsicHeight / 2;
@@ -864,7 +864,7 @@ namespace Xamarin.RSControls.Droid.Controls
                             center2 - correctiveY,
                             iconsSearator);
         }
-        private void UpdateRighIconSeparator(Canvas canvas, Rect textRect)
+        private void UpdateRighIconSeparator(Canvas canvas)
         {
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - rightDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + rightDrawable.IntrinsicHeight / 2;
@@ -875,7 +875,7 @@ namespace Xamarin.RSControls.Droid.Controls
                             center2 - correctiveY,
                             iconsSearator);
         }
-        private void UpdateLeadingIcon(Canvas canvas, Rect textRect)
+        private void UpdateLeadingIcon(Canvas canvas)
         {
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - leadingDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + leadingDrawable.IntrinsicHeight / 2;
@@ -885,7 +885,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             leadingDrawable.Draw(canvas);
         }
-        private void UpdateTrailingIcon(Canvas canvas, Rect textRect)
+        private void UpdateTrailingIcon(Canvas canvas)
         {
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - trailingDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + trailingDrawable.IntrinsicHeight / 2;
@@ -895,24 +895,24 @@ namespace Xamarin.RSControls.Droid.Controls
 
             trailingDrawable.Draw(canvas);
         }
-        private void UpdateFloatingHint(Canvas canvas, Rect textRect)
+        private void UpdateFloatingHint(Canvas canvas)
         {
             canvas.DrawText(floatingHintText, textRect.Left + floatingHintXPostion, floatingHintYPostion, floatingHintPaint);
         }
-        private void UpdateErrorMessage(Canvas canvas, Rect textRect)
+        private void UpdateErrorMessage(Canvas canvas)
         {
             canvas.DrawText(errorMessage, textRect.Left + leftRightSpacingLabels + leadingIconWidth, errorYPosition, errorPaint);
         }
-        private void UpdateHelperMessage(Canvas canvas, Rect textRect)
+        private void UpdateHelperMessage(Canvas canvas)
         {
             canvas.DrawText(helperMessage, textRect.Left + leftRightSpacingLabels + leadingIconWidth, helperYPosition, helperPaint);
         }
-        private void UpdateCounterMessage(Canvas canvas, Rect textRect)
+        private void UpdateCounterMessage(Canvas canvas)
         {
             counterMessage = string.Format("{0}/{1}", this.Length(), rSControl.CounterMaxLength);
             canvas.DrawText(counterMessage, textRect.Right - trailingIconWidth - (counterMessageBounds.Width()) - leftRightSpacingLabels, counterYPosition, counterPaint);
         }
-        private void UpdateBorder(Canvas canvas, Rect textRect)
+        private void UpdateBorder(Canvas canvas)
         {
             if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
             {
@@ -1096,13 +1096,47 @@ namespace Xamarin.RSControls.Droid.Controls
             Invalidate();
         }
 
-
-        //On touch listener
-        public bool OnTouch(global::Android.Views.View v, MotionEvent e)
+        public override bool OnTouchEvent(MotionEvent e)
         {
+            bool rightIconCondition = this.rightDrawable != null && e.GetX() >= Right - trailingIconWidth - rightDrawable.IntrinsicWidth - iconsSpacing && e.GetX() <= Right - trailingIconWidth;
+            bool trailingIconCondition = trailingDrawable != null && e.GetX() >= Right - trailingIconWidth && e.GetX() <= Right;
+            bool rightHelpingIconCondition = rightHelpingDrawable != null && e.GetX() >= rightHelpingDrawable.Bounds.Left - textRect.Left - initLeftPadding && e.GetX() <= rightHelpingDrawable.Bounds.Right - textRect.Left + iconsSpacing;
+            bool leadingIconCondition = leadingDrawable != null && e.GetX() >= Left && e.GetX() <= Left + leadingIconWidth;
+            bool leftIconCondition = leftDrawable != null && e.GetX() >= Left + leadingIconWidth && e.GetX() <= Left + leadingIconWidth + leftDrawable.IntrinsicWidth + iconsSpacing;
+            bool leftHelpingIconCondition = leftHelpingDrawable != null && e.GetX() >= leftHelpingDrawable.Bounds.Left - textRect.Left - iconsSpacing && e.GetX() <= leftHelpingDrawable.Bounds.Right - textRect.Left + initLeftPadding;
+
             if (e.Action == MotionEventActions.Down)
             {
-                if (this.rightDrawable != null && e.GetX() >= Right - trailingIconWidth - rightDrawable.IntrinsicWidth - iconsSpacing  && e.GetX() <= Right - trailingIconWidth)
+                if (rightIconCondition)
+                {
+                    return true;
+                }
+                else if (trailingIconCondition)
+                {
+                    return true;
+                }
+                else if (rightHelpingIconCondition)
+                {
+                    return true;
+                }
+                else if (leadingIconCondition)
+                {
+                    return true;
+                }
+                else if (leftIconCondition)
+                {
+                    return true;
+                }
+                else if (leftHelpingIconCondition)
+                {
+                    return true;
+                }
+                else
+                    return base.OnTouchEvent(e);
+            }
+            if (e.Action == MotionEventActions.Up)
+            {
+                if (rightIconCondition)
                 {
                     if (this.rSControl.IsPassword)
                     {
@@ -1123,7 +1157,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         }
                     }
                 }
-                else if (trailingDrawable != null && e.GetX() >= Right - trailingIconWidth && e.GetX() <= Right)
+                else if (trailingIconCondition)
                 {
                     if ((trailingDrawable as CustomDrawable).Selected)
                     {
@@ -1134,7 +1168,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         (trailingDrawable as CustomDrawable).Selected = true;
                     }
                 }
-                else if (rightHelpingDrawable != null && e.GetX() >= rightHelpingDrawable.Bounds.Left - textRect.Left - initLeftPadding && e.GetX() <= rightHelpingDrawable.Bounds.Right - textRect.Left + iconsSpacing)
+                else if (rightHelpingIconCondition)
                 {
                     if (rightHelpingDrawable.Selected)
                     {
@@ -1145,7 +1179,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         rightHelpingDrawable.Selected = true;
                     }
                 }
-                else if (leadingDrawable != null && e.GetX() >= Left && e.GetX() <= Left + leadingIconWidth)
+                else if (leadingIconCondition)
                 {
                     if ((leadingDrawable as CustomDrawable).Selected)
                     {
@@ -1156,7 +1190,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         (leadingDrawable as CustomDrawable).Selected = true;
                     }
                 }
-                else if (leftDrawable != null && e.GetX() >= Left + leadingIconWidth && e.GetX() <= Left + leadingIconWidth + leftDrawable.IntrinsicWidth + iconsSpacing)
+                else if (leftIconCondition)
                 {
                     if ((leftDrawable as CustomDrawable).Selected)
                     {
@@ -1167,7 +1201,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         (leftDrawable as CustomDrawable).Selected = true;
                     }
                 }
-                else if (leftHelpingDrawable != null && e.GetX() >= leftHelpingDrawable.Bounds.Left - textRect.Left - iconsSpacing && e.GetX() <= leftHelpingDrawable.Bounds.Right - textRect.Left + initLeftPadding)
+                else if (leftHelpingIconCondition)
                 {
                     if (leftHelpingDrawable.Selected)
                     {
@@ -1183,11 +1217,17 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 this.SetSelection(this.Length());
                 Invalidate();
-                return true;
+                return false;
             }
             else
                 return base.OnTouchEvent(e);
         }
+
+        //On touch listener
+        //public bool OnTouch(global::Android.Views.View v, MotionEvent e)
+        //{
+
+        //}
 
         //Edit text listener to set color if error enables used for the counter
         private void CustomEditText_AfterTextChanged(object sender, AfterTextChangedEventArgs e)

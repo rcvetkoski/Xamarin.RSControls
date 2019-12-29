@@ -183,67 +183,6 @@
                 <rs:RSNumericUpDown Grid.Column="1" IsPlaceholderAlwaysFloating="True" IncrementValue="100" Maximum="1000" NumberDecimalDigits="2" CustomUnit="$" RSEntryStyle="FilledBorder" Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
             </Grid>
 
-            <rs:RSEntry RSEntryStyle="FilledBorder" Placeholder="Trolol" IsPlaceholderAlwaysFloating="True">
-                <rs:RSEntry.RightIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" IconColor="Violet"/>
-                </rs:RSEntry.RightIcon>
-                <rs:RSEntry.RightHelpingIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" IconColor="Blue"/>
-                </rs:RSEntry.RightHelpingIcon>
-                <rs:RSEntry.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSEntry.Behaviors>
-            </rs:RSEntry>
-
-            <rs:RSEntry RSEntryStyle="Underline" Placeholder="Trolol" IsPlaceholderAlwaysFloating="True">
-                <rs:RSEntry.RightIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" IconColor="Violet"/>
-                </rs:RSEntry.RightIcon>
-                <rs:RSEntry.RightHelpingIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" IconColor="Blue"/>
-                </rs:RSEntry.RightHelpingIcon>
-                <rs:RSEntry.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSEntry.Behaviors>
-            </rs:RSEntry>
-
-            <rs:RSPicker ItemsSource="{Binding ObsCollectionPicker}" RSEntryStyle="FilledBorder" Placeholder="Obs collection picker" >
-                <rs:RSPicker.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="SelectedItem">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSPicker.Behaviors>
-            </rs:RSPicker>
-
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" RSEntryStyle="FilledBorder" Placeholder="Person" >
-                <rs:RSPicker.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="SelectedItem">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSPicker.Behaviors>
-            </rs:RSPicker>
-
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" SelectedItems="{Binding SelectedPersons}" SelectionMode="Multiple" DisplayMemberPath="Name" RSEntryStyle="FilledBorder" Placeholder="Persons" >
-                <rs:RSPicker.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="SelectedItem">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSPicker.Behaviors>
-            </rs:RSPicker>
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
 
