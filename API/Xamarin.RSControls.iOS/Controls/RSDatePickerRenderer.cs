@@ -34,8 +34,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 SetPlaceHolderText(entry);
 
-                //Set icon
-                SetIcon(entry);
 
                 if (this.Element.DateSelectionMode == DateSelectionModeEnum.Default)
                 {
@@ -262,40 +260,6 @@ namespace Xamarin.RSControls.iOS.Controls
             else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Month)
             {
                 this.Element.Format = "MMMM";
-            }
-        }
-
-        private void SetIcon(UITextField entry)
-        {
-            string rightPath = string.Empty;
-            string leftPath = string.Empty;
-
-
-            //Right Icon
-            if (Element.RightIcon == null)
-                rightPath = "Samples/Data/SVG/calendar.svg";
-            else
-                rightPath = Element.RightIcon;
-
-            var iconSize = Element.IconHeight - 5;
-
-            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = rightPath, HeightRequest = iconSize, WidthRequest = iconSize, Color = Element.IconColor };
-            var convertedRightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new CGRect(x: 0, y: 0, width: iconSize, height: iconSize));
-            var outerView = new UIView(new CGRect(x: 0, y: 0, width: iconSize + 5, height: iconSize));
-            outerView.AddSubview(convertedRightView);
-            entry.RightView = outerView;
-            entry.RightViewMode = UITextFieldViewMode.Always;
-
-
-            //Left Icon
-            if (Element.LeftIcon != null)
-            {
-                RSSvgImage leftSvgIcon = new RSSvgImage() { Source = leftPath, HeightRequest = Element.IconHeight, WidthRequest = Element.IconHeight, Color = Element.IconColor };
-                var convertedLeftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new CGRect(x: 0, y: 0, width: Element.IconHeight, height: Element.IconHeight));
-                var outerView2 = new UIView(new CGRect(x: 0, y: 0, width: Element.IconHeight + 7, height: Element.IconHeight));
-                outerView2.AddSubview(convertedLeftView);
-                entry.LeftView = outerView;
-                entry.LeftViewMode = UITextFieldViewMode.Always;
             }
         }
 

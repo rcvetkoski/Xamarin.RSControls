@@ -178,10 +178,25 @@
             </rs:RSPickerInputLayout>-->
 
 
-            <Grid>
+            <!--<Grid>
                 <rs:RSNumericUpDown Grid.Column="0" IsPlaceholderAlwaysFloating="True" Minimum="56" IncrementValue="100" Maximum="1000" NumberDecimalDigits="2" CustomUnit="$" RSEntryStyle="OutlinedBorder" Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"/>
                 <rs:RSNumericUpDown Grid.Column="1" IsPlaceholderAlwaysFloating="True" IncrementValue="100" Maximum="1000" NumberDecimalDigits="2" CustomUnit="$" RSEntryStyle="FilledBorder" Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
-            </Grid>
+            </Grid>-->
+
+
+            <rs:RSEntry Placeholder="Numeric" Text="Trololo" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="OutlinedBorder">
+               <rs:RSEntry.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSEntry.Behaviors>
+            </rs:RSEntry>
+
+            <rs:RSEntry Placeholder="Trolol" Text="Trololo" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="FilledBorder">
+
+            </rs:RSEntry>
 
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>

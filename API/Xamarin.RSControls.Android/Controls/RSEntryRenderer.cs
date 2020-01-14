@@ -35,7 +35,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
         public RSEntryRenderer(Context context) : base(context)
         {
-            var lol = this.Element;
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)

@@ -9,6 +9,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Enums;
+using Xamarin.RSControls.Interfaces;
 using Xamarin.RSControls.iOS.Controls;
 
 [assembly: ExportRenderer(typeof(RSPickerBase), typeof(RSPickerRenderer))]
@@ -45,8 +46,6 @@ namespace Xamarin.RSControls.iOS.Controls
             //Control.Layer.BorderColor = UIColor.LightGray.CGColor;
             //Control.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
 
-            //Set icon
-            SetIcon();
 
             //Set placeholder text
             SetPlaceHolderText();
@@ -184,35 +183,6 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-        private void SetIcon()
-        {
-            string rightPath = string.Empty;
-            string leftPath = string.Empty;
-
-
-            //Right Icon
-            if (Element.RightIcon == null)
-                rightPath = "Samples/Data/SVG/arrow.svg";
-            else
-                rightPath = Element.RightIcon;
-
-            var size = Control.Font.LineHeight;
-
-            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = rightPath, HeightRequest = size, WidthRequest = size, Color = Element.IconColor };
-            var convertedRightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new CGRect(x: 0, y: 0, width: size, height: size));
-            this.Control.RightView = convertedRightView;
-            this.Control.RightViewMode = UITextFieldViewMode.Always;
-
-            //Left Icon
-            if (this.Element.LeftIcon != null)
-            {
-                RSSvgImage leftSvgIcon = new RSSvgImage() { Source = leftPath, HeightRequest = size, WidthRequest = size, Color = Element.IconColor };
-                var convertedLeftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new CGRect(x: 0, y: 0, width: size, height: size));
-                this.Control.LeftView = convertedLeftView;
-                this.Control.LeftViewMode = UITextFieldViewMode.Always;
-            }
-        }
-
         private UIToolbar CreateToolbar(UITextField entry)
         {
             var width = UIScreen.MainScreen.Bounds.Width;
@@ -301,16 +271,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
         protected override UITextField CreateNativeControl()
         {
-            return new RSUITextField(
-                this.Element.Placeholder,
-                "",
-                -1,
-                false,
-                RSEntryStyleSelectionEnum.OutlinedBorder,
-                1,
-                Color.Gray.ToUIColor(),
-                this.Element.BackgroundColor.ToUIColor(),
-                this.Element.Behaviors.Any());
+            return new RSUITextField(this.Element as IRSControl);
         }
 
         protected override void Dispose(bool disposing)

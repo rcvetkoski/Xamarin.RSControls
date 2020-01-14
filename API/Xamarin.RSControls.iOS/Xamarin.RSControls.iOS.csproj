@@ -48,11 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\RSDatePickerRenderer.cs" />
-    <Compile Include="Controls\RSEntryInputLayoutRenderer.cs" />
     <Compile Include="Controls\RSEntryRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controls\RSPickerRenderer.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
+    <Compile Include="Extensions\NSObjectConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.RSControls\Xamarin.RSControls.csproj">
