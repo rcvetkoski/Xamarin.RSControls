@@ -185,7 +185,9 @@
 
 
             <rs:RSEntry Placeholder="Numeric" Helper="Helper !" CounterMaxLength="6" BackgroundColor="Transparent" RSEntryStyle="OutlinedBorder">
-               
+               <rs:RSEntry.RightIcon>
+                   <helpers:RSEntryIcon Path="Samples/Data/SVG/calendar.svg"/>
+               </rs:RSEntry.RightIcon>
             </rs:RSEntry>
 
             <rs:RSEntry Placeholder="Hint" Text="Trololo" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="FilledBorder">
