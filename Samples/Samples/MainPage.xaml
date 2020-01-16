@@ -198,6 +198,10 @@
 
             </rs:RSEntry>
 
+            <rs:RSDatePicker Placeholder="Month" Helper="Pick a month" RSEntryStyle="FilledBorder" DateSelectionMode="Month"></rs:RSDatePicker>
+
+
+
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
 

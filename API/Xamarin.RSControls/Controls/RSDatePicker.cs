@@ -1,11 +1,12 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.RSControls.Enums;
+using Xamarin.RSControls.Helpers;
 using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Controls
 {
-    public class RSDatePicker : DatePicker, IHaveError
+    public class RSDatePicker : DatePicker, IHaveError, IRSControl
     {
         public RSDatePicker()
         {
@@ -13,21 +14,13 @@ namespace Xamarin.RSControls.Controls
             this.hasCustomFormat = false;
         }
 
-        //Icon
-        public static readonly BindableProperty LeftIconProperty = BindableProperty.Create("LeftIcon", typeof(string), typeof(RSDatePicker), null);
-        public string LeftIcon
+        //IsPlaceholderAlwaysFloating
+        public static readonly BindableProperty IsPlaceholderAlwaysFloatingProperty = BindableProperty.Create("IsPlaceholderAlwaysFloating", typeof(bool), typeof(RSDatePicker), false);
+        public bool IsPlaceholderAlwaysFloating
         {
-            get { return (string)GetValue(LeftIconProperty); }
-            set { SetValue(LeftIconProperty, value); }
+            get { return (bool)GetValue(IsPlaceholderAlwaysFloatingProperty); }
+            set { SetValue(IsPlaceholderAlwaysFloatingProperty, value); }
         }
-
-        public static readonly BindableProperty RightIconProperty = BindableProperty.Create("RightIcon", typeof(string), typeof(RSDatePicker), null);
-        public string RightIcon
-        {
-            get { return (string)GetValue(RightIconProperty); }
-            set { SetValue(RightIconProperty, value); }
-        }
-
 
         //Has Border
         public static readonly BindableProperty HasBorderProperty = BindableProperty.Create("HasBorder", typeof(bool), typeof(RSDatePicker), false);
@@ -56,6 +49,9 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(PlaceholderColorProperty, value); }
         }
 
+        //IsPassword
+        public bool IsPassword { get; set; } = false;
+
         //Is Clearable
         public static readonly BindableProperty IsClearableProperty = BindableProperty.Create("IsClearable", typeof(bool), typeof(RSDatePicker), true);
         public bool IsClearable
@@ -80,6 +76,14 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(DateSelectionModeProperty, value); }
         }
 
+        //Entry style
+        public static readonly BindableProperty RSEntryStyleProperty = BindableProperty.Create("RSEntryStyle", typeof(RSEntryStyleSelectionEnum), typeof(RSDatePicker), RSEntryStyleSelectionEnum.OutlinedBorder);
+        public RSEntryStyleSelectionEnum RSEntryStyle
+        {
+            get { return (RSEntryStyleSelectionEnum)GetValue(RSEntryStyleProperty); }
+            set { SetValue(RSEntryStyleProperty, value); }
+        }
+
         //Error
         public static readonly BindableProperty ErrorProperty = BindableProperty.Create("Error", typeof(string), typeof(RSDatePicker), null);
         public string Error
@@ -87,6 +91,129 @@ namespace Xamarin.RSControls.Controls
             get { return (string)GetValue(ErrorProperty); }
             set { SetValue(ErrorProperty, value); }
         }
+
+        //Has error
+        public bool HasError
+        {
+            get
+            {
+                if (this.Behaviors.Count > 0)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public static readonly BindableProperty HelperProperty = BindableProperty.Create("Helper", typeof(string), typeof(RSDatePicker), string.Empty);
+        public string Helper
+        {
+            get { return (string)GetValue(HelperProperty); }
+            set { SetValue(HelperProperty, value); }
+        }
+
+        public static readonly BindableProperty CounterProperty = BindableProperty.Create("Counter", typeof(int), typeof(RSDatePicker), 0);
+        public int Counter
+        {
+            get { return (int)GetValue(CounterProperty); }
+            set { SetValue(CounterProperty, value); }
+        }
+
+        public static readonly BindableProperty CounterMaxLengthProperty = BindableProperty.Create("CounterMaxLength", typeof(int), typeof(RSDatePicker), -1);
+        public int CounterMaxLength
+        {
+            get { return (int)GetValue(CounterMaxLengthProperty); }
+            set { SetValue(CounterMaxLengthProperty, value); }
+        }
+
+        //Icon
+        public static readonly BindableProperty LeadingIconProperty = BindableProperty.Create("LeadingIcon", typeof(RSEntryIcon), typeof(RSDatePicker), null);
+        public RSEntryIcon LeadingIcon
+        {
+            get { return (RSEntryIcon)GetValue(LeadingIconProperty); }
+            set { SetValue(LeadingIconProperty, value); }
+        }
+
+        public static readonly BindableProperty TrailingIconProperty = BindableProperty.Create("TrailingIcon", typeof(RSEntryIcon), typeof(RSDatePicker), null);
+        public RSEntryIcon TrailingIcon
+        {
+            get { return (RSEntryIcon)GetValue(TrailingIconProperty); }
+            set { SetValue(TrailingIconProperty, value); }
+        }
+
+        public static readonly BindableProperty LeftIconProperty = BindableProperty.Create("LeftIcon", typeof(RSEntryIcon), typeof(RSDatePicker), null);
+        public RSEntryIcon LeftIcon
+        {
+            get { return (RSEntryIcon)GetValue(LeftIconProperty); }
+            set { SetValue(LeftIconProperty, value); }
+        }
+
+        public static readonly BindableProperty RightIconProperty = BindableProperty.Create("RightIcon", typeof(RSEntryIcon), typeof(RSDatePicker), null);
+        public RSEntryIcon RightIcon
+        {
+            get { return (RSEntryIcon)GetValue(RightIconProperty); }
+            set { SetValue(RightIconProperty, value); }
+        }
+
+        public static readonly BindableProperty LeftHelpingIconProperty = BindableProperty.Create("LeftHelpingIcon", typeof(RSEntryIcon), typeof(RSDatePicker), null);
+        public RSEntryIcon LeftHelpingIcon
+        {
+            get { return (RSEntryIcon)GetValue(LeftHelpingIconProperty); }
+            set { SetValue(LeftHelpingIconProperty, value); }
+        }
+
+        public static readonly BindableProperty RightHelpingIconProperty = BindableProperty.Create("RightHelpingIcon", typeof(RSEntryIcon), typeof(RSDatePicker), null);
+        public RSEntryIcon RightHelpingIcon
+        {
+            get { return (RSEntryIcon)GetValue(RightHelpingIconProperty); }
+            set { SetValue(RightHelpingIconProperty, value); }
+        }
+
+
+        public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSDatePicker), 16f);
+        public float BorderRadius
+        {
+            get { return (float)GetValue(BorderRadiusProperty); }
+            set { SetValue(BorderRadiusProperty, value); }
+        }
+
+        public static readonly BindableProperty PaddingProperty = BindableProperty.Create("Padding", typeof(Thickness), typeof(RSDatePicker), null);
+        public Thickness Padding
+        {
+            get { return (Thickness)GetValue(PaddingProperty); }
+            set { SetValue(PaddingProperty, value); }
+        }
+
+        //Border Color
+        public static readonly BindableProperty BorderColorProperty = BindableProperty.Create("BorderColor", typeof(Color), typeof(RSDatePicker), Color.DimGray);
+        public Color BorderColor
+        {
+            get { return (Color)GetValue(BorderColorProperty); }
+            set { SetValue(BorderColorProperty, value); }
+        }
+        //Border Fill Color
+        public static readonly BindableProperty BorderFillColorProperty = BindableProperty.Create("BorderFillColor", typeof(Color), typeof(RSDatePicker), Color.FromHex("#OA000000"));
+        public Color BorderFillColor
+        {
+            get { return (Color)GetValue(BorderFillColorProperty); }
+            set { SetValue(BorderFillColorProperty, value); }
+        }
+        //Active Color
+        public static readonly BindableProperty ActiveColorProperty = BindableProperty.Create("ActiveColor", typeof(Color), typeof(RSDatePicker), Color.FromHex("#3F51B5"));
+        public Color ActiveColor
+        {
+            get { return (Color)GetValue(ActiveColorProperty); }
+            set { SetValue(ActiveColorProperty, value); }
+        }
+        //Error Color
+        public static readonly BindableProperty ErrorColorProperty = BindableProperty.Create("ErrorColor", typeof(Color), typeof(RSDatePicker), Color.FromHex("#f44336"));
+        public Color ErrorColor
+        {
+            get { return (Color)GetValue(ErrorColorProperty); }
+            set { SetValue(ErrorColorProperty, value); }
+        }
+
+        public bool HasRighIconSeparator { get; set; }
+        public bool HasLeftIconSeparator { get; set; }
 
         protected override void OnPropertyChanged(string propertyName = null)
         {
