@@ -205,11 +205,16 @@ namespace Xamarin.RSControls.Droid.Controls
             CreateCounterMessage();
 
             //Rounded border
-            CreateRoundedBorder();
+            if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
+                CreateRoundedBorder();
 
             //Filled container
             if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
                 CreateFilledBorder();
+
+            //Underline container
+            if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
+                CreateUnderlineBorder();
 
 
             if (this.rSControl.CounterMaxLength != -1)
@@ -506,6 +511,17 @@ namespace Xamarin.RSControls.Droid.Controls
         }
         private void CreateFilledBorder()
         {
+            //Border
+            borderPaint = new Paint();
+
+            borderPaint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
+            borderPaint.Color = borderColor;
+            borderPaint.StrokeWidth = borderWidth;
+            borderPaint.AntiAlias = true;
+            //borderPaint.SetShadowLayer(borderWidth, 0, borderWidth, global::Android.Graphics.Color.Gray);
+
+
+            //Filled
             filledPaint = new Paint();
 
             filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
@@ -514,6 +530,18 @@ namespace Xamarin.RSControls.Droid.Controls
             //filledPaint.StrokeWidth = borderWidth;
             //filledPaint.SetShadowLayer(borderWidth, 0, borderWidth, global::Android.Graphics.Color.Gray);
             filledPaint.AntiAlias = true;
+        }
+        private void CreateUnderlineBorder()
+        {
+            borderPaint = new Paint();
+
+            borderPaint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
+            borderPaint.Color = borderColor;
+            borderPaint.StrokeWidth = borderWidth;
+            borderPaint.AntiAlias = true;
+
+            (this.rSControl as Forms.View).BackgroundColor = rSControl.BorderFillColor;
+            //borderPaint.SetShadowLayer(borderWidth, 0, borderWidth, global::Android.Graphics.Color.Gray);
         }
         private void CreatePasswordIcon()
         {

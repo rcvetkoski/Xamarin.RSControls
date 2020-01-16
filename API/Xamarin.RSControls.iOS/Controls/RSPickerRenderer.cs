@@ -65,14 +65,8 @@ namespace Xamarin.RSControls.iOS.Controls
 
             entry.EditingDidBegin += Entry_EditingDidBegin;
 
-            //Set placeholder color for floating hint
-
-            if (Control is RSUITextField)
-            {
-                NSRange range;
-                var color = Control.AttributedPlaceholder.GetAttribute("NSColor", 0, out range) as UIColor;
-                (Control as RSUITextField).PlaceholderColor = color;
-            }
+            //Delete placeholder as we use floating hint instead
+            Element.Placeholder = "";
         }
 
         //If collection has changed meanwhile update the data on click

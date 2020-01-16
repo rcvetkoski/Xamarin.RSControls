@@ -184,17 +184,15 @@
             </Grid>-->
 
 
-            <rs:RSEntry Placeholder="Numeric" Text="Trololo" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="OutlinedBorder">
-               <rs:RSEntry.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSEntry.Behaviors>
+            <rs:RSEntry Placeholder="Numeric" Helper="Helper !" CounterMaxLength="6" BackgroundColor="Transparent" RSEntryStyle="OutlinedBorder">
+               
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Trolol" Text="Trololo" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="FilledBorder">
+            <rs:RSEntry Placeholder="Hint" Text="Trololo" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="FilledBorder">
+
+            </rs:RSEntry>
+
+            <rs:RSEntry Placeholder="Trolol" Text="Trololo" Helper="Helper !" RSEntryStyle="Underline">
 
             </rs:RSEntry>
 

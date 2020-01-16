@@ -28,6 +28,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if (e.NewElement == null)
                 return;
 
+
             if (Control == null)
             {
                 entry = CreateNativeControl();
@@ -74,6 +75,9 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 SetNativeControl(entry);
             }
+
+            //Delete placeholder as we use floating hint instead
+            Element.Placeholder = "";
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
