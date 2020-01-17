@@ -587,7 +587,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 rightDrawableClip = rightHelpingDrawable != null ? rightHelpingDrawable.IntrinsicWidth + iconsSpacing : 0;
 
-                this.rightDrawable = CreateDrawable(rSControl.RightIcon, rightDrawableClip, "right");
+                if(rSControl.RightIcon.View != null)
+                    this.rightDrawable = CreateDrawable(rSControl.RightIcon, rightDrawableClip, "right");
             }
 
             //Trailing Icon
@@ -606,10 +607,17 @@ namespace Xamarin.RSControls.Droid.Controls
         }
         private CustomDrawable CreateDrawable(RSEntryIcon rsIcon, int customDrawableClip, string type = null)
         {
-            int pixel = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rsIcon.IconSize, Context.Resources.DisplayMetrics);
-            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = rsIcon.Path, HeightRequest = pixel, WidthRequest = pixel, Color = rsIcon.IconColor };
-            var convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new Rectangle(), Context);
-            var bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, pixel, pixel));
+            int width = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rsIcon.IconWidth, Context.Resources.DisplayMetrics);
+            int height = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rsIcon.IconHeight, Context.Resources.DisplayMetrics);
+
+            global::Android.Views.View convertedView = null;
+            BitmapDrawable bitmapDrawable = null;
+
+            if (rsIcon.View != null)
+                convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rsIcon.View, new Rectangle(), Context);
+
+            if (convertedView != null)
+                bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, width, height));
 
 
             if (type != null && type == "right")

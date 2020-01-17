@@ -13,6 +13,8 @@ namespace Xamarin.RSControls.Helpers
         {
         }
 
+        public View View { get; set; }
+
         public string Path { get; set; }
         public string Command { get; set; }
         public object Source { get; set; }
@@ -25,12 +27,20 @@ namespace Xamarin.RSControls.Helpers
             set { SetValue(IconColorProperty, value); }
         }
 
-        //Icon Height
-        public static readonly BindableProperty IconSizeProperty = BindableProperty.Create("IconSize", typeof(double), typeof(RSEntryIcon), 22.0);
-        public double IconSize
+        //Icon Width
+        public static readonly BindableProperty IconWidthProperty = BindableProperty.Create("IconWidth", typeof(double), typeof(RSEntryIcon), 22.0);
+        public double IconWidth
         {
-            get { return (double)GetValue(IconSizeProperty); }
-            set { SetValue(IconSizeProperty, value); }
+            get { return (double)GetValue(IconWidthProperty); }
+            set { SetValue(IconWidthProperty, value); }
+        }
+
+        //Icon Height
+        public static readonly BindableProperty IconHeightProperty = BindableProperty.Create("IconHeight", typeof(double), typeof(RSEntryIcon), 22.0);
+        public double IconHeight
+        {
+            get { return (double)GetValue(IconHeightProperty); }
+            set { SetValue(IconHeightProperty, value); }
         }
 
         public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create("CommandParameter", typeof(object), typeof(RSEntryIcon), default);

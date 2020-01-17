@@ -20,11 +20,19 @@
 
                 <rs:RSEntry Placeholder="No left icon" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
                     <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>
                     </rs:RSEntry.LeftIcon>
 
                     <rs:RSEntry.RightHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>
                     </rs:RSEntry.RightHelpingIcon>
 
                 </rs:RSEntry>
@@ -32,13 +40,25 @@
                 <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
 
                     <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>                    
                     </rs:RSEntry.TrailingIcon>
                     <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>                   
                     </rs:RSEntry.LeftHelpingIcon>
                     <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>                   
                     </rs:RSEntry.LeftIcon>
 
                     <rs:RSEntry.Behaviors>
@@ -53,13 +73,25 @@
                 <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
 
                     <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>                
                     </rs:RSEntry.TrailingIcon>
                     <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>                  
                     </rs:RSEntry.LeftHelpingIcon>
                     <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>               
                     </rs:RSEntry.LeftIcon>
 
                 </rs:RSEntry>
@@ -92,358 +124,23 @@
 
                 <rs:RSEntry Placeholder="No left icon" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
                     <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>                
                     </rs:RSEntry.LeftIcon>
 
                     <rs:RSEntry.RightHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>              
                     </rs:RSEntry.RightHelpingIcon>
 
                 </rs:RSEntry>
 
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                    <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.TrailingIcon>
-                    <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftHelpingIcon>
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                    <rs:RSEntry.Behaviors>
-                        <validators:ValidationBehaviour PropertyName="Text">
-                            <validators:ValidationBehaviour.Validators>
-                                <validators:RequiredValidation/>
-                            </validators:ValidationBehaviour.Validators>
-                        </validators:ValidationBehaviour>
-                    </rs:RSEntry.Behaviors>
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                    <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.TrailingIcon>
-                    <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftHelpingIcon>
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                </rs:RSEntry>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-
-                </rs:RSPicker>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="OutlinedBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-                    <rs:RSPicker.Behaviors>
-                        <validators:ValidationBehaviour PropertyName="SelectedItem">
-                            <validators:ValidationBehaviour.Validators>
-                                <validators:RequiredValidation/>
-                            </validators:ValidationBehaviour.Validators>
-                        </validators:ValidationBehaviour>
-                    </rs:RSPicker.Behaviors>
-                </rs:RSPicker>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="Underline" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-
-                </rs:RSPicker>
-
-                <rs:RSNumericEntry Helper="Enter number" Placeholder="Numeric"></rs:RSNumericEntry>
-                <rs:RSNumericUpDown Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
-
-                <rs:RSEntry BackgroundColor="Cyan" Placeholder="No left icon" RSEntryStyle="Underline" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
-
-
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                    <rs:RSEntry.RightHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.RightHelpingIcon>
-
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                    <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.TrailingIcon>
-                    <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftHelpingIcon>
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                    <rs:RSEntry.Behaviors>
-                        <validators:ValidationBehaviour PropertyName="Text">
-                            <validators:ValidationBehaviour.Validators>
-                                <validators:RequiredValidation/>
-                            </validators:ValidationBehaviour.Validators>
-                        </validators:ValidationBehaviour>
-                    </rs:RSEntry.Behaviors>
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                    <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.TrailingIcon>
-                    <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftHelpingIcon>
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                </rs:RSEntry>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-
-                </rs:RSPicker>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="OutlinedBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-                    <rs:RSPicker.Behaviors>
-                        <validators:ValidationBehaviour PropertyName="SelectedItem">
-                            <validators:ValidationBehaviour.Validators>
-                                <validators:RequiredValidation/>
-                            </validators:ValidationBehaviour.Validators>
-                        </validators:ValidationBehaviour>
-                    </rs:RSPicker.Behaviors>
-                </rs:RSPicker>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="Underline" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-
-                </rs:RSPicker>
-
-                <rs:RSNumericEntry Helper="Enter number" Placeholder="Numeric"></rs:RSNumericEntry>
-                <rs:RSNumericUpDown Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
-
-                <rs:RSEntry BackgroundColor="Cyan" Placeholder="No left icon" RSEntryStyle="Underline" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
-
-
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                    <rs:RSEntry.RightHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.RightHelpingIcon>
-
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                    <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.TrailingIcon>
-                    <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftHelpingIcon>
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                    <rs:RSEntry.Behaviors>
-                        <validators:ValidationBehaviour PropertyName="Text">
-                            <validators:ValidationBehaviour.Validators>
-                                <validators:RequiredValidation/>
-                            </validators:ValidationBehaviour.Validators>
-                        </validators:ValidationBehaviour>
-                    </rs:RSEntry.Behaviors>
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                    <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.TrailingIcon>
-                    <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftHelpingIcon>
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                </rs:RSEntry>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-
-                </rs:RSPicker>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="OutlinedBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-                    <rs:RSPicker.Behaviors>
-                        <validators:ValidationBehaviour PropertyName="SelectedItem">
-                            <validators:ValidationBehaviour.Validators>
-                                <validators:RequiredValidation/>
-                            </validators:ValidationBehaviour.Validators>
-                        </validators:ValidationBehaviour>
-                    </rs:RSPicker.Behaviors>
-                </rs:RSPicker>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="Underline" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-
-                </rs:RSPicker>
-
-                <rs:RSNumericEntry Helper="Enter number" Placeholder="Numeric"></rs:RSNumericEntry>
-                <rs:RSNumericUpDown Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
-
-                <rs:RSEntry BackgroundColor="Cyan" Placeholder="No left icon" RSEntryStyle="Underline" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
-
-
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                    <rs:RSEntry.RightHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.RightHelpingIcon>
-
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                    <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.TrailingIcon>
-                    <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftHelpingIcon>
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                    <rs:RSEntry.Behaviors>
-                        <validators:ValidationBehaviour PropertyName="Text">
-                            <validators:ValidationBehaviour.Validators>
-                                <validators:RequiredValidation/>
-                            </validators:ValidationBehaviour.Validators>
-                        </validators:ValidationBehaviour>
-                    </rs:RSEntry.Behaviors>
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                    <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.TrailingIcon>
-                    <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftHelpingIcon>
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                </rs:RSEntry>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-
-                </rs:RSPicker>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="OutlinedBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-                    <rs:RSPicker.Behaviors>
-                        <validators:ValidationBehaviour PropertyName="SelectedItem">
-                            <validators:ValidationBehaviour.Validators>
-                                <validators:RequiredValidation/>
-                            </validators:ValidationBehaviour.Validators>
-                        </validators:ValidationBehaviour>
-                    </rs:RSPicker.Behaviors>
-                </rs:RSPicker>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="Underline" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-
-                </rs:RSPicker>
-
-                <rs:RSNumericEntry Helper="Enter number" Placeholder="Numeric"></rs:RSNumericEntry>
-                <rs:RSNumericUpDown Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
-
-                <rs:RSEntry BackgroundColor="Cyan" Placeholder="No left icon" RSEntryStyle="Underline" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
-
-
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                    <rs:RSEntry.RightHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/calendarAndTime.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.RightHelpingIcon>
-
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                    <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.TrailingIcon>
-                    <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftHelpingIcon>
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                    <rs:RSEntry.Behaviors>
-                        <validators:ValidationBehaviour PropertyName="Text">
-                            <validators:ValidationBehaviour.Validators>
-                                <validators:RequiredValidation/>
-                            </validators:ValidationBehaviour.Validators>
-                        </validators:ValidationBehaviour>
-                    </rs:RSEntry.Behaviors>
-                </rs:RSEntry>
-
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
-
-                    <rs:RSEntry.TrailingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.TrailingIcon>
-                    <rs:RSEntry.LeftHelpingIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftHelpingIcon>
-                    <rs:RSEntry.LeftIcon>
-                        <helpers:RSEntryIcon Path="Samples/Data/SVG/time.svg" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}"/>
-                    </rs:RSEntry.LeftIcon>
-
-                </rs:RSEntry>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-
-                </rs:RSPicker>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="OutlinedBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-                    <rs:RSPicker.Behaviors>
-                        <validators:ValidationBehaviour PropertyName="SelectedItem">
-                            <validators:ValidationBehaviour.Validators>
-                                <validators:RequiredValidation/>
-                            </validators:ValidationBehaviour.Validators>
-                        </validators:ValidationBehaviour>
-                    </rs:RSPicker.Behaviors>
-                </rs:RSPicker>
-
-                <rs:RSPicker ItemsSource="{Binding ListPicker}" RSEntryStyle="Underline" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-
-                </rs:RSPicker>
-
-                <rs:RSNumericEntry Helper="Enter number" Placeholder="Numeric"></rs:RSNumericEntry>
-                <rs:RSNumericUpDown Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

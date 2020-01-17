@@ -183,22 +183,59 @@
                 <rs:RSNumericUpDown Grid.Column="1" IsPlaceholderAlwaysFloating="True" IncrementValue="100" Maximum="1000" NumberDecimalDigits="2" CustomUnit="$" RSEntryStyle="FilledBorder" Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
             </Grid>-->
 
-            <rs:RSEntry Placeholder="Numeric" Helper="Helper !" IsPassword="True" CounterMaxLength="6" BackgroundColor="Transparent" RSEntryStyle="OutlinedBorder">
+
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Just a long placeholder :" VerticalOptions="Center"></Label>
+                <Entry Placeholder="Numeric" HorizontalOptions="FillAndExpand"></Entry>
+            </StackLayout>
+
+            <rs:RSEntry Placeholder="Just a long placeholder" Helper="Helper !" HasRighIconSeparator="True" CounterMaxLength="6" BackgroundColor="Transparent" RSEntryStyle="OutlinedBorder">
                 <rs:RSEntry.RightIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendar.svg"/>
+                    <helpers:RSEntryIcon>
+                        <helpers:RSEntryIcon.View>
+                            <rs:RSSvgImage Source="Samples/Data/SVG/calendar.svg"/>
+                        </helpers:RSEntryIcon.View>
+                    </helpers:RSEntryIcon>
                 </rs:RSEntry.RightIcon>
+
+                <rs:RSEntry.RightHelpingIcon>
+                        <helpers:RSEntryIcon>
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendar.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>
+                </rs:RSEntry.RightHelpingIcon>
             </rs:RSEntry>
 
             <rs:RSEntry Placeholder="Hint" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="FilledBorder">
                 <rs:RSEntry.RightIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendar.svg"/>
+                    <helpers:RSEntryIcon>
+                        <helpers:RSEntryIcon.View>
+                            <rs:RSSvgImage Source="Samples/Data/SVG/calendar.svg"/>
+                        </helpers:RSEntryIcon.View>
+                    </helpers:RSEntryIcon>
                 </rs:RSEntry.RightIcon>
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Trolol" Text="Trololo" Helper="Helper !"  RSEntryStyle="Underline">
+            <rs:RSEntry Placeholder="Trolol" Text="Trololo" Helper="Helper !" HasRighIconSeparator="True"  RSEntryStyle="Underline">
+                
+                
                 <rs:RSEntry.RightIcon>
-                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendar.svg"/>
+                    <helpers:RSEntryIcon IconHeight="15">
+                        <helpers:RSEntryIcon.View>
+                            <Label Text="Lol"></Label>
+                        </helpers:RSEntryIcon.View>
+                    </helpers:RSEntryIcon>
                 </rs:RSEntry.RightIcon>
+                
+                
+                <rs:RSEntry.RightHelpingIcon>
+                    <helpers:RSEntryIcon>
+                        <helpers:RSEntryIcon.View>
+                            <rs:RSSvgImage Source="Samples/Data/SVG/calendar.svg"/>
+                        </helpers:RSEntryIcon.View>
+                    </helpers:RSEntryIcon>
+                </rs:RSEntry.RightHelpingIcon>
             </rs:RSEntry>
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>

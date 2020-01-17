@@ -18,11 +18,21 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             if ((this.Element as IRSControl).RightIcon == null)
             {
-                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon() { Path = "Samples/Data/SVG/plus.svg", Command = "Increase" , Source = this.Element};
+                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon() 
+                {
+                    View = new RSSvgImage() { Source = "Samples/Data/SVG/plus.svg" },
+                    Command = "Increase",
+                    Source = this.Element
+                };
             }
 
             if ((this.Element as IRSControl).RightIcon != null && (this.Element as IRSControl).RightHelpingIcon == null)
-                (this.Element as IRSControl).RightHelpingIcon = new Helpers.RSEntryIcon() { Path = "Samples/Data/SVG/minus.svg", Command = "Decrease", Source = this.Element };
+                (this.Element as IRSControl).RightHelpingIcon = new Helpers.RSEntryIcon()
+                {
+                    View = new RSSvgImage() { Source = "Samples/Data/SVG/minus.svg" },
+                    Command = "Decrease",
+                    Source = this.Element
+                };
 
             return new CustomEditText(Context, this.Element as IRSControl);
         }

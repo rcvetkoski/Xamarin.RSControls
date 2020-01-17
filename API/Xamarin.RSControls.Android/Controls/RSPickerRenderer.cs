@@ -282,7 +282,10 @@ namespace Xamarin.RSControls.Droid.Controls
         protected override EditText CreateNativeControl()
         {
             if ((this.Element as IRSControl).RightIcon == null)
-                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon() { Path = "Samples/Data/SVG/arrow.svg" };
+                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
+                { 
+                    View = new RSSvgImage() { Source = "Samples/Data/SVG/arrow.svg" }
+                };
 
             return new CustomEditText(Context, this.Element as IRSControl);
         }
