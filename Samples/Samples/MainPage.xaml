@@ -183,25 +183,23 @@
                 <rs:RSNumericUpDown Grid.Column="1" IsPlaceholderAlwaysFloating="True" IncrementValue="100" Maximum="1000" NumberDecimalDigits="2" CustomUnit="$" RSEntryStyle="FilledBorder" Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
             </Grid>-->
 
-
-            <rs:RSEntry Placeholder="Numeric" Helper="Helper !" CounterMaxLength="6" BackgroundColor="Transparent" RSEntryStyle="OutlinedBorder">
-               <rs:RSEntry.RightIcon>
-                   <helpers:RSEntryIcon Path="Samples/Data/SVG/calendar.svg"/>
-               </rs:RSEntry.RightIcon>
+            <rs:RSEntry Placeholder="Numeric" Helper="Helper !" IsPassword="True" CounterMaxLength="6" BackgroundColor="Transparent" RSEntryStyle="OutlinedBorder">
+                <rs:RSEntry.RightIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendar.svg"/>
+                </rs:RSEntry.RightIcon>
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Hint" Text="Trololo" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="FilledBorder">
-
+            <rs:RSEntry Placeholder="Hint" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="FilledBorder">
+                <rs:RSEntry.RightIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendar.svg"/>
+                </rs:RSEntry.RightIcon>
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Trolol" Text="Trololo" Helper="Helper !" RSEntryStyle="Underline">
-
+            <rs:RSEntry Placeholder="Trolol" Text="Trololo" Helper="Helper !"  RSEntryStyle="Underline">
+                <rs:RSEntry.RightIcon>
+                    <helpers:RSEntryIcon Path="Samples/Data/SVG/calendar.svg"/>
+                </rs:RSEntry.RightIcon>
             </rs:RSEntry>
-
-            <rs:RSDatePicker Placeholder="Month" Helper="Pick a month" RSEntryStyle="FilledBorder" DateSelectionMode="Month"></rs:RSDatePicker>
-
-
-
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
 

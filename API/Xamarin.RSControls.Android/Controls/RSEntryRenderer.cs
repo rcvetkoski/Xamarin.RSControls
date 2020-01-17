@@ -70,7 +70,6 @@ namespace Xamarin.RSControls.Droid.Controls
     public class CustomEditText : FormsEditText
     {
         private IRSControl rSControl;
-        private int initLeftPadding;
         private int topSpacing;
         private int bottomSpacing;
         private int leftRightSpacingLabels;
@@ -172,13 +171,12 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //Init values
             isFocused = this.IsFocused;
-            initLeftPadding = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, this.PaddingLeft, Context.Resources.DisplayMetrics);
             labelsTextSize = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 12, Context.Resources.DisplayMetrics);
             borderWidth = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 1, Context.Resources.DisplayMetrics);
             borderWidthFocused = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 2, Context.Resources.DisplayMetrics);
             floatingHintClipPadding = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Context.Resources.DisplayMetrics);
             corectCorners = borderWidthFocused - borderWidth;
-            leftRightSpacingLabels = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 12, Context.Resources.DisplayMetrics);
+            leftRightSpacingLabels = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 14, Context.Resources.DisplayMetrics);
             iconsSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics);
             errorMessage = string.Empty;
             borderColor = rSControl.BorderColor.ToAndroid();
@@ -239,47 +237,30 @@ namespace Xamarin.RSControls.Droid.Controls
                 bottomSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics);
 
 
-            if (this.rSControl.Padding.IsEmpty)
+            if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
             {
-                if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
-                {
-                    this.rSControl.Padding = new Thickness((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + this.PaddingLeft,
-                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 12, Context.Resources.DisplayMetrics) + topSpacing,
-                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + this.PaddingRight,
-                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 12, Context.Resources.DisplayMetrics) + bottomSpacing);
+                this.SetPadding((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Left,
+                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Top,
+                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Right,
+                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 25, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Bottom);
 
-                                    }
-                else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
-                {
-                    this.rSControl.Padding = new Thickness((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 2, Context.Resources.DisplayMetrics),
-                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics) + topSpacing,
-                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Context.Resources.DisplayMetrics),
-                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + bottomSpacing);
-                    
-                }
-                else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
-                {
-                    this.rSControl.Padding = new Thickness((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + this.PaddingLeft,
-                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics) + topSpacing,
-                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + this.PaddingRight,
-                                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics) + bottomSpacing);
-                    
-                }
             }
-            else
+            else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
             {
-                this.rSControl.Padding = new Thickness(rSControl.Padding.Left,
-                                                       rSControl.Padding.Top + topSpacing,
-                                                       rSControl.Padding.Right,
-                                                       rSControl.Padding.Bottom + bottomSpacing);
+                this.SetPadding((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Left,
+                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Top,
+                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 6, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Right,
+                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Bottom);
+
             }
+            else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
+            {
+                this.SetPadding((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Left,
+                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 25, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Top,
+                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Right,
+                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Bottom);
 
-
-            //Set Padding
-            this.SetPadding((int)rSControl.Padding.Left,
-                            (int)rSControl.Padding.Top,
-                            (int)rSControl.Padding.Right,
-                            (int)rSControl.Padding.Bottom);
+            }
         }
         private void SetColors()
         {
@@ -552,14 +533,16 @@ namespace Xamarin.RSControls.Droid.Controls
             rightDrawable.SetBounds(0, 0, passwordDrawable.IntrinsicWidth, passwordDrawable.IntrinsicHeight);
 
             rightDrawable.Command = new Command(PasswordCommand);
+
+            rSControl.RightIcon = new RSEntryIcon();
         }
         private void CreateIcons()
         {
             this.CompoundDrawablePadding = 15;
 
             //Corrective Y
-            if (rSControl.RSEntryStyle != Enums.RSEntryStyleSelectionEnum.Underline)
-                correctiveY = (float)Math.Abs(Math.Abs(this.PaddingTop - topSpacing) - Math.Abs(this.PaddingBottom - bottomSpacing)) / 2;
+            if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
+                correctiveY = Math.Abs(topSpacing - bottomSpacing) / 2 + Math.Abs(PaddingTop - PaddingBottom) / 2;
             else
                 correctiveY = 0;
 
@@ -596,7 +579,7 @@ namespace Xamarin.RSControls.Droid.Controls
             }
 
             //Right Icon
-            if (this.rSControl.RightIcon != null)
+            if (this.rSControl.RightIcon != null && !rSControl.IsPassword)
             {
                 //Custom Icon
                 if (rSControl.RightHelpingIcon != null)
@@ -735,8 +718,8 @@ namespace Xamarin.RSControls.Droid.Controls
                     floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
 
                     //Y
-                    floatingHintYPostionFloating = -this.Paint.Ascent(); 
-                    floatingHintYPostionNotFloating = (this.Height - bottomSpacing) / 2 - ((floatingHintBoundsNotFloating.Bottom + floatingHintBoundsNotFloating.Top) / 2);
+                    floatingHintYPostionFloating = -this.Paint.Ascent() + topSpacing; 
+                    floatingHintYPostionNotFloating = this.Baseline - Math.Abs(topSpacing - bottomSpacing) / 2 - Math.Abs(PaddingTop - PaddingBottom) / 2;
                 }
                 else if(this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
                 {
@@ -1012,7 +995,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
                 canvas.DrawRoundRect(new RectF(textRect.Left + leadingIconWidth,
-                                               textRect.Top,
+                                               textRect.Top + topSpacing,
                                                textRect.Right - trailingIconWidth,
                                                this.Bottom + this.Height / 2),
                                                this.rSControl.BorderRadius, this.rSControl.BorderRadius,
@@ -1127,10 +1110,10 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             bool rightIconCondition = this.rightDrawable != null && e.GetX() >= Right - trailingIconWidth - rightDrawable.IntrinsicWidth - iconsSpacing && e.GetX() <= Right - trailingIconWidth;
             bool trailingIconCondition = trailingDrawable != null && e.GetX() >= Right - trailingIconWidth && e.GetX() <= Right;
-            bool rightHelpingIconCondition = rightHelpingDrawable != null && e.GetX() >= rightHelpingDrawable.Bounds.Left - textRect.Left - initLeftPadding && e.GetX() <= rightHelpingDrawable.Bounds.Right - textRect.Left + iconsSpacing;
+            bool rightHelpingIconCondition = rightHelpingDrawable != null && e.GetX() >= rightHelpingDrawable.Bounds.Left - textRect.Left && e.GetX() <= rightHelpingDrawable.Bounds.Right - textRect.Left + iconsSpacing;
             bool leadingIconCondition = leadingDrawable != null && e.GetX() >= Left && e.GetX() <= Left + leadingIconWidth;
             bool leftIconCondition = leftDrawable != null && e.GetX() >= Left + leadingIconWidth && e.GetX() <= Left + leadingIconWidth + leftDrawable.IntrinsicWidth + iconsSpacing;
-            bool leftHelpingIconCondition = leftHelpingDrawable != null && e.GetX() >= leftHelpingDrawable.Bounds.Left - textRect.Left - iconsSpacing && e.GetX() <= leftHelpingDrawable.Bounds.Right - textRect.Left + initLeftPadding;
+            bool leftHelpingIconCondition = leftHelpingDrawable != null && e.GetX() >= leftHelpingDrawable.Bounds.Left - textRect.Left - iconsSpacing && e.GetX() <= leftHelpingDrawable.Bounds.Right - textRect.Left;
 
             if (e.Action == MotionEventActions.Down)
             {
