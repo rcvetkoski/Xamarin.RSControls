@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.Helpers;
@@ -210,6 +211,13 @@ namespace Xamarin.RSControls.Controls
         {
             get { return (Color)GetValue(ErrorColorProperty); }
             set { SetValue(ErrorColorProperty, value); }
+        }
+
+        public static readonly BindableProperty LeftIconsProperty = BindableProperty.Create("LeftIcons", typeof(IList<RSEntryIcon>), typeof(RSDatePicker), new List<RSEntryIcon>());
+        public IList<RSEntryIcon> LeftIcons
+        {
+            get { return (IList<RSEntryIcon>)GetValue(LeftIconsProperty); }
+            set { SetValue(LeftIconsProperty, value); }
         }
 
         public bool HasRighIconSeparator { get; set; }

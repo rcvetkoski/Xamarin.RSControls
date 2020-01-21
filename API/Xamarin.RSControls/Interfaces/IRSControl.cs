@@ -30,6 +30,7 @@ namespace Xamarin.RSControls.Interfaces
         RSEntryIcon RightIcon { get; set; }
         RSEntryIcon LeftHelpingIcon { get; set; }
         RSEntryIcon RightHelpingIcon { get; set; }
+        IList<RSEntryIcon> LeftIcons { get; set; }
         bool HasRighIconSeparator { get; set; }
         bool HasLeftIconSeparator { get; set; }
         Thickness Padding { get; set; }

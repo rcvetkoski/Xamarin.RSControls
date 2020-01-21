@@ -614,10 +614,10 @@ namespace Xamarin.RSControls.Droid.Controls
             BitmapDrawable bitmapDrawable = null;
 
             if (rsIcon.View != null)
-                convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rsIcon.View, new Rectangle(), Context);
+                convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rsIcon.View, new Rectangle(0, 0, this.Width, this.Height), Context);
 
             if (convertedView != null)
-                bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, width, height));
+                bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, (int)rsIcon.View.Width, (int)rsIcon.View.Height));
 
 
             if (type != null && type == "right")
@@ -702,7 +702,6 @@ namespace Xamarin.RSControls.Droid.Controls
             }
         }
 
-
         //Draw
         public override void Draw(Canvas canvas)
         {
@@ -767,13 +766,13 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
                 if (errorPaint != null)
-                    errorYPosition = this.Height - bottomSpacing - errorPaint.Ascent() + 2;
+                    errorYPosition = this.Height - bottomSpacing - errorPaint.Ascent() + 2 + textRect.Top;
 
                 if (helperPaint != null)
-                    helperYPosition = this.Height - bottomSpacing - helperPaint.Ascent() + 2;
+                    helperYPosition = this.Height - bottomSpacing - helperPaint.Ascent() + 2 + textRect.Top;
 
                 if (counterPaint != null)
-                    counterYPosition = this.Height - bottomSpacing - counterPaint.Ascent() + 2;
+                    counterYPosition = this.Height - bottomSpacing - counterPaint.Ascent() + 2 + textRect.Top;
 
 
                 hasInitfloatingHintYPosition = true;
@@ -896,8 +895,8 @@ namespace Xamarin.RSControls.Droid.Controls
         }
         private void UpdateLeadingIcon(Canvas canvas)
         {
-            var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - leadingDrawable.IntrinsicHeight / 2;
-            var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + leadingDrawable.IntrinsicHeight / 2;
+            var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - leadingDrawable.IntrinsicHeight / 2 + textRect.Top;
+            var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + leadingDrawable.IntrinsicHeight / 2 + textRect.Top;
 
             leadingDrawable.drawable.SetBounds(textRect.Left + this.CompoundDrawablePadding, center, textRect.Left + this.CompoundDrawablePadding + leadingDrawable.IntrinsicWidth, center2);
             leadingDrawable.SetBounds(textRect.Left + this.CompoundDrawablePadding, center, textRect.Left + this.CompoundDrawablePadding + this.PaddingLeft + this.PaddingLeft + leadingDrawable.IntrinsicWidth, center2);
@@ -906,8 +905,8 @@ namespace Xamarin.RSControls.Droid.Controls
         }
         private void UpdateTrailingIcon(Canvas canvas)
         {
-            var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - trailingDrawable.IntrinsicHeight / 2;
-            var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + trailingDrawable.IntrinsicHeight / 2;
+            var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - trailingDrawable.IntrinsicHeight / 2 + textRect.Top;
+            var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + trailingDrawable.IntrinsicHeight / 2 + textRect.Top;
 
             trailingDrawable.drawable.SetBounds(textRect.Right - this.CompoundDrawablePadding - trailingDrawable.IntrinsicWidth, center, textRect.Right - this.CompoundDrawablePadding, center2);
             trailingDrawable.SetBounds(textRect.Right - this.CompoundDrawablePadding - trailingDrawable.IntrinsicWidth, center, textRect.Right - this.CompoundDrawablePadding + this.PaddingRight + this.PaddingRight, center2);
@@ -916,18 +915,21 @@ namespace Xamarin.RSControls.Droid.Controls
         }
         private void UpdateFloatingHint(Canvas canvas)
         {
-            canvas.DrawText(floatingHintText, textRect.Left + floatingHintXPostion, floatingHintYPostion, floatingHintPaint);
+            canvas.DrawText(floatingHintText, textRect.Left + floatingHintXPostion, floatingHintYPostion + textRect.Top, floatingHintPaint);
         }
         private void UpdateErrorMessage(Canvas canvas)
         {
+            errorYPosition = this.Height - bottomSpacing - errorPaint.Ascent() + 2 + textRect.Top;
             canvas.DrawText(errorMessage, textRect.Left + leftRightSpacingLabels + leadingIconWidth, errorYPosition, errorPaint);
         }
         private void UpdateHelperMessage(Canvas canvas)
         {
+            helperYPosition = this.Height - bottomSpacing - helperPaint.Ascent() + 2 + textRect.Top;
             canvas.DrawText(helperMessage, textRect.Left + leftRightSpacingLabels + leadingIconWidth, helperYPosition, helperPaint);
         }
         private void UpdateCounterMessage(Canvas canvas)
         {
+            counterYPosition = this.Height - bottomSpacing - counterPaint.Ascent() + 2 + textRect.Top;
             counterMessage = string.Format("{0}/{1}", this.Length(), rSControl.CounterMaxLength);
             canvas.DrawText(counterMessage, textRect.Right - trailingIconWidth - (counterMessageBounds.Width()) - leftRightSpacingLabels, counterYPosition, counterPaint);
         }

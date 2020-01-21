@@ -365,6 +365,13 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(ErrorColorProperty, value); }
         }
 
+        public static readonly BindableProperty LeftIconsProperty = BindableProperty.Create("LeftIcons", typeof(IList<RSEntryIcon>), typeof(RSPickerBase), new List<RSEntryIcon>());
+        public IList<RSEntryIcon> LeftIcons
+        {
+            get { return (IList<RSEntryIcon>)GetValue(LeftIconsProperty); }
+            set { SetValue(LeftIconsProperty, value); }
+        }
+
         public bool HasRighIconSeparator { get; set; }
         public bool HasLeftIconSeparator { get; set; }
 

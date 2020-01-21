@@ -82,7 +82,7 @@ namespace Samples
 
         private void Button_Clicked2(object sender, EventArgs e)
         {
-            (this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(1);
+            //(this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(1);
         }
     }
 }

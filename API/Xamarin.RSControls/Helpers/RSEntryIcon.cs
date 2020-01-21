@@ -11,6 +11,7 @@ namespace Xamarin.RSControls.Helpers
     {
         public RSEntryIcon()
         {
+            
         }
 
         public View View { get; set; }
@@ -59,6 +60,5 @@ namespace Xamarin.RSControls.Helpers
 
 
         public IList<Binding> Bindings { get; } = new List<Binding>();
-
     }
 }
