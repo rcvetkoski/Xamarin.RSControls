@@ -183,99 +183,13 @@
                 <rs:RSNumericUpDown Grid.Column="1" IsPlaceholderAlwaysFloating="True" IncrementValue="100" Maximum="1000" NumberDecimalDigits="2" CustomUnit="$" RSEntryStyle="FilledBorder" Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
             </Grid>-->
 
+            <rs:RSEditor Placeholder="Editor" AutoSize="Disabled" BorderFillColor="Red" Helper="Helper" CounterMaxLength="6">
 
-            <rs:RSEntry Placeholder="Hint" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="FilledBorder">
-                <rs:RSEntry.RightIcon>
-                    <helpers:RSEntryIcon>
-                        <helpers:RSEntryIcon.View>
-                            <StackLayout>
-                                <Label Grid.Column="1" Text="Mehe"/>
-                            </StackLayout>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.RightIcon>
-
-                <rs:RSEntry.LeftIcon>
-                    <helpers:RSEntryIcon>
-                        <helpers:RSEntryIcon.View>
-                            <Label Grid.Column="1" Text="Mehe"/>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.LeftIcon>
-
-            </rs:RSEntry>
-
-            <rs:RSEditor Placeholder="Editor" Helper="Helper" AutoSize="TextChanges" CounterMaxLength="6">
-                <rs:RSEditor.RightIcon>
-                    <helpers:RSEntryIcon>
-                        <helpers:RSEntryIcon.View>
-                            <StackLayout>
-                                <Label Grid.Column="1" Text="Mehe"/>
-                            </StackLayout>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEditor.RightIcon>
-                <rs:RSEditor.TrailingIcon>
-                    <helpers:RSEntryIcon>
-                        <helpers:RSEntryIcon.View>
-                            <StackLayout>
-                                <Label Grid.Column="1" Text="Mehe"/>
-                            </StackLayout>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEditor.TrailingIcon>
-                <rs:RSEditor.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSEditor.Behaviors>
             </rs:RSEditor>
 
-            <Editor Placeholder="Trolol"></Editor>
+            <rs:RSEntry Placeholder="Editor" Text="Trol2" BorderColor="White" ShadowEnabled="True" BorderFillColor="White" Helper="Helper" CounterMaxLength="6" RSEntryStyle="OutlinedBorder">
 
-            <!--<rs:RSEntry Placeholder="Trolol" Text="Trololo" Helper="Helper !" HasRighIconSeparator="True"  RSEntryStyle="Underline">
-                <rs:RSEntry.LeftIcons>
-                    <helpers:RSEntryIcon>
-                        <helpers:RSEntryIcon.View>
-                            <Label Text="Trol" ></Label>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.LeftIcons>
             </rs:RSEntry>
-
-            <rs:RSEntry Placeholder="Just a long placeholder" Helper="Helper !" HasRighIconSeparator="True" CounterMaxLength="6" BackgroundColor="Transparent" RSEntryStyle="OutlinedBorder">
-                <rs:RSEntry.RightIcon>
-                    <helpers:RSEntryIcon>
-                        <helpers:RSEntryIcon.View>
-                            <rs:RSSvgImage Source="Samples/Data/SVG/calendar.svg"/>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.RightIcon>
-
-                <rs:RSEntry.RightHelpingIcon>
-                        <helpers:RSEntryIcon>
-                            <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendar.svg"/>
-                            </helpers:RSEntryIcon.View>
-                        </helpers:RSEntryIcon>
-                </rs:RSEntry.RightHelpingIcon>
-            </rs:RSEntry>
-
-            <rs:RSEntry Placeholder="Hint" Helper="Helper !" BackgroundColor="Transparent" RSEntryStyle="FilledBorder">
-                <rs:RSEntry.RightIcon>
-                    <helpers:RSEntryIcon>
-                        <helpers:RSEntryIcon.View>
-                            <rs:RSSvgImage Source="Samples/Data/SVG/calendar.svg"/>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.RightIcon>
-            </rs:RSEntry>
-
-            <rs:RSPicker Placeholder="we" ItemsSource="{Binding ListPicker}" SelectedItems="{Binding SelectedPersons}" DisplayMemberPath="Name" SelectionMode="Multiple">
-
-            </rs:RSPicker>-->
 
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>

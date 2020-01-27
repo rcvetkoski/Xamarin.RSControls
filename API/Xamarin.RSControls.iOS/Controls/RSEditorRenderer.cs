@@ -1,11 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using CoreAnimation;
 using CoreGraphics;
-using CoreText;
 using Foundation;
-using ObjCRuntime;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -13,14 +10,18 @@ using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.Interfaces;
 using Xamarin.RSControls.iOS.Controls;
-using Xamarin.RSControls.iOS.Extensions;
 
-[assembly: ExportRenderer(typeof(RSEntry), typeof(RSEntryRenderer))]
+[assembly: ExportRenderer(typeof(RSEditor), typeof(RSEditorRenderer))]
 namespace Xamarin.RSControls.iOS.Controls
 {
-    public class RSEntryRenderer : EntryRenderer
+    public class RSEditorRenderer : EditorRenderer
     {
-        protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)
+        public RSEditorRenderer()
+        {
+
+        }
+
+        protected override void OnElementChanged(ElementChangedEventArgs<Editor> e)
         {
             base.OnElementChanged(e);
 
@@ -29,6 +30,13 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //Delete placeholder as we use floating hint instead
             Element.Placeholder = "";
+
+            if (Control == null)
+                return;
+
+            //Control.Layer.CornerRadius = 3;
+            //Control.Layer.BorderColor = Color.FromHex("F0F0F0").ToCGColor();
+            //Control.Layer.BorderWidth = 2;
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -37,26 +45,21 @@ namespace Xamarin.RSControls.iOS.Controls
 
             if (e.PropertyName == "Error")
             {
-                (this.Control as RSUITextField).ErrorMessage = (this.Element as RSEntry).Error;
+                (this.Control as RSUITextView).ErrorMessage = (this.Element as RSEditor).Error;
             }
         }
 
-        protected override UITextField CreateNativeControl()
+        protected override UITextView CreateNativeControl()
         {
-            return new RSUITextField(this.Element as IRSControl);
-        }
-
-        //Fix for bug ios not loading dll
-        public static void Initialize()
-        {
-
+            return new RSUITextView(this.Element as IRSControl);
         }
     }
 
-    public class RSUITextField : UITextField
+    public class RSUITextView : UITextView
     {
         private IRSControl rSControl;
         private nfloat borderRadius;
+        private UIView borderContainer;
         private CALayer border;
         private CGPath borderShadowPath;
         private CustomCATextLayer floatingHint;
@@ -127,16 +130,16 @@ namespace Xamarin.RSControls.iOS.Controls
                     errorLabel.Position = new CGPoint(this.leftPadding + leftRightSpacingLabels + errorLabel.Size.Width / 2,
                                                       this.Frame.Height);
 
-                    if (this.IsEditing)
-                    {
-                        border.BorderColor = this.activeColor.CGColor;
-                        floatingHint.ForegroundColor = this.activeColor.CGColor;
-                    }
-                    else
-                    {
-                        border.BorderColor = this.borderColor.CGColor;
-                        floatingHint.ForegroundColor = this.borderColor.CGColor;
-                    }
+                    //if (this.IsEditing)
+                    //{
+                    //    border.BorderColor = this.activeColor.CGColor;
+                    //    floatingHint.ForegroundColor = this.activeColor.CGColor;
+                    //}
+                    //else
+                    //{
+                    //    border.BorderColor = this.borderColor.CGColor;
+                    //    floatingHint.ForegroundColor = this.borderColor.CGColor;
+                    //}
                 }
             }
         }
@@ -161,13 +164,13 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
         //Constructor
-        public RSUITextField(IRSControl rSControl)
+        public RSUITextView(IRSControl rSControl)
         {
             this.rSControl = rSControl;
             if (PlaceholderColor == null)
                 PlaceholderColor = Color.Gray.ToUIColor();
 
-            if(rSControl.FontSize < 12)
+            if (rSControl.FontSize < 12)
                 this.floatingFontSize = (nfloat)rSControl.FontSize;
             else
                 this.floatingFontSize = 12;
@@ -183,11 +186,22 @@ namespace Xamarin.RSControls.iOS.Controls
             this.bottomSpacing = 20;
             this.leftRightSpacingLabels = 5;
 
+            //Disable scroll bounce when reaaches limits
+            this.Bounces = false;
+
+            //Set default font since is null if editor text empty
+            this.Font = UIFont.FromName(".AppleSystemUIFont", (nfloat)rSControl.FontSize);
+
+            //Set to editable
+            this.Editable = true;
+
             //Padding
             SetPadding();
 
+
             this.AutocorrectionType = UITextAutocorrectionType.No;
 
+            CreateBorderContainer();
 
             //Counter needs to be called before CreateErrorLabel and CReateHelperLabel
             if (this.counterMaxLength != -1)
@@ -199,8 +213,6 @@ namespace Xamarin.RSControls.iOS.Controls
             if (!string.IsNullOrEmpty(this.rSControl.Helper))
                 CreateHelperLabel();
 
-            if (this.rSControl.IsPassword)
-                CreatePassword();
 
             CreateFloatingHint();
 
@@ -217,9 +229,11 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
             //Edit text events
-            this.Started += RSUITextField_Started;
-            this.Ended += RSUITextField_Ended;
-            this.EditingChanged += RSUITextField_EditingChanged;
+            this.Started += RSUITextView_Started;
+            this.Ended += RSUITextView_Ended;
+            this.Changed += RSUITextView_EditingChanged;
+
+            
 
             //Set event for device orientation change so we can reset border frame and mask
             deviceRotationObserver = NSNotificationCenter.DefaultCenter.AddObserver(new NSString("UIDeviceOrientationDidChangeNotification"), DeviceRotated);
@@ -240,16 +254,18 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 this.leftPadding = 8 + (nfloat)rSControl.Padding.Left;
                 this.rightPadding = 8 + (nfloat)rSControl.Padding.Right;
-                this.topPadding = 30 + (nfloat)rSControl.Padding.Top; 
-                this.bottomPadding = 20 + (nfloat)rSControl.Padding.Bottom; 
+                this.topPadding = 30 + (nfloat)rSControl.Padding.Top;
+                this.bottomPadding = 20 + (nfloat)rSControl.Padding.Bottom;
             }
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
             {
                 this.leftPadding = 2 + (nfloat)rSControl.Padding.Left;
                 this.rightPadding = 8 + (nfloat)rSControl.Padding.Right;
                 this.topPadding = 20 + (nfloat)rSControl.Padding.Top;
-                this.bottomPadding = 20 + (nfloat)rSControl.Padding.Bottom;
+                this.bottomPadding = 20 + (nfloat)rSControl.Padding.Bottom; 
             }
+
+            this.TextContainerInset = new UIEdgeInsets(this.topPadding, this.leftPadding - 5, this.bottomPadding, this.rightPadding - 5);
         }
         //Set Icons
         private void CreateIcons()
@@ -265,20 +281,20 @@ namespace Xamarin.RSControls.iOS.Controls
 
             RSSvgImage rightSvgIcon = new RSSvgImage() { Source = "Samples/Data/SVG/calendar.svg", HeightRequest = 22, WidthRequest = 22, Color = Color.Gray };
             var convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new CGRect(0, 0, 22, 22));
-            UIView outerView = new UIView(new CGRect(0, 0, 22 + rightPadding, 22 - correctiveY)) { BackgroundColor = UIColor.Clear};
+            UIView outerView = new UIView(new CGRect(0, 0, 22 + rightPadding, 22 - correctiveY)) { BackgroundColor = UIColor.Clear };
             outerView.AddSubview(convertedView);
-            this.RightView = outerView;
-            this.RightViewMode = UITextFieldViewMode.Always;
+            //this.RightView = outerView;
+            //this.RightViewMode = UITextFieldViewMode.Always;
             UITapGestureRecognizer uITapGestureRecognizer = new UITapGestureRecognizer(() => {
                 // Do something
                 this.BecomeFirstResponder();
             });
-            this.RightView.AddGestureRecognizer(uITapGestureRecognizer);
+            //this.RightView.AddGestureRecognizer(uITapGestureRecognizer);
         }
 
 
         //Edit started
-        private void RSUITextField_Started(object sender, EventArgs e)
+        private void RSUITextView_Started(object sender, EventArgs e)
         {
             this.IsFloating = true;
             this.border.BorderWidth = this.borderWidthFocused;
@@ -294,16 +310,22 @@ namespace Xamarin.RSControls.iOS.Controls
 
             AnimateFloatingHint(floatingFontSize);
 
-            UpdateFloatingLabel();
+
+            //Update border
+            this.Layer.SetNeedsDisplay();
         }
         //Edit changed
-        private void RSUITextField_EditingChanged(object sender, EventArgs e)
+        private void RSUITextView_EditingChanged(object sender, EventArgs e)
         {
             if (this.counterMaxLength != -1)
                 SetCounter();
+
+
+            //Update border
+            this.Layer.SetNeedsDisplay();
         }
         //Edit finished
-        private void RSUITextField_Ended(object sender, EventArgs e)
+        private void RSUITextView_Ended(object sender, EventArgs e)
         {
             if (rSControl.IsPlaceholderAlwaysFloating)
                 IsFloating = true;
@@ -327,22 +349,12 @@ namespace Xamarin.RSControls.iOS.Controls
             floatingHintXPostion = floatingHintXPostionNotFloating;
             floatingHintYPostion = floatingHintYPostionNotFloating;
 
-            if(!IsFloating)
+
+            if (!IsFloating)
                 AnimateFloatingHint(rSControl.FontSize);
 
-            UpdateFloatingLabel();
-
-
-
-            //CABasicAnimation cABasicAnimation = new CABasicAnimation();
-            //cABasicAnimation.KeyPath = "fontSize";
-            //cABasicAnimation.SetTo(NSNumber.FromDouble(rSControl.FontSize));
-            //cABasicAnimation.SetFrom(NSNumber.FromDouble(12));
-            //cABasicAnimation.Duration = 0.2;
-            //cABasicAnimation.FillMode = CAFillMode.Forwards;
-            //cABasicAnimation.RemovedOnCompletion = false;
-            //cABasicAnimation.AutoReverses = false;
-            //floatingHint.AddAnimation(cABasicAnimation, "basic");
+            //Update border
+            this.Layer.SetNeedsDisplay();
         }
         //Floating hint Animation properties
         private void AnimateFloatingHint(double toValue)
@@ -352,7 +364,12 @@ namespace Xamarin.RSControls.iOS.Controls
             floatingHint.Position = new CGPoint(floatingHintXPostion, floatingHintYPostion);
         }
 
-
+        //Create Border Container
+        private void CreateBorderContainer()
+        {
+            borderContainer = new UIView();
+            borderContainer.UserInteractionEnabled = false;
+        }
         //Rounded Border
         private void CreateRoundedBorder()
         {
@@ -362,13 +379,13 @@ namespace Xamarin.RSControls.iOS.Controls
                 BorderWidth = this.borderWidth,
                 BackgroundColor = rSControl.BorderFillColor != Color.FromHex("#OA000000") ? rSControl.BorderFillColor.ToCGColor() : UIColor.Clear.CGColor,
                 CornerRadius = this.borderRadius,
-                ZPosition = -1 // So its behind floating label
+                ZPosition = -1// So its behind floating label
             };
 
             //Border shadow if enabled
             //borderShadowPath = new CGPath();
 
-            if(rSControl.ShadowEnabled)
+            if (rSControl.ShadowEnabled)
             {
                 border.ShadowColor = UIColor.Gray.CGColor;
                 border.ShadowOpacity = 0.5f;
@@ -376,8 +393,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 border.ShadowOffset = new CGSize(0f, 0.5f);
             }
 
-
-            this.Layer.AddSublayer(border);
+            //this.Layer.AddSublayer(border);
+            this.borderContainer.Layer.AddSublayer(border);
         }
         //Filled Border
         private void CreateFilledBorder()
@@ -393,16 +410,8 @@ namespace Xamarin.RSControls.iOS.Controls
 
             border.MaskedCorners = CACornerMask.MinXMinYCorner | CACornerMask.MaxXMinYCorner;
 
-            if(rSControl.ShadowEnabled)
-            {
-                border.ShadowColor = UIColor.Gray.CGColor;
-                border.ShadowOpacity = 0.5f;
-                border.ShadowRadius = 2;
-                border.ShadowOffset = new CGSize(0f, 0.5f);
-            }
-
-
-            this.Layer.AddSublayer(border);
+            //this.Layer.AddSublayer(border);
+            this.borderContainer.Layer.AddSublayer(border);
         }
         //Underline Border
         private void CreateUnderlineBorder()
@@ -416,14 +425,6 @@ namespace Xamarin.RSControls.iOS.Controls
             };
 
             this.BackgroundColor = rSControl.BorderFillColor.ToUIColor();
-
-            if (rSControl.ShadowEnabled)
-            {
-                border.ShadowColor = UIColor.Gray.CGColor;
-                border.ShadowOpacity = 0.5f;
-                border.ShadowRadius = 2;
-                border.ShadowOffset = new CGSize(0f, 0.5f);
-            }
 
             this.Layer.AddSublayer(border);
         }
@@ -446,7 +447,8 @@ namespace Xamarin.RSControls.iOS.Controls
 
             floatingHint.Bounds = new CGRect(0.0f, 0.0f, floatingHint.Size.Width, floatingHint.Size.Height);
 
-            this.Layer.AddSublayer(floatingHint);
+            //this.Layer.AddSublayer(floatingHint);
+            this.borderContainer.Layer.AddSublayer(floatingHint);
         }
         //Create error label
         private void CreateErrorLabel()
@@ -462,8 +464,8 @@ namespace Xamarin.RSControls.iOS.Controls
             };
 
 
-
-            this.Layer.AddSublayer(errorLabel);
+            //this.Layer.AddSublayer(errorLabel);
+            this.borderContainer.Layer.AddSublayer(errorLabel);
         }
         //Create helper label
         private void CreateHelperLabel()
@@ -480,7 +482,9 @@ namespace Xamarin.RSControls.iOS.Controls
 
             helperLabel.Bounds = new CGRect(0.0f, 0.0f, helperLabel.Size.Width, helperLabel.Size.Height);
 
-            this.Layer.AddSublayer(helperLabel);
+            //this.Layer.AddSublayer(helperLabel);
+            this.borderContainer.Layer.AddSublayer(helperLabel);
+
         }
         //Create helper label
         private void CreateCounterLabel()
@@ -495,7 +499,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 Wrapped = false,
             };
 
-            this.Layer.AddSublayer(counterLabel);
+            //this.Layer.AddSublayer(counterLabel);
+            this.borderContainer.Layer.AddSublayer(counterLabel);
         }
         //Set Counter
         private void SetCounter()
@@ -503,9 +508,13 @@ namespace Xamarin.RSControls.iOS.Controls
             this.counter = this.Text.Length;
             counterLabel.String = string.Format("{0}/{1}", this.counter, this.counterMaxLength);
 
+            CATransaction.Begin();
+            CATransaction.DisableActions = true;
             counterLabel.Bounds = new CGRect(0.0f, 0.0f, counterLabel.Size.Width, counterLabel.Size.Height);
             counterLabel.Position = new CGPoint(this.Frame.Width - this.rightPadding - leftRightSpacingLabels - counterLabel.Size.Width / 2,
                                                 this.Frame.Height - counterLabel.Size.Height / 2 - 1);
+            CATransaction.Commit();
+
 
             if (this.counter > this.counterMaxLength)
             {
@@ -538,47 +547,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 }
             }
         }
-        //Create Password
-        private void CreatePassword()
-        {
-            bool isVisible = false;
-
-            UIButton uIButtonPassword = new UIButton();
-
-            uIButtonPassword.SetImage(UIImage.FromBundle("EyeInvisible"), UIControlState.Normal);
-            uIButtonPassword.ImageView.TintColor = this.borderColor;
-            uIButtonPassword.TouchUpInside += (sender, e) =>
-            {
-                UIView.Transition(uIButtonPassword.ImageView, 0.2,
-                    UIViewAnimationOptions.TransitionCrossDissolve,
-                    () =>
-                    {
-                        if (isVisible)
-                        {
-                            this.SecureTextEntry = true;
-                            isVisible = false;
-                            uIButtonPassword.SetImage(UIImage.FromBundle("EyeInvisible"), UIControlState.Normal);
-                        }
-                        else
-                        {
-                            isVisible = true;
-                            this.SecureTextEntry = false;
-                            uIButtonPassword.SetImage(UIImage.FromBundle("EyeVisible"), UIControlState.Normal);
-                        }
-                    },
-                    null
-                );
-
-                //var colorAnimation = CABasicAnimation.FromKeyPath("backgroundColor");
-                //colorAnimation.SetFrom(UIColor.LightGray.CGColor);
-                //colorAnimation.Duration = 0.2f;  
-                //uIButtonPassword.Layer.AddAnimation(colorAnimation, "ColorPulse");
-            };
-
-            this.RightView = uIButtonPassword;
-            this.RightViewMode = UITextFieldViewMode.Always;
-        }
-
 
 
         //Set rounded border frame and mask
@@ -620,7 +588,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public void UpdateFilledBorder()
         {
             //Border frame
-            border.Frame = new CGRect(0, topSpacing, this.Frame.Width, this.Frame.Height - this.bottomSpacing);
+            border.Frame = new CGRect(0, topSpacing, this.Frame.Width, this.Frame.Height - this.bottomSpacing );
 
             CAShapeLayer borderMask = new CAShapeLayer();
             CGPath maskPath = new CGPath();
@@ -652,7 +620,7 @@ namespace Xamarin.RSControls.iOS.Controls
             floatingHint.Position = new CGPoint(floatingHintXPostion, floatingHintYPostion);
         }
         //Update floating hint
-        public void UpdateFloatingLabel()
+        public void UpdateBorder()
         {
             if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.OutlinedBorder)
                 UpdateOutlinedBorder();
@@ -660,6 +628,22 @@ namespace Xamarin.RSControls.iOS.Controls
                 UpdateFilledBorder();
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
                 UpdateUnderlineBorder();
+        }
+        private void UpdateHelper()
+        {
+            CATransaction.Begin();
+            CATransaction.DisableActions = true;
+            helperLabel.Position = new CGPoint(this.leftPadding + leftRightSpacingLabels + helperLabel.Size.Width / 2,
+                                               this.Frame.Height - helperLabel.Size.Height / 2 - 1);
+            CATransaction.Commit();
+        }
+        private void UpdateError()
+        {
+            CATransaction.Begin();
+            CATransaction.DisableActions = true;
+            errorLabel.Position = new CGPoint(this.leftPadding + leftRightSpacingLabels + errorLabel.Size.Width / 2,
+                                               this.Frame.Height - errorLabel.Size.Height / 2 - 1);
+            CATransaction.Commit();
         }
 
 
@@ -674,45 +658,16 @@ namespace Xamarin.RSControls.iOS.Controls
         }
 
 
-        //Helper for padding
-        private static CGRect InsetRect(CGRect rect, UIEdgeInsets insets)
-        {
-            return new CGRect(
-                rect.X + insets.Left,
-                rect.Y + insets.Top,
-                rect.Width - insets.Left - insets.Right,
-                rect.Height - insets.Top - insets.Bottom);
-        }
-        //Text padding
-        public override CGRect TextRect(CGRect forBounds)
-        {
-            return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(this.topPadding, this.leftPadding, this.bottomPadding, this.rightPadding));
-        }
-        //Placeholder padding
-        public override CGRect PlaceholderRect(CGRect forBounds)
-        {
-            return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(this.topPadding, this.leftPadding, this.bottomPadding, this.rightPadding));
-        }
-        //Edit rectangle padding
-        public override CGRect EditingRect(CGRect forBounds)
-        {
-            return InsetRect(base.EditingRect(forBounds), new UIEdgeInsets(this.topPadding, this.leftPadding, this.bottomPadding, this.rightPadding));
-        }
-
-
         //Draw
         public override void Draw(CGRect rect)
         {
             base.Draw(rect);
 
-            //Update border
-            if (rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.OutlinedBorder)
-                UpdateOutlinedBorder();
-            else if (rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
-                UpdateFilledBorder();
-            else if (rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
-                UpdateUnderlineBorder();
-
+            //Update border without animation
+            CATransaction.Begin();
+            CATransaction.DisableActions = true;
+            UpdateBorder();
+            CATransaction.Commit();
 
             //Init floatingHint X and Y values
             if (!hasInitfinished)
@@ -738,7 +693,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
                     //Y
                     floatingHintYPostionFloating = (this.Frame.Height / 2 + (topPadding - bottomPadding + topSpacing - bottomSpacing) / 2) - floatinghHintSizeFloating.Height / 2 - 2;
-                    floatingHintYPostionNotFloating = this.Frame.Height / 2 + (topPadding - bottomPadding + topSpacing - bottomSpacing) / 2 ;
+                    floatingHintYPostionNotFloating = this.Frame.Height / 2 + (topPadding - bottomPadding + topSpacing - bottomSpacing) / 2;
                 }
                 else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
                 {
@@ -777,12 +732,10 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
                 if (errorLabel != null)
-                    errorLabel.Position = new CGPoint(this.leftPadding + leftRightSpacingLabels + errorLabel.Size.Width / 2,
-                                                       this.Frame.Height - errorLabel.Size.Height / 2 - 1);
+                    UpdateError();
 
                 if (helperLabel != null)
-                    helperLabel.Position = new CGPoint(this.leftPadding + leftRightSpacingLabels + helperLabel.Size.Width / 2,
-                                                       this.Frame.Height - helperLabel.Size.Height / 2 - 1);
+                    UpdateHelper();
 
                 //if (counterLabel != null)
                 //    counterLabel.Position = new CGPoint(this.Frame.Width - this.rightPadding - leftRightSpacingLabels - counterLabel.Size.Width / 2,
@@ -792,9 +745,22 @@ namespace Xamarin.RSControls.iOS.Controls
                 //Init here because text property not yet set in create floatinghint method
                 FloatingHintFramePlacement();
 
+                borderContainer.Frame = new CGRect(0, 0, this.Frame.Width, this.Frame.Height);
+                this.Superview.AddSubview(borderContainer);
+                this.BackgroundColor = UIColor.Clear;
+                borderContainer.Layer.ZPosition = -1;
+
 
                 hasInitfinished = true;
             }
+
+            //Update error
+            if (errorLabel != null)
+                UpdateError();
+
+            //Update helper
+            if (helperLabel != null)
+                UpdateHelper();
 
             //Counter
             if (this.counterMaxLength != -1)
@@ -809,86 +775,12 @@ namespace Xamarin.RSControls.iOS.Controls
             NSNotificationCenter.DefaultCenter.RemoveObserver(deviceRotationObserver);
 
             //Remove events
-            this.Started -= RSUITextField_Started;
-            this.Ended -= RSUITextField_Ended;
-            this.EditingChanged -= RSUITextField_EditingChanged;
+            this.Started -= RSUITextView_Started;
+            this.Ended -= RSUITextView_Ended;
+            this.Changed -= RSUITextView_EditingChanged;
 
             base.Dispose(disposing);
         }
     }
 
-    public class CustomCATextLayer : CATextLayer
-    {
-        public CGSize Size;
-        private string familyName;
-        private NSString nSString;
-
-        public override void Clone(CALayer other)
-        {
-            base.Clone(other);
-        }
-
-        [return: Release]
-        public override NSObject Copy()
-        {
-            return base.Copy();
-        }
-
-        public CustomCATextLayer(IntPtr handle) : base(handle)
-        {
-
-        }
-
-        public CustomCATextLayer(NSCoder coder) : base(coder)
-        {
-
-        }
-
-        public CustomCATextLayer(NSObjectFlag f) : base(f)
-        {
-
-        }
-
-        public CustomCATextLayer(string hint, string familyName)
-        {
-            this.familyName = familyName;
-            this.SetFont(familyName);
-            nSString = new NSString(hint);
-            this.String = nSString;
-        }
-
-        public override string String
-        {
-            get => base.String;
-            set
-            {
-                if(value == null)
-                    nSString = (NSString)string.Empty;
-                else
-                    nSString = (NSString)value;
-
-                base.String = nSString;
-                UIStringAttributes attrs = new UIStringAttributes() { Font = UIFont.FromName(familyName, this.FontSize) };
-                Size = nSString.GetSizeUsingAttributes(attrs);
-            }
-        }
-
-        public override nfloat FontSize
-        {
-            get
-            {
-                return base.FontSize;
-            }
-            set
-            {
-                base.FontSize = value;
-
-                if (string.IsNullOrEmpty(familyName))
-                    return;
-
-                UIStringAttributes attrs = new UIStringAttributes() { Font = UIFont.FromName(familyName, value) };
-                Size = nSString.GetSizeUsingAttributes(attrs);
-            }
-        }
-    }
 }

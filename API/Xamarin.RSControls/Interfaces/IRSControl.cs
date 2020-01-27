@@ -12,6 +12,7 @@ namespace Xamarin.RSControls.Interfaces
         bool IsPlaceholderAlwaysFloating { get; set; }
         string Placeholder { get; set; }
         Color PlaceholderColor { get; set; }
+        bool ShadowEnabled { get; set; }
         string Helper { get; set; }
         int Counter { get; set; }
         int CounterMaxLength { get; set; }
@@ -34,5 +35,6 @@ namespace Xamarin.RSControls.Interfaces
         bool HasRighIconSeparator { get; set; }
         bool HasLeftIconSeparator { get; set; }
         Thickness Padding { get; set; }
+
     }
 }

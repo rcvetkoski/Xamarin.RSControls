@@ -220,6 +220,14 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(LeftIconsProperty, value); }
         }
 
+        //Shadow Enabled
+        public static readonly BindableProperty ShadowEnabledProperty = BindableProperty.Create("ShadowEnabled", typeof(bool), typeof(RSDatePicker), false);
+        public bool ShadowEnabled
+        {
+            get { return (bool)GetValue(ShadowEnabledProperty); }
+            set { SetValue(ShadowEnabledProperty, value); }
+        }
+
         public bool HasRighIconSeparator { get; set; }
         public bool HasLeftIconSeparator { get; set; }
 
