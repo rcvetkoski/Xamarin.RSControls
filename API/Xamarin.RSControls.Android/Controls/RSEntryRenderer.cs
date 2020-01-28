@@ -488,7 +488,18 @@ namespace Xamarin.RSControls.Droid.Controls
             borderPaint.Color = borderColor;
             borderPaint.StrokeWidth = borderWidth;
             borderPaint.AntiAlias = true;
-            //borderPaint.SetShadowLayer(borderWidth, 0, borderWidth, global::Android.Graphics.Color.Gray);
+            //borderPaint.SetShadowLayer(borderWidthFocused, 0, 0.5f, global::Android.Graphics.Color.LightGray);
+
+            //Filled
+            filledPaint = new Paint();
+
+            filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
+            filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
+
+            //filledPaint.StrokeWidth = borderWidth;
+            filledPaint.SetShadowLayer(5, 0, 0f, global::Android.Graphics.Color.Gray);
+            this.SetLayerType(LayerType.Software, filledPaint);
+            filledPaint.AntiAlias = true;
         }
         private void CreateFilledBorder()
         {
@@ -499,7 +510,7 @@ namespace Xamarin.RSControls.Droid.Controls
             borderPaint.Color = borderColor;
             borderPaint.StrokeWidth = borderWidth;
             borderPaint.AntiAlias = true;
-            //borderPaint.SetShadowLayer(borderWidth, 0, borderWidth, global::Android.Graphics.Color.Gray);
+
 
 
             //Filled
@@ -509,7 +520,7 @@ namespace Xamarin.RSControls.Droid.Controls
             filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
 
             //filledPaint.StrokeWidth = borderWidth;
-            //filledPaint.SetShadowLayer(borderWidth, 0, borderWidth, global::Android.Graphics.Color.Gray);
+            //borderPaint.SetShadowLayer(borderWidthFocused, 0, 0.5f, global::Android.Graphics.Color.LightGray);
             filledPaint.AntiAlias = true;
         }
         private void CreateUnderlineBorder()
@@ -959,12 +970,20 @@ namespace Xamarin.RSControls.Droid.Controls
                     }
                 }
 
-                canvas.DrawRoundRect(new RectF(textRect.Left + corectCorners + leadingIconWidth,
+
+                canvas.DrawRoundRect(new RectF(textRect.Left + corectCorners + leadingIconWidth + 5,
                                                textRect.Top + corectCorners + topSpacing,
-                                               textRect.Right - corectCorners - trailingIconWidth,
+                                               textRect.Right - corectCorners - trailingIconWidth - 5,
                                                textRect.Bottom - corectCorners - bottomSpacing),
                                                this.rSControl.BorderRadius, this.rSControl.BorderRadius,
                                                borderPaint);
+
+                canvas.DrawRoundRect(new RectF(textRect.Left + leadingIconWidth + borderPaint.StrokeWidth + 5,
+                                               textRect.Top + topSpacing + borderPaint.StrokeWidth,
+                                               textRect.Right - trailingIconWidth - borderPaint.StrokeWidth - 5,
+                                               textRect.Bottom - bottomSpacing - borderPaint.StrokeWidth),
+                                               this.rSControl.BorderRadius, this.rSControl.BorderRadius,
+                                               filledPaint);
 
                 canvas.Restore();
 
@@ -1008,7 +1027,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 canvas.DrawRoundRect(new RectF(textRect.Left + leadingIconWidth,
                                                textRect.Top + topSpacing,
                                                textRect.Right - trailingIconWidth,
-                                               this.Bottom + this.Height / 2),
+                                               textRect.Bottom + this.Height / 2),
                                                this.rSControl.BorderRadius, this.rSControl.BorderRadius,
                                                filledPaint);
 

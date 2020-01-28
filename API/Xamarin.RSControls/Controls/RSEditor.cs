@@ -7,16 +7,16 @@ using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Controls
 {
-    public class RSEditor : Editor, IHaveError, IRSControl
+    public class RSEditor : Editor, IHaveError, IRSControl, IDisposable
     {
         public RSEditor()
         {
-            
+            this.TextChanged += RSEditor_TextChanged;   
         }
 
-        public void InvalidateRSEditor()
+        private void RSEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //this.InvalidateMeasure();
+            SetListMaxHeight();
         }
 
         public static readonly BindableProperty IsPlaceholderAlwaysFloatingProperty = BindableProperty.Create("IsPlaceholderAlwaysFloating", typeof(bool), typeof(RSEditor), false);
@@ -194,6 +194,24 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(LeftIconsProperty, value); }
         }
 
+        public static readonly BindableProperty MaxHeightProperty = BindableProperty.Create("MaxHeight", typeof(double), typeof(RSEditor), default(double));
+        public double MaxHeight
+        {
+            get { return (double)GetValue(MaxHeightProperty); }
+            set { SetValue(MaxHeightProperty, value); }
+        }
+
+        private void SetListMaxHeight()
+        {
+            if (MaxHeight != 0)
+            {
+                if (Height >= MaxHeight)
+                    this.HeightRequest = MaxHeight;
+                //else
+                //    this.HeightRequest = Listheight;
+            }
+        }
+
         protected override void OnBindingContextChanged()
         {
             base.OnBindingContextChanged();
@@ -215,6 +233,11 @@ namespace Xamarin.RSControls.Controls
 
             if (RightHelpingIcon != null)
                 RightHelpingIcon.BindingContext = this.BindingContext;
+        }
+
+        public void Dispose()
+        {
+            this.TextChanged -= RSEditor_TextChanged;
         }
     }
 }

@@ -26,15 +26,8 @@ namespace Xamarin.RSControls.Droid.Controls
             if (this.Element is IRSControl)
                 this.Element.Placeholder = "";
 
-            this.Element.TextChanged += Element_TextChanged;
-
             //This fixes scroll problem when inside scrollview
             this.Control.SetOnTouchListener(this);
-        }
-
-        private void Element_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            (this.Element as RSEditor).InvalidateRSEditor();
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)

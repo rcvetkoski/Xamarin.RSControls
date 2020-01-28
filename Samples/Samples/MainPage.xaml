@@ -9,7 +9,7 @@
              xmlns:helpers="clr-namespace:Xamarin.RSControls.Helpers;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
-    <ScrollView Orientation="Neither">
+    <ScrollView Orientation="Neither" BackgroundColor="White">
         <StackLayout Grid.Row="1" Margin="10" x:Name="stack">
 
             <!--<rs:RSEntry Placeholder="Entry">
@@ -184,15 +184,21 @@
             </Grid>-->
 
 
-            <rs:RSEditor RSEntryStyle="FilledBorder" Placeholder="Entry" Helper="Helper" CounterMaxLength="6">
+            <rs:RSEditor RSEntryStyle="FilledBorder" Placeholder="Entry" MaxHeight="150" Helper="Helper" CounterMaxLength="6">
 
             </rs:RSEditor>
 
-            <rs:RSEditor RSEntryStyle="FilledBorder" Placeholder="Editor" AutoSize="TextChanges" Helper="Helper" CounterMaxLength="6">
+            <rs:RSEditor RSEntryStyle="FilledBorder" Placeholder="Editor" MaxHeight="150" AutoSize="TextChanges" Helper="Helper" CounterMaxLength="6">
 
             </rs:RSEditor>
 
-          
+            <rs:RSEditor RSEntryStyle="OutlinedBorder" Padding="0,8,0,8" BorderColor="White" Placeholder="Editor" BorderFillColor="White" Helper="Helper" CounterMaxLength="6">
+
+            </rs:RSEditor>
+
+            <rs:RSEntry Placeholder="rergr" Helper="Helper" BorderFillColor="Transparent" CounterMaxLength="6">
+
+            </rs:RSEntry>
 
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
