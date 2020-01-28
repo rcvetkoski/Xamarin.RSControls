@@ -162,6 +162,8 @@ namespace Xamarin.RSControls.iOS.Controls
         //Device orientation observer
         private NSObject deviceRotationObserver;
 
+        UIView mask;
+
 
         //Constructor
         public RSUITextView(IRSControl rSControl)
@@ -232,12 +234,14 @@ namespace Xamarin.RSControls.iOS.Controls
             this.Started += RSUITextView_Started;
             this.Ended += RSUITextView_Ended;
             this.Changed += RSUITextView_EditingChanged;
-
+            if ((rSControl as RSEditor).AutoSize == EditorAutoSizeOption.Disabled || (rSControl as RSEditor).HeightRequest != -1)
+                this.Scrolled += RSUITextView_Scrolled;
             
 
             //Set event for device orientation change so we can reset border frame and mask
             deviceRotationObserver = NSNotificationCenter.DefaultCenter.AddObserver(new NSString("UIDeviceOrientationDidChangeNotification"), DeviceRotated);
         }
+
 
 
         //Set Padding
@@ -363,6 +367,13 @@ namespace Xamarin.RSControls.iOS.Controls
             floatingHint.FontSize = (nfloat)toValue;
             floatingHint.Position = new CGPoint(floatingHintXPostion, floatingHintYPostion);
         }
+        //Scrolled
+        private void RSUITextView_Scrolled(object sender, EventArgs e)
+        {
+            var height = this.Frame.Height - bottomSpacing - floatingHintYPostionFloating - floatinghHintSizeFloating.Height / 2;
+            mask.Frame = new CGRect(0, floatingHintYPostionFloating + floatinghHintSizeFloating.Height / 2 + this.ContentOffset.Y, Frame.Width, height);
+        }
+
 
         //Create Border Container
         private void CreateBorderContainer()
@@ -484,7 +495,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //this.Layer.AddSublayer(helperLabel);
             this.borderContainer.Layer.AddSublayer(helperLabel);
-
         }
         //Create helper label
         private void CreateCounterLabel()
@@ -692,7 +702,7 @@ namespace Xamarin.RSControls.iOS.Controls
                     floatingHintXPostionNotFloating = this.leftPadding + floatinghHintSizeNotFloating.Width / 2;
 
                     //Y
-                    floatingHintYPostionFloating = (this.Frame.Height / 2 + (topPadding - bottomPadding + topSpacing - bottomSpacing) / 2) - floatinghHintSizeFloating.Height / 2 - 2;
+                    floatingHintYPostionFloating = topSpacing + floatinghHintSizeFloating.Height + 3;
                     floatingHintYPostionNotFloating = this.Frame.Height / 2 + (topPadding - bottomPadding + topSpacing - bottomSpacing) / 2;
                 }
                 else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
@@ -751,6 +761,17 @@ namespace Xamarin.RSControls.iOS.Controls
                 borderContainer.Layer.ZPosition = -1;
 
 
+                if ((rSControl as RSEditor).AutoSize == EditorAutoSizeOption.Disabled || (rSControl as RSEditor).HeightRequest != -1)
+                {
+                    mask = new UIView();
+                    var height = this.Frame.Height - bottomSpacing - floatingHintYPostionFloating - floatinghHintSizeFloating.Height / 2;
+                    mask.Frame = new CGRect(0, floatingHintYPostionFloating + floatinghHintSizeFloating.Height / 2 + this.ContentOffset.Y, Frame.Width, height);
+                    mask.BackgroundColor = UIColor.Purple;
+                    //this.TextInputView.BackgroundColor = UIColor.Yellow;
+                    this.TextInputView.MaskView = mask;
+                }
+
+                
                 hasInitfinished = true;
             }
 
@@ -765,8 +786,8 @@ namespace Xamarin.RSControls.iOS.Controls
             //Counter
             if (this.counterMaxLength != -1)
                 SetCounter();
-        }
-
+     
+   }
 
         //Remove any events when closed
         protected override void Dispose(bool disposing)
@@ -778,6 +799,8 @@ namespace Xamarin.RSControls.iOS.Controls
             this.Started -= RSUITextView_Started;
             this.Ended -= RSUITextView_Ended;
             this.Changed -= RSUITextView_EditingChanged;
+            if ((rSControl as RSEditor).AutoSize == EditorAutoSizeOption.Disabled || (rSControl as RSEditor).HeightRequest != -1)
+                this.Scrolled -= RSUITextView_Scrolled;
 
             base.Dispose(disposing);
         }

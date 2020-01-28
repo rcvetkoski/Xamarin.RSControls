@@ -417,14 +417,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
             this.BackgroundColor = rSControl.BorderFillColor.ToUIColor();
 
-            if (rSControl.ShadowEnabled)
-            {
-                border.ShadowColor = UIColor.Gray.CGColor;
-                border.ShadowOpacity = 0.5f;
-                border.ShadowRadius = 2;
-                border.ShadowOffset = new CGSize(0f, 0.5f);
-            }
-
             this.Layer.AddSublayer(border);
         }
         //Create floatingHint

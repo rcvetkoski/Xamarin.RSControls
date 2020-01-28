@@ -183,13 +183,16 @@
                 <rs:RSNumericUpDown Grid.Column="1" IsPlaceholderAlwaysFloating="True" IncrementValue="100" Maximum="1000" NumberDecimalDigits="2" CustomUnit="$" RSEntryStyle="FilledBorder" Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
             </Grid>-->
 
-            <rs:RSEditor Placeholder="Editor" AutoSize="Disabled" BorderFillColor="Red" Helper="Helper" CounterMaxLength="6">
+
+            <rs:RSEditor RSEntryStyle="FilledBorder" Placeholder="Entry" Helper="Helper" CounterMaxLength="6">
 
             </rs:RSEditor>
 
-            <rs:RSEntry Placeholder="Editor" Text="Trol2" BorderColor="White" ShadowEnabled="True" BorderFillColor="White" Helper="Helper" CounterMaxLength="6" RSEntryStyle="OutlinedBorder">
+            <rs:RSEditor RSEntryStyle="FilledBorder" Placeholder="Editor" AutoSize="TextChanges" Helper="Helper" CounterMaxLength="6">
 
-            </rs:RSEntry>
+            </rs:RSEditor>
+
+          
 
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
