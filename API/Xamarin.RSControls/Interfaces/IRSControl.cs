@@ -16,6 +16,11 @@ namespace Xamarin.RSControls.Interfaces
         string Helper { get; set; }
         int Counter { get; set; }
         int CounterMaxLength { get; set; }
+        AssistiveTextStyle PlaceholderStyle { get; set; }
+        AssistiveTextStyle HelperStyle { get; set; }
+        AssistiveTextStyle CounterStyle { get; set; }
+        AssistiveTextStyle ErrorStyle { get; set; }
+
         Color BorderFillColor { get; set; }
         Color BorderColor { get; set; }
         Color ActiveColor { get; set; }
@@ -25,6 +30,9 @@ namespace Xamarin.RSControls.Interfaces
         bool HasError { get; }
         bool IsPassword { get; set; }
         float BorderRadius { get; set; }
+        float ShadowRadius { get; set; }
+        Color ShadowColor { get; set; }
+        float BorderWidth { get; set; }
         RSEntryIcon LeadingIcon { get; set; }
         RSEntryIcon TrailingIcon { get; set; }
         RSEntryIcon LeftIcon { get; set; }

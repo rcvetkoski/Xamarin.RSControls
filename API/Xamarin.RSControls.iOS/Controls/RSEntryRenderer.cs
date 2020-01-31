@@ -845,8 +845,11 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             this.familyName = familyName;
             this.SetFont(familyName);
+            UIFont uIFont = UIFont.ItalicSystemFontOfSize(this.FontSize);
             nSString = new NSString(hint);
+            
             this.String = nSString;
+           
         }
 
         public override string String
@@ -860,7 +863,9 @@ namespace Xamarin.RSControls.iOS.Controls
                     nSString = (NSString)value;
 
                 base.String = nSString;
-                UIStringAttributes attrs = new UIStringAttributes() { Font = UIFont.FromName(familyName, this.FontSize) };
+                UIFont font = UIFont.FromName(familyName, this.FontSize);
+                font.FontDescriptor.CreateWithTraits(UIFontDescriptorSymbolicTraits.Italic);
+                UIStringAttributes attrs = new UIStringAttributes() { Font = font };
                 Size = nSString.GetSizeUsingAttributes(attrs);
             }
         }

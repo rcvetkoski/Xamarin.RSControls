@@ -191,6 +191,15 @@ namespace Xamarin.RSControls.Controls
             get { return (Color)GetValue(BorderColorProperty); }
             set { SetValue(BorderColorProperty, value); }
         }
+
+        //Border width stroke
+        public static readonly BindableProperty BorderWidthProperty = BindableProperty.Create("BorderWidth", typeof(float), typeof(RSDatePicker), 1f);
+        public float BorderWidth
+        {
+            get { return (float)GetValue(BorderWidthProperty); }
+            set { SetValue(BorderWidthProperty, value); }
+        }
+
         //Border Fill Color
         public static readonly BindableProperty BorderFillColorProperty = BindableProperty.Create("BorderFillColor", typeof(Color), typeof(RSDatePicker), Color.FromHex("#OA000000"));
         public Color BorderFillColor
@@ -226,6 +235,54 @@ namespace Xamarin.RSControls.Controls
         {
             get { return (bool)GetValue(ShadowEnabledProperty); }
             set { SetValue(ShadowEnabledProperty, value); }
+        }
+
+        //Shadow radius
+        public static readonly BindableProperty ShadowRadiusProperty = BindableProperty.Create("ShadowRadius", typeof(float), typeof(RSDatePicker), 5f);
+        public float ShadowRadius
+        {
+            get { return (float)GetValue(ShadowRadiusProperty); }
+            set { SetValue(ShadowRadiusProperty, value); }
+        }
+
+        //Shadow Color
+        public static readonly BindableProperty ShadowColorProperty = BindableProperty.Create("ShadowColor", typeof(Color), typeof(RSDatePicker), Color.Gray);
+        public Color ShadowColor
+        {
+            get { return (Color)GetValue(ShadowColorProperty); }
+            set { SetValue(ShadowColorProperty, value); }
+        }
+
+        //Placeholder Style
+        public static readonly BindableProperty PlaceholderStyleProperty = BindableProperty.Create("PlaceholderStyle", typeof(AssistiveTextStyle), typeof(RSDatePicker), default);
+        public AssistiveTextStyle PlaceholderStyle
+        {
+            get { return (AssistiveTextStyle)GetValue(PlaceholderStyleProperty); }
+            set { SetValue(PlaceholderStyleProperty, value); }
+        }
+
+        //Helper Style
+        public static readonly BindableProperty HelperStyleProperty = BindableProperty.Create("HelperStyle", typeof(AssistiveTextStyle), typeof(RSDatePicker), new AssistiveTextStyle());
+        public AssistiveTextStyle HelperStyle
+        {
+            get { return (AssistiveTextStyle)GetValue(HelperStyleProperty); }
+            set { SetValue(HelperStyleProperty, value); }
+        }
+
+        //Counter Style
+        public static readonly BindableProperty CounterStyleProperty = BindableProperty.Create("CounterStyle", typeof(AssistiveTextStyle), typeof(RSDatePicker), new AssistiveTextStyle());
+        public AssistiveTextStyle CounterStyle
+        {
+            get { return (AssistiveTextStyle)GetValue(CounterStyleProperty); }
+            set { SetValue(CounterStyleProperty, value); }
+        }
+
+        //Error Style
+        public static readonly BindableProperty ErrorStyleProperty = BindableProperty.Create("ErrorStyle", typeof(AssistiveTextStyle), typeof(RSDatePicker), new AssistiveTextStyle());
+        public AssistiveTextStyle ErrorStyle
+        {
+            get { return (AssistiveTextStyle)GetValue(ErrorStyleProperty); }
+            set { SetValue(ErrorStyleProperty, value); }
         }
 
         public bool HasRighIconSeparator { get; set; }

@@ -11,7 +11,7 @@ namespace Xamarin.RSControls.Controls
     {
         public RSEditor()
         {
-            this.TextChanged += RSEditor_TextChanged;   
+            this.TextChanged += RSEditor_TextChanged;
         }
 
         private void RSEditor_TextChanged(object sender, TextChangedEventArgs e)
@@ -136,6 +136,14 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(BorderRadiusProperty, value); }
         }
 
+        //Border width stroke
+        public static readonly BindableProperty BorderWidthProperty = BindableProperty.Create("BorderWidth", typeof(float), typeof(RSEditor), 1f);
+        public float BorderWidth
+        {
+            get { return (float)GetValue(BorderWidthProperty); }
+            set { SetValue(BorderWidthProperty, value); }
+        }
+
         public static readonly BindableProperty PaddingProperty = BindableProperty.Create("Padding", typeof(Thickness), typeof(RSEditor), null);
         public Thickness Padding
         {
@@ -182,6 +190,53 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(ShadowEnabledProperty, value); }
         }
 
+        //Shadow radius
+        public static readonly BindableProperty ShadowRadiusProperty = BindableProperty.Create("ShadowRadius", typeof(float), typeof(RSEditor), 5f);
+        public float ShadowRadius
+        {
+            get { return (float)GetValue(ShadowRadiusProperty); }
+            set { SetValue(ShadowRadiusProperty, value); }
+        }
+
+        //Shadow Color
+        public static readonly BindableProperty ShadowColorProperty = BindableProperty.Create("ShadowColor", typeof(Color), typeof(RSEditor), Color.Gray);
+        public Color ShadowColor
+        {
+            get { return (Color)GetValue(ShadowColorProperty); }
+            set { SetValue(ShadowColorProperty, value); }
+        }
+
+        //Placeholder Style
+        public static readonly BindableProperty PlaceholderStyleProperty = BindableProperty.Create("PlaceholderStyle", typeof(AssistiveTextStyle), typeof(RSEditor), default);
+        public AssistiveTextStyle PlaceholderStyle
+        {
+            get { return (AssistiveTextStyle)GetValue(PlaceholderStyleProperty); }
+            set { SetValue(PlaceholderStyleProperty, value); }
+        }
+
+        //Helper Style
+        public static readonly BindableProperty HelperStyleProperty = BindableProperty.Create("HelperStyle", typeof(AssistiveTextStyle), typeof(RSEditor), new AssistiveTextStyle());
+        public AssistiveTextStyle HelperStyle
+        {
+            get { return (AssistiveTextStyle)GetValue(HelperStyleProperty); }
+            set { SetValue(HelperStyleProperty, value); }
+        }
+
+        //Counter Style
+        public static readonly BindableProperty CounterStyleProperty = BindableProperty.Create("CounterStyle", typeof(AssistiveTextStyle), typeof(RSEditor), new AssistiveTextStyle());
+        public AssistiveTextStyle CounterStyle
+        {
+            get { return (AssistiveTextStyle)GetValue(CounterStyleProperty); }
+            set { SetValue(CounterStyleProperty, value); }
+        }
+
+        //Error Style
+        public static readonly BindableProperty ErrorStyleProperty = BindableProperty.Create("ErrorStyle", typeof(AssistiveTextStyle), typeof(RSEditor), new AssistiveTextStyle());
+        public AssistiveTextStyle ErrorStyle
+        {
+            get { return (AssistiveTextStyle)GetValue(ErrorStyleProperty); }
+            set { SetValue(ErrorStyleProperty, value); }
+        }
 
         public bool HasRighIconSeparator { get; set; }
         public bool HasLeftIconSeparator { get; set; }

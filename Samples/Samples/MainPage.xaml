@@ -184,7 +184,7 @@
             </Grid>-->
 
 
-            <rs:RSEditor RSEntryStyle="FilledBorder" Placeholder="Entry" MaxHeight="150" Helper="Helper" CounterMaxLength="6">
+            <!--<rs:RSEditor RSEntryStyle="FilledBorder" Placeholder="Entry" MaxHeight="150" Helper="Helper" CounterMaxLength="6">
 
             </rs:RSEditor>
 
@@ -194,12 +194,19 @@
 
             <rs:RSEditor RSEntryStyle="OutlinedBorder" Padding="0,8,0,8" BorderColor="White" Placeholder="Editor" BorderFillColor="White" Helper="Helper" CounterMaxLength="6">
 
-            </rs:RSEditor>
+            </rs:RSEditor>-->
 
-            <rs:RSEntry Placeholder="rergr" Helper="Helper" BorderFillColor="Transparent" CounterMaxLength="6">
-
+            <rs:RSEntry Placeholder="Hint" Helper="Helper" CounterMaxLength="6" BorderFillColor="White" BorderColor="White">
+                <rs:RSEntry.PlaceholderStyle>
+                    <helpers:AssistiveTextStyle FontColor="Blue" FontFamily="serif"/>
+                </rs:RSEntry.PlaceholderStyle>
+                <rs:RSEntry.HelperStyle>
+                    <helpers:AssistiveTextStyle FontColor="Green" FontFamily="serif"/>
+                </rs:RSEntry.HelperStyle>
+                <rs:RSEntry.CounterStyle>
+                    <helpers:AssistiveTextStyle FontColor="Pink"/>
+                </rs:RSEntry.CounterStyle>
             </rs:RSEntry>
-
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
 
