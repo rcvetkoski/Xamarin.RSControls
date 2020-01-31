@@ -430,7 +430,15 @@ namespace Xamarin.RSControls.Droid.Controls
             floatingHintBoundsFloating = new Rect();
             floatingHintBoundsNotFloating = new Rect();
 
-            floatingHintPaint.SetTypeface(Typeface.Create(rSControl.PlaceholderStyle.FontFamily, TypefaceStyle.Italic));
+            if(rSControl.PlaceholderStyle.FontFamily != null && rSControl.PlaceholderStyle.FontFamily.Contains("#"))
+            {
+                var index = rSControl.PlaceholderStyle.FontFamily.IndexOf("#");
+                var fontFamily = rSControl.PlaceholderStyle.FontFamily.Substring(0, index);
+                floatingHintPaint.SetTypeface(Typeface.CreateFromAsset(Context.Assets, fontFamily));
+            }
+            else
+                floatingHintPaint.SetTypeface(Typeface.Create(rSControl.PlaceholderStyle.FontFamily, TypefaceStyle.Italic));
+
             floatingHintText = this.rSControl.Placeholder != null ? rSControl.Placeholder : "";
             //global::Android.Graphics.Color color = new global::Android.Graphics.Color(this.CurrentHintTextColor);
             floatingHintPaint.Color = rSControl.PlaceholderStyle.FontColor.ToAndroid();
@@ -449,7 +457,15 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             errorPaint = new TextPaint();
 
-            errorPaint.SetTypeface(Typeface.Create(rSControl.ErrorStyle.FontFamily, TypefaceStyle.Italic));
+            if (rSControl.ErrorStyle.FontFamily != null && rSControl.ErrorStyle.FontFamily.Contains("#"))
+            {
+                var index = rSControl.ErrorStyle.FontFamily.IndexOf("#");
+                var fontFamily = rSControl.ErrorStyle.FontFamily.Substring(0, index);
+                errorPaint.SetTypeface(Typeface.CreateFromAsset(Context.Assets, fontFamily));
+            }
+            else
+                errorPaint.SetTypeface(Typeface.Create(rSControl.ErrorStyle.FontFamily, TypefaceStyle.Italic));
+
             errorPaint.Color = errorColor;
             errorPaint.Alpha = 0; //Set alpha after color set or not working. Range 0-255
             errorPaint.TextSize = labelsTextSize;
@@ -462,7 +478,15 @@ namespace Xamarin.RSControls.Droid.Controls
             helperMessage = this.rSControl.Helper;
 
             //global::Android.Graphics.Color color = new global::Android.Graphics.Color(this.CurrentHintTextColor);
-            helperPaint.SetTypeface(Typeface.Create(rSControl.HelperStyle.FontFamily, TypefaceStyle.Normal));
+            if (rSControl.HelperStyle.FontFamily != null && rSControl.HelperStyle.FontFamily.Contains("#"))
+            {
+                var index = rSControl.HelperStyle.FontFamily.IndexOf("#");
+                var fontFamily = rSControl.HelperStyle.FontFamily.Substring(0, index);
+                helperPaint.SetTypeface(Typeface.CreateFromAsset(Context.Assets, fontFamily));
+            }
+            else
+                helperPaint.SetTypeface(Typeface.Create(rSControl.HelperStyle.FontFamily, TypefaceStyle.Italic));
+
             helperPaint.Color = rSControl.HelperStyle.FontColor.ToAndroid();
             helperPaint.TextSize = labelsTextSize;
             helperPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
@@ -473,7 +497,17 @@ namespace Xamarin.RSControls.Droid.Controls
             counterPaint = new TextPaint();
             counterMessageBounds = new Rect();
             counterMessage = string.Format("{0}/{1}", this.Length(), rSControl.CounterMaxLength);
-            counterPaint.SetTypeface(Typeface.Create(rSControl.CounterStyle.FontFamily, TypefaceStyle.Normal));
+
+
+            if (rSControl.CounterStyle.FontFamily != null && rSControl.CounterStyle.FontFamily.Contains("#"))
+            {
+                var index = rSControl.CounterStyle.FontFamily.IndexOf("#");
+                var fontFamily = rSControl.CounterStyle.FontFamily.Substring(0, index);
+                counterPaint.SetTypeface(Typeface.CreateFromAsset(Context.Assets, fontFamily));
+            }
+            else
+                counterPaint.SetTypeface(Typeface.Create(rSControl.CounterStyle.FontFamily, TypefaceStyle.Italic));
+
             counterPaint.Color = rSControl.CounterStyle.FontColor.ToAndroid();
             counterPaint.TextSize = labelsTextSize;
             counterPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);

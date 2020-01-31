@@ -146,7 +146,6 @@ namespace Xamarin.RSControls.iOS.Controls
         private UIColor borderColor;
         private nfloat borderWidth;
         private nfloat borderWidthFocused;
-        public UIColor PlaceholderColor { get; set; }
 
         //Padding values
         private nfloat topSpacing;
@@ -164,15 +163,16 @@ namespace Xamarin.RSControls.iOS.Controls
         public RSUITextField(IRSControl rSControl)
         {
             this.rSControl = rSControl;
-            if (PlaceholderColor == null)
-                PlaceholderColor = Color.Gray.ToUIColor();
 
             if(rSControl.FontSize < 12)
                 this.floatingFontSize = (nfloat)rSControl.FontSize;
             else
                 this.floatingFontSize = 12;
+            if(rSControl.Placeholder != null)
+                this.floatingHintMaskPadding = 3;
+            else
+                this.floatingHintMaskPadding = 0;
 
-            this.floatingHintMaskPadding = 3;
             this.borderRadius = rSControl.BorderRadius / 2; //divided by 2 to get android equivalent value
             this.counterMaxLength = this.rSControl.CounterMaxLength;
             this.borderColor = this.rSControl.BorderColor.ToUIColor();
@@ -317,9 +317,9 @@ namespace Xamarin.RSControls.iOS.Controls
             if (!errorEnabled)
             {
                 if (IsFloating)
-                    this.floatingHint.ForegroundColor = this.borderColor.CGColor;
+                    this.floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor();
                 else
-                    this.floatingHint.ForegroundColor = PlaceholderColor.CGColor;
+                    this.floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor();
 
                 this.border.BorderColor = this.borderColor.CGColor;
             }
@@ -422,7 +422,8 @@ namespace Xamarin.RSControls.iOS.Controls
         //Create floatingHint
         private void CreateFloatingHint()
         {
-            floatingHint = new CustomCATextLayer(rSControl.Placeholder, this.Font.FamilyName);
+            floatingHint = new CustomCATextLayer(rSControl.Placeholder,
+                                                 rSControl.PlaceholderStyle.FontFamily != null ? rSControl.PlaceholderStyle.FontFamily : this.Font.FamilyName);
 
             //Init floatinhHint sizes
             floatingHint.FontSize = floatingFontSize;
@@ -432,7 +433,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             floatingHint.AllowsEdgeAntialiasing = true;
             floatingHint.ContentsScale = UIScreen.MainScreen.Scale;
-            floatingHint.ForegroundColor = borderColor.CGColor;
+            floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor();
             floatingHint.BackgroundColor = UIColor.Clear.CGColor;
             floatingHint.Wrapped = false;
 
@@ -443,7 +444,8 @@ namespace Xamarin.RSControls.iOS.Controls
         //Create error label
         private void CreateErrorLabel()
         {
-            errorLabel = new CustomCATextLayer(this.ErrorMessage, this.Font.FamilyName)
+            errorLabel = new CustomCATextLayer(this.ErrorMessage,
+                                               rSControl.ErrorStyle.FontFamily != null ? rSControl.ErrorStyle.FontFamily : this.Font.FamilyName)
             {
                 FontSize = 12,
                 ForegroundColor = UIColor.SystemRedColor.CGColor,
@@ -460,10 +462,11 @@ namespace Xamarin.RSControls.iOS.Controls
         //Create helper label
         private void CreateHelperLabel()
         {
-            helperLabel = new CustomCATextLayer(rSControl.Helper, this.Font.FamilyName)
+            helperLabel = new CustomCATextLayer(rSControl.Helper,
+                                                rSControl.HelperStyle.FontFamily != null ? rSControl.HelperStyle.FontFamily : this.Font.FamilyName)
             {
                 FontSize = 12,
-                ForegroundColor = this.borderColor.CGColor,
+                ForegroundColor = rSControl.HelperStyle.FontColor.ToCGColor(),
                 Opacity = 1.0f,
                 ContentsScale = UIScreen.MainScreen.Scale,
                 AllowsEdgeAntialiasing = true,
@@ -477,10 +480,10 @@ namespace Xamarin.RSControls.iOS.Controls
         //Create helper label
         private void CreateCounterLabel()
         {
-            counterLabel = new CustomCATextLayer("", this.Font.FamilyName)
+            counterLabel = new CustomCATextLayer("", rSControl.CounterStyle.FontFamily != null ? rSControl.CounterStyle.FontFamily : this.Font.FamilyName)
             {
                 FontSize = 12,
-                ForegroundColor = this.borderColor.CGColor,
+                ForegroundColor = rSControl.CounterStyle.FontColor.ToCGColor(),
                 Opacity = 1.0f,
                 ContentsScale = UIScreen.MainScreen.Scale,
                 AllowsEdgeAntialiasing = true,
@@ -508,7 +511,7 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             else
             {
-                counterLabel.ForegroundColor = this.borderColor.CGColor;
+                counterLabel.ForegroundColor = rSControl.CounterStyle.FontColor.ToCGColor();
 
                 if (string.IsNullOrEmpty(this.ErrorMessage) && this.IsFirstResponder)
                 {
@@ -519,7 +522,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 else if (string.IsNullOrEmpty(this.ErrorMessage) && !this.IsFirstResponder)
                 {
                     this.border.BorderColor = this.borderColor.CGColor;
-                    this.floatingHint.ForegroundColor = this.borderColor.CGColor;
+                    this.floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor();
                     this.errorEnabled = false;
                 }
                 else
@@ -843,9 +846,21 @@ namespace Xamarin.RSControls.iOS.Controls
 
         public CustomCATextLayer(string hint, string familyName)
         {
+            if (hint == null)
+                hint = string.Empty;
+
             this.familyName = familyName;
-            this.SetFont(familyName);
-            UIFont uIFont = UIFont.ItalicSystemFontOfSize(this.FontSize);
+            
+            CTFontDescriptorAttributes cTFontDescriptorAttributes = new CTFontDescriptorAttributes();
+            cTFontDescriptorAttributes.Traits = new CTFontTraits();
+            cTFontDescriptorAttributes.FamilyName = familyName;
+            cTFontDescriptorAttributes.Name = familyName;
+            //cTFontDescriptorAttributes.Traits.SymbolicTraits = CTFontSymbolicTraits.Italic;
+            CTFontDescriptor cTFontDescriptor = new CTFontDescriptor(cTFontDescriptorAttributes);
+            //CTFont cTFont = new CTFont(cTFontDescriptor, this.FontSize);
+            CTFont ct = new CTFont(familyName, this.FontSize);
+            this.SetFont(ct);
+
             nSString = new NSString(hint);
             
             this.String = nSString;
@@ -864,7 +879,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 base.String = nSString;
                 UIFont font = UIFont.FromName(familyName, this.FontSize);
-                font.FontDescriptor.CreateWithTraits(UIFontDescriptorSymbolicTraits.Italic);
+                //font.FontDescriptor.CreateWithTraits(UIFontDescriptorSymbolicTraits.Italic);
                 UIStringAttributes attrs = new UIStringAttributes() { Font = font };
                 Size = nSString.GetSizeUsingAttributes(attrs);
             }

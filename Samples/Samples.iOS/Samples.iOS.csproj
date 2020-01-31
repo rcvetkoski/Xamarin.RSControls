@@ -217,4 +217,7 @@
     <Folder Include="Assets.xcassets\EyeInvisible.imageset\" />
     <Folder Include="Assets.xcassets\EyeVisible.imageset\" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Lobster-Regular.ttf" />
+  </ItemGroup>
 </Project>

@@ -34,10 +34,6 @@
     <AndroidDexTool>dx</AndroidDexTool>
     <MandroidI18n />
     <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
-    <AotAssemblies>false</AotAssemblies>
-    <EnableLLVM>false</EnableLLVM>
-    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
-    <BundleAssemblies>false</BundleAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -113,6 +109,9 @@
       <Project>{03CB7154-B107-4723-8DB4-CCE199BDC390}</Project>
       <Name>Samples</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Lobster-Regular.ttf" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
