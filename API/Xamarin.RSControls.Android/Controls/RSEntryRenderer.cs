@@ -430,7 +430,7 @@ namespace Xamarin.RSControls.Droid.Controls
             floatingHintBoundsFloating = new Rect();
             floatingHintBoundsNotFloating = new Rect();
 
-            if(rSControl.PlaceholderStyle.FontFamily != null && rSControl.PlaceholderStyle.FontFamily.Contains("#"))
+            if (rSControl.PlaceholderStyle.FontFamily != null && rSControl.PlaceholderStyle.FontFamily.Contains("#"))
             {
                 var index = rSControl.PlaceholderStyle.FontFamily.IndexOf("#");
                 var fontFamily = rSControl.PlaceholderStyle.FontFamily.Substring(0, index);
@@ -536,10 +536,10 @@ namespace Xamarin.RSControls.Droid.Controls
             filledPaint.SetShadowLayer(rSControl.ShadowRadius, 0, 0.5f, rSControl.ShadowColor.ToAndroid());
 
 
-            //if(!this.IsHardwareAccelerated)
-            //    this.SetLayerType(LayerType.Software, null);
-            //else
-            //    this.SetLayerType(LayerType.Hardware, null);
+            if (!this.IsHardwareAccelerated)
+                this.SetLayerType(LayerType.Software, null);
+            else
+                this.SetLayerType(LayerType.Hardware, null);
 
             filledPaint.AntiAlias = true;
         }

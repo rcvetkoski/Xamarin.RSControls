@@ -196,7 +196,7 @@
 
             </rs:RSEditor>-->
 
-            <rs:RSEntry RSEntryStyle="Underline" Placeholder="Hint" FontFamily="Lobster-Regular.ttf#Lobster-Regular" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6">
+            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6" BorderFillColor="Cyan">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -233,6 +233,66 @@
                 </rs:RSEntry.Behaviors>
             </rs:RSEntry>
 
+            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6">
+                <rs:RSEntry.PlaceholderStyle>
+                    <helpers:AssistiveTextStyle FontColor="Purple">
+                        <helpers:AssistiveTextStyle.FontFamily>
+                            <OnPlatform x:TypeArguments="x:String">
+                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
+                                <On Platform="iOS" Value="Lobster-Regular" />
+                            </OnPlatform>
+                        </helpers:AssistiveTextStyle.FontFamily>
+                    </helpers:AssistiveTextStyle>
+                </rs:RSEntry.PlaceholderStyle>
+                <rs:RSEntry.HelperStyle>
+                    <helpers:AssistiveTextStyle FontColor="Green">
+                        <helpers:AssistiveTextStyle.FontFamily>
+                            <OnPlatform x:TypeArguments="x:String">
+                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
+                                <On Platform="iOS" Value="Lobster-Regular" />
+                            </OnPlatform>
+                        </helpers:AssistiveTextStyle.FontFamily>
+                    </helpers:AssistiveTextStyle>
+                </rs:RSEntry.HelperStyle>
+                <rs:RSEntry.CounterStyle>
+                    <helpers:AssistiveTextStyle FontColor="Pink"/>
+                </rs:RSEntry.CounterStyle>
+                <rs:RSEntry.ErrorStyle>
+                    <helpers:AssistiveTextStyle FontColor="Green"/>
+                </rs:RSEntry.ErrorStyle>
+
+            </rs:RSEntry>
+
+            <rs:RSEntry Placeholder="Mehton" ShadowEnabled="True" Helper="Helper" BorderColor="White" ShadowRadius="10" BorderFillColor="White" CounterMaxLength="12">
+                <rs:RSEntry.PlaceholderStyle>
+                    <helpers:AssistiveTextStyle FontColor="Purple">
+                        <helpers:AssistiveTextStyle.FontFamily>
+                            <OnPlatform x:TypeArguments="x:String">
+                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
+                                <On Platform="iOS" Value="Lobster-Regular" />
+                            </OnPlatform>
+                        </helpers:AssistiveTextStyle.FontFamily>
+                    </helpers:AssistiveTextStyle>
+                </rs:RSEntry.PlaceholderStyle>
+                <rs:RSEntry.HelperStyle>
+                    <helpers:AssistiveTextStyle FontColor="Green">
+                        <helpers:AssistiveTextStyle.FontFamily>
+                            <OnPlatform x:TypeArguments="x:String">
+                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
+                                <On Platform="iOS" Value="Lobster-Regular" />
+                            </OnPlatform>
+                        </helpers:AssistiveTextStyle.FontFamily>
+                    </helpers:AssistiveTextStyle>
+                </rs:RSEntry.HelperStyle>
+                <rs:RSEntry.CounterStyle>
+                    <helpers:AssistiveTextStyle FontColor="Pink"/>
+                </rs:RSEntry.CounterStyle>
+                <rs:RSEntry.ErrorStyle>
+                    <helpers:AssistiveTextStyle FontColor="Green"/>
+                </rs:RSEntry.ErrorStyle>
+
+            </rs:RSEntry>
+            
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
 
         </StackLayout>
