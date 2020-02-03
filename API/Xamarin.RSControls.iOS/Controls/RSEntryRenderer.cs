@@ -176,8 +176,8 @@ namespace Xamarin.RSControls.iOS.Controls
             this.borderRadius = rSControl.BorderRadius / 2; //divided by 2 to get android equivalent value
             this.counterMaxLength = this.rSControl.CounterMaxLength;
             this.borderColor = this.rSControl.BorderColor.ToUIColor();
-            this.borderWidth = 1;
-            this.borderWidthFocused = 2;
+            this.borderWidth = rSControl.BorderWidth;
+            this.borderWidthFocused = rSControl.BorderWidth + 1;
             this.activeColor = UIColor.SystemBlueColor;
             this.topSpacing = 5;
             this.bottomSpacing = 20;
@@ -365,17 +365,13 @@ namespace Xamarin.RSControls.iOS.Controls
                 ZPosition = -1 // So its behind floating label
             };
 
-            //Border shadow if enabled
-            //borderShadowPath = new CGPath();
-
             if(rSControl.ShadowEnabled)
             {
-                border.ShadowColor = UIColor.Gray.CGColor;
-                border.ShadowOpacity = 0.5f;
-                border.ShadowRadius = 2;
+                border.ShadowColor = rSControl.ShadowColor.ToCGColor();
+                border.ShadowOpacity = 1f;
+                border.ShadowRadius = rSControl.ShadowRadius;
                 border.ShadowOffset = new CGSize(0f, 0.5f);
             }
-
 
             this.Layer.AddSublayer(border);
         }
@@ -452,7 +448,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 Opacity = 1.0f,
                 ContentsScale = UIScreen.MainScreen.Scale,
                 AllowsEdgeAntialiasing = true,
-                Wrapped = false,
+                Wrapped = false
             };
 
 
@@ -470,7 +466,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 Opacity = 1.0f,
                 ContentsScale = UIScreen.MainScreen.Scale,
                 AllowsEdgeAntialiasing = true,
-                Wrapped = false,
+                Wrapped = false
             };
 
             helperLabel.Bounds = new CGRect(0.0f, 0.0f, helperLabel.Size.Width, helperLabel.Size.Height);
@@ -487,7 +483,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 Opacity = 1.0f,
                 ContentsScale = UIScreen.MainScreen.Scale,
                 AllowsEdgeAntialiasing = true,
-                Wrapped = false,
+                Wrapped = false
             };
 
             this.Layer.AddSublayer(counterLabel);
@@ -850,16 +846,16 @@ namespace Xamarin.RSControls.iOS.Controls
                 hint = string.Empty;
 
             this.familyName = familyName;
-            
-            CTFontDescriptorAttributes cTFontDescriptorAttributes = new CTFontDescriptorAttributes();
-            cTFontDescriptorAttributes.Traits = new CTFontTraits();
-            cTFontDescriptorAttributes.FamilyName = familyName;
-            cTFontDescriptorAttributes.Name = familyName;
+
+            //CTFontDescriptorAttributes cTFontDescriptorAttributes = new CTFontDescriptorAttributes();
+            //cTFontDescriptorAttributes.Traits = new CTFontTraits();
+            //cTFontDescriptorAttributes.FamilyName = familyName;
             //cTFontDescriptorAttributes.Traits.SymbolicTraits = CTFontSymbolicTraits.Italic;
-            CTFontDescriptor cTFontDescriptor = new CTFontDescriptor(cTFontDescriptorAttributes);
-            //CTFont cTFont = new CTFont(cTFontDescriptor, this.FontSize);
-            CTFont ct = new CTFont(familyName, this.FontSize);
-            this.SetFont(ct);
+            //CTFontDescriptor cTFontDescriptor = new CTFontDescriptor(cTFontDescriptorAttributes);
+            //CTFont ctFont = new CTFont(familyName, this.FontSize);
+            //this.SetFont(ctFont);
+
+            this.SetFont(familyName);
 
             nSString = new NSString(hint);
             

@@ -263,7 +263,7 @@
 
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Mehton" ShadowEnabled="True" Helper="Helper" BorderColor="White" ShadowRadius="10" BorderFillColor="White" CounterMaxLength="12">
+            <rs:RSEntry Placeholder="Mehton" ShadowEnabled="True" Helper="Helper" BorderWidth="0.5" ShadowColor="Black" BorderColor="White" BorderFillColor="White" ShadowRadius="3" CounterMaxLength="12">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
