@@ -405,7 +405,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Placeholder Style
-        public static readonly BindableProperty PlaceholderStyleProperty = BindableProperty.Create("PlaceholderStyle", typeof(AssistiveTextStyle), typeof(RSPickerBase), default);
+        public static readonly BindableProperty PlaceholderStyleProperty = BindableProperty.Create("PlaceholderStyle", typeof(AssistiveTextStyle), typeof(RSPickerBase), new AssistiveTextStyle());
         public AssistiveTextStyle PlaceholderStyle
         {
             get { return (AssistiveTextStyle)GetValue(PlaceholderStyleProperty); }

@@ -187,9 +187,6 @@ namespace Xamarin.RSControls.Droid.Controls
             //Set Padding
             SetPaddingValues();
 
-            //Create Icons if any
-            CreateIcons();
-
             //Floating Hint
             CreateFloatingHint();
 
@@ -258,7 +255,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.SetPadding((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Left,
                                 (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 25, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Top,
                                 (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Right,
-                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Bottom);
+                                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 18, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Bottom);
 
             }
         }
@@ -524,46 +521,42 @@ namespace Xamarin.RSControls.Droid.Controls
             borderPaint.Color = borderColor;
             borderPaint.StrokeWidth = borderWidth;
             borderPaint.AntiAlias = true;
-            //borderPaint.SetShadowLayer(10, 0, 0.5f, global::Android.Graphics.Color.Black);
 
             //Filled
             filledPaint = new Paint();
-
             filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
             filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
-
-            //filledPaint.StrokeWidth = borderWidth;
-            filledPaint.SetShadowLayer(rSControl.ShadowRadius, 0, 0.5f, rSControl.ShadowColor.ToAndroid());
-
+            filledPaint.AntiAlias = true;
+            if(rSControl.ShadowEnabled)
+                filledPaint.SetShadowLayer(rSControl.ShadowRadius, 0f, 0.5f, rSControl.ShadowColor.ToAndroid());
 
             if (!this.IsHardwareAccelerated)
                 this.SetLayerType(LayerType.Software, null);
             else
                 this.SetLayerType(LayerType.Hardware, null);
-
-            filledPaint.AntiAlias = true;
         }
         private void CreateFilledBorder()
         {
             //Border
             borderPaint = new Paint();
-
             borderPaint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
             borderPaint.Color = borderColor;
             borderPaint.StrokeWidth = borderWidth;
             borderPaint.AntiAlias = true;
 
 
-
             //Filled
             filledPaint = new Paint();
-
             filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
             filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
-
-            //filledPaint.StrokeWidth = borderWidth;
-            //borderPaint.SetShadowLayer(borderWidthFocused, 0, 0.5f, global::Android.Graphics.Color.LightGray);
             filledPaint.AntiAlias = true;
+            if (rSControl.ShadowEnabled)
+                filledPaint.SetShadowLayer(rSControl.ShadowRadius, 0, 1f, rSControl.ShadowColor.ToAndroid());
+
+            if (!this.IsHardwareAccelerated)
+                this.SetLayerType(LayerType.Software, null);
+            else
+                this.SetLayerType(LayerType.Hardware, null);
         }
         private void CreateUnderlineBorder()
         {
@@ -575,7 +568,6 @@ namespace Xamarin.RSControls.Droid.Controls
             borderPaint.AntiAlias = true;
 
             (this.rSControl as Forms.View).BackgroundColor = rSControl.BorderFillColor;
-            //borderPaint.SetShadowLayer(borderWidth, 0, borderWidth, global::Android.Graphics.Color.Gray);
         }
         private void CreatePasswordIcon()
         {
@@ -670,7 +662,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rsIcon.View, new Rectangle(0, 0, this.Width, this.Height), Context);
 
             if (convertedView != null)
-                bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, (int)rsIcon.View.Width, (int)rsIcon.View.Height));
+                bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, width, height));
 
 
             if (type != null && type == "right")
@@ -826,6 +818,9 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 if (counterPaint != null)
                     counterYPosition = this.Height - bottomSpacing - counterPaint.Ascent() + 2 + textRect.Top;
+
+                //Create Icons if any
+                CreateIcons();
 
 
                 hasInitfloatingHintYPosition = true;
@@ -1013,17 +1008,18 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
 
 
-                canvas.DrawRoundRect(new RectF(textRect.Left + corectCorners + leadingIconWidth + rSControl.ShadowRadius,
-                                               textRect.Top + corectCorners + topSpacing ,
-                                               textRect.Right - corectCorners - trailingIconWidth  - rSControl.ShadowRadius,
-                                               textRect.Bottom - corectCorners - bottomSpacing ),
+                canvas.DrawRoundRect(new RectF(textRect.Left + leadingIconWidth + rSControl.ShadowRadius,
+                                               textRect.Top + topSpacing,
+                                               textRect.Right - trailingIconWidth - rSControl.ShadowRadius,
+                                               textRect.Bottom - bottomSpacing),
                                                this.rSControl.BorderRadius, this.rSControl.BorderRadius,
                                                filledPaint);
 
-                canvas.DrawRoundRect(new RectF(textRect.Left + corectCorners + leadingIconWidth + rSControl.ShadowRadius,
-                                               textRect.Top + corectCorners + topSpacing,
-                                               textRect.Right - corectCorners - trailingIconWidth - rSControl.ShadowRadius,
-                                               textRect.Bottom - corectCorners - bottomSpacing),
+
+                canvas.DrawRoundRect(new RectF(textRect.Left  + leadingIconWidth + rSControl.ShadowRadius,
+                                               textRect.Top  + topSpacing,
+                                               textRect.Right  - trailingIconWidth - rSControl.ShadowRadius,
+                                               textRect.Bottom  - bottomSpacing),
                                                this.rSControl.BorderRadius, this.rSControl.BorderRadius,
                                                borderPaint);
 
@@ -1041,42 +1037,87 @@ namespace Xamarin.RSControls.Droid.Controls
             }
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
             {
-                canvas.DrawLine(textRect.Left  + leadingIconWidth,
-                                textRect.Bottom - bottomSpacing - corectCorners - (borderPaint.StrokeWidth / borderPaint.StrokeWidth),
-                                textRect.Right - trailingIconWidth - corectCorners,
-                                textRect.Bottom - bottomSpacing,
-                                borderPaint);
+                //canvas.Save();
 
-                canvas.Save();
-
-                if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
-                {
-                    canvas.ClipRect(textRect.Left + leadingIconWidth,
-                                    textRect.Bottom - bottomSpacing,
-                                    textRect.Right - trailingIconWidth,
-                                    textRect.Bottom,
-                                    global::Android.Graphics.Region.Op.Difference);
-                }
-                else
-                {
-                    canvas.ClipOutRect(textRect.Left + leadingIconWidth,
-                                       textRect.Bottom - bottomSpacing,
-                                       textRect.Right - trailingIconWidth,
-                                       textRect.Bottom);
-                }
+                //if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
+                //{
+                //    canvas.ClipRect(textRect.Left + leadingIconWidth,
+                //                    textRect.Bottom - bottomSpacing,
+                //                    textRect.Right - trailingIconWidth,
+                //                    textRect.Bottom,
+                //                    global::Android.Graphics.Region.Op.Difference);
+                //}
+                //else
+                //{
+                //    canvas.ClipOutRect(textRect.Left + leadingIconWidth,
+                //                       textRect.Bottom - bottomSpacing,
+                //                       textRect.Right - trailingIconWidth,
+                //                       textRect.Bottom - bottomSpacing + borderPaint.StrokeWidth);
+                //}
 
 
-                canvas.DrawRoundRect(new RectF(textRect.Left + leadingIconWidth,
-                                               textRect.Top + topSpacing,
-                                               textRect.Right - trailingIconWidth,
-                                               textRect.Bottom + this.Height / 2),
-                                               this.rSControl.BorderRadius, this.rSControl.BorderRadius,
-                                               filledPaint);
+                //canvas.DrawRoundRect(new RectF(textRect.Left + leadingIconWidth + rSControl.ShadowRadius,
+                //                               textRect.Top + topSpacing,
+                //                               textRect.Right - trailingIconWidth - rSControl.ShadowRadius,
+                //                               textRect.Bottom - bottomSpacing + borderPaint.StrokeWidth),
+                //                               this.rSControl.BorderRadius, this.rSControl.BorderRadius,
+                //                               filledPaint);
 
-                canvas.Restore();
+                //canvas.Restore();
+
+                //canvas.DrawLine(textRect.Left  + leadingIconWidth + rSControl.ShadowRadius,
+                //                textRect.Bottom - bottomSpacing - corectCorners - (borderPaint.StrokeWidth / borderPaint.StrokeWidth),
+                //                textRect.Right - trailingIconWidth - corectCorners - rSControl.ShadowRadius,
+                //                textRect.Bottom - bottomSpacing,
+                //                borderPaint);
+
+                var path = RoundedRect(7, topSpacing, this.Width - 7, this.Height - bottomSpacing, rSControl.BorderRadius, rSControl.BorderRadius, true);
+                Path path2 = new Path();
+                path2.MoveTo(7, this.Height - bottomSpacing - borderWidth / 2);
+                path2.LineTo(this.Width - 7, this.Height - bottomSpacing - borderWidth / 2);
+                path2.Close();//Given close, last lineto can be removed.
+
+                canvas.DrawPath(path, filledPaint);
+                canvas.DrawPath(path2, borderPaint);
             }
         }
+        public Path RoundedRect(float left, float top, float right, float bottom, float rx, float ry, bool conformToOriginalPost)
+        {
+            Path path = new Path();
+            if (rx < 0) rx = 0;
+            if (ry < 0) ry = 0;
+            float width = right - left;
+            float height = bottom - top;
+            if (rx > width / 2) rx = width / 2;
+            if (ry > height / 2) ry = height / 2;
+            float widthMinusCorners = (width - (2 * rx));
+            float heightMinusCorners = (height - (2 * ry));
 
+            path.MoveTo(right, top + ry);
+            path.RQuadTo(0, -ry, -rx, -ry);//top-right corner
+            path.RLineTo(-widthMinusCorners, 0);
+            path.RQuadTo(-rx, 0, -rx, ry); //top-left corner
+            path.RLineTo(0, heightMinusCorners);
+
+            if (conformToOriginalPost)
+            {
+                path.RLineTo(0, ry);
+                path.RLineTo(width, 0);
+                path.RLineTo(0, -ry);
+            }
+            else
+            {
+                path.RQuadTo(0, ry, rx, ry);//bottom-left corner
+                path.RLineTo(widthMinusCorners, 0);
+                path.RQuadTo(rx, 0, rx, -ry); //bottom-right corner
+            }
+
+            path.RLineTo(0, -heightMinusCorners);
+
+            path.Close();//Given close, last lineto can be removed.
+
+            return path;
+        }
 
         //Floating hint animation
         private void CreateFloatingHintAnimator()
