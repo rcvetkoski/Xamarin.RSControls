@@ -57,7 +57,9 @@ namespace Xamarin.RSControls.iOS.Controls
     {
         private IRSControl rSControl;
         private nfloat borderRadius;
+        private nfloat shadowRadius;
         private CALayer border;
+        private CALayer filledBorder;
         private CGPath borderShadowPath;
         private CustomCATextLayer floatingHint;
         private CustomCATextLayer errorLabel;
@@ -174,6 +176,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 this.floatingHintMaskPadding = 0;
 
             this.borderRadius = rSControl.BorderRadius / 2; //divided by 2 to get android equivalent value
+            this.shadowRadius = rSControl.ShadowRadius / 3; //divided by 2 to get android equivalent value
             this.counterMaxLength = this.rSControl.CounterMaxLength;
             this.borderColor = this.rSControl.BorderColor.ToUIColor();
             this.borderWidth = rSControl.BorderWidth;
@@ -233,14 +236,14 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 this.leftPadding = 8 + (nfloat)rSControl.Padding.Left;
                 this.rightPadding = 8 + (nfloat)rSControl.Padding.Right;
-                this.topPadding = 20 + (nfloat)rSControl.Padding.Top;
-                this.bottomPadding = 27.5f + (nfloat)rSControl.Padding.Bottom;
+                this.topPadding = 17 + (nfloat)rSControl.Padding.Top;
+                this.bottomPadding = 24.5f + (nfloat)rSControl.Padding.Bottom;
             }
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
             {
                 this.leftPadding = 8 + (nfloat)rSControl.Padding.Left;
                 this.rightPadding = 8 + (nfloat)rSControl.Padding.Right;
-                this.topPadding = 30 + (nfloat)rSControl.Padding.Top; 
+                this.topPadding = 25 + (nfloat)rSControl.Padding.Top; 
                 this.bottomPadding = 20 + (nfloat)rSControl.Padding.Bottom; 
             }
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
@@ -265,9 +268,9 @@ namespace Xamarin.RSControls.iOS.Controls
 
             RSSvgImage rightSvgIcon = new RSSvgImage() { Source = "Samples/Data/SVG/calendar.svg", HeightRequest = 22, WidthRequest = 22, Color = Color.Gray };
             var convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new CGRect(0, 0, 22, 22));
-            UIView outerView = new UIView(new CGRect(0, 0, 22 + rightPadding, 22 - correctiveY)) { BackgroundColor = UIColor.Clear};
-            outerView.AddSubview(convertedView);
-            this.RightView = outerView;
+            UIView outerView = new UIView(new CGRect(0, 0, 22 + rightPadding, this.Frame.Height - bottomSpacing - topSpacing)) { BackgroundColor = UIColor.Green};
+            //outerView.AddSubview(convertedView);
+            this.RightView = convertedView;
             this.RightViewMode = UITextFieldViewMode.Always;
             UITapGestureRecognizer uITapGestureRecognizer = new UITapGestureRecognizer(() => {
                 // Do something
@@ -358,9 +361,9 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             border = new CALayer()
             {
-                BorderColor = UIColor.DarkGray.CGColor,
+                BorderColor = this.borderColor.CGColor,
                 BorderWidth = this.borderWidth,
-                BackgroundColor = rSControl.BorderFillColor != Color.FromHex("#OA000000") ? rSControl.BorderFillColor.ToCGColor() : UIColor.Clear.CGColor,
+                BackgroundColor = rSControl.BorderFillColor.ToCGColor(),
                 CornerRadius = this.borderRadius,
                 ZPosition = -1 // So its behind floating label
             };
@@ -368,8 +371,8 @@ namespace Xamarin.RSControls.iOS.Controls
             if(rSControl.ShadowEnabled)
             {
                 border.ShadowColor = rSControl.ShadowColor.ToCGColor();
-                border.ShadowOpacity = 1f;
-                border.ShadowRadius = rSControl.ShadowRadius;
+                border.ShadowOpacity = 0.5f;
+                border.ShadowRadius = this.shadowRadius;
                 border.ShadowOffset = new CGSize(0f, 0.5f);
             }
 
@@ -383,22 +386,29 @@ namespace Xamarin.RSControls.iOS.Controls
                 BorderColor = this.borderColor.CGColor,
                 BorderWidth = this.borderWidth,
                 BackgroundColor = rSControl.BorderFillColor.ToCGColor(),
-                CornerRadius = this.borderRadius,
                 ZPosition = -1 // So its behind floating label
             };
 
-            border.MaskedCorners = CACornerMask.MinXMinYCorner | CACornerMask.MaxXMinYCorner;
+            filledBorder = new CALayer()
+            {
+                BackgroundColor = rSControl.BorderFillColor.ToCGColor(),
+                CornerRadius = this.borderRadius,
+                ZPosition = -2 // So its behind floating label
+            };
+
+            filledBorder.MaskedCorners = CACornerMask.MinXMinYCorner | CACornerMask.MaxXMinYCorner;
 
             if(rSControl.ShadowEnabled)
             {
-                border.ShadowColor = UIColor.Gray.CGColor;
-                border.ShadowOpacity = 0.5f;
-                border.ShadowRadius = 2;
-                border.ShadowOffset = new CGSize(0f, 0.5f);
+                filledBorder.ShadowColor = rSControl.ShadowColor.ToCGColor();
+                filledBorder.ShadowOpacity = 0.5f;
+                filledBorder.ShadowRadius = this.shadowRadius;
+                filledBorder.ShadowOffset = new CGSize(0f, 0.5f);
             }
 
 
             this.Layer.AddSublayer(border);
+            this.Layer.AddSublayer(filledBorder);
         }
         //Underline Border
         private void CreateUnderlineBorder()
@@ -611,23 +621,25 @@ namespace Xamarin.RSControls.iOS.Controls
         public void UpdateFilledBorder()
         {
             //Border frame
-            border.Frame = new CGRect(0, topSpacing, this.Frame.Width, this.Frame.Height - this.bottomSpacing);
-
-            CAShapeLayer borderMask = new CAShapeLayer();
-            CGPath maskPath = new CGPath();
-
-            //Top rounded border mask
-            maskPath.AddRoundedRect(new CGRect(borderWidth + 1, borderWidth + 1, this.Frame.Width - (2 * borderWidth + 2), this.Frame.Height - this.bottomSpacing), borderRadius, borderRadius);
-
-            //Bottom edges make them straight
-            maskPath.AddRect(new CGRect(x: borderWidth + 1, y: this.border.Frame.Height / 2, width: this.Frame.Width - (2 * borderWidth + 2), height: this.border.Frame.Height));
-
-            //Bottom border
-            maskPath.AddRect(new CGRect(x: 0, y: this.border.Frame.Height, width: this.Frame.Width, height: this.borderWidth));
+            filledBorder.Frame = new CGRect(0, topSpacing, this.Frame.Width, this.Frame.Height - this.bottomSpacing);
+            border.Frame = new CGRect(0, topSpacing + this.Frame.Height - this.bottomSpacing - border.BorderWidth, this.Frame.Width, border.BorderWidth);
 
 
-            borderMask.Path = maskPath;
-            border.Mask = borderMask;
+            //CAShapeLayer borderMask = new CAShapeLayer();
+            //CGPath maskPath = new CGPath();
+
+            ////Top rounded border mask
+            //maskPath.AddRoundedRect(new CGRect(borderWidth + 1, borderWidth + 1, this.Frame.Width - (2 * borderWidth + 2), this.Frame.Height - this.bottomSpacing), borderRadius, borderRadius);
+
+            ////Bottom edges make them straight
+            //maskPath.AddRect(new CGRect(x: borderWidth + 1, y: this.border.Frame.Height / 2, width: this.Frame.Width - (2 * borderWidth + 2), height: this.border.Frame.Height));
+
+            ////Bottom border
+            //maskPath.AddRect(new CGRect(x: 0, y: this.border.Frame.Height, width: this.Frame.Width, height: this.borderWidth));
+
+
+            //borderMask.Path = maskPath;
+            //border.Mask = borderMask;
         }
         //Set Underline border frame
         public void UpdateUnderlineBorder()
@@ -688,6 +700,14 @@ namespace Xamarin.RSControls.iOS.Controls
         public override CGRect EditingRect(CGRect forBounds)
         {
             return InsetRect(base.EditingRect(forBounds), new UIEdgeInsets(this.topPadding, this.leftPadding, this.bottomPadding, this.rightPadding));
+        }
+
+        public override CGRect RightViewRect(CGRect forBounds)
+        {
+            //return base.RightViewRect(forBounds);
+
+            CGRect rightBounds = new CGRect(border.Bounds.Right - rightPadding - 22, floatingHintYPostionNotFloating - 11, 22, 22);
+            return rightBounds;
         }
 
 

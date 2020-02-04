@@ -59,8 +59,10 @@ namespace Xamarin.RSControls.iOS.Controls
     {
         private IRSControl rSControl;
         private nfloat borderRadius;
+        private nfloat shadowRadius;
         private UIView borderContainer;
         private CALayer border;
+        private CALayer filledBorder;
         private CGPath borderShadowPath;
         private CustomCATextLayer floatingHint;
         private CustomCATextLayer errorLabel;
@@ -179,6 +181,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             this.floatingHintMaskPadding = 3;
             this.borderRadius = rSControl.BorderRadius / 2; //divided by 2 to get android equivalent value
+            this.shadowRadius = rSControl.ShadowRadius / 3; //divided by 2 to get android equivalent value
             this.counterMaxLength = this.rSControl.CounterMaxLength;
             this.borderColor = this.rSControl.BorderColor.ToUIColor();
             this.borderWidth = 1;
@@ -251,8 +254,8 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 this.leftPadding = 8 + (nfloat)rSControl.Padding.Left;
                 this.rightPadding = 8 + (nfloat)rSControl.Padding.Right;
-                this.topPadding = 20 + (nfloat)rSControl.Padding.Top;
-                this.bottomPadding = 27.5f + (nfloat)rSControl.Padding.Bottom;
+                this.topPadding = 17 + (nfloat)rSControl.Padding.Top;
+                this.bottomPadding = 24.5f + (nfloat)rSControl.Padding.Bottom;
             }
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
             {
@@ -345,7 +348,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (IsFloating)
                     this.floatingHint.ForegroundColor = this.borderColor.CGColor;
                 else
-                    this.floatingHint.ForegroundColor = PlaceholderColor.CGColor;
+                    this.floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor(); ;
 
                 this.border.BorderColor = this.borderColor.CGColor;
             }
@@ -386,21 +389,18 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             border = new CALayer()
             {
-                BorderColor = UIColor.DarkGray.CGColor,
+                BorderColor = this.borderColor.CGColor,
                 BorderWidth = this.borderWidth,
-                BackgroundColor = rSControl.BorderFillColor != Color.FromHex("#OA000000") ? rSControl.BorderFillColor.ToCGColor() : UIColor.Clear.CGColor,
+                BackgroundColor = rSControl.BorderFillColor.ToCGColor(),
                 CornerRadius = this.borderRadius,
                 ZPosition = -1// So its behind floating label
             };
 
-            //Border shadow if enabled
-            //borderShadowPath = new CGPath();
-
             if (rSControl.ShadowEnabled)
             {
-                border.ShadowColor = UIColor.Gray.CGColor;
+                border.ShadowColor = rSControl.ShadowColor.ToCGColor();
                 border.ShadowOpacity = 0.5f;
-                border.ShadowRadius = 2;
+                border.ShadowRadius = this.shadowRadius;
                 border.ShadowOffset = new CGSize(0f, 0.5f);
             }
 
@@ -415,14 +415,28 @@ namespace Xamarin.RSControls.iOS.Controls
                 BorderColor = this.borderColor.CGColor,
                 BorderWidth = this.borderWidth,
                 BackgroundColor = rSControl.BorderFillColor.ToCGColor(),
-                CornerRadius = this.borderRadius,
                 ZPosition = -1 // So its behind floating label
             };
 
-            border.MaskedCorners = CACornerMask.MinXMinYCorner | CACornerMask.MaxXMinYCorner;
+            filledBorder = new CALayer()
+            {
+                BackgroundColor = rSControl.BorderFillColor.ToCGColor(),
+                CornerRadius = this.borderRadius,
+                ZPosition = -2 // So its behind floating label
+            };
 
-            //this.Layer.AddSublayer(border);
+            filledBorder.MaskedCorners = CACornerMask.MinXMinYCorner | CACornerMask.MaxXMinYCorner;
+
+            if (rSControl.ShadowEnabled)
+            {
+                filledBorder.ShadowColor = rSControl.ShadowColor.ToCGColor();
+                filledBorder.ShadowOpacity = 0.5f;
+                filledBorder.ShadowRadius = this.shadowRadius;
+                filledBorder.ShadowOffset = new CGSize(0f, 0.5f);
+            }
+
             this.borderContainer.Layer.AddSublayer(border);
+            this.borderContainer.Layer.AddSublayer(filledBorder);
         }
         //Underline Border
         private void CreateUnderlineBorder()
@@ -437,12 +451,21 @@ namespace Xamarin.RSControls.iOS.Controls
 
             this.BackgroundColor = rSControl.BorderFillColor.ToUIColor();
 
-            this.Layer.AddSublayer(border);
+            if (rSControl.ShadowEnabled)
+            {
+                border.ShadowColor = rSControl.ShadowColor.ToCGColor();
+                border.ShadowOpacity = 0.5f;
+                border.ShadowRadius = this.shadowRadius;
+                border.ShadowOffset = new CGSize(0f, 0.5f);
+            }
+
+            this.borderContainer.Layer.AddSublayer(border);
         }
         //Create floatingHint
         private void CreateFloatingHint()
         {
-            floatingHint = new CustomCATextLayer(rSControl.Placeholder, this.Font.FamilyName);
+            floatingHint = new CustomCATextLayer(rSControl.Placeholder,
+                                                 rSControl.PlaceholderStyle.FontFamily != null ? rSControl.PlaceholderStyle.FontFamily : this.Font.FamilyName);
 
             //Init floatinhHint sizes
             floatingHint.FontSize = floatingFontSize;
@@ -452,64 +475,60 @@ namespace Xamarin.RSControls.iOS.Controls
 
             floatingHint.AllowsEdgeAntialiasing = true;
             floatingHint.ContentsScale = UIScreen.MainScreen.Scale;
-            floatingHint.ForegroundColor = borderColor.CGColor;
+            floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor();
             floatingHint.BackgroundColor = UIColor.Clear.CGColor;
             floatingHint.Wrapped = false;
 
             floatingHint.Bounds = new CGRect(0.0f, 0.0f, floatingHint.Size.Width, floatingHint.Size.Height);
 
-            //this.Layer.AddSublayer(floatingHint);
             this.borderContainer.Layer.AddSublayer(floatingHint);
         }
         //Create error label
         private void CreateErrorLabel()
         {
-            errorLabel = new CustomCATextLayer(this.ErrorMessage, this.Font.FamilyName)
+            errorLabel = new CustomCATextLayer(this.ErrorMessage,
+                                               rSControl.ErrorStyle.FontFamily != null ? rSControl.ErrorStyle.FontFamily : this.Font.FamilyName)
             {
                 FontSize = 12,
                 ForegroundColor = UIColor.SystemRedColor.CGColor,
                 Opacity = 1.0f,
                 ContentsScale = UIScreen.MainScreen.Scale,
                 AllowsEdgeAntialiasing = true,
-                Wrapped = false,
+                Wrapped = false
             };
 
-
-            //this.Layer.AddSublayer(errorLabel);
             this.borderContainer.Layer.AddSublayer(errorLabel);
         }
         //Create helper label
         private void CreateHelperLabel()
         {
-            helperLabel = new CustomCATextLayer(rSControl.Helper, this.Font.FamilyName)
+            helperLabel = new CustomCATextLayer(rSControl.Helper,
+                                                rSControl.HelperStyle.FontFamily != null ? rSControl.HelperStyle.FontFamily : this.Font.FamilyName)
             {
                 FontSize = 12,
-                ForegroundColor = this.borderColor.CGColor,
+                ForegroundColor = rSControl.HelperStyle.FontColor.ToCGColor(),
                 Opacity = 1.0f,
                 ContentsScale = UIScreen.MainScreen.Scale,
                 AllowsEdgeAntialiasing = true,
-                Wrapped = false,
+                Wrapped = false
             };
 
             helperLabel.Bounds = new CGRect(0.0f, 0.0f, helperLabel.Size.Width, helperLabel.Size.Height);
-
-            //this.Layer.AddSublayer(helperLabel);
             this.borderContainer.Layer.AddSublayer(helperLabel);
         }
         //Create helper label
         private void CreateCounterLabel()
         {
-            counterLabel = new CustomCATextLayer("", this.Font.FamilyName)
+            counterLabel = new CustomCATextLayer("", rSControl.CounterStyle.FontFamily != null ? rSControl.CounterStyle.FontFamily : this.Font.FamilyName)
             {
                 FontSize = 12,
-                ForegroundColor = this.borderColor.CGColor,
+                ForegroundColor = rSControl.CounterStyle.FontColor.ToCGColor(),
                 Opacity = 1.0f,
                 ContentsScale = UIScreen.MainScreen.Scale,
                 AllowsEdgeAntialiasing = true,
-                Wrapped = false,
+                Wrapped = false
             };
 
-            //this.Layer.AddSublayer(counterLabel);
             this.borderContainer.Layer.AddSublayer(counterLabel);
         }
         //Set Counter
@@ -518,13 +537,9 @@ namespace Xamarin.RSControls.iOS.Controls
             this.counter = this.Text.Length;
             counterLabel.String = string.Format("{0}/{1}", this.counter, this.counterMaxLength);
 
-            CATransaction.Begin();
-            CATransaction.DisableActions = true;
             counterLabel.Bounds = new CGRect(0.0f, 0.0f, counterLabel.Size.Width, counterLabel.Size.Height);
             counterLabel.Position = new CGPoint(this.Frame.Width - this.rightPadding - leftRightSpacingLabels - counterLabel.Size.Width / 2,
                                                 this.Frame.Height - counterLabel.Size.Height / 2 - 1);
-            CATransaction.Commit();
-
 
             if (this.counter > this.counterMaxLength)
             {
@@ -535,7 +550,7 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             else
             {
-                counterLabel.ForegroundColor = this.borderColor.CGColor;
+                counterLabel.ForegroundColor = rSControl.CounterStyle.FontColor.ToCGColor();
 
                 if (string.IsNullOrEmpty(this.ErrorMessage) && this.IsFirstResponder)
                 {
@@ -546,7 +561,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 else if (string.IsNullOrEmpty(this.ErrorMessage) && !this.IsFirstResponder)
                 {
                     this.border.BorderColor = this.borderColor.CGColor;
-                    this.floatingHint.ForegroundColor = this.borderColor.CGColor;
+                    this.floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor();
                     this.errorEnabled = false;
                 }
                 else
@@ -595,27 +610,13 @@ namespace Xamarin.RSControls.iOS.Controls
             this.border.Mask = borderMask;
         }
         //Set FIlled border frame
-        public void UpdateFilledBorder()
-        {
-            //Border frame
-            border.Frame = new CGRect(0, topSpacing, this.Frame.Width, this.Frame.Height - this.bottomSpacing );
-
-            CAShapeLayer borderMask = new CAShapeLayer();
-            CGPath maskPath = new CGPath();
-
-            //Top rounded border mask
-            maskPath.AddRoundedRect(new CGRect(borderWidth + 1, borderWidth + 1, this.Frame.Width - (2 * borderWidth + 2), this.Frame.Height - this.bottomSpacing), borderRadius, borderRadius);
-
-            //Bottom edges make them straight
-            maskPath.AddRect(new CGRect(x: borderWidth + 1, y: this.border.Frame.Height / 2, width: this.Frame.Width - (2 * borderWidth + 2), height: this.border.Frame.Height));
-
-            //Bottom border
-            maskPath.AddRect(new CGRect(x: 0, y: this.border.Frame.Height, width: this.Frame.Width, height: this.borderWidth));
-
-
-            borderMask.Path = maskPath;
-            border.Mask = borderMask;
-        }
+         public void UpdateFilledBorder()
+         {
+             //Border frame
+             filledBorder.Frame = new CGRect(0, topSpacing, this.Frame.Width, this.Frame.Height - this.bottomSpacing);
+             border.Frame = new CGRect(0, topSpacing + this.Frame.Height - this.bottomSpacing - border.BorderWidth, this.Frame.Width, border.BorderWidth);
+         }
+        
         //Set Underline border frame
         public void UpdateUnderlineBorder()
         {

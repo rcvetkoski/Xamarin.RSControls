@@ -9,7 +9,7 @@
              xmlns:helpers="clr-namespace:Xamarin.RSControls.Helpers;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
-    <ScrollView Orientation="Neither" BackgroundColor="White">
+    <ScrollView Orientation="Vertical" BackgroundColor="White">
         <StackLayout Grid.Row="1" Margin="10" x:Name="stack">
 
             <!--<rs:RSEntry Placeholder="Entry">
@@ -196,7 +196,9 @@
 
             </rs:RSEditor>-->
 
-            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" Helper="Helper" BorderColor="White" ShadowRadius="7" BorderFillColor="White" CounterMaxLength="6">
+            <Entry BackgroundColor="Cyan"/>
+
+            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper" BorderColor="White" ShadowRadius="7" BorderFillColor="White" CounterMaxLength="6">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -234,16 +236,7 @@
             </rs:RSEntry>
 
             <rs:RSEntry Placeholder="Hint" Helper="Helper" CounterMaxLength="6">
-                <rs:RSEntry.PlaceholderStyle>
-                    <helpers:AssistiveTextStyle FontColor="Purple">
-                        <helpers:AssistiveTextStyle.FontFamily>
-                            <OnPlatform x:TypeArguments="x:String">
-                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
-                                <On Platform="iOS" Value="Lobster-Regular" />
-                            </OnPlatform>
-                        </helpers:AssistiveTextStyle.FontFamily>
-                    </helpers:AssistiveTextStyle>
-                </rs:RSEntry.PlaceholderStyle>
+
                 <rs:RSEntry.HelperStyle>
                     <helpers:AssistiveTextStyle FontColor="Green">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -292,7 +285,7 @@
             </rs:RSEntry>
 
 
-            <rs:RSEntry Placeholder="Hint" BorderFillColor="White" ShadowRadius="7" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6" RSEntryStyle="FilledBorder">
+            <rs:RSEntry Placeholder="Hint" ShadowRadius="7" ShadowEnabled="True" BorderFillColor="White"  Helper="Helper" CounterMaxLength="6" RSEntryStyle="FilledBorder">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -321,7 +314,7 @@
                 </rs:RSEntry.ErrorStyle>
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Hint" Helper="Helper" CounterMaxLength="6" RSEntryStyle="FilledBorder">
+            <rs:RSEntry Placeholder="Test" Helper="Helper" CounterMaxLength="6" RSEntryStyle="FilledBorder">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -349,6 +342,35 @@
                     <helpers:AssistiveTextStyle FontColor="Green"/>
                 </rs:RSEntry.ErrorStyle>
             </rs:RSEntry>
+
+            <rs:RSEditor Placeholder="Editor" Helper="Helper" ShadowEnabled="True" AutoSize="Disabled" MaxHeight="150"  BorderFillColor="White" CounterMaxLength="6" RSEntryStyle="Underline">
+                <rs:RSEditor.PlaceholderStyle>
+                    <helpers:AssistiveTextStyle FontColor="Purple">
+                        <helpers:AssistiveTextStyle.FontFamily>
+                            <OnPlatform x:TypeArguments="x:String">
+                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
+                                <On Platform="iOS" Value="Lobster-Regular" />
+                            </OnPlatform>
+                        </helpers:AssistiveTextStyle.FontFamily>
+                    </helpers:AssistiveTextStyle>
+                </rs:RSEditor.PlaceholderStyle>
+                <rs:RSEditor.HelperStyle>
+                    <helpers:AssistiveTextStyle FontColor="Green">
+                        <helpers:AssistiveTextStyle.FontFamily>
+                            <OnPlatform x:TypeArguments="x:String">
+                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
+                                <On Platform="iOS" Value="Lobster-Regular" />
+                            </OnPlatform>
+                        </helpers:AssistiveTextStyle.FontFamily>
+                    </helpers:AssistiveTextStyle>
+                </rs:RSEditor.HelperStyle>
+                <rs:RSEditor.CounterStyle>
+                    <helpers:AssistiveTextStyle FontColor="Pink"/>
+                </rs:RSEditor.CounterStyle>
+                <rs:RSEditor.ErrorStyle>
+                    <helpers:AssistiveTextStyle FontColor="Green"/>
+                </rs:RSEditor.ErrorStyle>
+            </rs:RSEditor>
 
             <rs:RSPicker Placeholder="Hint" BorderFillColor="White" ItemsSource="{Binding ObsCollectionPicker}" ShadowRadius="7" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6">
                 <rs:RSPicker.PlaceholderStyle>

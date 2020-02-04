@@ -47,9 +47,6 @@ namespace Xamarin.RSControls.iOS.Controls
             //Control.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
 
 
-            //Set placeholder text
-            SetPlaceHolderText();
-
             //Set Text
             SetText();
 
@@ -95,11 +92,6 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 (this.Control as RSUITextField).ErrorMessage = this.Element.Error;
             }
-        }
-
-        private void SetPlaceHolderText()
-        {
-            this.Control.AttributedPlaceholder = new NSAttributedString(this.Element.Placeholder, null, this.Element.PlaceholderColor.ToUIColor());
         }
 
         public void SetText()

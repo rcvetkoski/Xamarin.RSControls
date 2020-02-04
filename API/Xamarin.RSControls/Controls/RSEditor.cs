@@ -11,13 +11,50 @@ namespace Xamarin.RSControls.Controls
     {
         public RSEditor()
         {
-            this.TextChanged += RSEditor_TextChanged;
+            //this.TextChanged += RSEditor_TextChanged;
         }
 
-        private void RSEditor_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            SetListMaxHeight();
-        }
+        //private void RSEditor_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    if (MaxHeight != 0)
+        //    {
+        //        if (Height >= MaxHeight)
+        //            HeightRequest = MaxHeight;
+        //        else
+        //            HeightRequest = Height;
+
+        //        InvalidateMeasure();
+        //    }
+        //}
+
+        //protected override void OnSizeAllocated(double width, double height)
+        //{
+        //    if (MaxHeight != 0)
+        //    {
+        //        if (height >= MaxHeight)
+        //            base.OnSizeAllocated(width, MaxHeight);
+        //        else
+        //            base.OnSizeAllocated(width, height);
+        //    }
+        //    else
+        //        base.OnSizeAllocated(width, height);
+
+        //    InvalidateMeasure();
+        //}
+
+
+        //protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
+        //{
+        //    if (MaxHeight != 0)
+        //    {
+        //        if (heightConstraint >= MaxHeight)
+        //            return base.OnMeasure(widthConstraint, MaxHeight);
+        //        else
+        //            return base.OnMeasure(widthConstraint, heightConstraint);
+        //    }
+        //    else
+        //        return base.OnMeasure(widthConstraint, heightConstraint);
+        //}
 
         public static readonly BindableProperty IsPlaceholderAlwaysFloatingProperty = BindableProperty.Create("IsPlaceholderAlwaysFloating", typeof(bool), typeof(RSEditor), false);
         public bool IsPlaceholderAlwaysFloating
@@ -256,17 +293,6 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(MaxHeightProperty, value); }
         }
 
-        private void SetListMaxHeight()
-        {
-            if (MaxHeight != 0)
-            {
-                if (Height >= MaxHeight)
-                    this.HeightRequest = MaxHeight;
-                //else
-                //    this.HeightRequest = Listheight;
-            }
-        }
-
         protected override void OnBindingContextChanged()
         {
             base.OnBindingContextChanged();
@@ -292,7 +318,7 @@ namespace Xamarin.RSControls.Controls
 
         public void Dispose()
         {
-            this.TextChanged -= RSEditor_TextChanged;
+
         }
     }
 }
