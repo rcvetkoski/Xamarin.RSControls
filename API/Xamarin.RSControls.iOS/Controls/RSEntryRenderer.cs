@@ -266,7 +266,7 @@ namespace Xamarin.RSControls.iOS.Controls
             else if (rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
                 correctiveY = (topSpacing - bottomSpacing) / 2;
 
-            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = "Samples/Data/SVG/calendar.svg", HeightRequest = 22, WidthRequest = 22, Color = Color.Gray };
+            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = "Samples/Data/SVG/arrow.svg", HeightRequest = 22, WidthRequest = 22, Color = Color.Gray };
             var convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new CGRect(0, 0, 22, 22));
             UIView outerView = new UIView(new CGRect(0, 0, 22 + rightPadding, this.Frame.Height - bottomSpacing - topSpacing)) { BackgroundColor = UIColor.Green};
             //outerView.AddSubview(convertedView);
