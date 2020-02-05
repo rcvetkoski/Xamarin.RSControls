@@ -343,7 +343,7 @@
                 </rs:RSEntry.ErrorStyle>
             </rs:RSEntry>
 
-            <rs:RSEditor Placeholder="Editor" Helper="Helper" ShadowEnabled="True" AutoSize="Disabled" MaxHeight="150"  BorderFillColor="White" CounterMaxLength="6" RSEntryStyle="Underline">
+            <rs:RSEditor Placeholder="Editor" Helper="Helper" ShadowEnabled="True"  AutoSize="Disabled" MaxHeight="150"  BorderFillColor="Red" CounterMaxLength="6" RSEntryStyle="Underline">
                 <rs:RSEditor.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -372,7 +372,7 @@
                 </rs:RSEditor.ErrorStyle>
             </rs:RSEditor>
 
-            <rs:RSPicker Placeholder="Hint" BorderFillColor="White" ItemsSource="{Binding ObsCollectionPicker}" ShadowRadius="7" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6">
+            <rs:RSPicker Placeholder="Hint" BorderFillColor="Red" RSEntryStyle="Underline" ItemsSource="{Binding ObsCollectionPicker}" ShadowRadius="7" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6">
                 <rs:RSPicker.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>

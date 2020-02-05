@@ -449,17 +449,25 @@ namespace Xamarin.RSControls.iOS.Controls
                 ZPosition = -1 // So its behind floating label
             };
 
-            this.BackgroundColor = rSControl.BorderFillColor.ToUIColor();
+            //this.BackgroundColor = rSControl.BorderFillColor.ToUIColor();
+
+            filledBorder = new CALayer()
+            {
+                BackgroundColor = rSControl.BorderFillColor.ToCGColor(),
+                ZPosition = -2 // So its behind floating label
+            };
 
             if (rSControl.ShadowEnabled)
             {
-                border.ShadowColor = rSControl.ShadowColor.ToCGColor();
-                border.ShadowOpacity = 0.5f;
-                border.ShadowRadius = this.shadowRadius;
-                border.ShadowOffset = new CGSize(0f, 0.5f);
+                filledBorder.ShadowColor = rSControl.ShadowColor.ToCGColor();
+                filledBorder.ShadowOpacity = 0.5f;
+                filledBorder.ShadowRadius = this.shadowRadius;
+                filledBorder.ShadowOffset = new CGSize(0f, 0.5f);
             }
 
+
             this.borderContainer.Layer.AddSublayer(border);
+            this.borderContainer.Layer.AddSublayer(filledBorder);
         }
         //Create floatingHint
         private void CreateFloatingHint()
@@ -621,6 +629,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public void UpdateUnderlineBorder()
         {
             //Border frame
+            filledBorder.Frame = new CGRect(0, 0, this.Frame.Width, this.Frame.Height - this.bottomSpacing + topSpacing);
             border.Frame = new CGRect(0, this.Frame.Height - this.bottomSpacing + topSpacing - border.BorderWidth, this.Frame.Width, border.BorderWidth);
         }
 
