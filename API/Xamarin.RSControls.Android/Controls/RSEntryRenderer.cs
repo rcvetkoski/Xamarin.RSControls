@@ -567,7 +567,20 @@ namespace Xamarin.RSControls.Droid.Controls
             borderPaint.StrokeWidth = borderWidth;
             borderPaint.AntiAlias = true;
 
-            (this.rSControl as Forms.View).BackgroundColor = rSControl.BorderFillColor;
+            //Filled
+            filledPaint = new Paint();
+            filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
+            filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
+            filledPaint.AntiAlias = true;
+            if (rSControl.ShadowEnabled)
+                filledPaint.SetShadowLayer(rSControl.ShadowRadius, 0, 1f, rSControl.ShadowColor.ToAndroid());
+
+            if (!this.IsHardwareAccelerated)
+                this.SetLayerType(LayerType.Software, null);
+            else
+                this.SetLayerType(LayerType.Hardware, null);
+
+            //(this.rSControl as Forms.View).BackgroundColor = rSControl.BorderFillColor;
         }
         private void CreatePasswordIcon()
         {
@@ -1028,11 +1041,19 @@ namespace Xamarin.RSControls.Droid.Controls
             }
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
             {
-                canvas.DrawLine(textRect.Left + leadingIconWidth,
-                                textRect.Bottom - bottomSpacing - corectCorners - (borderPaint.StrokeWidth / borderPaint.StrokeWidth),
-                                textRect.Right - trailingIconWidth,
-                                textRect.Bottom - bottomSpacing - corectCorners,
-                                borderPaint);
+
+                canvas.DrawRect(new RectF(textRect.Left + leadingIconWidth + rSControl.ShadowRadius,
+                                          textRect.Top + topSpacing,
+                                          textRect.Right - trailingIconWidth - rSControl.ShadowRadius,
+                                          textRect.Bottom - bottomSpacing),
+                                          filledPaint);
+
+
+                Path path2 = new Path();
+                path2.MoveTo(textRect.Left + rSControl.ShadowRadius, this.Height - bottomSpacing - borderWidth / 2);
+                path2.LineTo(textRect.Right - rSControl.ShadowRadius, this.Height - bottomSpacing - borderWidth / 2);
+                path2.Close();//Given close, last lineto can be removed.
+                canvas.DrawPath(path2, borderPaint);
 
             }
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
@@ -1071,10 +1092,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 //                textRect.Bottom - bottomSpacing,
                 //                borderPaint);
 
-                var path = RoundedRect(7, topSpacing, this.Width - 7, this.Height - bottomSpacing, rSControl.BorderRadius, rSControl.BorderRadius, true);
+                var path = RoundedRect(textRect.Left + rSControl.ShadowRadius, topSpacing, textRect.Right - rSControl.ShadowRadius, this.Height - bottomSpacing, rSControl.BorderRadius, rSControl.BorderRadius, true);
                 Path path2 = new Path();
-                path2.MoveTo(7, this.Height - bottomSpacing - borderWidth / 2);
-                path2.LineTo(this.Width - 7, this.Height - bottomSpacing - borderWidth / 2);
+                path2.MoveTo(textRect.Left + rSControl.ShadowRadius, this.Height - bottomSpacing - borderWidth / 2);
+                path2.LineTo(textRect.Right - rSControl.ShadowRadius, this.Height - bottomSpacing - borderWidth / 2);
                 path2.Close();//Given close, last lineto can be removed.
 
                 canvas.DrawPath(path, filledPaint);
