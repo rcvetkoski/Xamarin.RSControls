@@ -363,7 +363,7 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 BorderColor = this.borderColor.CGColor,
                 BorderWidth = this.borderWidth,
-                BackgroundColor = rSControl.BorderFillColor.ToCGColor(),
+                BackgroundColor = rSControl.BorderFillColor == Forms.Color.Default ? UIColor.Clear.CGColor : rSControl.BorderFillColor.ToCGColor(),
                 CornerRadius = this.borderRadius,
                 ZPosition = -1 // So its behind floating label
             };
@@ -391,7 +391,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             filledBorder = new CALayer()
             {
-                BackgroundColor = rSControl.BorderFillColor.ToCGColor(),
+                BackgroundColor = rSControl.BorderFillColor == Forms.Color.Default ? Forms.Color.FromHex("#OA000000").ToCGColor() : rSControl.BorderFillColor.ToCGColor(),
                 CornerRadius = this.borderRadius,
                 ZPosition = -2 // So its behind floating label
             };
@@ -425,7 +425,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             filledBorder = new CALayer()
             {
-                BackgroundColor = rSControl.BorderFillColor.ToCGColor(),
+                BackgroundColor = rSControl.BorderFillColor == Forms.Color.Default ? Forms.Color.FromHex("#OA000000").ToCGColor() : rSControl.BorderFillColor.ToCGColor(),
                 ZPosition = -2 // So its behind floating label
             };
 

@@ -198,7 +198,7 @@
 
             <Entry BackgroundColor="Cyan"/>
 
-            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper"  CounterMaxLength="6">
+            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper" BorderFillColor="White" CounterMaxLength="6">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -263,7 +263,7 @@
                 </rs:RSEntry.ErrorStyle>
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Mehton" ShadowEnabled="True" BorderColor="White" Helper="Helper" BorderFillColor="White" CounterMaxLength="12">
+            <rs:RSEntry Placeholder="Mehton" ShadowEnabled="True" Helper="Helper" ShadowRadius="1.5" BorderColor="White" BorderFillColor="White" CounterMaxLength="12">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -293,7 +293,7 @@
             </rs:RSEntry>
 
 
-            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6" RSEntryStyle="FilledBorder">
+            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BorderFillColor="White"  Helper="Helper" CounterMaxLength="6" RSEntryStyle="FilledBorder">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -367,7 +367,7 @@
                 </rs:RSEntry.LeftIcon>
             </rs:RSEntry>
 
-            <rs:RSEditor Placeholder="Editor" Helper="Helper" ShadowEnabled="True" ShadowRadius="2" AutoSize="Disabled" MaxHeight="150"  BorderFillColor="White" CounterMaxLength="6" RSEntryStyle="Underline">
+            <rs:RSEditor Placeholder="Editor" Helper="Helper" ShadowEnabled="True"  AutoSize="Disabled" MaxHeight="150"  BorderFillColor="White" CounterMaxLength="6" RSEntryStyle="Underline">
                 <rs:RSEditor.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -425,8 +425,6 @@
                 </rs:RSPicker.ErrorStyle>
             </rs:RSPicker>
 
-
-            <rs:RSSearchView ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name"></rs:RSSearchView>
 
 
             <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
