@@ -193,7 +193,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Border Fill Color
-        public static readonly BindableProperty BorderFillColorProperty = BindableProperty.Create("BorderFillColor", typeof(Color), typeof(RSDatePicker), Color.FromHex("#OA000000"));
+        public static readonly BindableProperty BorderFillColorProperty = BindableProperty.Create("BorderFillColor", typeof(Color), typeof(RSDatePicker), null);
         public Color BorderFillColor
         {
             get { return (Color)GetValue(BorderFillColorProperty); }
