@@ -198,7 +198,7 @@
 
             <Entry BackgroundColor="Cyan"/>
 
-            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper" BorderColor="White" ShadowRadius="7" BorderFillColor="White" CounterMaxLength="6">
+            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper" BorderFillColor="White" CounterMaxLength="6">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -233,6 +233,14 @@
                         </validators:ValidationBehaviour.Validators>
                     </validators:ValidationBehaviour>
                 </rs:RSEntry.Behaviors>
+
+                <rs:RSEntry.LeftIcon>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>                    
+                </rs:RSEntry.LeftIcon>
             </rs:RSEntry>
 
             <rs:RSEntry Placeholder="Hint" Helper="Helper" CounterMaxLength="6">
@@ -255,7 +263,7 @@
                 </rs:RSEntry.ErrorStyle>
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Mehton" ShadowEnabled="True" Helper="Helper" BorderColor="White" BorderFillColor="White" ShadowRadius="10" CounterMaxLength="12">
+            <rs:RSEntry Placeholder="Mehton" ShadowEnabled="True" Helper="Helper" BorderColor="White" BorderFillColor="White" CounterMaxLength="12">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -285,7 +293,7 @@
             </rs:RSEntry>
 
 
-            <rs:RSEntry Placeholder="Hint" ShadowRadius="7" ShadowEnabled="True" BorderFillColor="White"  Helper="Helper" CounterMaxLength="6" RSEntryStyle="FilledBorder">
+            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BorderFillColor="White"  Helper="Helper" CounterMaxLength="6" RSEntryStyle="FilledBorder">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -314,7 +322,7 @@
                 </rs:RSEntry.ErrorStyle>
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Test" Helper="Helper" CounterMaxLength="6" RSEntryStyle="FilledBorder">
+            <rs:RSEntry Placeholder="Test icon" Helper="Helper"  CounterMaxLength="6" RSEntryStyle="Underline">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -341,9 +349,25 @@
                 <rs:RSEntry.ErrorStyle>
                     <helpers:AssistiveTextStyle FontColor="Green"/>
                 </rs:RSEntry.ErrorStyle>
+
+                
+                <rs:RSEntry.RightIcon>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>                    
+                </rs:RSEntry.RightIcon>
+                <rs:RSEntry.LeftIcon>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>                    
+                </rs:RSEntry.LeftIcon>
             </rs:RSEntry>
 
-            <rs:RSEditor Placeholder="Editor" Helper="Helper" ShadowEnabled="True"  AutoSize="Disabled" MaxHeight="150"  BorderFillColor="Red" CounterMaxLength="6" RSEntryStyle="Underline">
+            <rs:RSEditor Placeholder="Editor" Helper="Helper" ShadowEnabled="True"  AutoSize="Disabled" MaxHeight="150"  BorderFillColor="White" CounterMaxLength="6" RSEntryStyle="Underline">
                 <rs:RSEditor.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -372,7 +396,7 @@
                 </rs:RSEditor.ErrorStyle>
             </rs:RSEditor>
 
-            <rs:RSPicker Placeholder="Hint" BorderFillColor="Red" RSEntryStyle="Underline" ItemsSource="{Binding ObsCollectionPicker}" ShadowRadius="7" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6">
+            <rs:RSPicker Placeholder="Hint" BorderFillColor="Red" RSEntryStyle="Underline" ItemsSource="{Binding ObsCollectionPicker}" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6">
                 <rs:RSPicker.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
