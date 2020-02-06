@@ -76,6 +76,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private int leftRightSpacingLabels;
         private float borderWidth;
         private float borderWidthFocused;
+        private float borderRadius;
         private float shadowRadius;
         private int labelsTextSize;
         private int floatingHintClipPadding;
@@ -176,6 +177,7 @@ namespace Xamarin.RSControls.Droid.Controls
             labelsTextSize = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 12, Context.Resources.DisplayMetrics);
             borderWidth = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.BorderWidth, Context.Resources.DisplayMetrics);
             borderWidthFocused = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.BorderWidth + 1, Context.Resources.DisplayMetrics);
+            borderRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.BorderRadius, Context.Resources.DisplayMetrics);
             floatingHintClipPadding = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Context.Resources.DisplayMetrics);
             corectCorners = borderWidthFocused - borderWidth;
             shadowRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.ShadowEnabled ? rSControl.ShadowRadius : borderWidth, Context.Resources.DisplayMetrics);
@@ -1027,7 +1029,7 @@ namespace Xamarin.RSControls.Droid.Controls
                                                textRect.Top + topSpacing,
                                                textRect.Right - trailingIconWidth - this.shadowRadius,
                                                textRect.Bottom - bottomSpacing),
-                                               this.rSControl.BorderRadius, this.rSControl.BorderRadius,
+                                               this.borderRadius, this.borderRadius,
                                                filledPaint);
 
 
@@ -1035,7 +1037,7 @@ namespace Xamarin.RSControls.Droid.Controls
                                                textRect.Top  + topSpacing,
                                                textRect.Right  - trailingIconWidth - this.shadowRadius,
                                                textRect.Bottom  - bottomSpacing),
-                                               this.rSControl.BorderRadius, this.rSControl.BorderRadius,
+                                               this.borderRadius, this.borderRadius,
                                                borderPaint);
 
                 canvas.Restore();
@@ -1083,7 +1085,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 //                               textRect.Top + topSpacing,
                 //                               textRect.Right - trailingIconWidth - this.shadowRadius,
                 //                               textRect.Bottom - bottomSpacing + borderPaint.StrokeWidth),
-                //                               this.rSControl.BorderRadius, this.rSControl.BorderRadius,
+                //                               this.borderRadius, this.borderRadius,
                 //                               filledPaint);
 
                 //canvas.Restore();
@@ -1094,7 +1096,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 //                textRect.Bottom - bottomSpacing,
                 //                borderPaint);
 
-                var path = RoundedRect(textRect.Left + this.shadowRadius, textRect.Top + topSpacing, textRect.Right - this.shadowRadius, textRect.Top + this.Height - bottomSpacing, rSControl.BorderRadius, rSControl.BorderRadius, true);
+                var path = RoundedRect(textRect.Left + this.shadowRadius, textRect.Top + topSpacing, textRect.Right - this.shadowRadius, textRect.Top + this.Height - bottomSpacing, this.borderRadius, this.borderRadius, true);
                 Path path2 = new Path();
                 path2.MoveTo(textRect.Left + this.shadowRadius, textRect.Top + this.Height - bottomSpacing - borderWidth / 2);
                 path2.LineTo(textRect.Right - this.shadowRadius, textRect.Top + this.Height - bottomSpacing - borderWidth / 2);
