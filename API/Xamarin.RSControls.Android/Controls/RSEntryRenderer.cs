@@ -439,7 +439,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 floatingHintPaint.SetTypeface(Typeface.CreateFromAsset(Context.Assets, fontFamily));
             }
             else
-                floatingHintPaint.SetTypeface(Typeface.Create(rSControl.PlaceholderStyle.FontFamily, TypefaceStyle.Italic));
+                floatingHintPaint.SetTypeface(Typeface.Create(rSControl.PlaceholderStyle.FontFamily, TypefaceStyle.Normal));
 
             floatingHintText = this.rSControl.Placeholder != null ? rSControl.Placeholder : "";
             //global::Android.Graphics.Color color = new global::Android.Graphics.Color(this.CurrentHintTextColor);
@@ -466,7 +466,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 errorPaint.SetTypeface(Typeface.CreateFromAsset(Context.Assets, fontFamily));
             }
             else
-                errorPaint.SetTypeface(Typeface.Create(rSControl.ErrorStyle.FontFamily, TypefaceStyle.Italic));
+                errorPaint.SetTypeface(Typeface.Create(rSControl.ErrorStyle.FontFamily, TypefaceStyle.Normal));
 
             errorPaint.Color = errorColor;
             errorPaint.Alpha = 0; //Set alpha after color set or not working. Range 0-255
@@ -487,7 +487,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 helperPaint.SetTypeface(Typeface.CreateFromAsset(Context.Assets, fontFamily));
             }
             else
-                helperPaint.SetTypeface(Typeface.Create(rSControl.HelperStyle.FontFamily, TypefaceStyle.Italic));
+                helperPaint.SetTypeface(Typeface.Create(rSControl.HelperStyle.FontFamily, TypefaceStyle.Normal));
 
             helperPaint.Color = rSControl.HelperStyle.FontColor.ToAndroid();
             helperPaint.TextSize = labelsTextSize;
@@ -508,7 +508,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 counterPaint.SetTypeface(Typeface.CreateFromAsset(Context.Assets, fontFamily));
             }
             else
-                counterPaint.SetTypeface(Typeface.Create(rSControl.CounterStyle.FontFamily, TypefaceStyle.Italic));
+                counterPaint.SetTypeface(Typeface.Create(rSControl.CounterStyle.FontFamily, TypefaceStyle.Normal));
 
             counterPaint.Color = rSControl.CounterStyle.FontColor.ToAndroid();
             counterPaint.TextSize = labelsTextSize;
@@ -530,7 +530,7 @@ namespace Xamarin.RSControls.Droid.Controls
             //Filled
             filledPaint = new Paint();
             filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
-            filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
+            filledPaint.Color = rSControl.BorderFillColor == Forms.Color.Default ? global::Android.Graphics.Color.Transparent : rSControl.BorderFillColor.ToAndroid();
             filledPaint.AntiAlias = true;
             if(rSControl.ShadowEnabled)
                 filledPaint.SetShadowLayer(this.shadowRadius, 0, this.borderWidth, rSControl.ShadowColor.ToAndroid());
@@ -553,7 +553,7 @@ namespace Xamarin.RSControls.Droid.Controls
             //Filled
             filledPaint = new Paint();
             filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
-            filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
+            filledPaint.Color = rSControl.BorderFillColor == Forms.Color.Default ? Forms.Color.FromHex("#OA000000").ToAndroid() : rSControl.BorderFillColor.ToAndroid();
             filledPaint.AntiAlias = true;
             if (rSControl.ShadowEnabled)
                 filledPaint.SetShadowLayer(this.shadowRadius, 0, this.borderWidth, rSControl.ShadowColor.ToAndroid());
@@ -575,7 +575,7 @@ namespace Xamarin.RSControls.Droid.Controls
             //Filled
             filledPaint = new Paint();
             filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
-            filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
+            filledPaint.Color = rSControl.BorderFillColor == Forms.Color.Default ? Forms.Color.FromHex("#OA000000").ToAndroid() : rSControl.BorderFillColor.ToAndroid();
             filledPaint.AntiAlias = true;
             if (rSControl.ShadowEnabled)
                 filledPaint.SetShadowLayer(this.shadowRadius, 0, this.borderWidth, rSControl.ShadowColor.ToAndroid());

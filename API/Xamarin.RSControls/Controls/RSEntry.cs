@@ -158,7 +158,7 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(BorderColorProperty, value); }
         }
         //Border Fill Color
-        public static readonly BindableProperty BorderFillColorProperty = BindableProperty.Create("BorderFillColor", typeof(Color), typeof(RSEntry), Color.FromHex("#OA000000"));
+        public static readonly BindableProperty BorderFillColorProperty = BindableProperty.Create("BorderFillColor", typeof(Color), typeof(RSEntry), null);
 
         public Color BorderFillColor
         {

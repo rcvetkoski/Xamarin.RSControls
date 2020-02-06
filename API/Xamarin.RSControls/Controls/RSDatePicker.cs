@@ -162,7 +162,7 @@ namespace Xamarin.RSControls.Controls
         }
 
 
-        public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSDatePicker), 16f);
+        public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSDatePicker), 8f);
         public float BorderRadius
         {
             get { return (float)GetValue(BorderRadiusProperty); }
@@ -193,7 +193,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Border Fill Color
-        public static readonly BindableProperty BorderFillColorProperty = BindableProperty.Create("BorderFillColor", typeof(Color), typeof(RSDatePicker), Color.FromHex("#OA000000"));
+        public static readonly BindableProperty BorderFillColorProperty = BindableProperty.Create("BorderFillColor", typeof(Color), typeof(RSDatePicker), null);
         public Color BorderFillColor
         {
             get { return (Color)GetValue(BorderFillColorProperty); }
