@@ -56,6 +56,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 (this.Control as CustomEditText).ErrorMessage = (this.Element as RSEntry).Error;
         }
 
+
         internal void SetIsTextInputLayout(bool value)
         {
             isTextInputLayout = value;
@@ -185,7 +186,7 @@ namespace Xamarin.RSControls.Droid.Controls
             activeColor = rSControl.ActiveColor.ToAndroid();
             errorColor = rSControl.ErrorColor.ToAndroid();
 
-
+            
             //Set Padding
             SetPaddingValues();
 
@@ -530,7 +531,7 @@ namespace Xamarin.RSControls.Droid.Controls
             filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
             filledPaint.AntiAlias = true;
             if(rSControl.ShadowEnabled)
-                filledPaint.SetShadowLayer(this.shadowRadius, 0f, 1f, rSControl.ShadowColor.ToAndroid());
+                filledPaint.SetShadowLayer(this.shadowRadius, 0, this.borderWidth, rSControl.ShadowColor.ToAndroid());
 
             if (!this.IsHardwareAccelerated)
                 this.SetLayerType(LayerType.Software, null);
@@ -553,7 +554,7 @@ namespace Xamarin.RSControls.Droid.Controls
             filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
             filledPaint.AntiAlias = true;
             if (rSControl.ShadowEnabled)
-                filledPaint.SetShadowLayer(this.shadowRadius, 0, 1f, rSControl.ShadowColor.ToAndroid());
+                filledPaint.SetShadowLayer(this.shadowRadius, 0, this.borderWidth, rSControl.ShadowColor.ToAndroid());
 
             if (!this.IsHardwareAccelerated)
                 this.SetLayerType(LayerType.Software, null);
@@ -575,7 +576,7 @@ namespace Xamarin.RSControls.Droid.Controls
             filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
             filledPaint.AntiAlias = true;
             if (rSControl.ShadowEnabled)
-                filledPaint.SetShadowLayer(this.shadowRadius, 0, 1f, rSControl.ShadowColor.ToAndroid());
+                filledPaint.SetShadowLayer(this.shadowRadius, 0, this.borderWidth, rSControl.ShadowColor.ToAndroid());
 
             if (!this.IsHardwareAccelerated)
                 this.SetLayerType(LayerType.Software, null);
@@ -836,7 +837,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 //Create Icons if any
                 CreateIcons();
-
 
                 hasInitfloatingHintYPosition = true;
             }

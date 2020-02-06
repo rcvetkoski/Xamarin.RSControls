@@ -382,7 +382,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Shadow radius
-        public static readonly BindableProperty ShadowRadiusProperty = BindableProperty.Create("ShadowRadius", typeof(float), typeof(RSPickerBase), 3f);
+        public static readonly BindableProperty ShadowRadiusProperty = BindableProperty.Create("ShadowRadius", typeof(float), typeof(RSPickerBase), 1f);
         public float ShadowRadius
         {
             get { return (float)GetValue(ShadowRadiusProperty); }
