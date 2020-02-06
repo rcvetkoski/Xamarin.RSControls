@@ -159,7 +159,7 @@ namespace Xamarin.RSControls.Controls
         }
 
 
-        public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSEditor), 16f);
+        public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSEditor), 8f);
         public float BorderRadius
         {
             get { return (float)GetValue(BorderRadiusProperty); }
