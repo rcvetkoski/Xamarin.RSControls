@@ -176,7 +176,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 this.floatingHintMaskPadding = 0;
 
             this.borderRadius = rSControl.BorderRadius / 2; //divided by 2 to get android equivalent value
-            this.shadowRadius = rSControl.ShadowRadius / 3; //divided by 2 to get android equivalent value
+            this.shadowRadius = rSControl.ShadowRadius ; //divided by 2 to get android equivalent value
             this.counterMaxLength = this.rSControl.CounterMaxLength;
             this.borderColor = this.rSControl.BorderColor.ToUIColor();
             this.borderWidth = rSControl.BorderWidth;
@@ -373,7 +373,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 border.ShadowColor = rSControl.ShadowColor.ToCGColor();
                 border.ShadowOpacity = 0.5f;
                 border.ShadowRadius = this.shadowRadius;
-                border.ShadowOffset = new CGSize(0f, 0.5f);
+                border.ShadowOffset = new CGSize(0f, this.borderWidth);
             }
 
             this.Layer.AddSublayer(border);
