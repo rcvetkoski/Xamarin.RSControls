@@ -12,35 +12,6 @@ namespace Xamarin.RSControls.Droid.Extensions
 {
     public static class ViewExtensions
     {
-        public static void DrawBorder(View nativeView, Context context, Color borderColor)
-        {
-            //Rekt Shape
-            //var shape = new ShapeDrawable(new RectShape());
-            //shape.Paint.Color = borderColor;
-            //shape.Paint.StrokeWidth = 2;
-            //shape.Paint.SetStyle(Paint.Style.Stroke);
-            //int upDown = IntToDip(8, context);
-            //int leftRight = IntToDip(8, context);
-            //shape.SetPadding(leftRight, upDown, leftRight, upDown);
-            //shape.Paint.AntiAlias = true;
-            //shape.Paint.Flags = PaintFlags.AntiAlias;
-
-
-            ////Rounded shape
-            //GradientDrawable gd = new GradientDrawable();
-            //gd.SetCornerRadius(12);
-            //gd.SetShape(ShapeType.Rectangle);
-            //gd.SetColor(Color.Transparent);
-            //gd.SetStroke(2, Color.Gray);
-
-
-            //nativeView.SetBackground(shape);
-
-            nativeView.SetBackgroundResource(Resource.Color.RSRectangleBorderShapeColorStateList);
-        }
-
-
-
         public static Bitmap CreateBitmapFromView(global::Android.Views.View view, int width, int height)
         {
             if (width > 0 && height > 0)

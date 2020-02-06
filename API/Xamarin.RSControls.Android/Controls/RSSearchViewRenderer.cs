@@ -73,14 +73,14 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             // Draw border for simple SearchView
-            if(rSSearchView.HasBorder)
-            {
-                int searchPlateId = this.Control.Resources.GetIdentifier("android:id/search_plate", null, null);
-                var searchPlate = this.Control.FindViewById(searchPlateId);
-                searchPlate.SetBackgroundColor(global::Android.Graphics.Color.Transparent);
-                this.Control.SetBackgroundResource(Resource.Drawable.RSRectangleBorderShape);
-                //Extensions.ViewExtensions.DrawBorder(this.Control, Context, global::Android.Graphics.Color.Black);
-            }
+            //if(rSSearchView.HasBorder)
+            //{
+            //    int searchPlateId = this.Control.Resources.GetIdentifier("android:id/search_plate", null, null);
+            //    var searchPlate = this.Control.FindViewById(searchPlateId);
+            //    searchPlate.SetBackgroundColor(global::Android.Graphics.Color.Transparent);
+            //    this.Control.SetBackgroundResource(Resource.Drawable.RSRectangleBorderShape);
+            //    //Extensions.ViewExtensions.DrawBorder(this.Control, Context, global::Android.Graphics.Color.Black);
+            //}
 
 
             SetText(rSSearchView);
@@ -95,13 +95,13 @@ namespace Xamarin.RSControls.Droid.Controls
                 if (this.Control.Query == "")
                     rSSearchView.SelectedItem = null;
             }
-            else if (rSSearchView.HasBorder && e.PropertyName == "IsFocused")
-            {
-                if (this.Element.IsFocused)
-                    this.Control.SetBackgroundResource(Resource.Drawable.RSRectangleBorderShapeFocused);
-                else
-                    this.Control.SetBackgroundResource(Resource.Drawable.RSRectangleBorderShape);
-            }
+            //else if (rSSearchView.HasBorder && e.PropertyName == "IsFocused")
+            //{
+            //    if (this.Element.IsFocused)
+            //        this.Control.SetBackgroundResource(Resource.Drawable.RSRectangleBorderShapeFocused);
+            //    else
+            //        this.Control.SetBackgroundResource(Resource.Drawable.RSRectangleBorderShape);
+            //}
         }
 
         private void SetText(RSSearchView rSSearchView)

@@ -23,14 +23,6 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(IsPlaceholderAlwaysFloatingProperty, value); }
         }
 
-        //Has Border
-        public static readonly BindableProperty HasBorderProperty = BindableProperty.Create("HasBorder", typeof(bool), typeof(RSDatePicker), false);
-        public bool HasBorder
-        {
-            get { return (bool)GetValue(HasBorderProperty); }
-            set { SetValue(HasBorderProperty, value); }
-        }
-
         //Has Custom Format
         private bool hasCustomFormat { get; set; }
 
@@ -238,7 +230,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Shadow radius
-        public static readonly BindableProperty ShadowRadiusProperty = BindableProperty.Create("ShadowRadius", typeof(float), typeof(RSDatePicker), 5f);
+        public static readonly BindableProperty ShadowRadiusProperty = BindableProperty.Create("ShadowRadius", typeof(float), typeof(RSDatePicker), 3f);
         public float ShadowRadius
         {
             get { return (float)GetValue(ShadowRadiusProperty); }

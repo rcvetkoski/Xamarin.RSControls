@@ -250,13 +250,6 @@ namespace Xamarin.RSControls.Controls
             }
         }
 
-        public static readonly BindableProperty HasBorderProperty = BindableProperty.Create("HasBorder", typeof(bool), typeof(RSPickerBase), false);
-        public bool HasBorder
-        {
-            get { return (bool)GetValue(HasBorderProperty); }
-            set { SetValue(HasBorderProperty, value); }
-        }
-
         public static readonly BindableProperty HelperProperty = BindableProperty.Create("Helper", typeof(string), typeof(RSPickerBase), string.Empty);
         public string Helper
         {
@@ -389,7 +382,7 @@ namespace Xamarin.RSControls.Controls
         }
 
         //Shadow radius
-        public static readonly BindableProperty ShadowRadiusProperty = BindableProperty.Create("ShadowRadius", typeof(float), typeof(RSPickerBase), 5f);
+        public static readonly BindableProperty ShadowRadiusProperty = BindableProperty.Create("ShadowRadius", typeof(float), typeof(RSPickerBase), 3f);
         public float ShadowRadius
         {
             get { return (float)GetValue(ShadowRadiusProperty); }

@@ -530,7 +530,7 @@ namespace Xamarin.RSControls.Droid.Controls
             filledPaint.Color = rSControl.BorderFillColor.ToAndroid();
             filledPaint.AntiAlias = true;
             if(rSControl.ShadowEnabled)
-                filledPaint.SetShadowLayer(this.shadowRadius, 0f, 0.5f, rSControl.ShadowColor.ToAndroid());
+                filledPaint.SetShadowLayer(this.shadowRadius, 0f, 1f, rSControl.ShadowColor.ToAndroid());
 
             if (!this.IsHardwareAccelerated)
                 this.SetLayerType(LayerType.Software, null);

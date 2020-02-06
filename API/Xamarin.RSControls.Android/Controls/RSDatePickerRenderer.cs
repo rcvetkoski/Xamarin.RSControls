@@ -48,11 +48,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             nativeEditText.SetSingleLine(true);
 
-
-            //Draw border or not
-            if (Element.HasBorder)
-                Extensions.ViewExtensions.DrawBorder(nativeEditText, Context, global::Android.Graphics.Color.Black);
-
             //Set icon
             SetIcon(nativeEditText);
 
