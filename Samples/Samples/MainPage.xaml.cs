@@ -77,7 +77,11 @@ namespace Samples
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new Page1());
+            //Navigation.PushAsync(new Page1());
+
+            RSPopup rsPopup = new RSPopup(Xamarin.Forms.Application.Current);
+            rsPopup.SetPopupPosition(100, 200);
+            rsPopup.Show();
         }
 
         private void Button_Clicked2(object sender, EventArgs e)
