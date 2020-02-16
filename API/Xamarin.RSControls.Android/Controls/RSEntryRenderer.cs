@@ -80,7 +80,6 @@ namespace Xamarin.RSControls.Droid.Controls
         private float shadowRadius;
         private int labelsTextSize;
         private int floatingHintClipPadding;
-        private float corectCorners;
         private bool errorEnabled = false;
         private bool isFocused;
         private string floatingHintText;
@@ -179,7 +178,6 @@ namespace Xamarin.RSControls.Droid.Controls
             borderWidthFocused = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.BorderWidth + 1, Context.Resources.DisplayMetrics);
             borderRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.BorderRadius, Context.Resources.DisplayMetrics);
             floatingHintClipPadding = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Context.Resources.DisplayMetrics);
-            corectCorners = borderWidthFocused - borderWidth;
             shadowRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.ShadowEnabled ? rSControl.ShadowRadius : borderWidth, Context.Resources.DisplayMetrics);
             leftRightSpacingLabels = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 14, Context.Resources.DisplayMetrics);
             iconsSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics);
@@ -1257,6 +1255,44 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 if (rightIconCondition)
                 {
+
+                    //Frame frame = new Frame();
+                    //frame.WidthRequest = 150;
+                    //frame.HeightRequest = 50;
+                    //frame.VerticalOptions = LayoutOptions.Center;
+                    //frame.HorizontalOptions = LayoutOptions.Center;
+                    //frame.BackgroundColor = Forms.Color.Pink;
+                    //frame.Parent = Xamarin.Forms.Application.Current.MainPage;
+
+
+                    //var renderer = frame.GetRenderer();
+                    //if (renderer == null)
+                    //{
+                    //    renderer = Platform.CreateRendererWithContext(frame, Context);
+                    //    Platform.SetRenderer(frame, renderer);
+                    //}
+
+
+
+                    ////LinearLayoutCompat linearLayoutCompat = new LinearLayoutCompat(Context);
+                    ////linearLayoutCompat.LayoutParameters = new ViewGroup.LayoutParams(150, 50);
+                    ////linearLayoutCompat.SetBackgroundColor(global::Android.Graphics.Color.Green);
+
+                    //renderer.Tracker.UpdateLayout();
+                    //frame.Layout(new Forms.Rectangle(0, 0, 150, 15));
+                    //renderer.View.Layout(0, 0, 150, 50);
+                    //var w = renderer.View.Width;
+                    //var h = renderer.View.Height;
+
+
+                    //global::Android.Widget.FrameLayout DecoreView = (global::Android.Widget.FrameLayout)((global::Android.App.Activity)Context).Window.DecorView;
+                    //DecoreView.AddView(renderer.View);
+
+                    //currentPage.Navigation.PushAsync(page);
+
+
+                    //Navigation.PushModalAsync(detailPage);
+
                     return true;
                 }
                 else if (trailingIconCondition)
