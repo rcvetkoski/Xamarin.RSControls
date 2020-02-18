@@ -109,6 +109,10 @@
       <Project>{03CB7154-B107-4723-8DB4-CCE199BDC390}</Project>
       <Name>Samples</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\API\Xamarin.RSControls\Xamarin.RSControls.csproj">
+      <Project>{4DF267C8-3BA9-45EA-B0DE-B5BFBCCC8863}</Project>
+      <Name>Xamarin.RSControls</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Lobster-Regular.ttf" />

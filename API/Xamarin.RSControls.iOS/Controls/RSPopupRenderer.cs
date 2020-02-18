@@ -22,13 +22,18 @@ namespace Xamarin.RSControls.iOS.Controls
         private UILabel titleLabel;
         private UILabel messageLabel;
         private bool isAnimating;
+        public string Title { get; set; }
+        public string Message { get; set; }
         public float PositionX { get; set; }
         public float PositionY { get; set; }
+        public float BorderRadius { get; set; }
+        public bool ShadowEnabled { get; set; }
 
 
         public RSPopupRenderer() : base()
         {
-
+            BorderRadius = 12;
+            ShadowEnabled = true;
         }
 
         //Init Views
@@ -76,7 +81,7 @@ namespace Xamarin.RSControls.iOS.Controls
             DialogView.Layer.BorderColor = UIColor.White.CGColor;
             DialogView.Layer.ShadowColor = UIColor.Gray.CGColor;
             DialogView.Layer.ShadowOpacity = 0.5f;
-            DialogView.Layer.ShadowRadius = 7;
+            DialogView.Layer.ShadowRadius = BorderRadius;
             DialogView.Layer.BackgroundColor = UIColor.White.CGColor;
             DialogView.Layer.ShadowOffset = new CGSize(1f, 1f);
 
@@ -92,7 +97,7 @@ namespace Xamarin.RSControls.iOS.Controls
             DialogView.WidthAnchor.ConstraintEqualTo(stackDialog.WidthAnchor).Active = true;
             DialogView.HeightAnchor.ConstraintEqualTo(stackDialog.HeightAnchor).Active = true;
             DialogView.WidthAnchor.ConstraintGreaterThanOrEqualTo(250f).Active = true; ;
-            DialogView.WidthAnchor.ConstraintLessThanOrEqualTo(this.WidthAnchor).Active = true;
+            DialogView.WidthAnchor.ConstraintLessThanOrEqualTo(this.WidthAnchor, 0.5f).Active = true;
             DialogView.HeightAnchor.ConstraintLessThanOrEqualTo(this.HeightAnchor, 0.8f).Active = true;
         }
 
@@ -165,7 +170,6 @@ namespace Xamarin.RSControls.iOS.Controls
         public void SetTitle(string title, float fontSize)
         {
             titleLabel.Text = title;
-            //titleLabel.BackgroundColor = UIColor.Gray;
             titleLabel.Font = UIFont.BoldSystemFontOfSize(fontSize);
             titleLabel.TextAlignment = UITextAlignment.Center;
         }
@@ -208,10 +212,10 @@ namespace Xamarin.RSControls.iOS.Controls
             SetupBackgroundView();
             SetupStackDialogView();
             SetupDialogView();
-            SetTitle("Title", 18);
+            SetTitle(Title, 18);
             SetupContentStack();
             CreateButtonsStack();
-            SetMessage("Message", 12);
+            SetMessage(Message, 12);
 
 
             UITapGestureRecognizer didTappedOnBackgroundView = new UITapGestureRecognizer((obj) =>

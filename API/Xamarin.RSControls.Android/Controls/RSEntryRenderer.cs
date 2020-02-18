@@ -1257,6 +1257,9 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 if (rightIconCondition)
                 {
+                    RSPopup rSPopup = new RSPopup();
+                    rSPopup.SetPopupPosition((int)(rSControl as Forms.View).X, (int)(rSControl as Forms.View).Y + (int)(rSControl as Forms.View).Bounds.Height);
+                    rSPopup.Show();
                     return true;
                 }
                 else if (trailingIconCondition)

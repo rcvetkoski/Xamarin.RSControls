@@ -10,193 +10,10 @@
              x:Class="Samples.MainPage">
 
     <ScrollView Orientation="Vertical" BackgroundColor="White">
-        <StackLayout Grid.Row="1" Margin="10" x:Name="stack">
+        <StackLayout x:Name="stack">
 
-            <!--<rs:RSEntry Placeholder="Entry">
-                <rs:RSEntry.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSEntry.Behaviors>
-            </rs:R
+                        <Button Text="Toggle Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked2"></Button>
 
-            <rs:RSNumericEntry Placeholder="Numeric Entry" CustomUnit="KG" NumberDecimalDigits="3" HasBorder="True">
-                <rs:RSNumericEntry.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSNumericEntry.Behaviors>
-            </rs:RSNumericEntry>
-
-            
-            <rs:RSNumericEntryInputLayout NumberDecimalDigits="2" CustomUnit="€" Placeholder="Input text layout Numeric Entry">
-
-            </rs:RSNumericEntryInputLayout>
-
-            
-            <rs:RSEnumPicker x:TypeArguments="enums:DateSelectionModeEnum" Placeholder="Date selection mode" HasBorder="True">
-                
-            </rs:RSEnumPicker>
-
-            <rs:RSDatePicker HasBorder="True" DateSelectionMode="MonthYear">
-                
-            </rs:RSDatePicker>
-
-            <rs:RSDatePickerInputLayout>
-                
-            </rs:RSDatePickerInputLayout>
-
-            <rs:RSPickerInputLayout ItemsSource="{Binding ObsCollectionPicker}" Placeholder="Obs collection picker" >
-                <rs:RSPickerInputLayout.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="SelectedItem">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSPickerInputLayout.Behaviors>
-            </rs:RSPickerInputLayout>
-
-2   
-            <rs:RSEnumPickerInputLayout x:TypeArguments="enums:DateSelectionModeEnum" Placeholder="Test enum input layout">
-                
-            </rs:RSEnumPickerInputLayout>
-
-            <rs:RSSearchView Placeholder="Search" CancelButtonColor="Red" ItemsSource="{Binding ListPickerEnum}" SelectedItem="{Binding SelectedDateMode}">
-                
-            </rs:RSSearchView>
-
-            <Label Text="{Binding SelectedDateMode}"/>
-
-            <SearchBar Placeholder="Forms"></SearchBar>
-
-            <Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
-
-            <Button Text="Remove item" Clicked="Button_Clicked2"></Button>
-
-            <Entry></Entry>-->
-
-            <!--<Button Text="Switch to Page1" Clicked="Button_Clicked"></Button>
-
-
-            <rs:RSNumericEntry Placeholder="Numeric Entry" CustomUnit="KG" NumberDecimalDigits="3" HasBorder="False">
-                <rs:RSNumericEntry.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSNumericEntry.Behaviors>
-            </rs:RSNumericEntry>
-
-
-            <rs:RSPicker x:Name="rsPicker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Descending" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" HasBorder="True">
-            </rs:RSPicker>
-
-            <rs:RSPicker  ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Default" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" HasBorder="True">
-                <rs:RSPicker.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Label Text="{Binding Name}" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0"/>
-                            <Label Text="America" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1"/>
-                            <Label Text="2019" FontSize="Default" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="Red" Grid.Column="2"/>
-                        </Grid>
-                    </DataTemplate>
-                </rs:RSPicker.ItemTemplate>
-            </rs:RSPicker>
-
-            <Picker ItemsSource="{Binding ListPicker}"></Picker>
-
-            <rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" Placeholder="Select Date Month" DateSelectionMode="Month" HasBorder="True"></rs:RSDatePicker>
-            <rs:RSDatePickerInputLayout NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" Placeholder="Select Date Year" DateSelectionMode="Year" TextColor="Purple"></rs:RSDatePickerInputLayout>
-            <rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date MonthYear" DateSelectionMode="MonthYear"></rs:RSDatePicker>
-            <rs:RSDatePicker NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Placeholder="Select Date Default" DateSelectionMode="Default" IsClearable="False"></rs:RSDatePicker>
-
-            <DatePicker Date="{Binding SomeDate}"></DatePicker>-->
-
-
-            <!--<rs:RSEntryInputLayout Text="Trolol" FontSize="75" Placeholder="Test" Helper="Helper test" CounterMaxLength="5" BackgroundColor="Cyan" >
-                <rs:RSEntryInputLayout.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSEntryInputLayout.Behaviors>
-            </rs:RSEntryInputLayout>
-
-
-
-            <rs:RSEntryInputLayout Text="Trolol" Placeholder="Test" Helper="Helper test" CounterMaxLength="5" IsPassword="True">
-                <rs:RSEntryInputLayout.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSEntryInputLayout.Behaviors>
-            </rs:RSEntryInputLayout>
-
-
-
-
-            <rs:RSEntryInputLayout Placeholder="Test no error" PlaceholderColor="Red" CounterMaxLength="3" IsPassword="True"/>
-
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" OrderBy="Descending" SelectedItems="{Binding SelectedPersons}" SelectedItem="{Binding SelectedPerson}" Placeholder="Single pick Custom template with validators" SelectionMode="Multiple">
-                <rs:RSPicker.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Label Text="{Binding Name}" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0"/>
-                            <Label Text="America" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="1"/>
-                            <Label Text="20199999995648" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="Red" Grid.Column="2"/>
-                        </Grid>
-                    </DataTemplate>
-                </rs:RSPicker.ItemTemplate>
-            </rs:RSPicker>
-
-            <Picker ItemsSource="{Binding ListPicker}"></Picker>
-
-            <rs:RSEntryInputLayout Placeholder="Password" Helper="Enter your password" IsPassword="True" RSEntryStyle="FilledBorder">
-
-            </rs:RSEntryInputLayout>
-
-            <rs:RSEntryInputLayout Placeholder="Password" Helper="Enter your password" FontSize="46" BackgroundColor="LightGray" IsPassword="False" RSEntryStyle="FilledBorder">
-
-            </rs:RSEntryInputLayout>
-
-            <rs:RSPickerInputLayout ItemsSource="{Binding ObsCollectionPicker}" Placeholder="Obs collection picker" >
-                <rs:RSPickerInputLayout.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="SelectedItem">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSPickerInputLayout.Behaviors>
-            </rs:RSPickerInputLayout>-->
-
-
-            <!--<Grid>
-                <rs:RSNumericUpDown Grid.Column="0" IsPlaceholderAlwaysFloating="True" Minimum="56" IncrementValue="100" Maximum="1000" NumberDecimalDigits="2" CustomUnit="$" RSEntryStyle="OutlinedBorder" Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"/>
-                <rs:RSNumericUpDown Grid.Column="1" IsPlaceholderAlwaysFloating="True" IncrementValue="100" Maximum="1000" NumberDecimalDigits="2" CustomUnit="$" RSEntryStyle="FilledBorder" Helper="Press buttons to increase / decrease value" Placeholder="Numeric Up Down"></rs:RSNumericUpDown>
-            </Grid>-->
-
-
-            <!--<rs:RSEditor RSEntryStyle="FilledBorder" Placeholder="Entry" MaxHeight="150" Helper="Helper" CounterMaxLength="6">
-
-            </rs:RSEditor>
-
-            <rs:RSEditor RSEntryStyle="FilledBorder" Placeholder="Editor" MaxHeight="150" AutoSize="TextChanges" Helper="Helper" CounterMaxLength="6">
-
-            </rs:RSEditor>
-
-            <rs:RSEditor RSEntryStyle="OutlinedBorder" Padding="0,8,0,8" BorderColor="White" Placeholder="Editor" BorderFillColor="White" Helper="Helper" CounterMaxLength="6">
-
-            </rs:RSEditor>-->
-
-            <Entry BackgroundColor="Cyan"/>
 
             <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper" BorderFillColor="White" CounterMaxLength="6">
                 <rs:RSEntry.PlaceholderStyle>
@@ -243,86 +60,8 @@
                 </rs:RSEntry.LeftIcon>
             </rs:RSEntry>
 
-            <rs:RSEntry Placeholder="Hint" Helper="Helper" CounterMaxLength="6">
 
-                <rs:RSEntry.HelperStyle>
-                    <helpers:AssistiveTextStyle FontColor="Green">
-                        <helpers:AssistiveTextStyle.FontFamily>
-                            <OnPlatform x:TypeArguments="x:String">
-                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
-                                <On Platform="iOS" Value="Lobster-Regular" />
-                            </OnPlatform>
-                        </helpers:AssistiveTextStyle.FontFamily>
-                    </helpers:AssistiveTextStyle>
-                </rs:RSEntry.HelperStyle>
-                <rs:RSEntry.CounterStyle>
-                    <helpers:AssistiveTextStyle FontColor="Pink"/>
-                </rs:RSEntry.CounterStyle>
-                <rs:RSEntry.ErrorStyle>
-                    <helpers:AssistiveTextStyle FontColor="Green"/>
-                </rs:RSEntry.ErrorStyle>
-            </rs:RSEntry>
-
-            <rs:RSEntry Placeholder="Mehton" ShadowEnabled="True" Helper="Helper" ShadowRadius="1.5" BorderColor="White" BorderFillColor="White" CounterMaxLength="12">
-                <rs:RSEntry.PlaceholderStyle>
-                    <helpers:AssistiveTextStyle FontColor="Purple">
-                        <helpers:AssistiveTextStyle.FontFamily>
-                            <OnPlatform x:TypeArguments="x:String">
-                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
-                                <On Platform="iOS" Value="Lobster-Regular" />
-                            </OnPlatform>
-                        </helpers:AssistiveTextStyle.FontFamily>
-                    </helpers:AssistiveTextStyle>
-                </rs:RSEntry.PlaceholderStyle>
-                <rs:RSEntry.HelperStyle>
-                    <helpers:AssistiveTextStyle FontColor="Green">
-                        <helpers:AssistiveTextStyle.FontFamily>
-                            <OnPlatform x:TypeArguments="x:String">
-                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
-                                <On Platform="iOS" Value="Lobster-Regular" />
-                            </OnPlatform>
-                        </helpers:AssistiveTextStyle.FontFamily>
-                    </helpers:AssistiveTextStyle>
-                </rs:RSEntry.HelperStyle>
-                <rs:RSEntry.CounterStyle>
-                    <helpers:AssistiveTextStyle FontColor="Pink"/>
-                </rs:RSEntry.CounterStyle>
-                <rs:RSEntry.ErrorStyle>
-                    <helpers:AssistiveTextStyle FontColor="Green"/>
-                </rs:RSEntry.ErrorStyle>
-            </rs:RSEntry>
-
-
-            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BorderFillColor="White"  Helper="Helper" CounterMaxLength="6" RSEntryStyle="FilledBorder">
-                <rs:RSEntry.PlaceholderStyle>
-                    <helpers:AssistiveTextStyle FontColor="Purple">
-                        <helpers:AssistiveTextStyle.FontFamily>
-                            <OnPlatform x:TypeArguments="x:String">
-                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
-                                <On Platform="iOS" Value="Lobster-Regular" />
-                            </OnPlatform>
-                        </helpers:AssistiveTextStyle.FontFamily>
-                    </helpers:AssistiveTextStyle>
-                </rs:RSEntry.PlaceholderStyle>
-                <rs:RSEntry.HelperStyle>
-                    <helpers:AssistiveTextStyle FontColor="Green">
-                        <helpers:AssistiveTextStyle.FontFamily>
-                            <OnPlatform x:TypeArguments="x:String">
-                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
-                                <On Platform="iOS" Value="Lobster-Regular" />
-                            </OnPlatform>
-                        </helpers:AssistiveTextStyle.FontFamily>
-                    </helpers:AssistiveTextStyle>
-                </rs:RSEntry.HelperStyle>
-                <rs:RSEntry.CounterStyle>
-                    <helpers:AssistiveTextStyle FontColor="Pink"/>
-                </rs:RSEntry.CounterStyle>
-                <rs:RSEntry.ErrorStyle>
-                    <helpers:AssistiveTextStyle FontColor="Green"/>
-                </rs:RSEntry.ErrorStyle>
-            </rs:RSEntry>
-
-            <rs:RSEntry Placeholder="Test icon" Helper="Helper"  CounterMaxLength="6" RSEntryStyle="Underline">
+            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper" BorderFillColor="White" CounterMaxLength="6">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -350,14 +89,14 @@
                     <helpers:AssistiveTextStyle FontColor="Green"/>
                 </rs:RSEntry.ErrorStyle>
 
-                
-                <rs:RSEntry.RightIcon>
-                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
-                            <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
-                            </helpers:RSEntryIcon.View>
-                        </helpers:RSEntryIcon>                    
-                </rs:RSEntry.RightIcon>
+                <rs:RSEntry.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSEntry.Behaviors>
+
                 <rs:RSEntry.LeftIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
@@ -367,67 +106,8 @@
                 </rs:RSEntry.LeftIcon>
             </rs:RSEntry>
 
-            <rs:RSEditor Placeholder="Editor" Helper="Helper" ShadowEnabled="True"  AutoSize="Disabled" MaxHeight="150"  BorderFillColor="White" CounterMaxLength="6" RSEntryStyle="Underline">
-                <rs:RSEditor.PlaceholderStyle>
-                    <helpers:AssistiveTextStyle FontColor="Purple">
-                        <helpers:AssistiveTextStyle.FontFamily>
-                            <OnPlatform x:TypeArguments="x:String">
-                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
-                                <On Platform="iOS" Value="Lobster-Regular" />
-                            </OnPlatform>
-                        </helpers:AssistiveTextStyle.FontFamily>
-                    </helpers:AssistiveTextStyle>
-                </rs:RSEditor.PlaceholderStyle>
-                <rs:RSEditor.HelperStyle>
-                    <helpers:AssistiveTextStyle FontColor="Green">
-                        <helpers:AssistiveTextStyle.FontFamily>
-                            <OnPlatform x:TypeArguments="x:String">
-                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
-                                <On Platform="iOS" Value="Lobster-Regular" />
-                            </OnPlatform>
-                        </helpers:AssistiveTextStyle.FontFamily>
-                    </helpers:AssistiveTextStyle>
-                </rs:RSEditor.HelperStyle>
-                <rs:RSEditor.CounterStyle>
-                    <helpers:AssistiveTextStyle FontColor="Pink"/>
-                </rs:RSEditor.CounterStyle>
-                <rs:RSEditor.ErrorStyle>
-                    <helpers:AssistiveTextStyle FontColor="Green"/>
-                </rs:RSEditor.ErrorStyle>
-            </rs:RSEditor>
 
-            <rs:RSPicker Placeholder="Hint" BorderFillColor="Red" RSEntryStyle="Underline" ItemsSource="{Binding ObsCollectionPicker}" ShadowEnabled="True" Helper="Helper" CounterMaxLength="6">
-                <rs:RSPicker.PlaceholderStyle>
-                    <helpers:AssistiveTextStyle FontColor="Purple">
-                        <helpers:AssistiveTextStyle.FontFamily>
-                            <OnPlatform x:TypeArguments="x:String">
-                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
-                                <On Platform="iOS" Value="Lobster-Regular" />
-                            </OnPlatform>
-                        </helpers:AssistiveTextStyle.FontFamily>
-                    </helpers:AssistiveTextStyle>
-                </rs:RSPicker.PlaceholderStyle>
-                <rs:RSPicker.HelperStyle>
-                    <helpers:AssistiveTextStyle FontColor="Green">
-                        <helpers:AssistiveTextStyle.FontFamily>
-                            <OnPlatform x:TypeArguments="x:String">
-                                <On Platform="Android" Value="Lobster-Regular.ttf#Lobster-Regular" />
-                                <On Platform="iOS" Value="Lobster-Regular" />
-                            </OnPlatform>
-                        </helpers:AssistiveTextStyle.FontFamily>
-                    </helpers:AssistiveTextStyle>
-                </rs:RSPicker.HelperStyle>
-                <rs:RSPicker.CounterStyle>
-                    <helpers:AssistiveTextStyle FontColor="Pink"/>
-                </rs:RSPicker.CounterStyle>
-                <rs:RSPicker.ErrorStyle>
-                    <helpers:AssistiveTextStyle FontColor="Green"/>
-                </rs:RSPicker.ErrorStyle>
-            </rs:RSPicker>
-
-
-
-            <Button Text="Switch to Page1" CommandParameter="" Clicked="Button_Clicked"></Button>
+            <Button Text="Switch to Page1" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
 
         </StackLayout>
     </ScrollView>

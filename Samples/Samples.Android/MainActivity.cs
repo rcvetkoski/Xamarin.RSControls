@@ -6,6 +6,10 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Xamarin.RSControls.Interfaces;
+using Android.Content;
+using Xamarin.Forms;
+using Xamarin.RSControls.Droid;
 
 namespace Samples.Droid
 {
@@ -19,6 +23,7 @@ namespace Samples.Droid
 
             base.OnCreate(savedInstanceState);
 
+            RSAppContext.RSContext = this;
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());

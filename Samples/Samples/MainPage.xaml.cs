@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.RSControls.Controls;
+using Xamarin.RSControls.Interfaces;
 
 namespace Samples
 {
@@ -77,16 +78,16 @@ namespace Samples
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            //Navigation.PushAsync(new Page1());
-
-            RSPopup rsPopup = new RSPopup(Xamarin.Forms.Application.Current);
-            rsPopup.SetPopupPosition(100, 200);
-            rsPopup.Show();
+            Navigation.PushAsync(new Page1());
         }
 
         private void Button_Clicked2(object sender, EventArgs e)
         {
             //(this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(1);
+
+            RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessage");
+            rsPopup.SetPopupPosition((float)(sender as View).X, (float)(sender as View).Bounds.Location.Y + (float)(sender as View).Bounds.Height);
+            rsPopup.Show();
         }
     }
 }
