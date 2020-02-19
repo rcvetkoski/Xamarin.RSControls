@@ -13,12 +13,13 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Droid.Controls;
+using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.Interfaces;
 
 [assembly: Dependency(typeof(RSPopupRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSPopupRenderer : global::Android.Support.V4.App.DialogFragment, IDialogPopup
+    public class RSPopupRenderer : global::Android.Support.V4.App.DialogFragment, IDialogPopup, global::Android.Views.View.IOnClickListener
     {
         public float PositionX { get; set; }
         public float PositionY { get; set; }
@@ -29,17 +30,26 @@ namespace Xamarin.RSControls.Droid.Controls
         public string Message { get; set; }
         public Forms.View RelativeView { get; set; }
         public Forms.View CustomView { get; set; }
+        private LinearLayout customLayout;
         public bool ShadowEnabled { get; set; }
+        private global::Android.Widget.Button positiveButton;
+        private global::Android.Widget.Button neutralButton;
+        private global::Android.Widget.Button destructiveButton;
 
+
+        public RSPopupRenderer()
+        {
+            //Inflate custom layout
+            this.customLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as LinearLayout;
+        }
 
         public override global::Android.App.Dialog OnCreateDialog(Bundle savedInstanceState)
         {
             global::Android.Support.V7.App.AlertDialog.Builder builder = new global::Android.Support.V7.App.AlertDialog.Builder(Context);
-            builder.SetTitle(Title);
-            builder.SetMessage(this.Message);
-            builder.SetPositiveButton("Done", new EventHandler<DialogClickEventArgs>(PositiveButton_Click));
-            builder.SetNegativeButton("Cancel", new EventHandler<DialogClickEventArgs>(PositiveButton_Click));
-
+            //builder.SetTitle(Title);
+            //builder.SetMessage(this.Message);
+            //builder.SetPositiveButton("Done", new EventHandler<DialogClickEventArgs>(PositiveButton_Click));
+            //builder.SetNegativeButton("Cancel", new EventHandler<DialogClickEventArgs>(PositiveButton_Click));
             return builder.Create();
         }
 
@@ -62,6 +72,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.Show(((AppCompatActivity)RSAppContext.RSContext).SupportFragmentManager, "sc");
         }
 
+
         //Action bar height
         private int OffsetY()
         {
@@ -71,71 +82,122 @@ namespace Xamarin.RSControls.Droid.Controls
             return val;
         }
 
+        //Set and add custom view 
         private void SetCustomView()
         {
         }
 
+        //Set dialog properties
         private void SetDialog()
         {
             var attrs = this.Dialog.Window.Attributes;
-
             var metrics = Resources.DisplayMetrics;
-            var widthScreen = metrics.WidthPixels * 0.6;
+            var minWidth = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 270, Context.Resources.DisplayMetrics);
+            var minHeigth = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 150, Context.Resources.DisplayMetrics);
+
+            SetBackground();
+            SetCustomLayout();
 
             //Set the gravity top and left so it starts at real 0 coordinates than aply position
-            Dialog.Window.SetGravity(GravityFlags.Top | GravityFlags.Left);
+            //Dialog.Window.SetGravity(GravityFlags.Top | GravityFlags.Left);
             //attrs.X = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)PositionX, Context.Resources.DisplayMetrics);
             //attrs.Y = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)PositionY, Context.Resources.DisplayMetrics) + OffsetY();
 
+            customLayout.Measure(metrics.WidthPixels, metrics.HeightPixels);
 
-            int[] location = new int[2];
-            Platform.GetRenderer(RelativeView).View.GetLocationInWindow(location);
-            PositionX = location[0];
-            PositionY = location[1];
+            //Width
+            if(customLayout.MeasuredWidth > minWidth && customLayout.MeasuredWidth < metrics.WidthPixels * 0.9)
+                attrs.Width = customLayout.MeasuredWidth;
+            else if(customLayout.MeasuredWidth > metrics.WidthPixels * 0.9)
+                attrs.Width = (int)(metrics.WidthPixels * 0.9);
+            else
+                attrs.Width = minWidth;
 
-            attrs.X = (int)PositionX;
-            attrs.Y = (int)PositionY + Platform.GetRenderer(RelativeView).View.Height / 2;
+            //Height
+            if (customLayout.MeasuredHeight > minHeigth && customLayout.MeasuredHeight < metrics.HeightPixels * 0.8)
+                attrs.Height = customLayout.MeasuredHeight;
+            else if (customLayout.MeasuredHeight > metrics.HeightPixels * 0.9)
+                attrs.Height = (int)(metrics.HeightPixels * 0.9);
+            else
+                attrs.Height = minHeigth;
 
 
-            //Background 
             attrs.DimAmount = this.DimAmount;
-
             //Set new attributes
             this.Dialog.Window.Attributes = attrs;
 
-            SetBackground();
 
 
         }
 
+        //Custom background so we can set border radius shadow ...
         private void SetBackground()
         {
-            //Custom background so we can set border radius shadow ...
             PaintDrawable paintDrawable = new PaintDrawable(BackgroundColor.ToAndroid());
             paintDrawable.SetCornerRadius(BorderRadius);
-            paintDrawable.Paint.SetShadowLayer(TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics), 0.5f, 0.5f, global::Android.Graphics.Color.Gray);
+            var borderRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics);
+            paintDrawable.Paint.SetShadowLayer(borderRadius, 0f, 0f, global::Android.Graphics.Color.Gray);
             Dialog.Window.SetBackgroundDrawable(paintDrawable);
         }
 
+        //Custom layout for dialog
         private void SetCustomLayout()
         {
-            //Custom layout for dioalog
-            LinearLayout layout = LayoutInflater.From(Context).Inflate(Resource.Layout.rs_dialog_view, null) as LinearLayout;
-            //global::Android.Widget.Button positiveButton = layout.FindViewById<global::Android.Widget.Button>(Resource.Id.ok_action);
-            positiveButton.Click += PositiveButton_Click;
-            Dialog.SetContentView(layout);
+            global::Android.Widget.TextView title = customLayout.FindViewById<global::Android.Widget.TextView>(Resource.Id.dialog_title);
+            title.Text = this.Title;
+            global::Android.Widget.TextView message = customLayout.FindViewById<global::Android.Widget.TextView>(Resource.Id.dialog_message);
+            message.Text = this.Message;
+            customLayout.RemoveFromParent();
+            Dialog.SetContentView(customLayout);
         }
 
-        private void PositiveButton_Click(object sender, EventArgs e)
+        //Buttons
+        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType)
         {
-            this.Dialog.Dismiss();
+            if(rSPopupButtonType == RSPopupButtonTypeEnum.Positive)
+            {
+                positiveButton = customLayout.FindViewById<global::Android.Widget.Button>(Resource.Id.action_positive);
+                positiveButton.SetOnClickListener(this);
+                positiveButton.Text = title;
+                positiveButton.Visibility = ViewStates.Visible;
+            }
+            else if (rSPopupButtonType == RSPopupButtonTypeEnum.Neutral)
+            {
+                neutralButton = customLayout.FindViewById<global::Android.Widget.Button>(Resource.Id.action_neutral);
+                neutralButton.Text = title;
+                neutralButton.Visibility = ViewStates.Visible;
+            }
+            else if (rSPopupButtonType == RSPopupButtonTypeEnum.Destructive)
+            {
+                destructiveButton = customLayout.FindViewById<global::Android.Widget.Button>(Resource.Id.action_destructive);
+                destructiveButton.Text = title;
+                destructiveButton.Visibility = ViewStates.Visible;
+            }
+            else
+            {
+
+            }
         }
 
+        //Orientation change
         public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
 
             SetDialog();
+        }
+
+        //Button click
+        public void OnClick(global::Android.Views.View v)
+        {
+            if((v as global::Android.Widget.Button).Id.Equals(Resource.Id.action_positive))
+            {
+                Dialog.Dismiss();
+            }
+            if ((v as global::Android.Widget.Button).Id.Equals(Resource.Id.action_neutral))
+            {
+                Dialog.Dismiss();
+            }
         }
     }
 }

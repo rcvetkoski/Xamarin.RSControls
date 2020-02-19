@@ -20,7 +20,9 @@ namespace Xamarin.RSControls.Controls
         public RSPopup()
         {
             service = DependencyService.Get<IDialogPopup>();
-            SetBorderRadius(12);
+            SetBackgroundColor(Color.White);
+            SetBorderRadius(20);
+            SetDimAmount(0.5f);
             SetShadowEnabled(true);
         }
 
@@ -29,7 +31,9 @@ namespace Xamarin.RSControls.Controls
             service = DependencyService.Get<IDialogPopup>();
             SetTitle(title);
             SetMessage(message);
-            SetBorderRadius(12);
+            SetBackgroundColor(Color.White);
+            SetBorderRadius(20);
+            SetDimAmount(0.5f);
             SetShadowEnabled(true);
         }
 
@@ -98,7 +102,6 @@ namespace Xamarin.RSControls.Controls
             service.DimAmount = DimAmount;
         }
 
-
         public void SetPopupAnimation(RSPopupAnimationEnum rSPopupAnimationEnum = RSPopupAnimationEnum.Default)
         {
             //TODO
@@ -106,7 +109,7 @@ namespace Xamarin.RSControls.Controls
 
         public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType)
         {
-
+            service.AddAction(title, rSPopupButtonType);
         }
     }
 }

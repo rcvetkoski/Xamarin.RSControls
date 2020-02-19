@@ -1,4 +1,6 @@
-﻿namespace Xamarin.RSControls.Interfaces
+﻿using Xamarin.RSControls.Enums;
+
+namespace Xamarin.RSControls.Interfaces
 {
     public interface IDialogPopup
     {
@@ -12,6 +14,7 @@
         bool ShadowEnabled { get; set; }
         Forms.View RelativeView { get; set; }
         Forms.View CustomView { get; set; }
+        void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType);
         void ShowPopup();
     }
 

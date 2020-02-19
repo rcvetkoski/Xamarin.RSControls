@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:divider="?android:dividerVertical"
         android:showDividers="middle">
 
         <LinearLayout 
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <TextView
                 android:layout_width="match_parent"
@@ -48,19 +49,31 @@
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/cancel_action"
+                android:id="@+id/action_neutral"
                 android:layout_weight="1"
-                android:text="Cancel"
+                android:text="Done"
                 android:textAllCaps="false"
+                android:visibility="gone"
                 style="?android:buttonBarButtonStyle"/>
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/ok_action"
+                android:id="@+id/action_destructive"
                 android:layout_weight="1"
-                android:text="Ok"
+                android:text="Delete"
                 android:textAllCaps="false"
+                android:visibility="gone"
+                style="?android:buttonBarButtonStyle"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/action_positive"
+                android:layout_weight="1"
+                android:text="Cancel"
+                android:textAllCaps="false"
+                android:visibility="gone"
                 style="?android:buttonBarButtonStyle"/>
 
         </LinearLayout>
