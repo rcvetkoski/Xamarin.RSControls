@@ -24,7 +24,7 @@ namespace Xamarin.RSControls.Droid.Controls
         public float PositionX { get; set; }
         public float PositionY { get; set; }
         public float BorderRadius { get; set; }
-        public Forms.Color BackgroundColor { get; set; }
+        public Forms.Color BorderFillColor { get; set; }
         public float DimAmount { get; set; }
         public string Title { get; set; }
         public string Message { get; set; }
@@ -45,7 +45,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
         public override global::Android.App.Dialog OnCreateDialog(Bundle savedInstanceState)
         {
-            global::Android.Support.V7.App.AlertDialog.Builder builder = new global::Android.Support.V7.App.AlertDialog.Builder(Context);
+            global::Android.Support.V7.App.AlertDialog.Builder builder = new global::Android.Support.V7.App.AlertDialog.Builder(Context, Resource.Style.RSDialogAnimationTheme);
             //builder.SetTitle(Title);
             //builder.SetMessage(this.Message);
             //builder.SetPositiveButton("Done", new EventHandler<DialogClickEventArgs>(PositiveButton_Click));
@@ -133,10 +133,11 @@ namespace Xamarin.RSControls.Droid.Controls
         //Custom background so we can set border radius shadow ...
         private void SetBackground()
         {
-            PaintDrawable paintDrawable = new PaintDrawable(BackgroundColor.ToAndroid());
-            paintDrawable.SetCornerRadius(BorderRadius);
-            var borderRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics);
-            paintDrawable.Paint.SetShadowLayer(borderRadius, 0f, 0f, global::Android.Graphics.Color.Gray);
+            PaintDrawable paintDrawable = new PaintDrawable(BorderFillColor.ToAndroid());
+            paintDrawable.Paint.AntiAlias = true;
+            paintDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics));
+            var shadowRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics);
+            paintDrawable.Paint.SetShadowLayer(shadowRadius, 0f, 0f, global::Android.Graphics.Color.Gray);
             Dialog.Window.SetBackgroundDrawable(paintDrawable);
         }
 

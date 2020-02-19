@@ -30,25 +30,10 @@ namespace Samples
         {
             //(this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(1);
 
-            RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessage wefw efwef wefzjtjztjtzjztjtzjtzjtzjtzjtzjtzjtzjtzjtzjtzjtzjtzjtzjjtzjtz" +
-                "regregregreregregregregergerg" +
-                "gergregergergerg" +
-                "ergergergergreger" +
-                "erg afefejfewfhewhejhfkjewhfkewhfkewfjkwehfhwefewhfékjhewfjkhwegéjewéjgrwugihergiezgherzighregreiughreiughreuigrueghéruegreuéhgrueéhgerughureghéreg" +
-                "erggregregregregrekjgrjkghrhglwrghwhgkwehgjkhwgkjwehgkljhewljghewlghlweghljkwehgjkewhghewkghwekjghweg" +
-                "reg" +
-                "regafefejfewfhewhejhfkjewhfkewhfkewfjkwehfhwefewhfékjhewfjkhwegéjewéjgrwugihergiezgherzighregreiughreiughreuigrueghéruegreuéhgrueéhgerughureghéreg" +
-                "erafefejfewfhewhejhfkjewhfkewhfkewfjkwehfhwefewhfékjhewfjkhwegéjewéjgrwugihergiezgherzighregreiughreiughreuigrueghéruegreuéhgrueéhgerughureghéreg" +
-                "gerafefejfewfhewhejhfkjewhfkewhfkewfjkwehfhwefewhfékjhewfjkhwegéjewéjgrwugihergiezgherzighregreiughreiughreuigrueghéruegreuéhgrueéhgerughureghéreg" +
-                "ger" +
-                "egr" +
-                "regafefejfewfhewhejhfkjewhfkewhfkewfjkwehfhwefewhfékjhewfjkhwegéjewéjgrwugihergiezgherzighregreiughreiughreuigrueghéruegreuéhgrueéhgerughureghéreg" +
-                "gerafefejfewfhewhejhfkjewhfkewhfkewfjkwehfhwefewhfékjhewfjkhwegéjewéjgrwugihergiezgherzighregreiughreiughreuigrueghéruegreuéhgrueéhgerughureghéreg" +
-                "erg" +
-                "jzt" +
-                "Rade");
+            RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessage");
             //rsPopup.SetPopupPosition(sender as View);
             //rsPopup.SetPopupPosition((float)(sender as View).X, (float)(sender as View).Bounds.Location.Y);
+            rsPopup.SetDimAmount(0f);
             rsPopup.Show();
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);

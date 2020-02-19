@@ -14,7 +14,7 @@
 
             <Button Text="Toggle Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked2"></Button>
 
-            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper" BorderFillColor="White" CounterMaxLength="6">
+            <!--<rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper" BorderFillColor="White" CounterMaxLength="6">
                 <rs:RSEntry.PlaceholderStyle>
                     <helpers:AssistiveTextStyle FontColor="Purple">
                         <helpers:AssistiveTextStyle.FontFamily>
@@ -103,7 +103,7 @@
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>                    
                 </rs:RSEntry.LeftIcon>
-            </rs:RSEntry>
+            </rs:RSEntry>-->
 
 
             <Button Text="Switch to Page1" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>

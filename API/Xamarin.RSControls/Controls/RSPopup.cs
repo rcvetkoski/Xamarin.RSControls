@@ -21,7 +21,7 @@ namespace Xamarin.RSControls.Controls
         {
             service = DependencyService.Get<IDialogPopup>();
             SetBackgroundColor(Color.White);
-            SetBorderRadius(20);
+            SetBorderRadius(14);
             SetDimAmount(0.5f);
             SetShadowEnabled(true);
         }
@@ -32,7 +32,7 @@ namespace Xamarin.RSControls.Controls
             SetTitle(title);
             SetMessage(message);
             SetBackgroundColor(Color.White);
-            SetBorderRadius(20);
+            SetBorderRadius(14);
             SetDimAmount(0.5f);
             SetShadowEnabled(true);
         }
@@ -87,7 +87,7 @@ namespace Xamarin.RSControls.Controls
         public void SetBackgroundColor(Forms.Color color)
         {
             BackgroundColor = color;
-            service.BackgroundColor = BackgroundColor;
+            service.BorderFillColor = BackgroundColor;
         }
 
         public void SetShadowEnabled(bool enabled)

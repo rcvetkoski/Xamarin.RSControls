@@ -9,7 +9,7 @@ namespace Xamarin.RSControls.Interfaces
         float PositionX { get; set; }
         float PositionY { get; set; }
         float BorderRadius { get; set; }
-        Forms.Color BackgroundColor { get; set; }
+        Forms.Color BorderFillColor { get; set; }
         float DimAmount { get; set; }
         bool ShadowEnabled { get; set; }
         Forms.View RelativeView { get; set; }
