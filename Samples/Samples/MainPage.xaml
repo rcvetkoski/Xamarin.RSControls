@@ -10,10 +10,9 @@
              x:Class="Samples.MainPage">
 
     <ScrollView Orientation="Vertical" BackgroundColor="White">
-        <StackLayout x:Name="stack">
+        <StackLayout x:Name="stack" Margin="10">
 
-                        <Button Text="Toggle Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked2"></Button>
-
+            <Button Text="Toggle Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked2"></Button>
 
             <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper" BorderFillColor="White" CounterMaxLength="6">
                 <rs:RSEntry.PlaceholderStyle>

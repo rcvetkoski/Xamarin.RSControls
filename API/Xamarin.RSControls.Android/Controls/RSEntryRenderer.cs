@@ -1257,8 +1257,11 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 if (rightIconCondition)
                 {
+                    int[] location = new int[2];
+                    this.GetLocationOnScreen(location);
+
                     RSPopup rSPopup = new RSPopup();
-                    rSPopup.SetPopupPosition((int)(rSControl as Forms.View).X, (int)(rSControl as Forms.View).Y + (int)(rSControl as Forms.View).Bounds.Height);
+                    rSPopup.SetPopupPosition((int)location[0], (int)location[1] + (int)(rSControl as Forms.View).Bounds.Height);
                     rSPopup.Show();
                     return true;
                 }

@@ -12,6 +12,8 @@ namespace Xamarin.RSControls.Controls
         public float PositionX { get; set; }
         public float PositionY { get; set; }
         public float BorderRadius { get; set; }
+        public Forms.Color BackgroundColor { get; set; }
+        public float DimAmount { get; set; }
         public bool ShadowEnabled { get; set; }
 
 
@@ -50,6 +52,11 @@ namespace Xamarin.RSControls.Controls
             service.PositionY = Y;
         }
 
+        public void SetPopupPosition(View view)
+        {
+            service.RelativeView = view;
+        }
+
         public void SetTitle(string title)
         {
             Title = title;
@@ -62,10 +69,21 @@ namespace Xamarin.RSControls.Controls
             service.Message = this.Message;
         }
 
+        public void SetCustomView(Forms.View customView)
+        {
+            service.CustomView = customView;
+        }
+
         public void SetBorderRadius(float borderRadius)
         {
             BorderRadius = borderRadius;
             service.BorderRadius = this.BorderRadius;
+        }
+
+        public void SetBackgroundColor(Forms.Color color)
+        {
+            BackgroundColor = color;
+            service.BackgroundColor = BackgroundColor;
         }
 
         public void SetShadowEnabled(bool enabled)
@@ -73,6 +91,13 @@ namespace Xamarin.RSControls.Controls
             ShadowEnabled = enabled;
             service.ShadowEnabled = this.ShadowEnabled;
         }
+
+        public void SetDimAmount(float amount)
+        {
+            DimAmount = amount;
+            service.DimAmount = DimAmount;
+        }
+
 
         public void SetPopupAnimation(RSPopupAnimationEnum rSPopupAnimationEnum = RSPopupAnimationEnum.Default)
         {

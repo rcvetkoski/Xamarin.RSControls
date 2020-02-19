@@ -86,7 +86,31 @@ namespace Samples
             //(this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(1);
 
             RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessage");
-            rsPopup.SetPopupPosition((float)(sender as View).X, (float)(sender as View).Bounds.Location.Y + (float)(sender as View).Bounds.Height);
+            rsPopup.SetBackgroundColor(Color.Cyan);
+            rsPopup.SetPopupPosition(sender as View);
+            rsPopup.SetPopupPosition((float)(sender as View).X, (float)(sender as View).Bounds.Location.Y);
+
+            var grid = new Grid() { BackgroundColor = Color.Pink, HeightRequest = 100 };
+
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+            var topLeft = new Label { Text = "Top Left" };
+            var topRight = new Label { Text = "Top Right" };
+            var bottomLeft = new Label { Text = "Bottom Left" };
+            var bottomRight = new Label { Text = "Bottom Right" };
+
+            grid.Children.Add(topLeft, 0, 0);
+            grid.Children.Add(topRight, 1, 0);
+            grid.Children.Add(bottomLeft, 0, 1);
+            grid.Children.Add(bottomRight, 1, 1);
+
+            //rsPopup.SetCustomView(new Label() { Text = "label trol", BackgroundColor = Color.Green});
+
+            rsPopup.SetCustomView(grid);
+
             rsPopup.Show();
         }
     }
