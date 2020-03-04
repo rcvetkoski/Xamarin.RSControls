@@ -2,6 +2,7 @@
 using Android.App;
 using Android.Content;
 using Android.Content.Res;
+using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Support.V4.App;
@@ -31,6 +32,7 @@ namespace Xamarin.RSControls.Droid.Controls
         public Forms.View RelativeView { get; set; }
         public Forms.View CustomView { get; set; }
         private LinearLayout customLayout;
+        private LinearLayout contentView;
         public bool ShadowEnabled { get; set; }
         private global::Android.Widget.Button positiveButton;
         private global::Android.Widget.Button neutralButton;
@@ -41,7 +43,9 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             //Inflate custom layout
             this.customLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as LinearLayout;
+            this.contentView = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
         }
+
 
         public override global::Android.App.Dialog OnCreateDialog(Bundle savedInstanceState)
         {
@@ -53,6 +57,7 @@ namespace Xamarin.RSControls.Droid.Controls
             return builder.Create();
         }
 
+
         public override void OnStart()
         {
             base.OnStart();
@@ -63,7 +68,15 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 SetCustomView();
             }
+
+            this.contentView.AddView(new TextView(Context) { Gravity = GravityFlags.Center, Text = "ewewfwfqwwefbwejhwebcvwihv jbhlwrhjbv      h   bhr " +
+                "wrhjvbrwjhvrwbhvrwkvb  jlbwhbw hlv wlfhjbv" +
+                "wrviou blzbhowvoiu" +
+                "wejwekweifejqdihqefciewchjfefbvwrtuzgcveluwzfgfé   we" +
+                "qefuih eifuheq uifh    eqiufhu eqfhiu  eqfhb   iquebfiu    eqbfuzi eqfg    qeiuf   eqhf    eqf" +
+                "wehiugbwrliuvhweuibubgueiwhfb" });
         }
+
 
         public void ShowPopup()
         {
@@ -85,6 +98,7 @@ namespace Xamarin.RSControls.Droid.Controls
         //Set and add custom view 
         private void SetCustomView()
         {
+            
         }
 
         //Set dialog properties
@@ -103,42 +117,55 @@ namespace Xamarin.RSControls.Droid.Controls
             //attrs.X = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)PositionX, Context.Resources.DisplayMetrics);
             //attrs.Y = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)PositionY, Context.Resources.DisplayMetrics) + OffsetY();
 
+
             customLayout.Measure(metrics.WidthPixels, metrics.HeightPixels);
 
             //Width
-            if(customLayout.MeasuredWidth > minWidth && customLayout.MeasuredWidth < metrics.WidthPixels * 0.9)
+            if (customLayout.MeasuredWidth > minWidth && customLayout.MeasuredWidth < metrics.WidthPixels * 0.9)
                 attrs.Width = customLayout.MeasuredWidth;
-            else if(customLayout.MeasuredWidth > metrics.WidthPixels * 0.9)
+            else if (customLayout.MeasuredWidth > metrics.WidthPixels * 0.9)
                 attrs.Width = (int)(metrics.WidthPixels * 0.9);
             else
                 attrs.Width = minWidth;
 
-            //Height
-            if (customLayout.MeasuredHeight > minHeigth && customLayout.MeasuredHeight < metrics.HeightPixels * 0.8)
-                attrs.Height = customLayout.MeasuredHeight;
-            else if (customLayout.MeasuredHeight > metrics.HeightPixels * 0.9)
-                attrs.Height = (int)(metrics.HeightPixels * 0.9);
-            else
-                attrs.Height = minHeigth;
+
+            //if (customLayout.MeasuredHeight > minHeigth && customLayout.MeasuredHeight > metrics.HeightPixels * 0.8)
+            //    attrs.Height = (int)(metrics.HeightPixels * 0.8);
+
+
+
+            ////Height
+            //if (customLayout.MeasuredHeight > minHeigth && customLayout.MeasuredHeight < metrics.HeightPixels * 0.8)
+            //    attrs.Height = customLayout.MeasuredHeight;
+            //else if (customLayout.MeasuredHeight > metrics.HeightPixels * 0.9)
+            //    attrs.Height = (int)(metrics.HeightPixels * 0.9);
+            //else
+            //    attrs.Height = minHeigth;
+
 
 
             attrs.DimAmount = this.DimAmount;
             //Set new attributes
             this.Dialog.Window.Attributes = attrs;
-
-
-
         }
 
         //Custom background so we can set border radius shadow ...
         private void SetBackground()
         {
-            PaintDrawable paintDrawable = new PaintDrawable(BorderFillColor.ToAndroid());
-            paintDrawable.Paint.AntiAlias = true;
-            paintDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics));
-            var shadowRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics);
-            paintDrawable.Paint.SetShadowLayer(shadowRadius, 0f, 0f, global::Android.Graphics.Color.Gray);
-            Dialog.Window.SetBackgroundDrawable(paintDrawable);
+            //PaintDrawable paintDrawable = new PaintDrawable(BorderFillColor.ToAndroid());
+            //paintDrawable.Paint.AntiAlias = true;
+            //paintDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, 60, Context.Resources.DisplayMetrics));
+            //var shadowRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, 120, Context.Resources.DisplayMetrics);
+            //paintDrawable.Paint.SetShadowLayer(shadowRadius, 0f, 0f, global::Android.Graphics.Color.Gray);
+
+            //Manipulate color and roundness of border
+            GradientDrawable gradientDrawable = new GradientDrawable();
+            gradientDrawable.SetColor(BorderFillColor.ToAndroid());
+            gradientDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics));
+
+            InsetDrawable insetDrawable = new InsetDrawable(gradientDrawable, 0, 70, 0, 70); //Adds margin to alert
+
+            Dialog.Window.SetBackgroundDrawable(insetDrawable);
         }
 
         //Custom layout for dialog
@@ -171,6 +198,7 @@ namespace Xamarin.RSControls.Droid.Controls
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Destructive)
             {
                 destructiveButton = customLayout.FindViewById<global::Android.Widget.Button>(Resource.Id.action_destructive);
+                destructiveButton.SetTextColor(global::Android.Graphics.Color.Red);
                 destructiveButton.Text = title;
                 destructiveButton.Visibility = ViewStates.Visible;
             }

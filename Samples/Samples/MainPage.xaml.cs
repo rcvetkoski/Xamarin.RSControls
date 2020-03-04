@@ -30,43 +30,15 @@ namespace Samples
         {
             //(this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(1);
 
-            RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessageewhgjfhwfgwjhwwjgwghwrghwrwrjf" +
-                "wjfhewkjfhewjfhewfhewjfhewfkewhfjewhfjkewhfkjewhfkjewkew" +
-                "weflewflkewfhlkewfehwfjehwjfkehwkjfewkewljwgwrkhgrwqéhkg" +
-                "wgjgqkghjkreghkrjgkrwgkjrwhgkrwjhgrgjkrhgwrkghwrgwrghwr" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "ewfewfeeewfefewfwewfewfewf" +
-                "qefewfewfewfewwefewfew" +
-                "wefewfewfewewfewfewewfw" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "" +
-                "" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "wlgknwrgnw jkngwrngjh  kehrégkéwreghwkreghkjwrghkérgrwhgjkhghwrégkwrj" +
-                "Rade");
-            //rsPopup.SetPopupPosition(sender as View);
-            //rsPopup.SetPopupPosition((float)(sender as View).X, (float)(sender as View).Bounds.Location.Y);
-            rsPopup.SetDimAmount(0.5f);
+            RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessage");
+            rsPopup.SetPopupPosition(sender as View);
+            //rsPopup.SetPopupPosition((float)(sender as View).X, (float)(sender as View).Bounds.Location.Y + (float)(sender as View).Height);
+            rsPopup.SetDimAmount(0f);
             rsPopup.Show();
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
-            rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
+            //rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
+            rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive);
+
 
         }
     }

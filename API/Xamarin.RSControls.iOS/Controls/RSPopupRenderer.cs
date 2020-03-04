@@ -1,4 +1,5 @@
 ﻿using System;
+using CoreAnimation;
 using CoreGraphics;
 using UIKit;
 using Xamarin.Forms;
@@ -15,15 +16,15 @@ namespace Xamarin.RSControls.iOS.Controls
         private UIView mainView { get; set; }
         public UIView BackgroundView { get; set; }
         public UIView DialogView { get; set; }
-        public UIStackView dialogStack { get; set; }
-        public UIStackView contentStack { get; set; }
-        public UIScrollView contentScroll { get; set; }
+        private UIStackView dialogStack { get; set; }
+        private UIStackView contentStack { get; set; }
+        private UIScrollView contentScroll { get; set; }
         private UIStackView buttonsStack { get; set; }
         public UIButton positiveButton;
         public UIButton destructiveButton;
         public UIButton neutralButton;
-        private UILabel titleLabel;
-        private UILabel messageLabel;
+        private UITextView titleText;
+        private UITextView messageLabel;
         private bool isAnimating;
         public string Title { get; set; }
         public string Message { get; set; }
@@ -35,10 +36,13 @@ namespace Xamarin.RSControls.iOS.Controls
         public float PositionY { get; set; }
         public float BorderRadius { get; set; }
         public bool ShadowEnabled { get; set; }
+        private int buttonsCount;
+        
 
-
+        //Constructor
         public RSPopupRenderer() : base()
         {
+            buttonsCount = 0;
             BorderRadius = 12;
             ShadowEnabled = true;
         }
@@ -69,8 +73,8 @@ namespace Xamarin.RSControls.iOS.Controls
             DialogView.AddSubview(dialogStack);
 
             //Title
-            titleLabel = new UILabel();
-            dialogStack.AddArrangedSubview(titleLabel);
+            titleText = new UITextView();
+            dialogStack.AddArrangedSubview(titleText);
 
             //ContentStack
             contentStack = new UIStackView();
@@ -81,7 +85,7 @@ namespace Xamarin.RSControls.iOS.Controls
             dialogStack.AddArrangedSubview(contentScroll);
 
             //Message
-            messageLabel = new UILabel();
+            messageLabel = new UITextView();
             contentStack.AddArrangedSubview(messageLabel);
 
             //Buttons stack
@@ -110,9 +114,10 @@ namespace Xamarin.RSControls.iOS.Controls
             DialogView.Layer.BorderColor = UIColor.White.CGColor;
             DialogView.Layer.ShadowColor = UIColor.Gray.CGColor;
             DialogView.Layer.ShadowOpacity = 0.5f;
-            DialogView.Layer.ShadowRadius = BorderRadius;
+            DialogView.Layer.ShadowRadius = 10;
             DialogView.Layer.BackgroundColor = BorderFillColor.ToCGColor();
-            DialogView.Layer.ShadowOffset = new CGSize(1f, 1f);
+            DialogView.Layer.ShadowOffset = new CGSize(0f, 5f);
+
 
 
             //Constraints
@@ -136,7 +141,6 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             dialogStack.Axis = UILayoutConstraintAxis.Vertical;
             dialogStack.Distribution = UIStackViewDistribution.Fill;
-            dialogStack.Spacing = 5;
 
             //Constraints
             dialogStack.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -145,11 +149,11 @@ namespace Xamarin.RSControls.iOS.Controls
             //dialogStack.LeadingAnchor.ConstraintEqualTo(DialogView.LeadingAnchor).Active = true;
             //dialogStack.TrailingAnchor.ConstraintEqualTo(DialogView.TrailingAnchor).Active = true;
 
-            //dialogStack.WidthAnchor.ConstraintGreaterThanOrEqualTo(220f).Active = true;
-            //dialogStack.WidthAnchor.ConstraintLessThanOrEqualTo(this.WidthAnchor, 0.9f).Active = true;
+            dialogStack.WidthAnchor.ConstraintGreaterThanOrEqualTo(250f).Active = true;
+            dialogStack.WidthAnchor.ConstraintLessThanOrEqualTo(this.WidthAnchor, 0.9f).Active = true;
 
-            dialogStack.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
-            dialogStack.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor).Active = true;
+            dialogStack.CenterXAnchor.ConstraintEqualTo(DialogView.CenterXAnchor).Active = true;
+            dialogStack.CenterYAnchor.ConstraintEqualTo(DialogView.CenterYAnchor).Active = true;
         }
 
         //Set content scrollview
@@ -175,7 +179,7 @@ namespace Xamarin.RSControls.iOS.Controls
             var heightEqualConstraint = contentScroll.HeightAnchor.ConstraintEqualTo(contentStack.HeightAnchor);
             heightEqualConstraint.Priority = 250; //low priority
             heightEqualConstraint.Active = true;
-            contentScroll.HeightAnchor.ConstraintGreaterThanOrEqualTo(100f).Active = true;
+            contentScroll.HeightAnchor.ConstraintGreaterThanOrEqualTo(60f).Active = true;
 
         }
 
@@ -184,40 +188,49 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             buttonsStack.Axis = UILayoutConstraintAxis.Horizontal;
             buttonsStack.Distribution = UIStackViewDistribution.FillEqually;
-            positiveButton = new UIButton(UIButtonType.System) { Hidden = true }; positiveButton.BackgroundColor = UIColor.Yellow;
-            neutralButton = new UIButton(UIButtonType.System) { Hidden = true };
-            destructiveButton = new UIButton(UIButtonType.System) { Hidden = true };
+            var topBorder = new UIView( ){ BackgroundColor = UIColor.LightGray, TranslatesAutoresizingMaskIntoConstraints = false };
+            buttonsStack.AddSubview(topBorder);
+            topBorder.LeadingAnchor.ConstraintEqualTo(buttonsStack.LeadingAnchor).Active = true;
+            topBorder.TrailingAnchor.ConstraintEqualTo(buttonsStack.TrailingAnchor).Active = true;
+            topBorder.HeightAnchor.ConstraintEqualTo(0.5f).Active = true;
+
+
+            positiveButton = new UIButton(UIButtonType.System) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(12, 10, 12, 10) }; 
+            neutralButton = new UIButton(UIButtonType.System) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(12, 10, 12, 10) }; 
+            destructiveButton = new UIButton(UIButtonType.System) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(12, 10, 12, 10) }; 
 
 
             buttonsStack.AddArrangedSubview(destructiveButton);
             buttonsStack.AddArrangedSubview(neutralButton);
             buttonsStack.AddArrangedSubview(positiveButton);
+
+            buttonsCount = 3;
         }
 
         //Set title
         public void SetTitle(string title, float fontSize)
         {
-            titleLabel.Text = title;
-            titleLabel.TextColor = UIColor.DarkGray;
-            titleLabel.Font = UIFont.BoldSystemFontOfSize(fontSize);
-            titleLabel.TextAlignment = UITextAlignment.Center;
-
-            //Constraints
-            //titleLabel.TranslatesAutoresizingMaskIntoConstraints = false;
-            //titleLabel.LeadingAnchor.ConstraintEqualTo(DialogView.LeadingAnchor).Active = true; ;
-            //titleLabel.TrailingAnchor.ConstraintEqualTo(DialogView.TrailingAnchor).Active = true; ;
-            //titleLabel.TopAnchor.ConstraintEqualTo(DialogView.TopAnchor).Active = true; ;
+            titleText.BackgroundColor = UIColor.Clear;
+            titleText.Text = title;
+            titleText.TextColor = UIColor.DarkGray;
+            titleText.Font = UIFont.BoldSystemFontOfSize(fontSize);
+            titleText.TextAlignment = UITextAlignment.Center;
+            titleText.ScrollEnabled = false;
+            titleText.TextContainerInset = new UIEdgeInsets(15, 0, 5, 0);
         }
 
         //Set message
         public void SetMessage(string message, float fontSize)
         {
+            messageLabel.BackgroundColor = UIColor.Clear;
             messageLabel.TextColor = UIColor.DarkGray;
             messageLabel.Text = message;
-            messageLabel.Lines = 0;
-            messageLabel.LineBreakMode = UILineBreakMode.WordWrap;
             messageLabel.Font = UIFont.SystemFontOfSize(fontSize);
             messageLabel.TextAlignment = UITextAlignment.Center;
+            //messageLabel.TextContainer.HeightTracksTextView = true;
+            messageLabel.ScrollEnabled = false;
+            messageLabel.TextContainer.LineBreakMode = UILineBreakMode.WordWrap;
+            messageLabel.TextContainerInset = new UIEdgeInsets(5, 5, 5, 5);
         }
 
         //Buttons
@@ -228,25 +241,26 @@ namespace Xamarin.RSControls.iOS.Controls
                 positiveButton.Hidden = false;
                 positiveButton.SetTitle(title, UIControlState.Normal);
                 positiveButton.SetTitleColor(UIColor.SystemBlueColor, UIControlState.Normal);
+                AddBorder(positiveButton);
             }
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Neutral)
             {
                 neutralButton.Hidden = false;
                 neutralButton.SetTitle(title, UIControlState.Normal);
                 neutralButton.SetTitleColor(UIColor.SystemBlueColor, UIControlState.Normal);
+                AddBorder(neutralButton);
             }
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Destructive)
             {
                 destructiveButton.Hidden = false;
                 destructiveButton.SetTitle(title, UIControlState.Normal);
-                destructiveButton.SetTitleColor(UIColor.SystemBlueColor, UIControlState.Normal);
+                destructiveButton.SetTitleColor(UIColor.SystemRedColor, UIControlState.Normal);
+                AddBorder(destructiveButton);
             }
             else
             {
 
             }
-
-
         }
 
         // Animation part
@@ -318,16 +332,30 @@ namespace Xamarin.RSControls.iOS.Controls
         }
 
 
-        //public override void LayoutSubviews()
-        //{
-        //    base.LayoutSubviews();
+        private void AddBorder(UIButton button)
+        {
+            //var topBorder = new UIView() { BackgroundColor = UIColor.LightGray, TranslatesAutoresizingMaskIntoConstraints = false };
+            //button.AddSubview(topBorder);
+            //topBorder.LeadingAnchor.ConstraintEqualTo(button.LeadingAnchor).Active = true;
+            //topBorder.TrailingAnchor.ConstraintEqualTo(button.TrailingAnchor).Active = true;
+            //topBorder.HeightAnchor.ConstraintEqualTo(0.5f).Active = true;
 
-        //    if (!isAnimating)
-        //    {
-        //        //this.Frame = UIScreen.MainScreen.Bounds;
-        //        //BackgroundView.Frame = this.Frame;
-        //    }
-        //}
+            if (buttonsCount > 1)
+            {
+                UIView border = new UIView() { BackgroundColor = UIColor.LightGray, TranslatesAutoresizingMaskIntoConstraints = false };
+                button.AddSubview(border);
+                border.HeightAnchor.ConstraintEqualTo(button.HeightAnchor).Active = true;
+                border.WidthAnchor.ConstraintEqualTo(0.5f).Active = true;
+
+                if(buttonsStack.ArrangedSubviews[buttonsCount - 1] != button)
+                    border.LeadingAnchor.ConstraintEqualTo(button.TrailingAnchor).Active = true;
+            }
+        }
+
+        public enum UIButtonBorderSide
+        {
+            Top, Bottom, Left, Right
+        }
     }
 
 
