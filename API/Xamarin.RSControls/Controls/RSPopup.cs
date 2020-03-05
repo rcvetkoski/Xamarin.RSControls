@@ -28,7 +28,7 @@ namespace Xamarin.RSControls.Controls
 
         public RSPopup(string title, string message)
         {
-            service = DependencyService.Get<IDialogPopup>();
+            service = DependencyService.Get<IDialogPopup>(DependencyFetchTarget.NewInstance);
             SetTitle(title);
             SetMessage(message);
             SetBackgroundColor(Color.White);

@@ -1260,7 +1260,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     int[] location = new int[2];
                     this.GetLocationOnScreen(location);
 
-                    RSPopup rSPopup = new RSPopup();
+                    RSPopup rSPopup = new RSPopup("Title", "Message");
                     rSPopup.SetPopupPosition((int)location[0], (int)location[1] + (int)(rSControl as Forms.View).Bounds.Height);
                     rSPopup.Show();
                     return true;

@@ -20,7 +20,7 @@ using Xamarin.RSControls.Interfaces;
 [assembly: Dependency(typeof(RSPopupRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSPopupRenderer : global::Android.Support.V4.App.DialogFragment, IDialogPopup, global::Android.Views.View.IOnClickListener
+    public class RSPopupRenderer : global::Android.Support.V4.App.DialogFragment, IDialogPopup, global::Android.Views.View.IOnClickListener, IDisposable
     {
         public float PositionX { get; set; }
         public float PositionY { get; set; }
@@ -44,6 +44,12 @@ namespace Xamarin.RSControls.Droid.Controls
             //Inflate custom layout
             this.customLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as LinearLayout;
             this.contentView = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
+
+            //Set here so it will be given good dimensions
+            if (CustomView != null)
+            {
+                SetCustomView();
+            }
         }
 
 
@@ -63,26 +69,22 @@ namespace Xamarin.RSControls.Droid.Controls
             base.OnStart();
 
             SetDialog();
-
-            if(CustomView != null)
-            {
-                SetCustomView();
-            }
-
-            this.contentView.AddView(new TextView(Context) { Gravity = GravityFlags.Center, Text = "ewewfwfqwwefbwejhwebcvwihv jbhlwrhjbv      h   bhr " +
-                "wrhjvbrwjhvrwbhvrwkvb  jlbwhbw hlv wlfhjbv" +
-                "wrviou blzbhowvoiu" +
-                "wejwekweifejqdihqefciewchjfefbvwrtuzgcveluwzfgfé   we" +
-                "qefuih eifuheq uifh    eqiufhu eqfhiu  eqfhb   iquebfiu    eqbfuzi eqfg    qeiuf   eqhf    eqf" +
-                "wehiugbwrliuvhweuibubgueiwhfb" });
         }
 
 
         public void ShowPopup()
         {
             //Check if it is already added & ANDROID context not null
-            if (!this.IsAdded && RSAppContext.RSContext != null)
+           // if (!this.IsAdded && RSAppContext.RSContext != null)
                 this.Show(((AppCompatActivity)RSAppContext.RSContext).SupportFragmentManager, "sc");
+        }
+
+
+        public override void OnDismiss(IDialogInterface dialog)
+        {
+            base.OnDismiss(dialog);
+
+            this.Dispose();
         }
 
 
@@ -175,7 +177,7 @@ namespace Xamarin.RSControls.Droid.Controls
             title.Text = this.Title;
             global::Android.Widget.TextView message = customLayout.FindViewById<global::Android.Widget.TextView>(Resource.Id.dialog_message);
             message.Text = this.Message;
-            customLayout.RemoveFromParent();
+            //customLayout.RemoveFromParent();
             Dialog.SetContentView(customLayout);
         }
 
@@ -198,6 +200,7 @@ namespace Xamarin.RSControls.Droid.Controls
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Destructive)
             {
                 destructiveButton = customLayout.FindViewById<global::Android.Widget.Button>(Resource.Id.action_destructive);
+                destructiveButton.SetOnClickListener(this);
                 destructiveButton.SetTextColor(global::Android.Graphics.Color.Red);
                 destructiveButton.Text = title;
                 destructiveButton.Visibility = ViewStates.Visible;
@@ -223,10 +226,20 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 Dialog.Dismiss();
             }
-            if ((v as global::Android.Widget.Button).Id.Equals(Resource.Id.action_neutral))
+            else if ((v as global::Android.Widget.Button).Id.Equals(Resource.Id.action_neutral))
             {
                 Dialog.Dismiss();
             }
+            else if ((v as global::Android.Widget.Button).Id.Equals(Resource.Id.action_destructive))
+            {
+                
+            }
+        }
+
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
     }
 }
