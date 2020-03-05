@@ -30,12 +30,7 @@ namespace Samples
         {
             //(this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(1);
 
-            RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessage" +
-                "weokfoèwefwejfwejfwejfwjgèiojgwrongjwrgnrjegnwrog" +
-                "weugiwrhgpiuwegnwirghnrwghbrgouwbgwhrbgwiezgbweugbweuigh" +
-                "weuhnpuiwrgh   ch  uiwtlzjurhouijhd    owrhjoiehru wer" +
-                "weifhciwughzuoragcouzweBGOUZWCOUZWEBcfozwucbfoweBFCZweb" +
-                "ewIHPQEIUFBIZEFBCzowifbcwozfbweofzcbwofcbwofwebfcwe");
+            RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessage");
             rsPopup.SetPopupPosition(sender as View);
             //rsPopup.SetPopupPosition((float)(sender as View).X, (float)(sender as View).Bounds.Location.Y + (float)(sender as View).Height);
             rsPopup.SetDimAmount(0f);
