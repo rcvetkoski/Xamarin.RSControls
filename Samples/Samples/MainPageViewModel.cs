@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
+using Xamarin.Forms;
 using Xamarin.RSControls.Enums;
 
 namespace Samples
 {
     public class MainPageViewModel : INotifyPropertyChanged
     {
+
+        public Command RSCommand { get; set; }
+
+
         public MainPageViewModel()
         {
             NumericEntryValue = 2657.239;
@@ -42,6 +48,15 @@ namespace Samples
             MinDate = new DateTime(2009, 7, 1);
 
             Lolo = "lolo";
+
+
+
+            RSCommand = new Command(RSCommandMethod);
+        }
+
+        public void RSCommandMethod()
+        {
+
         }
 
         private double numericEntryValue;

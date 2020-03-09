@@ -108,6 +108,19 @@
 
             <Button Text="Switch to Page1" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
 
+
+
+            <rs:RSEntry Placeholder="Hint" ShadowEnabled="True" BackgroundColor="Cyan" Helper="Helper" BorderFillColor="White" CounterMaxLength="6">
+                <rs:RSEntry.LeftIcon>
+                        <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                            <helpers:RSCommandParameter CommandParameter="{Binding BindingContext.SelectedPerson, Source={x:Reference mainPage} }"/>
+                            <helpers:RSEntryIcon.View>
+                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            </helpers:RSEntryIcon.View>
+                        </helpers:RSEntryIcon>                    
+                </rs:RSEntry.LeftIcon>
+            </rs:RSEntry>
+
         </StackLayout>
     </ScrollView>
 </ContentPage>

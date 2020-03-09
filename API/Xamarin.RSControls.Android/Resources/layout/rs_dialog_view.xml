@@ -65,7 +65,7 @@
             android:divider="?android:dividerHorizontal"
             android:showDividers="middle">
 
-            <Button
+            <Xamarin.RSControls.Droid.Controls.RSAndroidButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/action_destructive"
@@ -75,7 +75,7 @@
                 android:visibility="gone"
                 style="?android:buttonBarButtonStyle"/>
 
-            <Button
+            <Xamarin.RSControls.Droid.Controls.RSAndroidButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/action_neutral"
@@ -85,7 +85,7 @@
                 android:visibility="gone"
                 style="?android:buttonBarButtonStyle"/>
 
-            <Button
+            <Xamarin.RSControls.Droid.Controls.RSAndroidButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/action_positive"
@@ -94,6 +94,7 @@
                 android:textAllCaps="false"
                 android:visibility="gone"
                 style="?android:buttonBarButtonStyle"/>
+
 
         </LinearLayout>
 

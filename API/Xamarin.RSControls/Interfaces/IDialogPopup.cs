@@ -1,4 +1,6 @@
-﻿using Xamarin.RSControls.Enums;
+﻿using System.Windows.Input;
+using Xamarin.Forms;
+using Xamarin.RSControls.Enums;
 
 namespace Xamarin.RSControls.Interfaces
 {
@@ -14,7 +16,7 @@ namespace Xamarin.RSControls.Interfaces
         bool ShadowEnabled { get; set; }
         Forms.View RelativeView { get; set; }
         Forms.View CustomView { get; set; }
-        void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType);
+        void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, bool canExecute);
         void ShowPopup();
     }
 

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Windows.Input;
 using Android.App;
 using Android.Content;
 using Android.Content.Res;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
+using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
 using Android.Util;
@@ -20,7 +22,7 @@ using Xamarin.RSControls.Interfaces;
 [assembly: Dependency(typeof(RSPopupRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSPopupRenderer : global::Android.Support.V4.App.DialogFragment, IDialogPopup, global::Android.Views.View.IOnClickListener, IDisposable
+    public class RSPopupRenderer : global::Android.Support.V4.App.DialogFragment, IDialogPopup, IDisposable
     {
         public float PositionX { get; set; }
         public float PositionY { get; set; }
@@ -34,9 +36,9 @@ namespace Xamarin.RSControls.Droid.Controls
         private LinearLayout customLayout;
         private LinearLayout contentView;
         public bool ShadowEnabled { get; set; }
-        private global::Android.Widget.Button positiveButton;
-        private global::Android.Widget.Button neutralButton;
-        private global::Android.Widget.Button destructiveButton;
+        private RSAndroidButton positiveButton;
+        private RSAndroidButton neutralButton;
+        private RSAndroidButton destructiveButton;
 
 
         public RSPopupRenderer()
@@ -182,33 +184,40 @@ namespace Xamarin.RSControls.Droid.Controls
         }
 
         //Buttons
-        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType)
+        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, bool canExecute)
         {
             if(rSPopupButtonType == RSPopupButtonTypeEnum.Positive)
             {
-                positiveButton = customLayout.FindViewById<global::Android.Widget.Button>(Resource.Id.action_positive);
-                positiveButton.SetOnClickListener(this);
+                positiveButton = customLayout.FindViewById<RSAndroidButton>(Resource.Id.action_positive);
+                positiveButton.dialog = this;
+                positiveButton.CanExecute = canExecute;
+                positiveButton.Command = command;
                 positiveButton.Text = title;
                 positiveButton.Visibility = ViewStates.Visible;
             }
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Neutral)
             {
-                neutralButton = customLayout.FindViewById<global::Android.Widget.Button>(Resource.Id.action_neutral);
+                neutralButton = customLayout.FindViewById<RSAndroidButton>(Resource.Id.action_neutral);
+                neutralButton.dialog = this;
+                neutralButton.CanExecute = canExecute;
+                neutralButton.Command = command;
                 neutralButton.Text = title;
                 neutralButton.Visibility = ViewStates.Visible;
             }
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Destructive)
             {
-                destructiveButton = customLayout.FindViewById<global::Android.Widget.Button>(Resource.Id.action_destructive);
-                destructiveButton.SetOnClickListener(this);
-                destructiveButton.SetTextColor(global::Android.Graphics.Color.Red);
+                destructiveButton = customLayout.FindViewById<RSAndroidButton>(Resource.Id.action_destructive);
+                destructiveButton.dialog = this;
+                destructiveButton.CanExecute = canExecute;
+                destructiveButton.Command = command;
+                //destructiveButton.SetTextColor(global::Android.Graphics.Color.Red);
                 destructiveButton.Text = title;
                 destructiveButton.Visibility = ViewStates.Visible;
             }
             else
             {
 
-            }
+            }            
         }
 
         //Orientation change
@@ -219,27 +228,70 @@ namespace Xamarin.RSControls.Droid.Controls
             SetDialog();
         }
 
-        //Button click
-        public void OnClick(global::Android.Views.View v)
-        {
-            if((v as global::Android.Widget.Button).Id.Equals(Resource.Id.action_positive))
-            {
-                Dialog.Dismiss();
-            }
-            else if ((v as global::Android.Widget.Button).Id.Equals(Resource.Id.action_neutral))
-            {
-                Dialog.Dismiss();
-            }
-            else if ((v as global::Android.Widget.Button).Id.Equals(Resource.Id.action_destructive))
-            {
-                
-            }
-        }
+
 
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+        }
+    }
+
+    //Custom button used to assign command
+    public class RSAndroidButton : global::Android.Widget.Button, global::Android.Views.View.IOnClickListener
+    {
+        public Command Command { get; set; }
+        public global::Android.Support.V4.App.DialogFragment dialog { get; set; }
+        private bool canExecute;
+        public bool CanExecute
+        {
+            get
+            {
+                return canExecute;
+            }
+            set
+            {
+                canExecute = value;
+                this.Enabled = false;
+            }
+        }
+
+        public RSAndroidButton(Context context) : base(context)
+        {
+            this.SetOnClickListener(this);
+        }
+
+        public RSAndroidButton(Context context, IAttributeSet attrs) : base(context, attrs)
+        {
+            this.SetOnClickListener(this);
+            
+
+        }
+
+        public RSAndroidButton(Context context, IAttributeSet attrs, int defStyleAttr) : base(context, attrs, defStyleAttr)
+        {
+            this.SetOnClickListener(this);
+        }
+        public RSAndroidButton(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes) : base(context, attrs, defStyleAttr, defStyleRes)
+        {
+            this.SetOnClickListener(this);
+        }
+        protected RSAndroidButton(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        {
+            this.SetOnClickListener(this);
+        }
+
+
+        //Button click
+        public void OnClick(global::Android.Views.View v)
+        {
+            var button = v as RSAndroidButton;
+
+            if (button.Command != null)
+                button.Command.Execute(null);
+
+            if (button.Id.Equals(Resource.Id.action_positive))
+                this.dialog.Dialog.Dismiss();
         }
     }
 }

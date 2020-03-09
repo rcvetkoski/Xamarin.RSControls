@@ -699,12 +699,13 @@ namespace Xamarin.RSControls.Droid.Controls
             if(rsIcon.Bindings.Any())
             {
                 List<object> objects = new List<object>();
-                foreach (Binding binding in this.rSControl.RightIcon.Bindings)
+                foreach (RSCommandParameter rSCommandParameter in rsIcon.Bindings)
                 {
-                    objects.Add(GetDeepPropertyValue(binding.Source, binding.Path));
+                    //objects.Add(GetDeepPropertyValue(binding.Source, binding.Path));
+                    objects.Add(rSCommandParameter.CommandParameter);
                 }
 
-                Type[] types = new Type[this.rSControl.RightIcon.Bindings.Count];
+                Type[] types = new Type[rsIcon.Bindings.Count];
                 for (int i = 0; i < objects.Count; i++)
                 {
                     types[i] = objects[i].GetType();

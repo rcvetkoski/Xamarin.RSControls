@@ -35,9 +35,9 @@ namespace Samples
             //rsPopup.SetPopupPosition((float)(sender as View).X, (float)(sender as View).Bounds.Location.Y + (float)(sender as View).Height);
             rsPopup.SetDimAmount(0f);
             rsPopup.Show();
-            rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
+            rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive, (this.BindingContext as MainPageViewModel).RSCommand, false);
             //rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
-            rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive);
+            rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive, null, true);
 
 
         }

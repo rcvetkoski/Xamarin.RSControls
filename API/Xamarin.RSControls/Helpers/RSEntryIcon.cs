@@ -59,6 +59,18 @@ namespace Xamarin.RSControls.Helpers
         }
 
 
-        public IList<Binding> Bindings { get; } = new List<Binding>();
+        public IList<RSCommandParameter> Bindings { get; } = new List<RSCommandParameter>();
+    }
+
+    public class RSCommandParameter : BindableObject
+    {
+        public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create("CommandParameter", typeof(object), typeof(RSCommandParameter), default);
+        public object CommandParameter
+        {
+            get { return (object)GetValue(CommandParameterProperty); }
+            set { SetValue(CommandParameterProperty, value);}
+        }
+
+       
     }
 }
