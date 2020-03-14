@@ -234,13 +234,21 @@ namespace Xamarin.RSControls.iOS.Controls
             messageLabel.TextContainerInset = new UIEdgeInsets(5, 5, 5, 5);
         }
 
+        //Set and add custom view 
+        private void SetCustomView()
+        {
+            var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(CustomView, new CGRect(0,0,300,370));
+            this.contentStack.AddArrangedSubview(nativeView);
+            this.contentStack.LayoutIfNeeded();
+        }
+
         //Buttons
-        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, bool canExecute)
+        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter = null)
         {
             if (rSPopupButtonType == RSPopupButtonTypeEnum.Positive)
             {
+                positiveButton.dialog = this;
                 positiveButton.Command = command;
-                positiveButton.AddTarget(ButtonEventHandler, UIControlEvent.TouchUpInside);
                 positiveButton.Hidden = false;
                 positiveButton.SetTitle(title, UIControlState.Normal);
                 positiveButton.SetTitleColor(UIColor.SystemBlueColor, UIControlState.Normal);
@@ -248,8 +256,8 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Neutral)
             {
+                neutralButton.dialog = this;
                 neutralButton.Command = command;
-                neutralButton.AddTarget(ButtonEventHandler, UIControlEvent.TouchUpInside);
                 neutralButton.Hidden = false;
                 neutralButton.SetTitle(title, UIControlState.Normal);
                 neutralButton.SetTitleColor(UIColor.SystemBlueColor, UIControlState.Normal);
@@ -257,8 +265,8 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Destructive)
             {
+                destructiveButton.dialog = this;
                 destructiveButton.Command = command;
-                destructiveButton.AddTarget(ButtonEventHandler, UIControlEvent.TouchUpInside);
                 destructiveButton.Hidden = false;
                 destructiveButton.SetTitle(title, UIControlState.Normal);
                 destructiveButton.SetTitleColor(UIColor.SystemRedColor, UIControlState.Normal);
@@ -270,18 +278,6 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-        //Button click
-        private void ButtonEventHandler(object sender, EventArgs e)
-        {
-            var button = sender as RSButtonNative;
-
-            if (button.Command != null)
-                button.Command.Execute(null);
-
-
-            if (button.rSPopupButtonType == RSPopupButtonTypeEnum.Positive)
-                this.Dismiss(true);
-        }
 
         // Animation part
         public void Dismiss(bool animated)
@@ -315,11 +311,14 @@ namespace Xamarin.RSControls.iOS.Controls
             SetTitle(Title, 18);
             CreateButtonsStack();
             SetMessage(Message, 12);
+            if(CustomView != null)
+                SetCustomView();
 
 
             UITapGestureRecognizer didTappedOnBackgroundView = new UITapGestureRecognizer((obj) =>
             {
                 Dismiss(true);
+                Dispose();
             });
 
             BackgroundView.AddGestureRecognizer(didTappedOnBackgroundView);
@@ -376,17 +375,69 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             Top, Bottom, Left, Right
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
     }
 
     //Custom button used to assign command
     public class RSButtonNative : UIButton
     {
-        public Command Command { get; set; }
+        public RSPopupRenderer dialog { get; set; }
+        public object CommandParameter { get; set; }
+        private Command command;
+        public Command Command
+        {
+            get
+            {
+                return command;
+            }
+            set
+            {
+                command = value;
+
+                if (command != null)
+                {
+                    command.CanExecuteChanged += Command_CanExecuteChanged;
+                    Command.ChangeCanExecute();
+                }
+            }
+        }
+
+        private void Command_CanExecuteChanged(object sender, EventArgs e)
+        {
+            if ((sender as Command).CanExecute(CommandParameter))
+                this.Enabled = true;
+            else
+                this.Enabled = false;
+        }
+
         public RSPopupButtonTypeEnum rSPopupButtonType { get; set; }
 
         public RSButtonNative(UIButtonType type, RSPopupButtonTypeEnum rSPopupButtonType) : base(type)
         {
             this.rSPopupButtonType = rSPopupButtonType;
+            this.SetTitleColor(UIColor.Gray, UIControlState.Disabled);
+            this.AddTarget(ButtonEventHandler, UIControlEvent.TouchUpInside);
+        }
+
+        private void ButtonEventHandler(object sender, EventArgs e)
+        {
+            var button = sender as RSButtonNative;
+
+            if (button.Command != null)
+                button.Command.Execute(null);
+
+
+            if (button.rSPopupButtonType == RSPopupButtonTypeEnum.Positive)
+                dialog.Dismiss(true);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
     }
 }

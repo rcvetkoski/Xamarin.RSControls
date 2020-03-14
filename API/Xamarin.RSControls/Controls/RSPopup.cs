@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.Interfaces;
@@ -108,9 +109,15 @@ namespace Xamarin.RSControls.Controls
             //TODO
         }
 
-        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, bool canExecute = true)
+        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command = null, object commandParameter = null)
         {
-            service.AddAction(title, rSPopupButtonType, command, canExecute);
+            service.AddAction(title, rSPopupButtonType, command, commandParameter);
         }
+
+        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, EventHandler handler)
+        {
+            service.AddAction(title, rSPopupButtonType, null, null);
+        }
+
     }
 }

@@ -22,13 +22,11 @@
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
                 android:id="@+id/dialog_title"/>
 
-            <ScrollView
-                android:layout_width="match_parent "
-                android:layout_height="match_parent">
+
 
 
                 <LinearLayout
@@ -46,14 +44,13 @@
                         android:textSize="12sp"
                         android:padding="5dp"
                         android:gravity="center_horizontal"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginBottom="0dp"
                         android:id="@+id/dialog_message"/>
 
                  </LinearLayout>
 
-            </ScrollView>
 
-         </LinearLayout>
+        </LinearLayout>
 
 
 

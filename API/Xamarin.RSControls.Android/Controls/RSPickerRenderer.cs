@@ -23,6 +23,7 @@ namespace Xamarin.RSControls.Droid.Controls
 {
     public class RSPickerRenderer : PickerRenderer, AdapterView.IOnItemClickListener, IDisposable
     {
+        private RSPopupRenderer sPopupRenderer;
         private AlertDialog alertDialog;
         private bool isTextInputLayout;
         private CustomBaseAdapter<object> adapter;
@@ -152,7 +153,10 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void CreatePickerDialog()
         {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(Context);
+            sPopupRenderer = new RSPopupRenderer();
+            sPopupRenderer.BorderRadius = 14;
+            sPopupRenderer.BorderFillColor = Color.White;
+            //AlertDialog.Builder dialog = new AlertDialog.Builder(Context);
 
 
             //LinearLayout
@@ -209,16 +213,16 @@ namespace Xamarin.RSControls.Droid.Controls
             layout.AddView(listViewAndroid);
 
             //SetView to dialog
-            dialog.SetView(layout);
-            dialog.SetTitle(ElementCasted.Title);
+            sPopupRenderer.SetNativeView(layout);
+            sPopupRenderer.Title = ElementCasted.Title;
 
 
 
-            dialog.SetPositiveButton("Done", (senderAlert, args) =>
+            sPopupRenderer.AddAction("Done", Enums.RSPopupButtonTypeEnum.Positive, (senderAlert, args) =>
             {
                 SetText();
             });
-            dialog.SetNegativeButton("Clear Item", (senderAlert, args) =>
+            sPopupRenderer.AddAction("Clear Item", Enums.RSPopupButtonTypeEnum.Neutral, (senderAlert, args) =>
             {
                 ElementCasted.SelectedItem = null;
                 ElementCasted.SelectedIndex = -1;
@@ -227,9 +231,11 @@ namespace Xamarin.RSControls.Droid.Controls
                     this.ElementCasted.SelectedItems.Clear();
 
                 SetText();
+                sPopupRenderer.Dismiss();
             });
 
-            alertDialog = dialog.Show();
+            //alertDialog = dialog.Show();
+            sPopupRenderer.ShowPopup();
         }
 
         private void SearchView_QueryTextChange(object sender, global::Android.Widget.SearchView.QueryTextChangeEventArgs e)
@@ -248,7 +254,8 @@ namespace Xamarin.RSControls.Droid.Controls
             if(this.ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
             {
                 ElementCasted.SelectedItem = instance;
-                alertDialog.Dismiss();
+                //alertDialog.Dismiss();
+                sPopupRenderer.Dismiss();
             }
             else
             {

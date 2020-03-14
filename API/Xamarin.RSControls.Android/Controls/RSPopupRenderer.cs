@@ -47,11 +47,13 @@ namespace Xamarin.RSControls.Droid.Controls
             this.customLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as LinearLayout;
             this.contentView = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
 
-            //Set here so it will be given good dimensions
-            if (CustomView != null)
-            {
-                SetCustomView();
-            }
+            ////Set here so it will be given good dimensions
+            //if (CustomView != null)
+            //{
+            //    SetCustomView();
+            //}
+
+            //this.contentView.AddView(new TextView(((AppCompatActivity)RSAppContext.RSContext)) { Text = "trolol", TextAlignment = global::Android.Views.TextAlignment.Center, Gravity = GravityFlags.Center });
         }
 
 
@@ -71,6 +73,11 @@ namespace Xamarin.RSControls.Droid.Controls
             base.OnStart();
 
             SetDialog();
+
+            //if (CustomView != null)
+            //{
+            //    SetCustomView();
+            //}
         }
 
 
@@ -102,7 +109,15 @@ namespace Xamarin.RSControls.Droid.Controls
         //Set and add custom view 
         private void SetCustomView()
         {
-            
+            CustomView.Layout(new Rectangle(0, 0, 600, 30));
+            var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(CustomView, new Rectangle(0, 0, 0, 0), Context);
+            this.contentView.AddView(nativeView);
+        }
+
+        //Set native view 
+        public void SetNativeView(global::Android.Views.View nativeView)
+        {
+            this.contentView.AddView(nativeView);
         }
 
         //Set dialog properties
@@ -177,20 +192,27 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             global::Android.Widget.TextView title = customLayout.FindViewById<global::Android.Widget.TextView>(Resource.Id.dialog_title);
             title.Text = this.Title;
+            if (string.IsNullOrEmpty(title.Text))
+                title.Visibility = ViewStates.Gone;
+            title.SetBackgroundColor(global::Android.Graphics.Color.Cyan);
             global::Android.Widget.TextView message = customLayout.FindViewById<global::Android.Widget.TextView>(Resource.Id.dialog_message);
             message.Text = this.Message;
+            if (string.IsNullOrEmpty(message.Text))
+                message.Visibility = ViewStates.Gone;
+            message.SetBackgroundColor(global::Android.Graphics.Color.Cyan);
+
             //customLayout.RemoveFromParent();
             Dialog.SetContentView(customLayout);
         }
 
         //Buttons
-        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, bool canExecute)
+        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter)
         {
             if(rSPopupButtonType == RSPopupButtonTypeEnum.Positive)
             {
                 positiveButton = customLayout.FindViewById<RSAndroidButton>(Resource.Id.action_positive);
                 positiveButton.dialog = this;
-                positiveButton.CanExecute = canExecute;
+                positiveButton.CommandParameter = commandParameter;
                 positiveButton.Command = command;
                 positiveButton.Text = title;
                 positiveButton.Visibility = ViewStates.Visible;
@@ -199,7 +221,7 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 neutralButton = customLayout.FindViewById<RSAndroidButton>(Resource.Id.action_neutral);
                 neutralButton.dialog = this;
-                neutralButton.CanExecute = canExecute;
+                neutralButton.CommandParameter = commandParameter;
                 neutralButton.Command = command;
                 neutralButton.Text = title;
                 neutralButton.Visibility = ViewStates.Visible;
@@ -208,7 +230,7 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 destructiveButton = customLayout.FindViewById<RSAndroidButton>(Resource.Id.action_destructive);
                 destructiveButton.dialog = this;
-                destructiveButton.CanExecute = canExecute;
+                destructiveButton.CommandParameter = commandParameter;
                 destructiveButton.Command = command;
                 //destructiveButton.SetTextColor(global::Android.Graphics.Color.Red);
                 destructiveButton.Text = title;
@@ -220,6 +242,39 @@ namespace Xamarin.RSControls.Droid.Controls
             }            
         }
 
+        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, EventHandler handler)
+        {
+            if (rSPopupButtonType == RSPopupButtonTypeEnum.Positive)
+            {
+                positiveButton = customLayout.FindViewById<RSAndroidButton>(Resource.Id.action_positive);
+                positiveButton.ClickHandler = handler;
+                positiveButton.dialog = this;
+                positiveButton.Text = title;
+                positiveButton.Visibility = ViewStates.Visible;
+            }
+            else if (rSPopupButtonType == RSPopupButtonTypeEnum.Neutral)
+            {
+                neutralButton = customLayout.FindViewById<RSAndroidButton>(Resource.Id.action_neutral);
+                neutralButton.ClickHandler = handler;
+                neutralButton.dialog = this;
+                neutralButton.Text = title;
+                neutralButton.Visibility = ViewStates.Visible;
+            }
+            else if (rSPopupButtonType == RSPopupButtonTypeEnum.Destructive)
+            {
+                destructiveButton = customLayout.FindViewById<RSAndroidButton>(Resource.Id.action_destructive);
+                destructiveButton.ClickHandler = handler;
+                destructiveButton.dialog = this;
+                destructiveButton.Text = title;
+                destructiveButton.Visibility = ViewStates.Visible;
+            }
+            else
+            {
+
+            }
+        }
+
+
         //Orientation change
         public override void OnConfigurationChanged(Configuration newConfig)
         {
@@ -227,8 +282,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             SetDialog();
         }
-
-
 
 
         protected override void Dispose(bool disposing)
@@ -240,34 +293,46 @@ namespace Xamarin.RSControls.Droid.Controls
     //Custom button used to assign command
     public class RSAndroidButton : global::Android.Widget.Button, global::Android.Views.View.IOnClickListener
     {
-        public Command Command { get; set; }
-        public global::Android.Support.V4.App.DialogFragment dialog { get; set; }
-        private bool canExecute;
-        public bool CanExecute
+        public EventHandler ClickHandler { get; set; }
+        public object CommandParameter { get; set; }
+        private Command command;
+        public Command Command
         {
             get
             {
-                return canExecute;
+                return command;
             }
             set
             {
-                canExecute = value;
-                this.Enabled = false;
+                command = value;
+
+                if(command != null)
+                {
+                    Command.CanExecuteChanged += Command_CanExecuteChanged;
+                    Command.ChangeCanExecute();
+                }
             }
         }
+
+        private void Command_CanExecuteChanged(object sender, EventArgs e)
+        {
+            if ((sender as Command).CanExecute(CommandParameter))
+                this.Enabled = true;
+            else
+                this.Enabled = false;
+        }
+
+        public global::Android.Support.V4.App.DialogFragment dialog { get; set; }
+
 
         public RSAndroidButton(Context context) : base(context)
         {
             this.SetOnClickListener(this);
         }
-
         public RSAndroidButton(Context context, IAttributeSet attrs) : base(context, attrs)
         {
             this.SetOnClickListener(this);
-            
-
         }
-
         public RSAndroidButton(Context context, IAttributeSet attrs, int defStyleAttr) : base(context, attrs, defStyleAttr)
         {
             this.SetOnClickListener(this);
@@ -290,8 +355,22 @@ namespace Xamarin.RSControls.Droid.Controls
             if (button.Command != null)
                 button.Command.Execute(null);
 
+            if (button.ClickHandler != null)
+                button.ClickHandler.Invoke(button, EventArgs.Empty);
+
             if (button.Id.Equals(Resource.Id.action_positive))
                 this.dialog.Dialog.Dismiss();
+        }
+
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if(disposing)
+            {
+                this.Command.CanExecuteChanged-= Command_CanExecuteChanged;
+            }
         }
     }
 }

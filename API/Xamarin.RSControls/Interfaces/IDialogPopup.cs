@@ -16,8 +16,7 @@ namespace Xamarin.RSControls.Interfaces
         bool ShadowEnabled { get; set; }
         Forms.View RelativeView { get; set; }
         Forms.View CustomView { get; set; }
-        void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, bool canExecute);
+        void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter);
         void ShowPopup();
     }
-
 }

@@ -51,12 +51,20 @@ namespace Samples
 
 
 
-            RSCommand = new Command(RSCommandMethod);
+            RSCommand = new Command(RSCommandMethod, CanExec);
         }
 
-        public void RSCommandMethod()
+        public void RSCommandMethod(object obj)
         {
+            RSCommand.ChangeCanExecute();
+        }
 
+        public bool CanExec(object obj)
+        {
+            if (Lolo == "Troll")
+                return true;
+            else
+                return false;
         }
 
         private double numericEntryValue;
@@ -204,8 +212,19 @@ namespace Samples
         public DateTime MaxDate { get; set; }
         public DateTime MinDate { get; set; }
 
-
-        public string Lolo { get; set; }
+        private string lol;
+        public string Lolo
+        {
+            get
+            {
+                return lol;
+            }
+            set
+            {
+                lol = value;
+                OnPropertyChanged("Lolo");
+            }
+        }
 
 
 

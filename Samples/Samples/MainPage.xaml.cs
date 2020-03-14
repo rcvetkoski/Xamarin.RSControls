@@ -33,13 +33,24 @@ namespace Samples
             RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessage");
             rsPopup.SetPopupPosition(sender as View);
             //rsPopup.SetPopupPosition((float)(sender as View).X, (float)(sender as View).Bounds.Location.Y + (float)(sender as View).Height);
+            //rsPopup.SetCustomView(new Label() { Text = "Trololol", HorizontalOptions = LayoutOptions.Fill, HorizontalTextAlignment = TextAlignment.Center });
+            RSEntry entry = new RSEntry() {Placeholder = "Enter some text", HorizontalOptions = LayoutOptions.FillAndExpand};
+           // entry.SetBinding(Entry.TextProperty, (this.BindingContext as MainPageViewModel).Lolo, BindingMode.TwoWay);
+
+            entry.SetBinding(Entry.TextProperty, new Binding("Lolo", BindingMode.TwoWay) { Source = this.BindingContext });
+            entry.TextChanged += Entry_TextChanged;
+            rsPopup.SetCustomView(entry);
             rsPopup.SetDimAmount(0f);
             rsPopup.Show();
-            rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive, (this.BindingContext as MainPageViewModel).RSCommand, false);
+            rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
-            rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive, null, true);
+            rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
+                                        (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
+        }
 
-
+        private void Entry_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            (this.BindingContext as MainPageViewModel).RSCommand.ChangeCanExecute();
         }
     }
 }
