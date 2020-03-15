@@ -74,10 +74,10 @@ namespace Xamarin.RSControls.Droid.Controls
 
             SetDialog();
 
-            //if (CustomView != null)
-            //{
-            //    SetCustomView();
-            //}
+            if (CustomView != null)
+            {
+                SetCustomView();
+            }
         }
 
 
@@ -109,7 +109,6 @@ namespace Xamarin.RSControls.Droid.Controls
         //Set and add custom view 
         private void SetCustomView()
         {
-            CustomView.Layout(new Rectangle(0, 0, 600, 30));
             var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(CustomView, new Rectangle(0, 0, 0, 0), Context);
             this.contentView.AddView(nativeView);
         }
@@ -194,12 +193,10 @@ namespace Xamarin.RSControls.Droid.Controls
             title.Text = this.Title;
             if (string.IsNullOrEmpty(title.Text))
                 title.Visibility = ViewStates.Gone;
-            title.SetBackgroundColor(global::Android.Graphics.Color.Cyan);
             global::Android.Widget.TextView message = customLayout.FindViewById<global::Android.Widget.TextView>(Resource.Id.dialog_message);
             message.Text = this.Message;
             if (string.IsNullOrEmpty(message.Text))
                 message.Visibility = ViewStates.Gone;
-            message.SetBackgroundColor(global::Android.Graphics.Color.Cyan);
 
             //customLayout.RemoveFromParent();
             Dialog.SetContentView(customLayout);
@@ -287,6 +284,11 @@ namespace Xamarin.RSControls.Droid.Controls
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+
+            //Force dispose so we can remove CanExecuteChanged event on command in buttons dispose method
+            positiveButton?.Dispose();
+            neutralButton?.Dispose();
+            destructiveButton?.Dispose();
         }
     }
 
@@ -367,9 +369,10 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.Dispose(disposing);
 
-            if(disposing)
+            if (disposing)
             {
-                this.Command.CanExecuteChanged-= Command_CanExecuteChanged;
+                if(this.Command != null)
+                    this.Command.CanExecuteChanged -= Command_CanExecuteChanged;
             }
         }
     }

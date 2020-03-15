@@ -11,18 +11,13 @@ namespace Xamarin.RSControls.iOS.Extensions
         {
             var renderer = Platform.CreateRenderer(view);
 
-            renderer.NativeView.Frame = size;
-
+            //renderer.NativeView.Frame = size;
             renderer.NativeView.AutoresizingMask = UIViewAutoresizing.All;
             renderer.NativeView.ContentMode = UIViewContentMode.ScaleToFill;
-
-            renderer.Element.Layout(size.ToRectangle());
-
+            //renderer.Element.Layout(size.ToRectangle());
             var nativeView = renderer.NativeView;
 
-            nativeView.SetNeedsLayout();
-
-            return nativeView;
+            return nativeView.Subviews[0];
         }
     }
 }

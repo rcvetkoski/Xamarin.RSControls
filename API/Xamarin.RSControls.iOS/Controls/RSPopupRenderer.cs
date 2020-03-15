@@ -79,11 +79,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //ContentStack
             contentStack = new UIStackView();
-
-            //Content scroll
-            contentScroll = new UIScrollView();
-            contentScroll.AddSubview(contentStack);
-            dialogStack.AddArrangedSubview(contentScroll);
+            dialogStack.AddArrangedSubview(contentStack);
 
             //Message
             messageLabel = new UITextView();
@@ -120,17 +116,12 @@ namespace Xamarin.RSControls.iOS.Controls
             DialogView.Layer.ShadowOffset = new CGSize(0f, 5f);
 
 
-
             //Constraints
             DialogView.TranslatesAutoresizingMaskIntoConstraints = false;
 
             ////Set size
             DialogView.WidthAnchor.ConstraintEqualTo(dialogStack.WidthAnchor).Active = true;
             DialogView.HeightAnchor.ConstraintEqualTo(dialogStack.HeightAnchor).Active = true;
-            ////DialogView.WidthAnchor.ConstraintLessThanOrEqualTo(this.WidthAnchor, 0.9f).Active = true;
-            ////DialogView.HeightAnchor.ConstraintLessThanOrEqualTo(this.HeightAnchor, 0.8f).Active = true;
-            ////DialogView.WidthAnchor.ConstraintGreaterThanOrEqualTo(220f).Active = true;
-            ////DialogView.HeightAnchor.ConstraintGreaterThanOrEqualTo(150f).Active = true;
 
             ////Position dialog
             DialogView.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
@@ -145,43 +136,21 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //Constraints
             dialogStack.TranslatesAutoresizingMaskIntoConstraints = false;
-            //dialogStack.TopAnchor.ConstraintEqualTo(DialogView.TopAnchor).Active = true;
-            //dialogStack.BottomAnchor.ConstraintEqualTo(DialogView.BottomAnchor).Active = true;
-            //dialogStack.LeadingAnchor.ConstraintEqualTo(DialogView.LeadingAnchor).Active = true;
-            //dialogStack.TrailingAnchor.ConstraintEqualTo(DialogView.TrailingAnchor).Active = true;
-
             dialogStack.WidthAnchor.ConstraintGreaterThanOrEqualTo(250f).Active = true;
             dialogStack.WidthAnchor.ConstraintLessThanOrEqualTo(this.WidthAnchor, 0.9f).Active = true;
+            dialogStack.HeightAnchor.ConstraintLessThanOrEqualTo(this.HeightAnchor, 0.7f).Active = true;
+            dialogStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(150f).Active = true;
 
             dialogStack.CenterXAnchor.ConstraintEqualTo(DialogView.CenterXAnchor).Active = true;
             dialogStack.CenterYAnchor.ConstraintEqualTo(DialogView.CenterYAnchor).Active = true;
         }
 
         //Set content scrollview
-        private void SetupContentScroll()
+        private void SetupContentStack()
         {
             //content stack
             contentStack.Axis = UILayoutConstraintAxis.Vertical;
             contentStack.Distribution = UIStackViewDistribution.Fill;
-
-            contentStack.TranslatesAutoresizingMaskIntoConstraints = false;
-            contentStack.LeadingAnchor.ConstraintEqualTo(contentScroll.LeadingAnchor).Active = true;
-            contentStack.TrailingAnchor.ConstraintEqualTo(contentScroll.TrailingAnchor).Active = true;
-            contentStack.TopAnchor.ConstraintEqualTo(contentScroll.TopAnchor).Active = true;
-            contentStack.BottomAnchor.ConstraintEqualTo(contentScroll.BottomAnchor).Active = true;
-            contentStack.WidthAnchor.ConstraintLessThanOrEqualTo(this.WidthAnchor,0.9f).Active = true;
-
-
-            //Scroll
-            contentScroll.BackgroundColor = UIColor.Clear;
-            contentScroll.TranslatesAutoresizingMaskIntoConstraints = false;
-            contentScroll.WidthAnchor.ConstraintEqualTo(contentStack.WidthAnchor).Active = true;
-            contentScroll.HeightAnchor.ConstraintLessThanOrEqualTo(this.HeightAnchor, 0.7f).Active = true;
-            var heightEqualConstraint = contentScroll.HeightAnchor.ConstraintEqualTo(contentStack.HeightAnchor);
-            heightEqualConstraint.Priority = 250; //low priority
-            heightEqualConstraint.Active = true;
-            contentScroll.HeightAnchor.ConstraintGreaterThanOrEqualTo(60f).Active = true;
-
         }
 
         //Create buttons stack
@@ -216,6 +185,7 @@ namespace Xamarin.RSControls.iOS.Controls
             titleText.TextColor = UIColor.DarkGray;
             titleText.Font = UIFont.BoldSystemFontOfSize(fontSize);
             titleText.TextAlignment = UITextAlignment.Center;
+            titleText.UserInteractionEnabled = false;
             titleText.ScrollEnabled = false;
             titleText.TextContainerInset = new UIEdgeInsets(15, 0, 5, 0);
         }
@@ -228,7 +198,7 @@ namespace Xamarin.RSControls.iOS.Controls
             messageLabel.Text = message;
             messageLabel.Font = UIFont.SystemFontOfSize(fontSize);
             messageLabel.TextAlignment = UITextAlignment.Center;
-            //messageLabel.TextContainer.HeightTracksTextView = true;
+            messageLabel.UserInteractionEnabled = false;
             messageLabel.ScrollEnabled = false;
             messageLabel.TextContainer.LineBreakMode = UILineBreakMode.WordWrap;
             messageLabel.TextContainerInset = new UIEdgeInsets(5, 5, 5, 5);
@@ -237,9 +207,12 @@ namespace Xamarin.RSControls.iOS.Controls
         //Set and add custom view 
         private void SetCustomView()
         {
-            var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(CustomView, new CGRect(0,0,300,370));
+
+
+            var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(CustomView, new CGRect(0, 0, 200, 200));
             this.contentStack.AddArrangedSubview(nativeView);
-            this.contentStack.LayoutIfNeeded();
+            contentStack.InvalidateIntrinsicContentSize();
+            contentStack.LayoutIfNeeded();
         }
 
         //Buttons
@@ -307,7 +280,7 @@ namespace Xamarin.RSControls.iOS.Controls
             SetupBackgroundView();
             SetupDialogView();
             SetupDialogStack();
-            SetupContentScroll();
+            SetupContentStack();
             SetTitle(Title, 18);
             CreateButtonsStack();
             SetMessage(Message, 12);

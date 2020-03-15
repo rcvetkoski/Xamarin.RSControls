@@ -32,14 +32,14 @@ namespace Samples
 
             RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessage");
             rsPopup.SetPopupPosition(sender as View);
-            //rsPopup.SetPopupPosition((float)(sender as View).X, (float)(sender as View).Bounds.Location.Y + (float)(sender as View).Height);
-            //rsPopup.SetCustomView(new Label() { Text = "Trololol", HorizontalOptions = LayoutOptions.Fill, HorizontalTextAlignment = TextAlignment.Center });
             RSEntry entry = new RSEntry() {Placeholder = "Enter some text", HorizontalOptions = LayoutOptions.FillAndExpand};
-           // entry.SetBinding(Entry.TextProperty, (this.BindingContext as MainPageViewModel).Lolo, BindingMode.TwoWay);
-
             entry.SetBinding(Entry.TextProperty, new Binding("Lolo", BindingMode.TwoWay) { Source = this.BindingContext });
             entry.TextChanged += Entry_TextChanged;
-            rsPopup.SetCustomView(entry);
+
+            StackLayout stackLayout = new StackLayout();
+            stackLayout.Children.Add(entry);
+
+            rsPopup.SetCustomView(stackLayout);
             rsPopup.SetDimAmount(0f);
             rsPopup.Show();
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);

@@ -7,6 +7,7 @@ using Android.Views;
 using Android.Widget;
 using System.Threading.Tasks;
 using Xamarin.Forms.Platform.Android;
+using Xamarin.RSControls.Droid.Controls;
 
 namespace Xamarin.RSControls.Droid.Extensions
 {
@@ -51,10 +52,12 @@ namespace Xamarin.RSControls.Droid.Extensions
         {
             var vRenderer = Platform.CreateRendererWithContext(view, context);
             var androidView = vRenderer.View;
+
             vRenderer.Tracker.UpdateLayout();
+            //vRenderer.View.contr
 
             var widthTotal = 0;
-            var spacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 6, context.Resources.DisplayMetrics); ;
+            var spacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 6, context.Resources.DisplayMetrics); 
             var heightTotal = 0;
 
             if (androidView is ViewGroup && (androidView as ViewGroup).ChildCount >= 1)
