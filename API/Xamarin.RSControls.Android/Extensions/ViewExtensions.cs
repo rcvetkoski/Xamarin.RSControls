@@ -35,7 +35,6 @@ namespace Xamarin.RSControls.Droid.Extensions
             return bitmap;
         }
 
-
         public static Bitmap ConvertViewToBitmap(global::Android.Views.View v)
         {
             v.SetLayerType(LayerType.Hardware, null);
@@ -85,7 +84,6 @@ namespace Xamarin.RSControls.Droid.Extensions
             androidView.Layout(0, 0, widthTotal, heightTotal);
             return androidView;
         }
-
 
         public static int IntToDip (int value, global::Android.Content.Context context)
         {
