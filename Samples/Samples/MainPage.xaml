@@ -121,6 +121,11 @@
                 </rs:RSEntry.LeftIcon>
             </rs:RSEntry>
 
+            <Grid>
+                <Editor Grid.Row="0" Grid.Column="0" Placeholder="Hint" Text="Trollo" AutoSize="TextChanges" BackgroundColor="Green"></Editor>
+                <Entry Grid.Row="0" Grid.Column="1" Placeholder="Text here"></Entry>
+            </Grid>
+
         </StackLayout>
     </ScrollView>
 </ContentPage>

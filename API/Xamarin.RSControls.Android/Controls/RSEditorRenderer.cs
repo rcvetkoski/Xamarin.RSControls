@@ -26,6 +26,7 @@ namespace Xamarin.RSControls.Droid.Controls
             if (this.Element is IRSControl)
                 this.Element.Placeholder = "";
 
+
             //This fixes scroll problem when inside scrollview
             this.Control.SetOnTouchListener(this);
         }

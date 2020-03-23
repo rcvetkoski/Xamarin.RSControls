@@ -56,7 +56,6 @@ namespace Xamarin.RSControls.Droid.Controls
                 (this.Control as CustomEditText).ErrorMessage = (this.Element as RSEntry).Error;
         }
 
-
         internal void SetIsTextInputLayout(bool value)
         {
             isTextInputLayout = value;
@@ -227,7 +226,6 @@ namespace Xamarin.RSControls.Droid.Controls
             //On touch listener
             //this.SetOnTouchListener(this);
         }
-
 
         private void SetPaddingValues()
         {

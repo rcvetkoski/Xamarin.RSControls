@@ -180,8 +180,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 this.floatingFontSize = 12;
 
             this.floatingHintMaskPadding = 3;
-            this.borderRadius = rSControl.BorderRadius / 2; //divided by 2 to get android equivalent value
-            this.shadowRadius = rSControl.ShadowRadius / 3; //divided by 2 to get android equivalent value
+            this.borderRadius = rSControl.BorderRadius;
+            this.shadowRadius = rSControl.ShadowRadius;
             this.counterMaxLength = this.rSControl.CounterMaxLength;
             this.borderColor = this.rSControl.BorderColor.ToUIColor();
             this.borderWidth = 1;
@@ -240,7 +240,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if ((rSControl as RSEditor).AutoSize == EditorAutoSizeOption.Disabled || (rSControl as RSEditor).HeightRequest != -1)
                 this.Scrolled += RSUITextView_Scrolled;
             
-
+            
             //Set event for device orientation change so we can reset border frame and mask
             deviceRotationObserver = NSNotificationCenter.DefaultCenter.AddObserver(new NSString("UIDeviceOrientationDidChangeNotification"), DeviceRotated);
         }
@@ -383,6 +383,7 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             borderContainer = new UIView();
             borderContainer.UserInteractionEnabled = false;
+            this.BackgroundColor = UIColor.Clear;
         }
         //Rounded Border
         private void CreateRoundedBorder()
@@ -624,7 +625,6 @@ namespace Xamarin.RSControls.iOS.Controls
              filledBorder.Frame = new CGRect(0, topSpacing, this.Frame.Width, this.Frame.Height - this.bottomSpacing);
              border.Frame = new CGRect(0, topSpacing + this.Frame.Height - this.bottomSpacing - border.BorderWidth, this.Frame.Width, border.BorderWidth);
          }
-        
         //Set Underline border frame
         public void UpdateUnderlineBorder()
         {
@@ -688,6 +688,7 @@ namespace Xamarin.RSControls.iOS.Controls
             CATransaction.DisableActions = true;
             UpdateBorder();
             CATransaction.Commit();
+
 
             //Init floatingHint X and Y values
             if (!hasInitfinished)
@@ -767,7 +768,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 borderContainer.Frame = new CGRect(0, 0, this.Frame.Width, this.Frame.Height);
                 this.Superview.AddSubview(borderContainer);
-                this.BackgroundColor = UIColor.Clear;
                 borderContainer.Layer.ZPosition = -1;
 
 
@@ -783,6 +783,9 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 
                 hasInitfinished = true;
+
+
+                UpdateBorder();
             }
 
             //Update error
@@ -796,8 +799,8 @@ namespace Xamarin.RSControls.iOS.Controls
             //Counter
             if (this.counterMaxLength != -1)
                 SetCounter();
-     
-   }
+        }
+
 
         //Remove any events when closed
         protected override void Dispose(bool disposing)

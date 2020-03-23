@@ -165,9 +165,9 @@ namespace Xamarin.RSControls.iOS.Controls
             topBorder.HeightAnchor.ConstraintEqualTo(0.5f).Active = true;
 
 
-            positiveButton = new RSButtonNative(UIButtonType.System, RSPopupButtonTypeEnum.Positive) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(12, 10, 12, 10) }; 
-            neutralButton = new RSButtonNative(UIButtonType.System, RSPopupButtonTypeEnum.Neutral) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(12, 10, 12, 10) }; 
-            destructiveButton = new RSButtonNative(UIButtonType.System, RSPopupButtonTypeEnum.Destructive) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(12, 10, 12, 10) }; 
+            positiveButton = new RSButtonNative(RSPopupButtonTypeEnum.Positive, UIColor.SystemBlueColor) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(12, 10, 12, 10) }; 
+            neutralButton = new RSButtonNative(RSPopupButtonTypeEnum.Neutral, UIColor.SystemBlueColor) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(12, 10, 12, 10) }; 
+            destructiveButton = new RSButtonNative(RSPopupButtonTypeEnum.Destructive, UIColor.SystemRedColor) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(12, 10, 12, 10) }; 
 
 
             buttonsStack.AddArrangedSubview(destructiveButton);
@@ -207,12 +207,15 @@ namespace Xamarin.RSControls.iOS.Controls
         //Set and add custom view 
         private void SetCustomView()
         {
+            var renderer = Platform.CreateRenderer(CustomView);
+            Platform.SetRenderer(CustomView, renderer);
+            var convertView = new Extensions.FormsToiosCustomDialogView(CustomView, renderer, this.DialogView);
+            //convertView.InvalidateIntrinsicContentSize();
 
-
-            var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(CustomView, new CGRect(0, 0, 200, 200));
-            this.contentStack.AddArrangedSubview(nativeView);
-            contentStack.InvalidateIntrinsicContentSize();
-            contentStack.LayoutIfNeeded();
+            //var nativeView = Extensions.ViewExtensions.
+            UITextView uITextView = new UITextView();
+            uITextView.Text = "rolfowqf";
+            this.contentStack.AddArrangedSubview(convertView);
         }
 
         //Buttons
@@ -242,7 +245,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 destructiveButton.Command = command;
                 destructiveButton.Hidden = false;
                 destructiveButton.SetTitle(title, UIControlState.Normal);
-                destructiveButton.SetTitleColor(UIColor.SystemRedColor, UIControlState.Normal);
                 AddBorder(destructiveButton);
             }
             else
@@ -271,6 +273,9 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 this.RemoveFromSuperview();
             }
+
+
+            this.Dispose();
         }
 
         //ShowPopup
@@ -352,6 +357,15 @@ namespace Xamarin.RSControls.iOS.Controls
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+
+            if(disposing)
+            {
+                foreach(var item in this.contentStack.Subviews)
+                {
+                    item.Dispose();
+                }
+            }
+
         }
     }
 
@@ -389,12 +403,21 @@ namespace Xamarin.RSControls.iOS.Controls
 
         public RSPopupButtonTypeEnum rSPopupButtonType { get; set; }
 
-        public RSButtonNative(UIButtonType type, RSPopupButtonTypeEnum rSPopupButtonType) : base(type)
+        public RSButtonNative(RSPopupButtonTypeEnum rSPopupButtonType, UIColor titleColor) : base()
         {
             this.rSPopupButtonType = rSPopupButtonType;
+            this.SetTitleColor(titleColor, UIControlState.Normal);
+            this.SetTitleColor(titleColor.ColorWithAlpha(0.5f), UIControlState.Highlighted);
             this.SetTitleColor(UIColor.Gray, UIControlState.Disabled);
             this.AddTarget(ButtonEventHandler, UIControlEvent.TouchUpInside);
         }
+
+        //public RSButtonNative(UIButtonType type, RSPopupButtonTypeEnum rSPopupButtonType) : base(type)
+        //{
+        //    this.rSPopupButtonType = rSPopupButtonType;
+        //    this.SetTitleColor(UIColor.Gray, UIControlState.Disabled);
+        //    this.AddTarget(ButtonEventHandler, UIControlEvent.TouchUpInside);
+        //}
 
         private void ButtonEventHandler(object sender, EventArgs e)
         {

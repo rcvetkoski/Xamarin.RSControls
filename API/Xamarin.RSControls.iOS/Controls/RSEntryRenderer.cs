@@ -28,7 +28,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 return;
 
             //Delete placeholder as we use floating hint instead
-            Element.Placeholder = "";
+            //Element.Placeholder = "";
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -827,6 +827,9 @@ namespace Xamarin.RSControls.iOS.Controls
             if (this.counterMaxLength != -1)
                 SetCounter();
         }
+
+        //Draw placeholder for intristic content size but give it transparent color
+        public override NSAttributedString AttributedPlaceholder { get => new NSAttributedString(base.AttributedPlaceholder.Value, null, UIColor.Clear); set => base.AttributedPlaceholder = value; }
 
 
         //Remove any events when closed

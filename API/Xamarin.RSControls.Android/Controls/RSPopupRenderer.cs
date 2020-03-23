@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows.Input;
 using Android.App;
 using Android.Content;
@@ -72,15 +73,16 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnStart();
 
-            SetDialog();
-
             if (CustomView != null)
             {
                 SetCustomView();
             }
+
+
+            SetDialog();
         }
 
-
+        //Show popup
         public void ShowPopup()
         {
             //Check if it is already added & ANDROID context not null
@@ -88,14 +90,13 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.Show(((AppCompatActivity)RSAppContext.RSContext).SupportFragmentManager, "sc");
         }
 
-
+        //Dismiss
         public override void OnDismiss(IDialogInterface dialog)
         {
             base.OnDismiss(dialog);
 
             this.Dispose();
         }
-
 
         //Action bar height
         private int OffsetY()
@@ -106,11 +107,23 @@ namespace Xamarin.RSControls.Droid.Controls
             return val;
         }
 
+
         //Set and add custom view 
         private void SetCustomView()
         {
-            var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(CustomView, new Rectangle(0, 0, 0, 0), Context);
-            this.contentView.AddView(nativeView);
+            var minWidth = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 270, Context.Resources.DisplayMetrics);
+            var minHeigth = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 150, Context.Resources.DisplayMetrics);
+
+            //var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(CustomView, new Rectangle(0, 0, minWidth, minHeigth), Context);
+
+
+
+
+            var renderer = Platform.CreateRendererWithContext(CustomView, Context);
+            Platform.SetRenderer(CustomView, renderer);
+            var convertView = new Extensions.ViewCellContainer(Context, CustomView, renderer);
+
+            this.contentView.AddView(convertView);
         }
 
         //Set native view 
@@ -238,7 +251,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             }            
         }
-
         public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, EventHandler handler)
         {
             if (rSPopupButtonType == RSPopupButtonTypeEnum.Positive)
@@ -280,7 +292,7 @@ namespace Xamarin.RSControls.Droid.Controls
             SetDialog();
         }
 
-
+        //Dispose
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
