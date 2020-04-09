@@ -47,7 +47,6 @@ namespace Xamarin.RSControls.Droid.Controls
             //Inflate custom layout
             this.customLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as LinearLayout;
             this.contentView = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
-
             ////Set here so it will be given good dimensions
             //if (CustomView != null)
             //{
@@ -68,10 +67,14 @@ namespace Xamarin.RSControls.Droid.Controls
             return builder.Create();
         }
 
-
+        
         public override void OnStart()
         {
             base.OnStart();
+
+            //Fix for Control that call keyboard like entry (keyboard not showing up)
+            Dialog.Window.ClearFlags(WindowManagerFlags.NotFocusable | WindowManagerFlags.AltFocusableIm);
+            Dialog.Window.SetSoftInputMode(SoftInput.StateAlwaysVisible);
 
             if (CustomView != null)
             {
@@ -160,8 +163,9 @@ namespace Xamarin.RSControls.Droid.Controls
                 attrs.Width = minWidth;
 
 
-            //if (customLayout.MeasuredHeight > minHeigth && customLayout.MeasuredHeight > metrics.HeightPixels * 0.8)
-            //    attrs.Height = (int)(metrics.HeightPixels * 0.8);
+            //contentView.Measure(metrics.WidthPixels, metrics.HeightPixels);
+            //if (contentView.MeasuredHeight > minHeigth && contentView.MeasuredHeight > metrics.HeightPixels * 0.5)
+            //    attrs.Height = (int)(metrics.HeightPixels * 0.5);
 
 
 
