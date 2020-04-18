@@ -39,14 +39,18 @@ namespace Samples
 
             RSEntry entry2 = new RSEntry() { Placeholder = "Enter some text", Helper = "Helper !"};
 
-            Grid stack = new Grid() { BackgroundColor = Color.Cyan };
+            Grid stack = new Grid() { BackgroundColor = Color.Cyan};
             stack.Children.Add(entry, 0, 0);
             //stack.Children.Add(entry2, 1, 0);
             stack.Padding = new Thickness(30);
 
-
-            rsPopup.SetCustomView(stack);
+            //rsPopup.SetCustomView(stack);
             rsPopup.SetDimAmount(0.5f);
+            rsPopup.SetPopupPosition(sender as View);
+
+
+
+
             rsPopup.Show();
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);

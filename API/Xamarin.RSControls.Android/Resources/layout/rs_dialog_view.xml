@@ -7,7 +7,6 @@
         android:divider="?android:dividerVertical"
         android:showDividers="middle">
 
-
         <LinearLayout
             android:id="@+id/content"
             android:orientation="vertical"
@@ -26,19 +25,15 @@
                 android:layout_marginBottom="10dp"
                 android:id="@+id/dialog_title"/>
 
-
-
-
-                <LinearLayout
+            <LinearLayout
                     android:id="@+id/contentView"
                     android:layout_width="match_parent "
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="Message"
                         android:textStyle="bold"
                         android:textSize="12sp"
@@ -47,11 +42,9 @@
                         android:layout_marginBottom="10dp"
                         android:id="@+id/dialog_message"/>
 
-                 </LinearLayout>
-
+            </LinearLayout>
 
         </LinearLayout>
-
 
 
         <LinearLayout
@@ -95,4 +88,4 @@
 
         </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>

@@ -8,6 +8,7 @@ using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.Constraints;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
 using Android.Util;
@@ -85,6 +86,8 @@ namespace Xamarin.RSControls.Droid.Controls
             SetDialog();
         }
 
+
+
         //Show popup
         public void ShowPopup()
         {
@@ -104,24 +107,22 @@ namespace Xamarin.RSControls.Droid.Controls
         //Action bar height
         private int OffsetY()
         {
-            int resourceId = Resources.GetIdentifier("navigation_bar_height", "dimen", "android");
-            //var id = Resources.GetIdentifier("status_bar_height", "dimen", "android");
-            var val = Context.Resources.GetDimensionPixelSize(resourceId);
-            return val;
+            var height = 0;
+
+            Resources resources = Context.Resources;
+            int resourceId = resources.GetIdentifier("navigation_bar_height_landscape", "dimen", "android");
+            if (resourceId > 0)
+            {
+                height = resources.GetDimensionPixelSize(resourceId);
+            }
+
+            return height;
         }
 
 
         //Set and add custom view 
         private void SetCustomView()
         {
-            var minWidth = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 270, Context.Resources.DisplayMetrics);
-            var minHeigth = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 150, Context.Resources.DisplayMetrics);
-
-            //var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(CustomView, new Rectangle(0, 0, minWidth, minHeigth), Context);
-
-
-
-
             var renderer = Platform.CreateRendererWithContext(CustomView, Context);
             Platform.SetRenderer(CustomView, renderer);
             var convertView = new Extensions.ViewCellContainer(Context, CustomView, renderer);
@@ -146,10 +147,7 @@ namespace Xamarin.RSControls.Droid.Controls
             SetBackground();
             SetCustomLayout();
 
-            //Set the gravity top and left so it starts at real 0 coordinates than aply position
-            //Dialog.Window.SetGravity(GravityFlags.Top | GravityFlags.Left);
-            //attrs.X = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)PositionX, Context.Resources.DisplayMetrics);
-            //attrs.Y = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)PositionY, Context.Resources.DisplayMetrics) + OffsetY();
+
 
 
             customLayout.Measure(metrics.WidthPixels, metrics.HeightPixels);
@@ -163,26 +161,126 @@ namespace Xamarin.RSControls.Droid.Controls
                 attrs.Width = minWidth;
 
 
-            //contentView.Measure(metrics.WidthPixels, metrics.HeightPixels);
-            //if (contentView.MeasuredHeight > minHeigth && contentView.MeasuredHeight > metrics.HeightPixels * 0.5)
-            //    attrs.Height = (int)(metrics.HeightPixels * 0.5);
+
+
+            //Position
 
 
 
-            ////Height
-            //if (customLayout.MeasuredHeight > minHeigth && customLayout.MeasuredHeight < metrics.HeightPixels * 0.8)
-            //    attrs.Height = customLayout.MeasuredHeight;
-            //else if (customLayout.MeasuredHeight > metrics.HeightPixels * 0.9)
-            //    attrs.Height = (int)(metrics.HeightPixels * 0.9);
-            //else
-            //    attrs.Height = minHeigth;
 
+            //attrs.X = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)RelativeView.Bounds.X, Context.Resources.DisplayMetrics));
+            //var mainDisplayInfo = Essentials.DeviceDisplay.MainDisplayInfo;
+            //var density = mainDisplayInfo.Density;
+
+            //var y = GetScreenCoordinates(RelativeView);
+
+            //attrs.Y = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)y.Y + 56, Context.Resources.DisplayMetrics));
+
+
+            if (RelativeView != null)
+            {
+                //Set the gravity top and left so it starts at real 0 coordinates than aply position
+                //Dialog.Window.SetGravity(GravityFlags.Top | GravityFlags.Left);
+
+                var nativeView = Xamarin.Forms.Platform.Android.Platform.GetRenderer(RelativeView).View;
+
+                int[] location = new int[2];
+                nativeView.GetLocationOnScreen(location);
+                //attrs.Gravity = nativeView.ForegroundGravity;
+                //attrs.X = (int)location[0];
+                //attrs.Y = (int)location[1];
+                //attrs.Width = (int)RelativeView.Width;
+                //attrs.Height = (int)RelativeView.Height;
+
+                var dpp = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)(RelativeView.Height / 2), Context.Resources.DisplayMetrics);
+                //attrs.Y += (int)(dpp / 2);
+
+                //nativeView.IsPaddingRelative.ToString();
+                //nativeView.PaddingBottom.ToString();
+                //nativeView.PaddingTop.ToString();
+                //nativeView.PaddingStart.ToString();
+                //nativeView.PaddingEnd.ToString();
+                var y1 = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)RelativeView.Bounds.Y + (float)RelativeView.Height + 56, Context.Resources.DisplayMetrics));
+                //attrs.Y = y1;
+
+                Rect rectfLocal = new Rect();
+
+                //For coordinates location relative to the parent
+                nativeView.GetLocalVisibleRect(rectfLocal);
+
+                Rect rectfGlobal = new Rect();
+
+                //For coordinates location relative to the screen/display
+                nativeView.GetGlobalVisibleRect(rectfGlobal);
+
+                rectfLocal.ToString();
+
+                var ppp = GetScreenCoordinates(RelativeView);
+
+                var off = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)(OffsetY()), Context.Resources.DisplayMetrics);
+                attrs.X = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)(ppp.X), Context.Resources.DisplayMetrics);
+                attrs.Y = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)(ppp.Y) + off, Context.Resources.DisplayMetrics);
+                attrs.Gravity = nativeView.ForegroundGravity;
+            }
 
 
             attrs.DimAmount = this.DimAmount;
+            var lololol = attrs.VerticalMargin;
             //Set new attributes
             this.Dialog.Window.Attributes = attrs;
         }
+
+        public (double X, double Y) GetScreenCoordinates(VisualElement view)
+        {
+            // A view's default X- and Y-coordinates are LOCAL with respect to the boundaries of its parent,
+            // and NOT with respect to the screen. This method calculates the SCREEN coordinates of a view.
+            // The coordinates returned refer to the top left corner of the view.
+
+            // Initialize with the view's "local" coordinates with respect to its parent
+            double screenCoordinateX = view.X;
+            double screenCoordinateY = view.Y;
+
+            // Get the view's parent (if it has one...)
+            //if (view.Parent.GetType() != typeof(App))
+            {
+                VisualElement parent = (VisualElement)view.Parent;
+
+
+                // Loop through all parents
+                while (parent != null)
+                {
+                    // Add in the coordinates of the parent with respect to ITS parent
+                    screenCoordinateX += parent.X;
+                    screenCoordinateY += parent.Y;
+
+                    // If the parent of this parent isn't the app itself, get the parent's parent.
+                    if (parent.Parent != null && parent.Parent is VisualElement)
+                        parent = (VisualElement)parent.Parent;
+                    else
+                        parent = null;
+                }
+            }
+
+            // Return the final coordinates...which are the global SCREEN coordinates of the view
+            return (screenCoordinateX, screenCoordinateY);
+        }
+
+        public int getStatusBarHeight()
+        {
+            int result = 0;
+            int resourceId = Resources.GetIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0)
+            {
+                result = Resources.GetDimensionPixelSize(resourceId);
+            }
+            return result;
+        }
+
+        public float convertPxToDp(Context context, float px)
+        {
+            return px / context.Resources.DisplayMetrics.Density;
+        }
+
 
         //Custom background so we can set border radius shadow ...
         private void SetBackground()
@@ -196,9 +294,10 @@ namespace Xamarin.RSControls.Droid.Controls
             //Manipulate color and roundness of border
             GradientDrawable gradientDrawable = new GradientDrawable();
             gradientDrawable.SetColor(BorderFillColor.ToAndroid());
+
             gradientDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics));
 
-            InsetDrawable insetDrawable = new InsetDrawable(gradientDrawable, 0, 70, 0, 70); //Adds margin to alert
+            InsetDrawable insetDrawable = new InsetDrawable(gradientDrawable, 0, 0, 0, 0); //Adds margin to alert
 
             Dialog.Window.SetBackgroundDrawable(insetDrawable);
         }
@@ -307,6 +406,7 @@ namespace Xamarin.RSControls.Droid.Controls
             destructiveButton?.Dispose();
         }
     }
+
 
     //Custom button used to assign command
     public class RSAndroidButton : global::Android.Widget.Button, global::Android.Views.View.IOnClickListener

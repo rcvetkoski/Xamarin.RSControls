@@ -121,9 +121,12 @@
                 </rs:RSEntry.LeftIcon>
             </rs:RSEntry>
 
+            <Button Text="Toggle Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked2"></Button>
+
+
             <Grid>
                 <Editor Grid.Row="0" Grid.Column="0" Placeholder="Hint" Text="Trollo" AutoSize="TextChanges" BackgroundColor="Green"></Editor>
-                <Entry Grid.Row="0" Grid.Column="1" Placeholder="Text here"></Entry>
+                <rs:RSEditor Grid.Row="0" Grid.Column="1" AutoSize="TextChanges" Placeholder="Text here"></rs:RSEditor>
             </Grid>
 
         </StackLayout>
