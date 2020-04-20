@@ -31,7 +31,6 @@ namespace Samples
             //(this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(1);
 
             RSPopup rsPopup = new RSPopup("RSPopup !", "RSMessage");
-            rsPopup.SetPopupPosition(sender as View);
             RSEditor entry = new RSEditor() {Placeholder = "Enter some text", AutoSize= EditorAutoSizeOption.TextChanges};
             entry.Helper = "Helper !";
             entry.SetBinding(RSEditor.TextProperty, new Binding("Lolo", BindingMode.TwoWay) { Source = this.BindingContext });
@@ -41,10 +40,10 @@ namespace Samples
 
             Grid stack = new Grid() { BackgroundColor = Color.Cyan};
             stack.Children.Add(entry, 0, 0);
-            //stack.Children.Add(entry2, 1, 0);
+            stack.Children.Add(entry2, 1, 0);
             stack.Padding = new Thickness(30);
 
-            //rsPopup.SetCustomView(stack);
+            rsPopup.SetCustomView(stack);
             rsPopup.SetDimAmount(0.5f);
             rsPopup.SetPopupPosition(sender as View);
 
