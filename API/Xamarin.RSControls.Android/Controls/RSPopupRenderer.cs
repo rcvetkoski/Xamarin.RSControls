@@ -75,7 +75,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //Fix for Control that call keyboard like entry (keyboard not showing up)
             Dialog.Window.ClearFlags(WindowManagerFlags.NotFocusable | WindowManagerFlags.AltFocusableIm);
-            Dialog.Window.SetSoftInputMode(SoftInput.StateAlwaysVisible);
+            //Dialog.Window.SetSoftInputMode(SoftInput.StateAlwaysVisible);
 
             if (CustomView != null)
             {
@@ -110,7 +110,7 @@ namespace Xamarin.RSControls.Droid.Controls
             var height = 0;
 
             Resources resources = Context.Resources;
-            int resourceId = resources.GetIdentifier("navigation_bar_height_landscape", "dimen", "android");
+            int resourceId = resources.GetIdentifier("navigation_bar_height", "dimen", "android");
             if (resourceId > 0)
             {
                 height = resources.GetDimensionPixelSize(resourceId);
@@ -173,7 +173,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
 
-
             //Position
             if (RelativeView != null)
             {
@@ -184,12 +183,15 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
                 int[] location = new int[2];
-                nativeView.GetLocationOnScreen(location);
+                nativeView.GetLocationInWindow(location);
 
+                Rect myViewRect = new Rect();
+                nativeView.GetLocalVisibleRect(myViewRect);
 
+                
                 var relativeViewHeight = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)RelativeView.Height, Context.Resources.DisplayMetrics));
 
-                if(Resources.Configuration.Orientation == global::Android.Content.Res.Orientation.Landscape)
+                if (Resources.Configuration.Orientation == global::Android.Content.Res.Orientation.Landscape)
                     attrs.X = location[0] - GetNavigationBarHeight();
                 else
                     attrs.X = location[0];
