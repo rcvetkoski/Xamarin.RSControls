@@ -1258,6 +1258,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     RSPopup rSPopup = new RSPopup("Title", "Message");
                     rSPopup.SetPopupPosition(this.rSControl as Forms.View);
+                    rSPopup.SetDimAmount(0f);
                     rSPopup.Show();
                     return true;
                 }

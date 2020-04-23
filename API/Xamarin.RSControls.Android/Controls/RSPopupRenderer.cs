@@ -41,6 +41,9 @@ namespace Xamarin.RSControls.Droid.Controls
         private RSAndroidButton positiveButton;
         private RSAndroidButton neutralButton;
         private RSAndroidButton destructiveButton;
+        private int dialogHorizontalMargin = 0;
+        private int dialogVerticalMargin = 50;
+
 
 
         public RSPopupRenderer()
@@ -86,8 +89,6 @@ namespace Xamarin.RSControls.Droid.Controls
             SetDialog();
         }
 
-
-
         //Show popup
         public void ShowPopup()
         {
@@ -103,35 +104,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             this.Dispose();
         }
-
-        //Navigation bar height
-        private int GetNavigationBarHeight()
-        {
-            var height = 0;
-
-            Resources resources = Context.Resources;
-            int resourceId = resources.GetIdentifier("navigation_bar_height", "dimen", "android");
-            if (resourceId > 0)
-            {
-                height = resources.GetDimensionPixelSize(resourceId);
-            }
-
-            return height;
-        }
-
-        //Status bar height
-        public int GetStatusBarHeight()
-        {
-            int result = 0;
-            int resourceId = Resources.GetIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0)
-            {
-                result = Resources.GetDimensionPixelSize(resourceId);
-            }
-            return result;
-        }
-
-
 
         //Set and add custom view 
         private void SetCustomView()
@@ -171,6 +143,8 @@ namespace Xamarin.RSControls.Droid.Controls
             //else
             //    attrs.Width = minWidth;
 
+            attrs.Width = ViewGroup.LayoutParams.WrapContent;
+            attrs.Height = ViewGroup.LayoutParams.WrapContent;
 
 
             //Position
@@ -187,8 +161,25 @@ namespace Xamarin.RSControls.Droid.Controls
                 var relativeViewHeight = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)RelativeView.Height, Context.Resources.DisplayMetrics));
 
 
-                attrs.X = locationScreen[0] - rectf.Left;
-                attrs.Y = locationScreen[1] - rectf.Top + relativeViewHeight - 30;
+
+                global::Android.Graphics.Point size = new global::Android.Graphics.Point();
+                (Context as AppCompatActivity).WindowManager.DefaultDisplay.GetRealSize(size);
+
+
+                int y = 0;
+                int pos = (locationScreen[1] + dialogVerticalMargin + relativeViewHeight + customLayout.MeasuredHeight);
+                int fixedHeight = (locationScreen[1] - rectf.Top - dialogVerticalMargin - customLayout.MeasuredHeight);
+                if (metrics.HeightPixels < pos && fixedHeight > 0)
+                {
+                    y = fixedHeight;
+                }
+                else
+                {
+                    y = locationScreen[1] - rectf.Top + relativeViewHeight - dialogVerticalMargin;
+                }
+
+                attrs.X = locationScreen[0] - rectf.Left - dialogHorizontalMargin;
+                attrs.Y = y;
 
             }
 
@@ -196,125 +187,19 @@ namespace Xamarin.RSControls.Droid.Controls
             //Set dim amount
             attrs.DimAmount = this.DimAmount;
 
-
+            
             //Set new attributes
             this.Dialog.Window.Attributes = attrs;
         }
 
-
-        private int[] findDropDownPosition(global::Android.Views.View anchor, WindowManagerLayoutParams p, int xoff, int yoff)
-        {
-            p.Flags = WindowManagerFlags.LayoutInScreen;
-            int mPopupHeight = 150;
-            int mPopupWidth = 250;
-            bool mClipToScreen = false;
-            bool mAllowScrollingAnchorParent = true;
-
-
-            int[] mDrawingLocation = new int[2];
-            int[] mScreenLocation = new int[2];
-
-
-            anchor.GetLocationInWindow(mDrawingLocation);
-            p.X = mDrawingLocation[0] + xoff;
-            p.Y = mDrawingLocation[1] + anchor.Height + yoff;
-
-            bool onTop = false;
-            p.Gravity = GravityFlags.Left | GravityFlags.Top;
-
-            anchor.GetLocationOnScreen(mScreenLocation);
-            Rect displayFrame = new Rect();
-            anchor.GetWindowVisibleDisplayFrame(displayFrame);
-
-            global::Android.Views.View root = anchor.RootView;
-            if (p.Y + mPopupHeight > displayFrame.Bottom || p.X + mPopupWidth - root.Width > 0)
-            {
-                // if the drop down disappears at the bottom of the screen. we try to
-                // scroll a parent scrollview or move the drop down back up on top of
-                // the edit box
-                if (mAllowScrollingAnchorParent)
-                {
-                    int scrollX = anchor.ScrollX;
-                    int scrollY = anchor.ScrollY;
-                    Rect r = new Rect(scrollX, scrollY, scrollX + mPopupWidth + xoff,
-                            scrollY + mPopupHeight + anchor.Height + yoff);
-                    anchor.RequestRectangleOnScreen(r, true);
-                }
-                // now we re-evaluate the space available, and decide from that
-                // whether the pop-up will go above or below the anchor.
-                anchor.GetLocationOnScreen(mDrawingLocation);
-                p.X = mDrawingLocation[0] + xoff;
-                p.Y = mDrawingLocation[1] + anchor.Height + yoff;
-
-                // determine whether there is more space above or below the anchor
-                anchor.GetLocationOnScreen(mScreenLocation);
-
-                onTop = (displayFrame.Bottom - mScreenLocation[1] - anchor.Height - yoff) <
-                        (mScreenLocation[1] - yoff - displayFrame.Top);
-                if (onTop)
-                {
-                    p.Gravity = GravityFlags.Left | GravityFlags.Bottom;
-                    p.Y = root.Height - mDrawingLocation[1] + yoff;
-                }
-                else
-                {
-                    p.Y = mDrawingLocation[1] + anchor.Height + yoff;
-                }
-            }
-            if (mClipToScreen)
-            {
-                int displayFrameWidth = displayFrame.Right - displayFrame.Left;
-                int right = p.X + p.Width;
-                if (right > displayFrameWidth)
-                {
-                    p.X -= right - displayFrameWidth;
-                }
-                if (p.X < displayFrame.Left)
-                {
-                    p.X = displayFrame.Left;
-                    p.Width = Math.Min(p.Width, displayFrameWidth);
-                }
-                if (onTop)
-                {
-                    int popupTop = mScreenLocation[1] + yoff - mPopupHeight;
-                    if (popupTop < 0)
-                    {
-                        p.Y += popupTop;
-                    }
-                }
-                else
-                {
-                    p.Y = Math.Max(p.Y, displayFrame.Top);
-                }
-            }
-            p.Gravity |= GravityFlags.DisplayClipVertical;
-
-
-            int[] position = new int[2];
-            position[0] = p.X;
-            position[1] = p.Y;
-
-            return position;
-        }
-
-
-
         //Custom background so we can set border radius shadow ...
         private void SetBackground()
         {
-            //PaintDrawable paintDrawable = new PaintDrawable(BorderFillColor.ToAndroid());
-            //paintDrawable.Paint.AntiAlias = true;
-            //paintDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, 60, Context.Resources.DisplayMetrics));
-            //var shadowRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, 120, Context.Resources.DisplayMetrics);
-            //paintDrawable.Paint.SetShadowLayer(shadowRadius, 0f, 0f, global::Android.Graphics.Color.Gray);
-
             //Manipulate color and roundness of border
             GradientDrawable gradientDrawable = new GradientDrawable();
             gradientDrawable.SetColor(BorderFillColor.ToAndroid());
-
             gradientDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics));
-
-            InsetDrawable insetDrawable = new InsetDrawable(gradientDrawable, 0, 30, 0, 30); //Adds margin to alert
+            InsetDrawable insetDrawable = new InsetDrawable(gradientDrawable, dialogHorizontalMargin, dialogVerticalMargin, dialogHorizontalMargin, dialogVerticalMargin); //Adds margin to alert
 
             Dialog.Window.SetBackgroundDrawable(insetDrawable);
         }
@@ -403,7 +288,6 @@ namespace Xamarin.RSControls.Droid.Controls
             }
         }
 
-
         //Orientation change
         public override void OnConfigurationChanged(Configuration newConfig)
         {
@@ -423,7 +307,6 @@ namespace Xamarin.RSControls.Droid.Controls
             destructiveButton?.Dispose();
         }
     }
-
 
     //public class RSPopupRenderer : IDialogPopup, IDisposable
     //{
@@ -768,6 +651,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
     //Custom button used to assign command
+
     public class RSAndroidButton : global::Android.Widget.Button, global::Android.Views.View.IOnClickListener
     {
         public EventHandler ClickHandler { get; set; }
