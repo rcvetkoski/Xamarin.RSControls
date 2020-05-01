@@ -11,8 +11,10 @@ namespace Xamarin.RSControls.Controls
         private IDialogPopup service;
         public string Title { get; set; }
         public string Message { get; set; }
-        public float PositionX { get; set; }
-        public float PositionY { get; set; }
+        public int PositionX { get; set; }
+        public int PositionY { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
         public float BorderRadius { get; set; }
         public Forms.Color BackgroundColor { get; set; }
         public float DimAmount { get; set; }
@@ -44,23 +46,61 @@ namespace Xamarin.RSControls.Controls
             service.ShowPopup();
         }
 
-        public void SetPopupPosition() //Center of the screen
+        public void SetPopupAtPosition(int x, int y)
         {
-            
+            PositionX = x;
+            PositionY = y;
+
+            service.PositionX = x;
+            service.PositionY = y;
+
+            service.UserSetPosition = true;
         }
 
-        public void SetPopupPosition(float X, float Y)
-        {
-            PositionX = X;
-            PositionY = Y;
-
-            service.PositionX = X;
-            service.PositionY = Y;
-        }
-
-        public void SetPopupPosition(View view)
+        public void SetPopupPositionRelativeTo(View view)
         {
             service.RelativeView = view;
+            service.UserSetPosition = true;
+        }
+
+        public void SetPopupSize(int width, int height)
+        {
+            Width = width;
+            Height = height;
+
+            service.Width = width;
+            service.Height = height;
+            service.UserSetSize = true;
+        }
+
+        public void SetPopupSize(int width, RSPopupSizeEnum height)
+        {
+            Width = width;
+            Height = (int)height;
+
+            service.Width = Width;
+            service.Height = Height;
+            service.UserSetSize = true;
+        }
+
+        public void SetPopupSize(RSPopupSizeEnum width, int height)
+        {
+            Width = (int)width;
+            Height = height;
+
+            service.Width = Width;
+            service.Height = Height;
+            service.UserSetSize = true;
+        }
+
+        public void SetPopupSize(RSPopupSizeEnum width, RSPopupSizeEnum height)
+        {
+            Width = (int)width;
+            Height = (int)height;
+
+            service.Width = Width;
+            service.Height = Height;
+            service.UserSetSize = true;
         }
 
         public void SetTitle(string title)
@@ -118,6 +158,5 @@ namespace Xamarin.RSControls.Controls
         {
             service.AddAction(title, rSPopupButtonType, null, null);
         }
-
     }
 }

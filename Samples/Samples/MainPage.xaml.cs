@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.RSControls.Controls;
+using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.Interfaces;
 
 namespace Samples
@@ -42,14 +43,15 @@ namespace Samples
             stack.Padding = new Thickness(30);
 
 
-            RSPopup rsPopup = new RSPopup("RSPopup !", "");
-            rsPopup.SetCustomView(stack);
-            rsPopup.SetDimAmount(0.5f);
-            //rsPopup.SetPopupPosition(sender as View);
-            rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
-            //rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
-            rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
-                                        (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
+            RSPopup rsPopup = new RSPopup("RSPopup !", "Message");
+            //rsPopup.SetCustomView(stack);
+            rsPopup.SetDimAmount(0.0f);
+            //rsPopup.SetPopupSize(RSPopupSizeEnum.WrapParent, RSPopupSizeEnum.WrapParent);
+            //rsPopup.SetPopupPositionRelativeTo(sender as View);
+            //rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
+            ////rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
+            //rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
+            //                            (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
 
 
 

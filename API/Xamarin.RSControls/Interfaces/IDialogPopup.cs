@@ -8,8 +8,12 @@ namespace Xamarin.RSControls.Interfaces
     {
         string Title { get; set; }
         string Message { get; set; }
-        float PositionX { get; set; }
-        float PositionY { get; set; }
+        int PositionX { get; set; }
+        int PositionY { get; set; }
+        int Width { get; set; }
+        int Height { get; set; }
+        bool UserSetPosition { get; set; }
+        bool UserSetSize { get; set; }
         float BorderRadius { get; set; }
         Forms.Color BorderFillColor { get; set; }
         float DimAmount { get; set; }
