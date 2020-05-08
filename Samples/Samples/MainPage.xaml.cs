@@ -44,11 +44,11 @@ namespace Samples
 
 
             RSPopup rsPopup = new RSPopup("RSPopup !", "Message");
-            //rsPopup.SetCustomView(stack);
+            rsPopup.SetCustomView(stack);
             rsPopup.SetDimAmount(0.0f);
-            //rsPopup.SetPopupSize(RSPopupSizeEnum.WrapParent, RSPopupSizeEnum.WrapParent);
-            //rsPopup.SetPopupPositionRelativeTo(sender as View);
-            //rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetPopupPositionRelativeTo(sender as View);
+            rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             ////rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
             //rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
             //                            (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);

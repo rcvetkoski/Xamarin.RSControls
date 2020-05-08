@@ -1257,6 +1257,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 if (rightIconCondition)
                 {
                     RSPopup rSPopup = new RSPopup("Title", "Message");
+                    rSPopup.SetPopupSize(Enums.RSPopupSizeEnum.WrapContent, 400);
                     rSPopup.SetPopupPositionRelativeTo(this.rSControl as Forms.View);
                     rSPopup.SetDimAmount(0f);
                     rSPopup.Show();

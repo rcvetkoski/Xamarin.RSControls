@@ -6,7 +6,7 @@ namespace Xamarin.RSControls.Enums
 {
     public enum RSPopupSizeEnum
     {
-        WrapParent = -2,
+        WrapContent = -2,
         MatchParent = -1
     }
 }
