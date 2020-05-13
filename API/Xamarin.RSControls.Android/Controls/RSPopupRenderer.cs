@@ -151,7 +151,6 @@ namespace Xamarin.RSControls.Droid.Controls
             if(formsView != null)
             {
                 var nativeView = Xamarin.Forms.Platform.Android.Platform.GetRenderer(formsView).View;
-                nativeView.TooltipText = "Tooltip !";
                 Rect rectf = new Rect();
                 nativeView.GetWindowVisibleDisplayFrame(rectf);
                 int[] locationScreen = new int[2];
