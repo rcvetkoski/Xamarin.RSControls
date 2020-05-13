@@ -48,7 +48,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private RSAndroidButton neutralButton;
         private RSAndroidButton destructiveButton;
         private int dialogHorizontalMargin = 0;
-        private int dialogVerticalMargin = 50;
+        private int dialogVerticalMargin = 0;
 
 
 
