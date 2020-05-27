@@ -18,6 +18,7 @@ namespace Xamarin.RSControls.Interfaces
         Forms.Color BorderFillColor { get; set; }
         float DimAmount { get; set; }
         bool ShadowEnabled { get; set; }
+        bool IsModal { get; set; }
         Forms.View RelativeView { get; set; }
         Forms.View CustomView { get; set; }
         void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter);

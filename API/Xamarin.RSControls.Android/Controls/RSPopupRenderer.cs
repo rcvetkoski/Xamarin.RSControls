@@ -6,6 +6,7 @@ using Android.Content;
 using Android.Content.Res;
 using Android.Graphics;
 using Android.Graphics.Drawables;
+using Android.Graphics.Drawables.Shapes;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.Constraints;
@@ -24,7 +25,7 @@ using Xamarin.RSControls.Interfaces;
 [assembly: Dependency(typeof(RSPopupRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSPopupRenderer : global::Android.Support.V4.App.DialogFragment, IDialogPopup, IDisposable
+    public class RSPopupRenderer : global::Android.Support.V4.App.DialogFragment, IDialogPopup, IDisposable, global::Android.Views.View.IOnClickListener
     {
         public int PositionX { get; set; }
         public int PositionY { get; set; }
@@ -39,15 +40,18 @@ namespace Xamarin.RSControls.Droid.Controls
         public string Message { get; set; }
         public Forms.View RelativeView { get; set; }
         public Forms.View CustomView { get; set; }
-        private LinearLayout customLayout;
+        private global::Android.Widget.RelativeLayout customLayout;
+        private global::Android.Widget.RelativeLayout relativeLayout;
         private LinearLayout contentView;
         private LinearLayout linearLayout;
         private LinearLayout buttonsLayout;
+        private global::Android.Views.View arrowUp;
         public bool ShadowEnabled { get; set; }
+        public bool IsModal { get; set; }
         private RSAndroidButton positiveButton;
         private RSAndroidButton neutralButton;
         private RSAndroidButton destructiveButton;
-        private int dialogHorizontalMargin = 0;
+        private int dialogHorizontalMargin = 50;
         private int dialogVerticalMargin = 0;
 
 
@@ -55,10 +59,16 @@ namespace Xamarin.RSControls.Droid.Controls
         public RSPopupRenderer()
         {
             //Inflate custom layout
-            this.customLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as LinearLayout;
+            this.customLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as global::Android.Widget.RelativeLayout;
+            relativeLayout = customLayout.FindViewById<global::Android.Widget.RelativeLayout>(Resource.Id.relativeLayout);
             this.contentView = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
             linearLayout = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.linearLayout);
             buttonsLayout = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.buttons);
+            arrowUp = customLayout.FindViewById<global::Android.Views.View>(Resource.Id.arrow_up);
+
+            relativeLayout.SetOnClickListener(this);
+            linearLayout.SetOnClickListener(this);
+
             ////Set here so it will be given good dimensions
             //if (CustomView != null)
             //{
@@ -162,21 +172,45 @@ namespace Xamarin.RSControls.Droid.Controls
                 (Context as AppCompatActivity).WindowManager.DefaultDisplay.GetRealSize(size);
 
 
+                linearLayout.Measure(Width, Height);
+
                 int y = 0;
 
                 int measuredHeight = 0;
                 if (Height == -2 || Height == -1)
-                    measuredHeight = customLayout.MeasuredHeight;
+                    measuredHeight = linearLayout.MeasuredHeight;
                 else
                     measuredHeight = Height;
 
-                int pos = (locationScreen[1] + dialogVerticalMargin + relativeViewHeight + measuredHeight);
-                int fixedHeight = (locationScreen[1] - rectf.Top - dialogVerticalMargin - measuredHeight);
-                if (metrics.HeightPixels < pos && fixedHeight > 0)
-                    y = fixedHeight;
-                else
-                    y = locationScreen[1] - rectf.Top + relativeViewHeight - dialogVerticalMargin;
+                //int pos = (locationScreen[1] + dialogVerticalMargin + relativeViewHeight + measuredHeight);
+                //int fixedHeight = (locationScreen[1] - rectf.Top - dialogVerticalMargin - measuredHeight);
+                //if (metrics.HeightPixels < pos && fixedHeight > 0)
+                //    y = fixedHeight;
+                //else
+                //    y = locationScreen[1] - rectf.Top + relativeViewHeight + dialogVerticalMargin;
 
+
+
+
+                if (metrics.HeightPixels > (locationScreen[1] + measuredHeight + relativeViewHeight - rectf.Top))
+                    y = locationScreen[1] + relativeViewHeight - rectf.Top;
+                else if ((locationScreen[1] - measuredHeight - rectf.Top) > 0)
+                {
+                    y = locationScreen[1] - measuredHeight - rectf.Top;
+                }
+                else
+                {
+                    if (locationScreen[1] > (metrics.HeightPixels / 2))
+                        y = locationScreen[1] - relativeViewHeight - measuredHeight - rectf.Top + Math.Abs(metrics.HeightPixels - locationScreen[1] - measuredHeight);
+                    else
+                        y = locationScreen[1] + relativeViewHeight - rectf.Top - Math.Abs(metrics.HeightPixels - locationScreen[1] - measuredHeight);
+                }
+                //y = (locationScreen[1] - measuredHeight - rectf.Top) + (Math.Abs(locationScreen[1] - measuredHeight));
+                //y = (metrics.HeightPixels / 2) - (measuredHeight / 2);
+
+
+
+                //y = locationScreen[1] + relativeViewHeight - rectf.Top;
 
                 PositionX = locationScreen[0] - rectf.Left - dialogHorizontalMargin;
                 PositionY = y;
@@ -227,16 +261,21 @@ namespace Xamarin.RSControls.Droid.Controls
             SetCustomLayout();
 
 
-            customLayout.Measure(metrics.WidthPixels, metrics.HeightPixels);
+            //customLayout.Measure(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //customLayout.Measure(metrics.WidthPixels, metrics.HeightPixels);
+            //linearLayout.Measure(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
 
 
             //Popup size
             SetPopupSize(metrics);
-            
-            //Apply size
-            attrs.Width = Width;
-            attrs.Height = Height;
 
+            //Apply size
+            //attrs.Width = Width;
+            //attrs.Height = Height;
+            attrs.Width = ViewGroup.LayoutParams.MatchParent;
+            attrs.Height = ViewGroup.LayoutParams.MatchParent;
+
+            linearLayout.LayoutParameters = new global::Android.Widget.RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, Height);
 
             //Position
             if (UserSetPosition)
@@ -250,11 +289,20 @@ namespace Xamarin.RSControls.Droid.Controls
                 else
                     SetPopupAtPosition();
             }
+            else
+            {
+                customLayout.SetGravity(GravityFlags.Center);
+            }
 
             //Apply position
-            attrs.X = PositionX;
-            attrs.Y = PositionY;
-            
+            //attrs.X = PositionX;
+            //attrs.Y = PositionY;
+            arrowUp.SetX(100);
+            arrowUp.SetY(PositionY);
+            linearLayout.SetX(PositionX );
+            linearLayout.SetY(PositionY + (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 60, Context.Resources.DisplayMetrics));
+            //customLayout.SetGravity(GravityFlags.Center);
+
             //Set dim amount
             attrs.DimAmount = this.DimAmount;
             
@@ -269,15 +317,18 @@ namespace Xamarin.RSControls.Droid.Controls
             GradientDrawable gradientDrawable = new GradientDrawable();
             gradientDrawable.SetColor(BorderFillColor.ToAndroid());
             gradientDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics));
+            gradientDrawable.SetStroke(1, global::Android.Graphics.Color.LightGray);
 
-            //GradientDrawable gradientDrawable2 = new GradientDrawable();
-            //gradientDrawable2.SetColor(global::Android.Graphics.Color.Transparent);
+            GradientDrawable gradientDrawable2 = new GradientDrawable();
+            gradientDrawable2.SetColor(global::Android.Graphics.Color.Transparent);
             //linearLayout.SetBackground(gradientDrawable);
 
             InsetDrawable insetDrawable = new InsetDrawable(gradientDrawable, dialogHorizontalMargin, dialogVerticalMargin, dialogHorizontalMargin, dialogVerticalMargin); //Adds margin to alert
 
+            var dr = Resources.GetDrawable(Resource.Drawable.rs_tooltip_arrow_up);
+            linearLayout.SetBackground(insetDrawable);
 
-            Dialog.Window.SetBackgroundDrawable(insetDrawable);
+            Dialog.Window.SetBackgroundDrawable(gradientDrawable2);
         }
 
         //Custom layout for dialog
@@ -389,6 +440,12 @@ namespace Xamarin.RSControls.Droid.Controls
             positiveButton?.Dispose();
             neutralButton?.Dispose();
             destructiveButton?.Dispose();
+        }
+
+        public void OnClick(global::Android.Views.View v)
+        {
+            if (v.Id == relativeLayout.Id && !IsModal)
+                this.Dialog.Dismiss();
         }
     }
 

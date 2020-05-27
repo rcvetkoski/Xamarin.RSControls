@@ -19,14 +19,16 @@ namespace Xamarin.RSControls.Controls
         public Forms.Color BackgroundColor { get; set; }
         public float DimAmount { get; set; }
         public bool ShadowEnabled { get; set; }
+        public bool IsModal { get; set; }
+
 
 
         public RSPopup()
         {
             service = DependencyService.Get<IDialogPopup>(DependencyFetchTarget.NewInstance);
             SetBackgroundColor(Color.White);
-            SetBorderRadius(14);
-            SetDimAmount(0.5f);
+            SetBorderRadius(18);
+            SetDimAmount(0.7f);
             SetShadowEnabled(true);
         }
 
@@ -36,8 +38,8 @@ namespace Xamarin.RSControls.Controls
             SetTitle(title);
             SetMessage(message);
             SetBackgroundColor(Color.White);
-            SetBorderRadius(14);
-            SetDimAmount(0.5f);
+            SetBorderRadius(18);
+            SetDimAmount(0.7f);
             SetShadowEnabled(true);
         }
 
@@ -137,6 +139,13 @@ namespace Xamarin.RSControls.Controls
             ShadowEnabled = enabled;
             service.ShadowEnabled = this.ShadowEnabled;
         }
+
+        public void SetIsModal(bool isModal)
+        {
+            IsModal = isModal;
+            service.IsModal = isModal;
+        }
+
 
         public void SetDimAmount(float amount)
         {
