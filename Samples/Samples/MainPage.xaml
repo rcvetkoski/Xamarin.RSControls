@@ -18,13 +18,10 @@
 
             <Button Text="Test Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked2"></Button>
 
+            <Button Text="Right" BackgroundColor="Green" HorizontalOptions="End" CommandParameter="" Clicked="Button_Clicked2"></Button>
 
+            <Button Text="Left" BackgroundColor="Green" HorizontalOptions="Start" CommandParameter="" Clicked="Button_Clicked2"></Button>
 
-            <StackLayout BackgroundColor="Green" HorizontalOptions="Start">
-
-                <Editor AutoSize="TextChanges"></Editor>
-                
-            </StackLayout>
 
         </StackLayout>
     </ScrollView>

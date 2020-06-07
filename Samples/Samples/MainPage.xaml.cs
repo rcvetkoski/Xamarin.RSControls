@@ -39,8 +39,8 @@ namespace Samples
             rSEditor.TextChanged += Entry_TextChanged;
             RSEntry entry2 = new RSEntry() { Placeholder = "Enter some text", Helper = "Helper !"};
             Grid stack = new Grid() { BackgroundColor = Color.Cyan};
-            //stack.Children.Add(entry, 0, 0);
-            //stack.Children.Add(entry2, 1, 0);
+            stack.Children.Add(rSEditor, 0, 0);
+            stack.Children.Add(entry2, 1, 0);
             stack.Padding = new Thickness(30);
 
             RSEntry rSEntry = new RSEntry();
@@ -49,21 +49,22 @@ namespace Samples
             rSEntry.HorizontalOptions = LayoutOptions.Start;
 
             Label label = new Label();
-            label.SetBinding(Label.TextProperty, new Binding("Lolo", BindingMode.Default) { Source = this.BindingContext });
-            label.HorizontalOptions = LayoutOptions.Start;
+            label.Text = "Troloeole Mehotn";
 
+            Entry entry = new Entry();
+            entry.Text = "TrolololhghghhgjggjhghgfghgfholoWhr ";
 
 
             RSPopup rsPopup = new RSPopup("RSPopup !", "Message");
-            rsPopup.SetCustomView(rSEditor);
+            rsPopup.SetCustomView(entry);
             rsPopup.SetDimAmount(0.0f);
-            rsPopup.SetIsModal(true);
+            rsPopup.SetIsModal(false);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetPopupPositionRelativeTo(sender as View);
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
-            ////rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
-            //rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
-                                       // (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
+            rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
+            rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
+                                        (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
 
 
 
