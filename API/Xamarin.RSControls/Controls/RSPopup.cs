@@ -63,6 +63,14 @@ namespace Xamarin.RSControls.Controls
         {
             service.RelativeView = view;
             service.UserSetPosition = true;
+            service.RSPopupPositionSideEnum = RSPopupPositionSideEnum.Bottom; //default
+        }
+
+        public void SetPopupPositionRelativeTo(View view, RSPopupPositionSideEnum rSPopupPositionSideEnum)
+        {
+            service.RelativeView = view;
+            service.UserSetPosition = true;
+            service.RSPopupPositionSideEnum = rSPopupPositionSideEnum;
         }
 
         public void SetPopupSize(int width, int height)

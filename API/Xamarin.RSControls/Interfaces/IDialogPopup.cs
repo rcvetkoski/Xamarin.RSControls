@@ -13,6 +13,7 @@ namespace Xamarin.RSControls.Interfaces
         int Width { get; set; }
         int Height { get; set; }
         bool UserSetPosition { get; set; }
+        RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
         bool UserSetSize { get; set; }
         float BorderRadius { get; set; }
         Forms.Color BorderFillColor { get; set; }

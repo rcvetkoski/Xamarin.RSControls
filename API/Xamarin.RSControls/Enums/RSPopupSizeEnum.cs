@@ -9,4 +9,12 @@ namespace Xamarin.RSControls.Enums
         WrapContent = -2,
         MatchParent = -1
     }
+
+    public enum RSPopupPositionSideEnum
+    {
+        Left,
+        Top,
+        Right,
+        Bottom
+    }
 }

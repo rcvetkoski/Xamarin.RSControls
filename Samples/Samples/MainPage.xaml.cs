@@ -60,7 +60,8 @@ namespace Samples
             rsPopup.SetDimAmount(0.0f);
             rsPopup.SetIsModal(false);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
-            rsPopup.SetPopupPositionRelativeTo(sender as View);
+            //rsPopup.SetPopupPositionRelativeTo(sender as View);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Left);
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
             rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,

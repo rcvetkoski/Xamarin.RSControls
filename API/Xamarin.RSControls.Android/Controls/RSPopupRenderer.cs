@@ -49,6 +49,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private global::Android.Views.View arrow;
         private global::Android.Graphics.Point arrowSize;
         private ArrowTypeEnum arrowType;
+        public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
         public bool ShadowEnabled { get; set; }
         public bool IsModal { get; set; }
         private RSAndroidButton positiveButton;
@@ -128,7 +129,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     if (Width > metrics.WidthPixels - dialogHorizontalMargin)
                         Width = metrics.WidthPixels - dialogHorizontalMargin;
 
-                    widthSpec = global::Android.Views.View.MeasureSpec.MakeMeasureSpec(Width, MeasureSpecMode.Exactly);
+                    widthSpec = Width;
                 }
                 else
                 {
@@ -146,7 +147,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     if (Height > metrics.HeightPixels - dialogVerticalMargin)
                         Height = metrics.HeightPixels - dialogVerticalMargin;
 
-                    heightSpec = global::Android.Views.View.MeasureSpec.MakeMeasureSpec(Height, MeasureSpecMode.Exactly);
+                    heightSpec = Height;
 
                 }
                 else
@@ -259,10 +260,7 @@ namespace Xamarin.RSControls.Droid.Controls
             var renderer = Platform.CreateRendererWithContext(CustomView, Context);
             Platform.SetRenderer(CustomView, renderer);
             var convertView = new Extensions.ViewCellContainer(Context, CustomView, renderer);
-            EditText editText = new EditText(Context);
-            editText.Text = "TrozzuuzzukzkzukzukMeht";
             this.contentView.AddView(convertView);
-            contentView.LayoutParameters = new LinearLayout.LayoutParams(Width, ViewGroup.LayoutParams.WrapContent);
         }
 
         //Set native view 
@@ -295,7 +293,6 @@ namespace Xamarin.RSControls.Droid.Controls
             //Apply size
             attrs.Width = ViewGroup.LayoutParams.MatchParent;
             attrs.Height = ViewGroup.LayoutParams.MatchParent;
-
 
             linearLayout.LayoutParameters = new global::Android.Widget.RelativeLayout.LayoutParams(widthSpec, heightSpec);
             linearLayout.Measure(widthSpec, heightSpec);
