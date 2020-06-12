@@ -157,6 +157,9 @@ namespace Xamarin.RSControls.Droid.Controls
             sPopupRenderer.BorderRadius = 14;
             sPopupRenderer.DimAmount = 0.7f;
             sPopupRenderer.BorderFillColor = Color.White;
+            //sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.MatchParent;
+            //sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.MatchParent;
+            //sPopupRenderer.UserSetSize = true;
             //AlertDialog.Builder dialog = new AlertDialog.Builder(Context);
 
 
