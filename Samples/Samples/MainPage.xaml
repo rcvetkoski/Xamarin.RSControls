@@ -12,11 +12,24 @@
     <ScrollView Orientation="Vertical" BackgroundColor="White">
         <StackLayout x:Name="stack" Margin="10">
 
-            <Button Text="Test Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked2"></Button>
+            <Button Text="Test Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked1"></Button>
 
             <Button Text="Switch to Page1" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
 
-            <Button Text="Test Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked2"></Button>
+            <Button Text="Test Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked1"></Button>
+
+            <Button Text="Top" BackgroundColor="Green" HorizontalOptions="Center" CommandParameter="" Clicked="Button_Clicked4"></Button>
+
+            <Button Text="Right" BackgroundColor="Green" HorizontalOptions="End" Margin="0,0,80,0" CommandParameter="" Clicked="Button_Clicked2"></Button>
+
+            <Button Text="Left" BackgroundColor="Green" HorizontalOptions="Start" CommandParameter="" Clicked="Button_Clicked3"></Button>
+
+            <Button Text="Left" BackgroundColor="Green" HorizontalOptions="End" Margin="0,0,80,0" CommandParameter="" Clicked="Button_Clicked3"></Button>
+
+
+            <Button Text="Bottom" BackgroundColor="Green" HorizontalOptions="Center" CommandParameter="" Clicked="Button_Clicked5"></Button>
+
+
 
         </StackLayout>
     </ScrollView>
