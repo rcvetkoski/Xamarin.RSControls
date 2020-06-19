@@ -37,6 +37,13 @@ namespace Xamarin.RSControls.iOS.Controls
         public float PositionY { get; set; }
         public float BorderRadius { get; set; }
         public bool ShadowEnabled { get; set; }
+        int IDialogPopup.PositionX { get; set; }
+        int IDialogPopup.PositionY { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public bool UserSetPosition { get; set; }
+        public bool UserSetSize { get; set; }
+
         private int buttonsCount;
         
 
