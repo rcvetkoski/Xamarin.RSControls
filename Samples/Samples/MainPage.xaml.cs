@@ -20,6 +20,13 @@ namespace Samples
         {
             InitializeComponent();
             this.BindingContext = new MainPageViewModel();
+            this.left2.PropertyChanged += Left1_PropertyChanged;
+        }
+
+        private void Left1_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == View.XProperty.PropertyName)
+                System.Diagnostics.Debug.WriteLine("LEFT 1 X : " + left2.X + " YY " + left2.Y);
         }
 
         private void Button_Clicked(object sender, EventArgs e)
@@ -108,10 +115,10 @@ namespace Samples
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
-            //rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
-            //rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
-            //rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
-            //                            (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
+            rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
+            rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
+            rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
+                                        (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
 
 
             rsPopup.Show();

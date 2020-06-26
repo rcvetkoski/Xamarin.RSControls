@@ -14,7 +14,7 @@
         android:layout_height="0dp"/>
 
 
-    <LinearLayout
+    <Xamarin.RSControls.Droid.Controls.CustomLinearLayout
         android:id="@+id/linearLayout"
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -44,6 +44,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="0"
                 android:text="Message" 
                 android:textStyle="bold"
                 android:textSize="12sp"
@@ -57,12 +58,12 @@
 
 
 
-        <LinearLayout
-            android:id="@+id/buttons"
+        <Xamarin.RSControls.Droid.Controls.CustomLinearLayout
+            android:id="@+id/buttons" android:background="@android:color/holo_blue_bright"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="gone"
+            android:visibility="visible"
             style="?android:buttonBarStyle"
             android:divider="?android:dividerHorizontal"
             android:showDividers="middle">
@@ -101,9 +102,9 @@
                 style="?android:buttonBarButtonStyle"/>
 
 
-        </LinearLayout>
+        </Xamarin.RSControls.Droid.Controls.CustomLinearLayout>
 
-    </LinearLayout>
+    </Xamarin.RSControls.Droid.Controls.CustomLinearLayout>
 
 
 </RelativeLayout>
