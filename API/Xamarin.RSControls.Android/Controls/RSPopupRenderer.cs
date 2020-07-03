@@ -49,8 +49,8 @@ namespace Xamarin.RSControls.Droid.Controls
         private LinearLayout contentView;
         private CustomLinearLayout linearLayout;
         private LinearLayout buttonsLayout;
-        private global::Android.Views.View arrow;
-        private global::Android.Graphics.Point arrowSize;
+        public global::Android.Views.View arrow;
+        public global::Android.Graphics.Point arrowSize;
         public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
         public bool ShadowEnabled { get; set; }
         public bool IsModal { get; set; }
@@ -58,8 +58,10 @@ namespace Xamarin.RSControls.Droid.Controls
         private RSAndroidButton neutralButton;
         private RSAndroidButton destructiveButton;
         private global::Android.Content.Res.Orientation Orientation;
-        private int dialogHorizontalMargin = 0;
-        private int dialogVerticalMargin = 0;
+        private int horizontalMargin = 0;
+        private int verticalMargin = 0;
+        private bool canRequestLayout = false;
+        private int linearLayoutMinWidth = 0;
 
         public RSPopupRenderer()
         {
@@ -72,6 +74,9 @@ namespace Xamarin.RSControls.Droid.Controls
 
             customLayout.SetOnClickListener(this);
             linearLayout.SetOnClickListener(this);
+
+
+            UserSetPosition = false;
         }
 
         public RSPopupRenderer(System.IntPtr intPtr, global::Android.Runtime.JniHandleOwnership jniHandleOwnership) : base(intPtr, jniHandleOwnership)
@@ -103,7 +108,6 @@ namespace Xamarin.RSControls.Droid.Controls
             base.OnCreate(savedInstanceState);
         }
 
-
         public override void OnStart()
         {
             base.OnStart();
@@ -117,42 +121,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             SetDialog();
-            //if(RelativeView != null)
-            //    RelativeView.PropertyChanged += RelativeView_PropertyChanged;
-        }
-
-
-        private void RelativeView_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            //if (e.PropertyName == Forms.View.XProperty.PropertyName)
-            //{
-            //    //var diffX = oldX - RelativeView.X;
-            //    //var diffPerCent = (RelativeView.X - oldX) / oldX;
-            //    //oldX = RelativeView.X;
-            //    //Xamarin.Forms.Platform.Android.Platform.GetRenderer(RelativeView).UpdateLayout();
-            //    //var ss = Xamarin.Forms.Platform.Android.Platform.GetRenderer(RelativeView).View.GetX();
-            //    //arrow.SetX(arrow.GetX() + (arrow.GetX() * (float)diffPerCent));
-            //    //linearLayout.SetX(linearLayout.GetX() + (linearLayout.GetX() * (float)diffPerCent));
-
-            //    SetPopupPositionRelativeTo(RelativeView, Resources.DisplayMetrics);
-            //    setArrow();
-            //    SetLinearLayoutPosition();
-            //}
-
-            //if (e.PropertyName == Forms.View.YProperty.PropertyName)
-            //{
-            //    //var diffY = oldY - RelativeView.Y;
-            //    //oldY = RelativeView.Y;
-
-            //    //arrow.SetY(arrow.GetY() + (float)diffY);
-            //    //linearLayout.SetY(linearLayout.GetY() + (float)diffY);
-
-            //    SetPopupPositionRelativeTo(RelativeView, Resources.DisplayMetrics);
-            //    setArrow();
-            //    SetLinearLayoutPosition();
-            //}
-
-            
         }
 
         //Set PopupSize
@@ -165,8 +133,8 @@ namespace Xamarin.RSControls.Droid.Controls
                     Width = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, Width, Context.Resources.DisplayMetrics);
 
                     //Fix if width user inputs greater than creen width
-                    if (Width > metrics.WidthPixels - dialogHorizontalMargin)
-                        Width = metrics.WidthPixels - dialogHorizontalMargin;
+                    if (Width > metrics.WidthPixels - horizontalMargin)
+                        Width = metrics.WidthPixels - horizontalMargin;
                 }
 
                 if (Height != -2 && Height != -1)
@@ -174,8 +142,8 @@ namespace Xamarin.RSControls.Droid.Controls
                     Height = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, Height, Context.Resources.DisplayMetrics);
 
                     //Fix if height user inputs greater than creen height
-                    if (Height > metrics.HeightPixels - dialogVerticalMargin)
-                        Height = metrics.HeightPixels - dialogVerticalMargin;
+                    if (Height > metrics.HeightPixels - verticalMargin)
+                        Height = metrics.HeightPixels - verticalMargin;
                 }
             }
             else
@@ -188,12 +156,12 @@ namespace Xamarin.RSControls.Droid.Controls
         //Set Popup position at coordinates
         private void SetPopupAtPosition()
         {
-            PositionX -= dialogHorizontalMargin;
-            PositionY -= dialogVerticalMargin;
+            PositionX -= horizontalMargin;
+            PositionY -= verticalMargin;
         }
 
         //Set Popup position relative to view
-        private void SetPopupPositionRelativeTo(Forms.View formsView, DisplayMetrics metrics)
+        public void SetPopupPositionRelativeTo(Forms.View formsView, DisplayMetrics metrics)
         {
             if(formsView != null)
             {
@@ -203,7 +171,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 var relativeViewAsNativeRenderer = Xamarin.Forms.Platform.Android.Platform.GetRenderer(formsView);
                 relativeViewAsNativeRenderer.UpdateLayout();
                 relativeViewAsNativeView = relativeViewAsNativeRenderer.View;
-                Rect rectf = new Rect();
+                 Rect rectf = new Rect();
                 relativeViewAsNativeView.GetWindowVisibleDisplayFrame(rectf);
                 int[] locationScreen = new int[2];
                 relativeViewAsNativeView.GetLocationOnScreen(locationScreen);
@@ -215,29 +183,27 @@ namespace Xamarin.RSControls.Droid.Controls
                 //X
                 if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
                 {
-                    x = locationScreen[0] - rectf.Left - dialogHorizontalMargin - arrowSize.Y;
-                    y = locationScreen[1] - rectf.Top - dialogVerticalMargin + relativeViewHeight / 2 - arrowSize.X / 2 ;
+                    x = locationScreen[0] - rectf.Left - horizontalMargin - arrowSize.Y;
+                    y = locationScreen[1] - rectf.Top - verticalMargin + relativeViewHeight / 2 - arrowSize.X / 2 ;
                 }
                 else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
                 {
-                    x = locationScreen[0] - rectf.Left - dialogHorizontalMargin + relativeViewWidth;
-                    y = locationScreen[1] - rectf.Top - dialogVerticalMargin + relativeViewHeight / 2 - arrowSize.X / 2;
+                    x = locationScreen[0] - rectf.Left - horizontalMargin + relativeViewWidth;
+                    y = locationScreen[1] - rectf.Top - verticalMargin + relativeViewHeight / 2 - arrowSize.X / 2;
                 }
 
 
                 //Y
                 if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
                 {
-                    y = locationScreen[1] - rectf.Top - dialogVerticalMargin - arrowSize.Y;
-                    x = locationScreen[0] - rectf.Left - dialogHorizontalMargin + relativeViewWidth / 2 - arrowSize.X / 2;
+                    y = locationScreen[1] - rectf.Top - verticalMargin - arrowSize.Y;
+                    x = locationScreen[0] - rectf.Left - horizontalMargin + relativeViewWidth / 2 - arrowSize.X / 2;
                 }
                 else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
                 {
-                    y = locationScreen[1] + relativeViewHeight - rectf.Top - dialogVerticalMargin;
-                    x = locationScreen[0] - rectf.Left - dialogHorizontalMargin + relativeViewWidth / 2 - arrowSize.X / 2;
+                    y = locationScreen[1] + relativeViewHeight - rectf.Top - verticalMargin;
+                    x = locationScreen[0] - rectf.Left - horizontalMargin + relativeViewWidth / 2 - arrowSize.X / 2;
                 }
-
-
 
                 //Set position
                 PositionX = x;
@@ -249,8 +215,8 @@ namespace Xamarin.RSControls.Droid.Controls
         public void ShowPopup()
         {
             //Check if it is already added & ANDROID context not null
-            // if (!this.IsAdded && RSAppContext.RSContext != null)
-            this.Show(((AppCompatActivity)RSAppContext.RSContext).SupportFragmentManager, "sc");
+           // if (!this.IsAdded && RSAppContext.RSContext != null)
+                this.Show(((AppCompatActivity)RSAppContext.RSContext).SupportFragmentManager, "sc");
         }
 
         //Set and add custom view 
@@ -271,6 +237,8 @@ namespace Xamarin.RSControls.Droid.Controls
         //Set dialog properties
         private void SetDialog()
         {
+            Orientation = Resources.Configuration.Orientation;
+
             var attrs = this.Dialog.Window.Attributes;
             var metrics = Resources.DisplayMetrics;
 
@@ -292,13 +260,10 @@ namespace Xamarin.RSControls.Droid.Controls
             arrowSize = new global::Android.Graphics.Point(0, 0);
             if (RelativeView != null)
             {
-                linearLayout.ArrowSize = arrowSize;
-
-                arrowSize.X = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, 25, Context.Resources.DisplayMetrics));
-                arrowSize.Y = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, Context.Resources.DisplayMetrics));
+                arrowSize.X = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, Context.Resources.DisplayMetrics));
+                arrowSize.Y = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics));
             }
 
-            //linearLayout.Measure(Width, Height);
 
             //Position
             if (UserSetPosition)
@@ -308,6 +273,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 if (RelativeView != null)
                 {
+                    linearLayout.rSPopupRenderer = this;
+
                     SetPopupPositionRelativeTo(RelativeView, metrics);
                     setArrow();
                     SetLinearLayoutPosition();
@@ -326,10 +293,69 @@ namespace Xamarin.RSControls.Droid.Controls
             
             //Set new attributes
             this.Dialog.Window.Attributes = attrs;
+
+            if(RelativeView != null)
+                RelativeView.PropertyChanged += RelativeView_PropertyChanged;
+
+
+            linearLayout.LayoutChange += LinearLayout_LayoutChange;
+            linearLayout.ViewTreeObserver.PreDraw += ViewTreeObserver_PreDraw;
+        }
+
+
+
+        private void ViewTreeObserver_PreDraw(object sender, PreDrawEventArgs e)
+        {
+            if (canRequestLayout)
+            {
+                SetPopupPositionRelativeTo(RelativeView, Resources.DisplayMetrics);
+                setArrow();
+                SetLinearLayoutPosition();
+                linearLayout.Post(() => linearLayout.RequestLayout());
+                canRequestLayout = false;
+            }
+        }
+
+        private void LinearLayout_LayoutChange(object sender, global::Android.Views.View.LayoutChangeEventArgs e)
+        {
+            //if (RelativeView != null)
+            //{
+            //    linearLayout.LayoutChange -= LinearLayout_LayoutChange;
+
+            //    SetPopupPositionRelativeTo(RelativeView, Resources.DisplayMetrics);
+            //    setArrow();
+            //    SetLinearLayoutPosition();
+            //    System.Console.WriteLine("Position X", PositionX);
+            //}
+
+            //linearLayout.Measure(Width, Height);
+        }
+
+        private void RelativeView_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            //if (RelativeView != null)
+            //{
+            //    SetPopupPositionRelativeTo(RelativeView, Resources.DisplayMetrics);
+            //    System.Console.WriteLine("Position X", PositionX.ToString());
+            //    setArrow();
+            //    SetLinearLayoutPosition();
+            //}
+            //if (e.PropertyName == Forms.View.XProperty.PropertyName || e.PropertyName == Forms.View.YProperty.PropertyName)
+            //{
+            //    this.Dismiss();
+
+            //    Bundle bundle = new Bundle();
+            //    bundle.PutParcelable("rsPopup", new RSPopupParcelable() { rSPopupRenderer = this });
+            //    this.Arguments = bundle;
+
+
+            //    //((AppCompatActivity)RSAppContext.RSContext).SupportFragmentManager.BeginTransaction().Remove(this).Commit();
+            //    this.Show(((AppCompatActivity)RSAppContext.RSContext).SupportFragmentManager, "sc");
+            //}
         }
 
         //Set popup position relative view
-        private void SetLinearLayoutPosition()
+        public void SetLinearLayoutPosition()
         {
             //Left Right
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
@@ -346,10 +372,10 @@ namespace Xamarin.RSControls.Droid.Controls
             }
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
             {
-                //if (linearLayout.MeasuredWidth >= customLayout.Width - PositionX - arrowSize.X)
+                //if (linearLayout.MeasuredWidth >= Resources.DisplayMetrics.WidthPixels - PositionX - arrowSize.X)
                 //{
-                //    var lol = customLayout.MeasuredWidth - PositionX - arrowSize.X;
-                //    (linearLayout.LayoutParameters as global::Android.Widget.RelativeLayout.LayoutParams).Width = customLayout.MeasuredWidth - PositionX - arrowSize.X;
+                //    var lol = System.Math.Abs(Resources.DisplayMetrics.WidthPixels - PositionX - arrowSize.X);
+                //    (linearLayout.LayoutParameters as global::Android.Widget.RelativeLayout.LayoutParams).Width = lol;
                 //    (linearLayout.LayoutParameters as global::Android.Widget.RelativeLayout.LayoutParams).Height = Height;
                 //}
                 //else
@@ -358,6 +384,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 //    (linearLayout.LayoutParameters as global::Android.Widget.RelativeLayout.LayoutParams).Height = Height;
                 //}
 
+                //Resources.DisplayMetrics.WidthPixels.ToString();
+                //linearLayout.Post(() => linearLayout.RequestLayout());
+                //SetPopupPositionRelativeTo(RelativeView, Resources.DisplayMetrics);
+                //setArrow();
 
                 //correctedX();
                 linearLayout.SetX(arrow.GetX() + arrowSize.Y - 1);
@@ -369,11 +399,13 @@ namespace Xamarin.RSControls.Droid.Controls
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
             {
                 correctedX();
+                correctY();
                 linearLayout.SetY(arrow.GetY() - linearLayout.MeasuredHeight + 1);
             }
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
             {
                 correctedX();
+                correctY();
                 linearLayout.SetY(arrow.GetY() + arrowSize.Y - 1);
             }
         }
@@ -394,9 +426,9 @@ namespace Xamarin.RSControls.Droid.Controls
             }
             else
             {
-                if (arrow.GetX() > (Resources.DisplayMetrics.WidthPixels - dialogHorizontalMargin) / 2)
+                if (arrow.GetX() > (Resources.DisplayMetrics.WidthPixels - horizontalMargin) / 2)
                 {
-                    if ((arrow.GetX() + arrowSize.X / 2 + linearLayout.MeasuredWidth / 2) > Resources.DisplayMetrics.WidthPixels - dialogHorizontalMargin)
+                    if ((arrow.GetX() + arrowSize.X / 2 + linearLayout.MeasuredWidth / 2) > Resources.DisplayMetrics.WidthPixels - horizontalMargin)
                     {
                         var offset = (arrow.GetX() + arrowSize.X / 2 + linearLayout.MeasuredWidth / 2) - Resources.DisplayMetrics.WidthPixels;
                         linearLayout.SetX(arrow.GetX() + arrowSize.X / 2 - linearLayout.MeasuredWidth / 2 - offset);
@@ -406,11 +438,11 @@ namespace Xamarin.RSControls.Droid.Controls
                         linearLayout.SetX(arrow.GetX() + arrowSize.X / 2 - linearLayout.MeasuredWidth / 2);
                     }
                 }
-                else if (arrow.GetX() < (Resources.DisplayMetrics.WidthPixels - dialogHorizontalMargin) / 2)
+                else if (arrow.GetX() < (Resources.DisplayMetrics.WidthPixels - horizontalMargin) / 2)
                 {
-                    if ((arrow.GetX() + arrowSize.X / 2 - linearLayout.MeasuredWidth / 2) < dialogHorizontalMargin)
+                    if ((arrow.GetX() + arrowSize.X / 2 - linearLayout.MeasuredWidth / 2) < horizontalMargin)
                     {
-                        var offset = (arrow.GetX() + arrowSize.X / 2 - linearLayout.MeasuredWidth / 2) + dialogHorizontalMargin;
+                        var offset = (arrow.GetX() + arrowSize.X / 2 - linearLayout.MeasuredWidth / 2) + horizontalMargin;
                         linearLayout.SetX(arrow.GetX() + arrowSize.X / 2 - linearLayout.MeasuredWidth / 2 - offset);
                     }
                     else
@@ -425,21 +457,37 @@ namespace Xamarin.RSControls.Droid.Controls
             }
         }
 
-        //Set arrow background size and position
-        private void setArrow()
+        //Correct Y if not place to show on screen
+        private void correctY()
         {
-            //arrow.SetBackground(new CustomArrow(arrow, RSPopupPositionSideEnum, Context));
+            if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
+            {
+                var pos = arrow.GetY() - linearLayout.MeasuredHeight + 1;
+
+                if (pos < 0 && pos < Resources.DisplayMetrics.HeightPixels)
+                    RSPopupPositionSideEnum = RSPopupPositionSideEnum.Bottom;
+            }
+            else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
+            {
+                var pos = arrow.GetY() + arrowSize.X + linearLayout.MeasuredHeight + 1;
+
+                if (pos > Resources.DisplayMetrics.HeightPixels && pos > 0)
+                    RSPopupPositionSideEnum = RSPopupPositionSideEnum.Top;
+            }
+        }
+
+        //Set arrow background size and position
+        public void setArrow()
+        {
+            arrow.SetBackground(new CustomArrow(arrow, RSPopupPositionSideEnum, Context));
             //arrow.Background = new CustomArrow(arrow, RSPopupPositionSideEnum, Context);
 
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
             {
-                //var lp = new global::Android.Widget.RelativeLayout.LayoutParams(arrowSize.X, arrowSize.Y);
-                //arrow.LayoutParameters = lp;
                 (arrow.LayoutParameters as global::Android.Widget.RelativeLayout.LayoutParams).Width = arrowSize.X;
                 (arrow.LayoutParameters as global::Android.Widget.RelativeLayout.LayoutParams).Height = arrowSize.Y;
                 arrow.SetX(PositionX );
                 arrow.SetY(PositionY);
-                arrow.Rotation = 180;
             }
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
             {
@@ -503,7 +551,6 @@ namespace Xamarin.RSControls.Droid.Controls
             Dialog.SetContentView(customLayout);
         }
 
-
         //Buttons
         public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter)
         {
@@ -543,6 +590,10 @@ namespace Xamarin.RSControls.Droid.Controls
             //Make buttons layout visible / Hides divider if no button visible
             if (buttonsLayout.Visibility == ViewStates.Gone)
                 buttonsLayout.Visibility = ViewStates.Visible;
+
+
+            this.linearLayoutMinWidth += (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 80, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics);
+            linearLayout.SetMinimumWidth(this.linearLayoutMinWidth);
         }
         public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, EventHandler handler)
         {
@@ -578,59 +629,34 @@ namespace Xamarin.RSControls.Droid.Controls
             //Make buttons layout visible / Hides divider if no button visible
             if (buttonsLayout.Visibility == ViewStates.Gone)
                 buttonsLayout.Visibility = ViewStates.Visible;
+
+            this.linearLayoutMinWidth += (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 80, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics);
+            linearLayout.SetMinimumWidth(this.linearLayoutMinWidth);
         }
 
         //Orientation change
         public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
-            //this.Dismiss();
 
-            //((AppCompatActivity)RSAppContext.RSContext).SupportFragmentManager.BeginTransaction().Remove(this).Commit();
-            //this.Show(((AppCompatActivity)RSAppContext.RSContext).SupportFragmentManager, "sc");
+            //In order to force request layout to update size based on new position
+            //Position of relative view is^given after this method
+            if(Orientation != newConfig.Orientation && RelativeView != null)
+                canRequestLayout = true;
         }
 
-        public override void OnDestroy()
+        public Forms.View GetRelativeView()
         {
-            base.OnDestroy();
-        }
-        public override void OnDestroyView()
-        {
-            base.OnDestroyView();
-        }
-
-
-        public override void OnResume()
-        {
-            base.OnResume();
-        }
-
-        public override void OnViewStateRestored(Bundle savedInstanceState)
-        {
-            base.OnViewStateRestored(savedInstanceState);
-        }
-
-
-        public override void OnSaveInstanceState(Bundle outState)
-        {
-            base.OnSaveInstanceState(outState);
-        }
-
-
-        public override void OnStop()
-        {
-            base.OnStop();
-        }
-
-        public override void OnPause()
-        {
-            base.OnPause();
+            return this.RelativeView;
         }
 
         public void OnClick(global::Android.Views.View v)
         {
             if (v.Id == customLayout.Id && !IsModal)
+            {
+                this.Arguments = null;
                 this.Dismiss();
+            }
         }
 
         //Dismiss
@@ -640,7 +666,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             this.Dispose();
         }
-
 
         //Dispose
         protected override void Dispose(bool disposing)
@@ -652,9 +677,11 @@ namespace Xamarin.RSControls.Droid.Controls
             neutralButton?.Dispose();
             destructiveButton?.Dispose();
 
-            if(RelativeView != null)
+            if (RelativeView != null)
                 RelativeView.PropertyChanged -= RelativeView_PropertyChanged;
 
+            linearLayout.LayoutChange -= LinearLayout_LayoutChange;
+            linearLayout.ViewTreeObserver.PreDraw -= ViewTreeObserver_PreDraw;
         }
     }
 
@@ -767,8 +794,10 @@ namespace Xamarin.RSControls.Droid.Controls
 
         public override void Draw(Canvas canvas)
         {
-            if(rSPopupPositionSideEnum == RSPopupPositionSideEnum.Top || rSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
-                drawArrow(canvas);
+            if(rSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
+                drawArrowTop(canvas);
+            else if (rSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
+                drawArrowBottom(canvas);
             else if(rSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
                 drawArrowRight(canvas);
             else if (rSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
@@ -785,7 +814,45 @@ namespace Xamarin.RSControls.Droid.Controls
             
         }
 
-        private void drawArrow(Canvas canvas)
+        private void drawArrowTop(Canvas canvas)
+        {
+            var width = arrow.Width;
+            var height = arrow.Height;
+
+            //Shadow arrow
+            Paint paint = new Paint();
+            paint.Color = global::Android.Graphics.Color.LightGray;
+            paint.AntiAlias = true;
+            //paint.Dither = true;
+            //paint.SetShader(new RadialGradient(50, 40, 100, global::Android.Graphics.Color.Transparent, global::Android.Graphics.Color.LightGray, Shader.TileMode.Clamp));
+            Path path = new Path();
+            path.SetFillType(Path.FillType.EvenOdd);
+
+            path.MoveTo(0, 0);
+            path.LineTo(width / 2, height);
+            path.LineTo(width, 0);
+            path.LineTo(0, 0);
+            path.Close();
+
+
+            //Arrow
+            Paint paint2 = new Paint();
+            paint2.Color = global::Android.Graphics.Color.White;
+            paint2.AntiAlias = true;
+            Path path2 = new Path();
+            path2.SetFillType(Path.FillType.EvenOdd);
+
+
+            path2.MoveTo(shadowThikness, 0);
+            path2.LineTo(width / 2, height - shadowThikness);
+            path2.LineTo(width - shadowThikness, 0);
+            path2.Close();
+
+            canvas.DrawPath(path, paint);
+            canvas.DrawPath(path2, paint2);
+        }
+
+        private void drawArrowBottom(Canvas canvas)
         {
             var width = arrow.Width;
             var height = arrow.Height;
@@ -902,10 +969,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
     public class CustomLinearLayout : LinearLayout
     {
-        public global::Android.Graphics.Point ArrowSize { get; set; }
-        public int PositionX { get; set; }
-        public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
-
+        public RSPopupRenderer rSPopupRenderer { get; set; }
+        public MeasureSpecMode SpecMode { get; set; }
 
         public CustomLinearLayout(Context context) : base (context)
         {
@@ -927,25 +992,49 @@ namespace Xamarin.RSControls.Droid.Controls
 
         }
 
+
+
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
-            MeasuredWidth.ToString();
-            MeasuredHeight.ToString();
-
-            double widthSpecPixel = MeasureSpec.GetSize(widthMeasureSpec);
-            var x = GetX();
-            var screenWidth = Resources.DisplayMetrics.WidthPixels;
-            var maxWidth = System.Math.Abs(screenWidth - x);
-
-            if (maxWidth < widthSpecPixel)
+            if (rSPopupRenderer != null && rSPopupRenderer.RelativeView != null)
             {
-                var widthMode = MeasureSpec.GetMode(widthMeasureSpec);
-                widthMeasureSpec = MeasureSpec.MakeMeasureSpec((int)maxWidth, widthMode);
-            }
+                rSPopupRenderer.SetPopupPositionRelativeTo(rSPopupRenderer.GetRelativeView(), Resources.DisplayMetrics);
+                rSPopupRenderer.setArrow();
+                rSPopupRenderer.SetLinearLayoutPosition();
 
-            base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
-            MeasuredWidth.ToString();
-            MeasuredHeight.ToString();
+
+                double widthSpecPixel = MeasureSpec.GetSize(widthMeasureSpec);
+                var screenWidth = Resources.DisplayMetrics.WidthPixels;
+                Console.WriteLine(rSPopupRenderer.arrow.GetX().ToString());
+
+
+                if (rSPopupRenderer.RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
+                {
+                    var x = rSPopupRenderer.arrow.GetX();
+                    var maxWidth = System.Math.Abs(x);
+
+                    if (maxWidth < widthSpecPixel)
+                    {
+                        var widthMode = MeasureSpec.GetMode(widthMeasureSpec);
+                        widthMeasureSpec = MeasureSpec.MakeMeasureSpec((int)maxWidth, widthMode);
+                    }
+                }
+                else if (rSPopupRenderer.RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
+                {
+                    var x = rSPopupRenderer.arrow.GetX() + rSPopupRenderer.arrowSize.X;
+                    var maxWidth = System.Math.Abs(screenWidth - x);
+
+                    if (maxWidth < widthSpecPixel)
+                    {
+                        var widthMode = MeasureSpec.GetMode(widthMeasureSpec);
+                        widthMeasureSpec = MeasureSpec.MakeMeasureSpec((int)maxWidth, widthMode);
+                    }
+                }
+
+                base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
+            }
+            else
+                base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 }

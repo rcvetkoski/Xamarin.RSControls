@@ -58,12 +58,12 @@
 
 
 
-        <Xamarin.RSControls.Droid.Controls.CustomLinearLayout
-            android:id="@+id/buttons" android:background="@android:color/holo_blue_bright"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="visible"
+            android:visibility="gone"
             style="?android:buttonBarStyle"
             android:divider="?android:dividerHorizontal"
             android:showDividers="middle">
@@ -102,7 +102,7 @@
                 style="?android:buttonBarButtonStyle"/>
 
 
-        </Xamarin.RSControls.Droid.Controls.CustomLinearLayout>
+        </LinearLayout>
 
     </Xamarin.RSControls.Droid.Controls.CustomLinearLayout>
 
