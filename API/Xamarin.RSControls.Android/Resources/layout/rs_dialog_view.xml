@@ -14,7 +14,7 @@
         android:layout_height="0dp"/>
 
 
-    <LinearLayout
+    <Xamarin.RSControls.Droid.Controls.CustomLinearLayout
         android:id="@+id/linearLayout"
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -44,6 +44,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="0"
                 android:text="Message" 
                 android:textStyle="bold"
                 android:textSize="12sp"
@@ -59,7 +60,7 @@
 
         <LinearLayout
             android:id="@+id/buttons"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:visibility="gone"
@@ -103,7 +104,7 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </Xamarin.RSControls.Droid.Controls.CustomLinearLayout>
 
 
 </RelativeLayout>
