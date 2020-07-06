@@ -43,6 +43,8 @@ namespace Xamarin.RSControls.iOS.Controls
         public int Height { get; set; }
         public bool UserSetPosition { get; set; }
         public bool UserSetSize { get; set; }
+        public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
+        public bool IsModal { get; set; }
 
         private int buttonsCount;
         
@@ -53,6 +55,17 @@ namespace Xamarin.RSControls.iOS.Controls
             buttonsCount = 0;
             BorderRadius = 12;
             ShadowEnabled = true;
+
+            InitViews();
+            SetupBackgroundView();
+            SetupDialogView();
+            SetupDialogStack();
+            SetupContentStack();
+            SetTitle(Title, 18);
+            CreateButtonsStack();
+            SetMessage(Message, 12);
+            if (CustomView != null)
+                SetCustomView();
         }
 
         //Init Views
@@ -296,7 +309,7 @@ namespace Xamarin.RSControls.iOS.Controls
             SetTitle(Title, 18);
             CreateButtonsStack();
             SetMessage(Message, 12);
-            if(CustomView != null)
+            if (CustomView != null)
                 SetCustomView();
 
 
