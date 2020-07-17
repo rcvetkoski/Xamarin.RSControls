@@ -15,6 +15,7 @@ namespace Xamarin.RSControls.Enums
         Left,
         Top,
         Right,
-        Bottom
+        Bottom,
+        Over
     }
 }

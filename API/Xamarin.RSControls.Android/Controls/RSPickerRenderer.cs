@@ -172,6 +172,7 @@ namespace Xamarin.RSControls.Droid.Controls
             searchView = new global::Android.Widget.SearchView(Context);
             searchView.SetQueryHint("Search");
             searchView.SetImeOptions((global::Android.Views.InputMethods.ImeAction)global::Android.Views.InputMethods.ImeFlags.NoExtractUi | global::Android.Views.InputMethods.ImeAction.Search);
+            searchView.QueryTextChange -= SearchView_QueryTextChange;
             searchView.QueryTextChange += SearchView_QueryTextChange;
             searchView.SetIconifiedByDefault(false);
 

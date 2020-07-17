@@ -45,6 +45,8 @@ namespace Samples
             rsPopup.SetCustomView(entry);
             rsPopup.SetDimAmount(0.6f);
             rsPopup.SetIsModal(false);
+            rsPopup.HasCloseButton = true;
+            rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
@@ -87,7 +89,9 @@ namespace Samples
             rsPopup.SetCustomView(entry);
             rsPopup.SetDimAmount(0.0f);
             rsPopup.SetIsModal(false);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetMargin(10, 40, 10, 40);
+            //rsPopup.HasCloseButton = true;
+            rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.MatchParent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
@@ -111,14 +115,13 @@ namespace Samples
             RSPopup rsPopup = new RSPopup("", "Message Tewowlewolowerewwe weg ewweg egw wegewg wegwe gew g gwegewg  weg");
             //rsPopup.SetCustomView(entry);
             rsPopup.SetDimAmount(0.0f);
-            rsPopup.SetIsModal(false);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
-            //rsPopup.SetPopupPositionRelativeTo(sender as View);
+            rsPopup.SetMargin(10, 10, 10, 10);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.MatchParent);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Left);
-            rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
-            rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
-            rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
-                                        (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
+            //rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
+            //rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
+            //rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
+            //                            (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
 
 
             rsPopup.Show();
@@ -126,21 +129,22 @@ namespace Samples
 
         private void Button_Clicked4(object sender, EventArgs e)
         {
-            Entry entry = new Entry();
-            entry.Text = "TrolololhghghhgjggjhghgfghgfholoWhr ";
+            //Entry entry = new Entry();
+            //entry.Text = "TrolololhghghhgjggjhghgfghgfholoWhr ";
 
+            //RSEditor rSEditor = new RSEditor() { Placeholder = "Enter some text", AutoSize = EditorAutoSizeOption.TextChanges };
 
             RSPopup rsPopup = new RSPopup("RSPopup Test wefwef w Test !", "Message");
-            rsPopup.SetCustomView(entry);
+            //rsPopup.SetCustomView(rSEditor);
             rsPopup.SetDimAmount(0.0f);
             rsPopup.SetIsModal(false);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
-            //rsPopup.SetPopupPositionRelativeTo(sender as View);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Top);
-            rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
-            rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
-            rsPopup.AddAction(" Remove ", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
-                                        (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
+            rsPopup.SetMargin(10, 10, 10, 10);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, 450);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Over);
+            //rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
+            //rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
+            //rsPopup.AddAction(" Remove ", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
+            //                            (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
 
 
             rsPopup.Show();
@@ -152,13 +156,14 @@ namespace Samples
             entry.Text = "TrolololhghghhgjggjhghgfghgfholoWhr ";
 
 
-            RSPopup rsPopup = new RSPopup("RSPopup !", "Message");
+            RSPopup rsPopup = new RSPopup("RSPopup !", "Message wef fw fewfwe wef wef ew ewfwe wef ewfewf ewfewwefwe fewf wef ewf ewf wef wef ewf we");
             rsPopup.SetCustomView(entry);
             rsPopup.SetDimAmount(0.0f);
             rsPopup.SetIsModal(false);
+            rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(250, RSPopupSizeEnum.WrapContent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Over);
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
             rsPopup.AddAction("Remove", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
