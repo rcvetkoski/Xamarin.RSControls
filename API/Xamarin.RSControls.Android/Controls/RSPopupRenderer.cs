@@ -71,6 +71,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private int linearLayoutMinWidth = 0;
         public int screenUsableWidth;
         public int screenUsableHeight;
+        private bool backFromSleep;
 
         public RSPopupRenderer()
         {
@@ -122,8 +123,8 @@ namespace Xamarin.RSControls.Droid.Controls
             Dialog.Window.ClearFlags(WindowManagerFlags.NotFocusable | WindowManagerFlags.AltFocusableIm);
             //Dialog.Window.SetSoftInputMode(SoftInput.StateAlwaysVisible);
 
-
-            SetDialog();
+            if(!backFromSleep) //Dont want to reset layoutparameters when back from sleep
+                SetDialog();
         }
 
         //Set PopupSize
@@ -231,6 +232,11 @@ namespace Xamarin.RSControls.Droid.Controls
             var renderer = Platform.CreateRendererWithContext(CustomView, Context);
             Platform.SetRenderer(CustomView, renderer);
             var convertView = new Extensions.ViewCellContainer(Context, CustomView, renderer);
+            convertView.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            LinearLayout viewGroup = new LinearLayout(Context);
+            viewGroup.SetBackgroundColor(global::Android.Graphics.Color.Green);
+            viewGroup.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+
             this.contentView.AddView(convertView);
         }
 
@@ -711,8 +717,17 @@ namespace Xamarin.RSControls.Droid.Controls
             return this.RelativeView;
         }
 
+
+        public override void OnSaveInstanceState(Bundle outState)
+        {
+            base.OnSaveInstanceState(outState);
+
+            backFromSleep = true;
+        }
+
         public void OnClick(global::Android.Views.View v)
         {
+            linearLayout.RequestLayout();
             if (v.Id == customLayout.Id && !IsModal)
             {
                 this.Arguments = null;
@@ -1148,7 +1163,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 if (widthSpecPixel > Resources.DisplayMetrics.WidthPixels - rSPopupRenderer.LeftMargin - rSPopupRenderer.RightMargin)
                 {
                     var widthMode = MeasureSpec.GetMode(widthMeasureSpec);
-                    widthMeasureSpec = MeasureSpec.MakeMeasureSpec(Resources.DisplayMetrics.WidthPixels - rSPopupRenderer.RightMargin, widthMode);
+                    widthMeasureSpec = MeasureSpec.MakeMeasureSpec(Resources.DisplayMetrics.WidthPixels - rSPopupRenderer.LeftMargin - rSPopupRenderer.RightMargin, widthMode);
                 }
 
                 if (heightSpecPixel > heightSpecPixel - rSPopupRenderer.TopMargin - rSPopupRenderer.BottomMargin)

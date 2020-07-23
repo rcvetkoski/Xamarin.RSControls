@@ -37,9 +37,17 @@ namespace Samples
 
         private void Button_Clicked1(object sender, EventArgs e)
         {
-            Entry entry = new Entry();
-            entry.Text = "TrolololhghghhgjggjhghgfghgfholoWhr ";
+            Editor entry = new Editor();
+            entry.Placeholder = "Forms View";
+            entry.AutoSize = EditorAutoSizeOption.TextChanges;
+            entry.HorizontalOptions = LayoutOptions.Fill;
+            entry.BackgroundColor = Color.Yellow;
+            //entry.Text = "TrolololhghghhgjggjhghgfghgfholoWhr ";
 
+            ListView listView = new ListView();
+            listView.HeightRequest = 150;
+            listView.HorizontalOptions = LayoutOptions.Center;
+            listView.ItemsSource = (this.BindingContext as MainPageViewModel).ListPicker;
 
             RSPopup rsPopup = new RSPopup("RSPopup !", "Message");
             rsPopup.SetCustomView(entry);
@@ -91,7 +99,7 @@ namespace Samples
             rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 40, 10, 40);
             //rsPopup.HasCloseButton = true;
-            rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.MatchParent);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.WrapContent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
@@ -113,10 +121,10 @@ namespace Samples
 
 
             RSPopup rsPopup = new RSPopup("", "Message Tewowlewolowerewwe weg ewweg egw wegewg wegwe gew g gwegewg  weg");
-            //rsPopup.SetCustomView(entry);
+            rsPopup.SetCustomView(entry);
             rsPopup.SetDimAmount(0.0f);
             rsPopup.SetMargin(10, 10, 10, 10);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.MatchParent);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Left);
             //rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
@@ -154,14 +162,19 @@ namespace Samples
         {
             Entry entry = new Entry();
             entry.Text = "TrolololhghghhgjggjhghgfghgfholoWhr ";
+            entry.HorizontalOptions = LayoutOptions.FillAndExpand;
 
+            ListView listView = new ListView();
+            listView.HeightRequest = 150;
+            listView.HorizontalOptions = LayoutOptions.Center;
+            listView.ItemsSource = (this.BindingContext as MainPageViewModel).ListPicker;
 
             RSPopup rsPopup = new RSPopup("RSPopup !", "Message wef fw fewfwe wef wef ew ewfwe wef ewfewf ewfewwefwe fewf wef ewf ewf wef wef ewf we");
-            rsPopup.SetCustomView(entry);
+            rsPopup.SetCustomView(listView);
             rsPopup.SetDimAmount(0.0f);
             rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 10, 10, 10);
-            rsPopup.SetPopupSize(250, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Over);
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
