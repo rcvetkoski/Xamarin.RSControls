@@ -105,7 +105,7 @@ namespace Xamarin.RSControls.Droid.Extensions
     }
 
 
-    public class ViewCellContainer : global::Android.Views.ViewGroup
+    public class ViewCellContainer : global::Android.Widget.LinearLayout
     {
         public Xamarin.Forms.View _formsView;
         private IVisualElementRenderer _renderer;
@@ -113,23 +113,34 @@ namespace Xamarin.RSControls.Droid.Extensions
         public ViewCellContainer(global::Android.Content.Context context, Xamarin.Forms.View formsView, IVisualElementRenderer renderer) : base(context)
         {
             _formsView = formsView;
+            _formsView.HorizontalOptions = Forms.LayoutOptions.Center;
             _renderer = renderer;
             this.AddView(_renderer.View);
+            this.SetBackgroundColor(Color.Blue);
         }
 
-        // this will layout the cell in xamarin forms and then get the height
-        // it means you can variable height cells / wrap to content etc
+        //// this will layout the cell in xamarin forms and then get the height
+        //// it means you can variable height cells / wrap to content etc
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
+            //base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
+
             double pixels = MeasureSpec.GetSize(widthMeasureSpec);
             double num = ContextExtensions.FromPixels(this.Context, pixels);
             Forms.SizeRequest sizeRequest = _formsView.Measure(num, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
-            _formsView.Layout(new Forms.Rectangle(0.0, 0.0, num, sizeRequest.Request.Height));
+
+            if (num > sizeRequest.Request.Width)
+                _formsView.Layout(new Forms.Rectangle(0.0, 0.0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+            else
+                _formsView.Layout(new Forms.Rectangle(0.0, 0.0, num, sizeRequest.Request.Height));
+
+
             double width = _formsView.Width;
             int measuredWidth = MeasureSpec.MakeMeasureSpec((int)ContextExtensions.ToPixels(this.Context, width), MeasureSpecMode.Exactly);
             double height = _formsView.Height;
             int measuredHeight = MeasureSpec.MakeMeasureSpec((int)ContextExtensions.ToPixels(this.Context, height), MeasureSpecMode.Exactly);
             _renderer.View.Measure(widthMeasureSpec, heightMeasureSpec);
+
             this.SetMeasuredDimension(measuredWidth, measuredHeight);
         }
 

@@ -15,12 +15,20 @@ namespace Xamarin.RSControls.Interfaces
         bool UserSetPosition { get; set; }
         RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
         bool UserSetSize { get; set; }
+        bool UserSetMargin { get; set; }
+        bool HasCloseButton { get; set; }
+        int RightMargin { get; set; }
+        int LeftMargin { get; set; }
+        int TopMargin { get; set; }
+        int BottomMargin { get; set; }
         float BorderRadius { get; set; }
         Forms.Color BorderFillColor { get; set; }
         float DimAmount { get; set; }
         bool ShadowEnabled { get; set; }
         bool IsModal { get; set; }
         Forms.View RelativeView { get; set; }
+        float RSPopupOffsetX { get; set; }
+        float RSPopupOffsetY { get; set; }
         Forms.View CustomView { get; set; }
         void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter);
         void ShowPopup();

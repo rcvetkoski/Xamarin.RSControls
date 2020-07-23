@@ -44,6 +44,11 @@ namespace Xamarin.RSControls.Controls
         public float DimAmount { get; set; }
         public bool ShadowEnabled { get; set; }
         public bool IsModal { get; set; }
+        public bool HasCloseButton
+        {
+            get { return service.HasCloseButton; }
+            set { service.HasCloseButton = value; }
+        }
 
 
 
@@ -51,7 +56,7 @@ namespace Xamarin.RSControls.Controls
         {
             service = DependencyService.Get<IDialogPopup>(DependencyFetchTarget.NewInstance);
             SetBackgroundColor(Color.White);
-            SetBorderRadius(18);
+            SetBorderRadius(16);
             SetDimAmount(0.7f);
             SetShadowEnabled(true);
         }
@@ -62,27 +67,14 @@ namespace Xamarin.RSControls.Controls
             SetTitle(title);
             SetMessage(message);
             SetBackgroundColor(Color.White);
-            SetBorderRadius(18);
+            SetBorderRadius(16);
             SetDimAmount(0.7f);
             SetShadowEnabled(true);
         }
 
         public void Show()
         {
-            //RSPopup2 lll = RSPopup2.GetInstance();
-
             service.ShowPopup();
-        }
-
-        public void SetPopupAtPosition(int x, int y)
-        {
-            PositionX = x;
-            PositionY = y;
-
-            service.PositionX = x;
-            service.PositionY = y;
-
-            service.UserSetPosition = true;
         }
 
         public void SetPopupPositionRelativeTo(View view)
@@ -92,11 +84,13 @@ namespace Xamarin.RSControls.Controls
             service.RSPopupPositionSideEnum = RSPopupPositionSideEnum.Bottom; //default
         }
 
-        public void SetPopupPositionRelativeTo(View view, RSPopupPositionSideEnum rSPopupPositionSideEnum)
+        public void SetPopupPositionRelativeTo(View view, RSPopupPositionSideEnum rSPopupPositionSideEnum, float offsetX = 0, float offsetY = 0)
         {
             service.RelativeView = view;
             service.UserSetPosition = true;
             service.RSPopupPositionSideEnum = rSPopupPositionSideEnum;
+            service.RSPopupOffsetX = offsetX;
+            service.RSPopupOffsetY = offsetY;
         }
 
         public void SetPopupSize(int width, int height)
@@ -137,6 +131,15 @@ namespace Xamarin.RSControls.Controls
             service.Width = Width;
             service.Height = Height;
             service.UserSetSize = true;
+        }
+
+        public void SetMargin(int left, int top, int right, int bottom)
+        {
+            service.LeftMargin = left;
+            service.TopMargin = top;
+            service.RightMargin = right;
+            service.BottomMargin = bottom;
+            service.UserSetMargin = true;
         }
 
         public void SetTitle(string title)
