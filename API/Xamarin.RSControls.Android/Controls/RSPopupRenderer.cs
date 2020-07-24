@@ -72,6 +72,7 @@ namespace Xamarin.RSControls.Droid.Controls
         public int screenUsableWidth;
         public int screenUsableHeight;
         private bool backFromSleep;
+        private Extensions.ViewCellContainer convertView;
 
         public RSPopupRenderer()
         {
@@ -231,13 +232,9 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             var renderer = Platform.CreateRendererWithContext(CustomView, Context);
             Platform.SetRenderer(CustomView, renderer);
-            var convertView = new Extensions.ViewCellContainer(Context, CustomView, renderer);
-            convertView.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-            LinearLayout viewGroup = new LinearLayout(Context);
-            viewGroup.SetBackgroundColor(global::Android.Graphics.Color.Green);
-            viewGroup.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-
+            convertView = new Extensions.ViewCellContainer(Context, CustomView, renderer);
             this.contentView.AddView(convertView);
+            convertView.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
         }
 
         //Set native view 

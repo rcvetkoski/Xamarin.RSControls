@@ -113,26 +113,28 @@ namespace Xamarin.RSControls.Droid.Extensions
         public ViewCellContainer(global::Android.Content.Context context, Xamarin.Forms.View formsView, IVisualElementRenderer renderer) : base(context)
         {
             _formsView = formsView;
-            _formsView.HorizontalOptions = Forms.LayoutOptions.Center;
             _renderer = renderer;
             this.AddView(_renderer.View);
-            this.SetBackgroundColor(Color.Blue);
         }
 
         //// this will layout the cell in xamarin forms and then get the height
         //// it means you can variable height cells / wrap to content etc
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
-            //base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
+            base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
 
             double pixels = MeasureSpec.GetSize(widthMeasureSpec);
             double num = ContextExtensions.FromPixels(this.Context, pixels);
             Forms.SizeRequest sizeRequest = _formsView.Measure(num, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
 
-            if (num > sizeRequest.Request.Width)
-                _formsView.Layout(new Forms.Rectangle(0.0, 0.0, sizeRequest.Request.Width, sizeRequest.Request.Height));
-            else
+
+            if (num < sizeRequest.Request.Width)
                 _formsView.Layout(new Forms.Rectangle(0.0, 0.0, num, sizeRequest.Request.Height));
+            else
+                _formsView.Layout(new Forms.Rectangle(0.0, 0.0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+
+            //_formsView.Layout(new Forms.Rectangle(0.0, 0.0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+
 
 
             double width = _formsView.Width;
@@ -144,9 +146,9 @@ namespace Xamarin.RSControls.Droid.Extensions
             this.SetMeasuredDimension(measuredWidth, measuredHeight);
         }
 
-        protected override void OnLayout(bool changed, int l, int t, int r, int b)
-        {
-            _renderer.UpdateLayout();
-        }
+        //protected override void OnLayout(bool changed, int l, int t, int r, int b)
+        //{
+        //    _renderer.UpdateLayout();
+        //}
     }
 }

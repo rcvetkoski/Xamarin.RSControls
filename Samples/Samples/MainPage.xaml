@@ -25,8 +25,8 @@
         
         <Button Text="Right" BackgroundColor="Green" VerticalOptions="End" HorizontalOptions="End" Margin="0,0,80,0" CommandParameter="" Clicked="Button_Clicked2"></Button>
 
+        
         <Button Text="Switch to Page1" VerticalOptions="EndAndExpand" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
         
-
     </StackLayout>
 </ContentPage>

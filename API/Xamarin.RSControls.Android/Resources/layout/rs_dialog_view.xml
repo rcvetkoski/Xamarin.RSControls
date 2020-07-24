@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <ImageButton
         android:id="@+id/closeButton"
         android:layout_width="wrap_content"
@@ -18,14 +17,12 @@
         android:background="@drawable/rsovalshapedrawable"
         android:src="@android:drawable/ic_menu_close_clear_cancel"/>
 
-
     <View
         android:id="@+id/arrow"
         android:elevation="7dp"
         android:outlineProvider="none"
         android:layout_width="0dp"
         android:layout_height="0dp"/>
-
 
     <Xamarin.RSControls.Droid.Controls.CustomLinearLayout
         android:id="@+id/linearLayout"
@@ -36,11 +33,10 @@
         android:divider="?android:dividerVertical"
         android:showDividers="middle">
 
-
         <LinearLayout
             android:id="@+id/contentView"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp" android:background="@android:color/holo_red_dark"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" 
             android:layout_weight="1" android:gravity="center_horizontal"
             android:layout_margin="10dp"
             android:orientation="vertical">
@@ -66,10 +62,7 @@
                 android:gravity="center"
                 android:id="@+id/dialog_message"/>
 
-
         </LinearLayout>
-
-
 
         <LinearLayout
             android:id="@+id/buttons"
@@ -118,6 +111,5 @@
         </LinearLayout>
 
     </Xamarin.RSControls.Droid.Controls.CustomLinearLayout>
-
 
 </RelativeLayout>

@@ -40,8 +40,8 @@ namespace Samples
             Editor entry = new Editor();
             entry.Placeholder = "Forms View";
             entry.AutoSize = EditorAutoSizeOption.TextChanges;
-            entry.HorizontalOptions = LayoutOptions.Fill;
-            entry.BackgroundColor = Color.Yellow;
+            entry.HorizontalOptions = LayoutOptions.FillAndExpand;
+            //entry.BackgroundColor = Color.Yellow;
             //entry.Text = "TrolololhghghhgjggjhghgfghgfholoWhr ";
 
             ListView listView = new ListView();
