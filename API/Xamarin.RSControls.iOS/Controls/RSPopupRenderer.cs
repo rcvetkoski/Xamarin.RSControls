@@ -45,6 +45,14 @@ namespace Xamarin.RSControls.iOS.Controls
         public bool UserSetSize { get; set; }
         public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
         public bool IsModal { get; set; }
+        public bool UserSetMargin { get; set; }
+        public bool HasCloseButton { get; set; }
+        public int RightMargin { get; set; }
+        public int LeftMargin { get; set; }
+        public int TopMargin { get; set; }
+        public int BottomMargin { get; set; }
+        public float RSPopupOffsetX { get; set; }
+        public float RSPopupOffsetY { get; set; }
 
         private int buttonsCount;
         
