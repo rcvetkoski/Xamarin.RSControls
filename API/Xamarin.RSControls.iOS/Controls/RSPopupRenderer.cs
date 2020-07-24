@@ -37,6 +37,23 @@ namespace Xamarin.RSControls.iOS.Controls
         public float PositionY { get; set; }
         public float BorderRadius { get; set; }
         public bool ShadowEnabled { get; set; }
+        int IDialogPopup.PositionX { get; set; }
+        int IDialogPopup.PositionY { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public bool UserSetPosition { get; set; }
+        public bool UserSetSize { get; set; }
+        public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
+        public bool IsModal { get; set; }
+        public bool UserSetMargin { get; set; }
+        public bool HasCloseButton { get; set; }
+        public int RightMargin { get; set; }
+        public int LeftMargin { get; set; }
+        public int TopMargin { get; set; }
+        public int BottomMargin { get; set; }
+        public float RSPopupOffsetX { get; set; }
+        public float RSPopupOffsetY { get; set; }
+
         private int buttonsCount;
         
 
@@ -46,6 +63,17 @@ namespace Xamarin.RSControls.iOS.Controls
             buttonsCount = 0;
             BorderRadius = 12;
             ShadowEnabled = true;
+
+            InitViews();
+            SetupBackgroundView();
+            SetupDialogView();
+            SetupDialogStack();
+            SetupContentStack();
+            SetTitle(Title, 18);
+            CreateButtonsStack();
+            SetMessage(Message, 12);
+            if (CustomView != null)
+                SetCustomView();
         }
 
         //Init Views
@@ -289,7 +317,7 @@ namespace Xamarin.RSControls.iOS.Controls
             SetTitle(Title, 18);
             CreateButtonsStack();
             SetMessage(Message, 12);
-            if(CustomView != null)
+            if (CustomView != null)
                 SetCustomView();
 
 
