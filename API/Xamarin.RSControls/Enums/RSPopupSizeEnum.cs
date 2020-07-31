@@ -12,10 +12,11 @@ namespace Xamarin.RSControls.Enums
 
     public enum RSPopupPositionSideEnum
     {
-        Left,
-        Top,
-        Right,
-        Bottom,
-        Over
+        Left = 1,
+        Top = 2,
+        Right = 3,
+        Bottom = 4,
+        Over = 5,
+        Center = 0
     }
 }

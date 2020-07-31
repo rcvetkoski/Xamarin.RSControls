@@ -13,6 +13,11 @@
         <ScrollView Orientation="Vertical">
             <StackLayout Grid.Row="1" Margin="10" x:Name="stack">
 
+
+
+                <Button Text="Right" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,0,80,0" CommandParameter="" Clicked="Button_Clicked"></Button>
+
+
                 <rs:RSPicker BackgroundColor="Cyan" ItemsSource="{Binding ListPicker}" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
 
                 </rs:RSPicker>
@@ -144,6 +149,10 @@
                     </rs:RSEntry.RightHelpingIcon>
 
                 </rs:RSEntry>
+
+
+                <Button Text="Right" BackgroundColor="Green" VerticalOptions="EndAndExpand" HorizontalOptions="End" Margin="0,0,80,0" CommandParameter="" Clicked="Button_Clicked"></Button>
+
 
             </StackLayout>
         </ScrollView>

@@ -829,7 +829,17 @@ namespace Xamarin.RSControls.iOS.Controls
         }
 
         //Draw placeholder for intristic content size but give it transparent color
-        public override NSAttributedString AttributedPlaceholder { get => new NSAttributedString(base.AttributedPlaceholder.Value, null, UIColor.Clear); set => base.AttributedPlaceholder = value; }
+        public override NSAttributedString AttributedPlaceholder
+        {
+            get
+            {
+                if(base.AttributedPlaceholder != null)
+                    return new NSAttributedString(base.AttributedPlaceholder.Value, null, UIColor.Clear);
+                else
+                    return new NSAttributedString("", null, UIColor.Clear);
+            }
+            set => base.AttributedPlaceholder = value;
+        }
 
 
         //Remove any events when closed
