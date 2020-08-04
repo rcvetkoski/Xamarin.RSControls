@@ -46,6 +46,9 @@
 
                 </rs:RSEntry>
 
+                                <Button Text="Right" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,0,80,0" CommandParameter="" Clicked="Button_Clicked"></Button>
+
+
                 <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
 
                     <rs:RSEntry.TrailingIcon>
@@ -78,6 +81,9 @@
                         </validators:ValidationBehaviour>
                     </rs:RSEntry.Behaviors>
                 </rs:RSEntry>
+
+                                <Button Text="Right" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,0,80,0" CommandParameter="" Clicked="Button_Clicked"></Button>
+
 
                 <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
 
