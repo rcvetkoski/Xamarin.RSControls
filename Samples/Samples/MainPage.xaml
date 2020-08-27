@@ -9,24 +9,56 @@
              xmlns:helpers="clr-namespace:Xamarin.RSControls.Helpers;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
-    <StackLayout x:Name="stack" Margin="10">
+    <ScrollView Orientation="Both">
 
-        <Button Text="Center Dialog" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked1"></Button>
+        <StackLayout x:Name="stack" Margin="10">
 
-        <Button Text="Top" BackgroundColor="Green" HorizontalOptions="End" Margin="0,0,00,0" CommandParameter="" Clicked="Button_Clicked4"></Button>
+            <Button Text="Center Dialog" TextColor="White" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked1"></Button>
 
-        <Button Text="Right" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,0,0,0" CommandParameter="" Clicked="Button_Clicked2"></Button>
+            <Button Text="Left Dialog" TextColor="White" BackgroundColor="Green" HorizontalOptions="End" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked3"></Button>
 
-        <Button x:Name="left1" Text="Right" BackgroundColor="Green" HorizontalOptions="Center" Margin="30,0,0,0" CommandParameter="" Clicked="Button_Clicked2"></Button>
+            <Button Text="Right Dialog" TextColor="White" BackgroundColor="Green" HorizontalOptions="Start" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked2"></Button>
 
-        <Button x:Name="left2" Text="Left2" BackgroundColor="Green" HorizontalOptions="End" Margin="0,40,0,0" CommandParameter="" Clicked="Button_Clicked3"></Button>
+            <Button x:Name="left2" TextColor="White" Text="Bottom Dialog" BackgroundColor="Green" HorizontalOptions="End" Margin="0,40,0,0" CommandParameter="" Clicked="Button_Clicked6"></Button>
 
-        <Button Text="Bottom" BackgroundColor="Green" HorizontalOptions="Start" CommandParameter="" Margin="30,0,0,0" Clicked="Button_Clicked5"></Button>
+            <Button x:Name="left1" TextColor="White" Text="Top Dialog" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked5"></Button>
+
+
+            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
+
+            </rs:RSPicker>
+
+
+
+
+            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Single" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
+                <rs:RSPicker.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="SelectedItem">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSPicker.Behaviors>
+            </rs:RSPicker>
+
+            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="Native" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker native">
+
+            </rs:RSPicker>
+
+            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="Native" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Single" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
+                <rs:RSPicker.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="SelectedItem">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSPicker.Behaviors>
+            </rs:RSPicker>
         
-        <Button Text="Right" BackgroundColor="Green" VerticalOptions="EndAndExpand" HorizontalOptions="End" Margin="0,0,80,0" CommandParameter="" Clicked="Button_Clicked2"></Button>
+            <Button Text="Switch to Page1" TextColor="White" VerticalOptions="EndAndExpand" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
+        
+        </StackLayout>
 
-        
-        <Button Text="Switch to Page1" VerticalOptions="EndAndExpand" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
-        
-    </StackLayout>
+    </ScrollView>
+
 </ContentPage>

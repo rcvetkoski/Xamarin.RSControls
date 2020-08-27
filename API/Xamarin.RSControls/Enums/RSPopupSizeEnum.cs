@@ -19,4 +19,10 @@ namespace Xamarin.RSControls.Enums
         Over = 5,
         Center = 0
     }
+
+    public enum RSPopupStyleEnum
+    {
+        Native,
+        RsPopopStyle
+    }
 }

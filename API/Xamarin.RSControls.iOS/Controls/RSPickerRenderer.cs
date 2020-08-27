@@ -19,6 +19,9 @@ namespace Xamarin.RSControls.iOS.Controls
     {
         private UIPickerView uIPickerView;
         private UITableView multipleSelectionList;
+        CustomUITableView customTable;
+        public RSPopupRenderer rSPopup;
+        public bool canUpdate = true;
 
         public RSPickerRenderer()
         {
@@ -27,6 +30,7 @@ namespace Xamarin.RSControls.iOS.Controls
         protected override void OnElementChanged(ElementChangedEventArgs<RSPickerBase> e)
         {
             base.OnElementChanged(e);
+
 
             if (Control != null)
                 return;
@@ -50,15 +54,24 @@ namespace Xamarin.RSControls.iOS.Controls
             //Set Text
             SetText();
 
-            entry.InputAccessoryView = CreateToolbar(entry);
 
-            entry.InputAssistantItem.LeadingBarButtonGroups = new UIBarButtonItemGroup[0];
-            entry.InputAssistantItem.TrailingBarButtonGroups = new UIBarButtonItemGroup[0];
+            if (this.Element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
+            {
+                entry.InputAccessoryView = CreateToolbar(entry);
+                entry.InputAssistantItem.LeadingBarButtonGroups = new UIBarButtonItemGroup[0];
+                entry.InputAssistantItem.TrailingBarButtonGroups = new UIBarButtonItemGroup[0];
 
-            if (this.Element.SelectionMode == PickerSelectionModeEnum.Single)
-                entry.InputView = CrearteUIPickerView();
+
+                if (this.Element.SelectionMode == PickerSelectionModeEnum.Single)
+                    entry.InputView = CreateUIPickerView();
+                else
+                    entry.InputView = CreateMultipleSelectionPicker();
+            }
             else
-                entry.InputView = CreateMultipleSelectionPicker();
+                entry.InputView = new UIView(); // Hide original keyboard
+
+
+
 
             entry.EditingDidBegin += Entry_EditingDidBegin;
 
@@ -69,13 +82,22 @@ namespace Xamarin.RSControls.iOS.Controls
         //If collection has changed meanwhile update the data on click
         private void Entry_EditingDidBegin(object sender, EventArgs e)
         {
-            if(uIPickerView != null)
-                uIPickerView.Model = new CustomUIPickerViewModel(this.Element.ItemsSource, this.Element, this);
-
-            if(multipleSelectionList != null)
+            if(canUpdate)
             {
-                multipleSelectionList.Source = new TableSource(this.Element.Items.ToArray(), this);
+                if (this.Element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
+                {
+                    if (uIPickerView != null)
+                        uIPickerView.Model = new CustomUIPickerViewModel(this.Element.ItemsSource, this.Element, this);
+
+                    if (multipleSelectionList != null)
+                    {
+                        multipleSelectionList.Source = new CustomTableSource(this.Element.Items.ToArray(), this);
+                    }
+                }
+                else
+                    CreateCustomUiPickerPopup();
             }
+
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -201,7 +223,7 @@ namespace Xamarin.RSControls.iOS.Controls
             //Done Button
             var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, (sender, ev) =>
             {
-                if(this.Element.SelectionMode == PickerSelectionModeEnum.Single)
+                if (this.Element.SelectionMode == PickerSelectionModeEnum.Single)
                     this.Element.SelectedItem = (uIPickerView.Model as CustomUIPickerViewModel).SelectedItem;
 
                 SetText();
@@ -213,7 +235,7 @@ namespace Xamarin.RSControls.iOS.Controls
             return toolbar;
         }
 
-        private UIPickerView CrearteUIPickerView()
+        private UIPickerView CreateUIPickerView()
         {
             uIPickerView = new UIPickerView(CGRect.Empty)
             {
@@ -233,8 +255,6 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             multipleSelectionList = new UITableView();
             multipleSelectionList.AutoresizingMask = UIViewAutoresizing.FlexibleHeight;
-            //multipleSelectionList = new UITableView(new CGRect(0, 0, this.Frame.Width, 162));
-
             multipleSelectionList.BackgroundColor = UIColor.Clear;
 
 
@@ -242,17 +262,107 @@ namespace Xamarin.RSControls.iOS.Controls
             UIBlurEffect.FromStyle(UIBlurEffectStyle.Light);
             UIVisualEffectView uIVisualEffectView = new UIVisualEffectView(uIBlurEffect);
             uIVisualEffectView.TranslatesAutoresizingMaskIntoConstraints = false;
-
             multipleSelectionList.AddSubview(uIVisualEffectView);
 
             multipleSelectionList.AllowsMultipleSelection = true;
-
             multipleSelectionList.SetEditing(true, true);
             multipleSelectionList.AllowsMultipleSelectionDuringEditing = true;
-            multipleSelectionList.Source = new TableSource(this.Element.Items.ToArray(), this);
+            multipleSelectionList.Source = new CustomTableSource(this.Element.Items.ToArray(), this);
 
 
             return multipleSelectionList;
+        }
+
+        private UIView CreateCustomUiPickerPopup()
+        {
+            customTable = new CustomUITableView();
+            customTable.Source = new CustomTableSource(this.Element.Items.ToArray(), this);
+
+            //Scroll to selected item if single selection mode
+            if(this.Element.SelectedItem != null)
+            {
+                var selectedIndex = this.Element.ItemsSource.IndexOf(this.Element.SelectedItem);
+                customTable.ScrollToRow(NSIndexPath.FromItemSection(selectedIndex, 0), UITableViewScrollPosition.Top, false);
+            }
+
+            customTable.AllowsMultipleSelection = true;
+            customTable.SetEditing(true, true);
+            customTable.AllowsMultipleSelectionDuringEditing = true;
+
+            customTable.TableFooterView = new UIView(); //Hide empty separators
+
+            //Holder
+            UIStackView holder = new UIStackView();
+            holder.Axis = UILayoutConstraintAxis.Vertical;
+
+            //Search Bar
+
+            if(this.Element.IsSearchEnabled)
+            {
+                UISearchBar searchBar = new UISearchBar();
+                searchBar.SizeToFit();
+                searchBar.SearchButtonClicked += (sender, e) =>
+                {
+                    //this is the method that is called when the user clicks on search button and its here to close keyboard  
+                    searchBar.ResignFirstResponder();
+                };
+                searchBar.AutocorrectionType = UITextAutocorrectionType.No;
+                searchBar.AutocapitalizationType = UITextAutocapitalizationType.None;
+                searchBar.SearchBarStyle = UISearchBarStyle.Minimal;
+                searchBar.Placeholder = "Search";
+                searchBar.TextChanged += (sender, e) =>
+                {
+                    //this is the method that is called when the user searches  
+                    searchTable(customTable, customTable.Source as CustomTableSource, searchBar);
+                };
+                holder.AddArrangedSubview(searchBar);
+            }
+
+
+            holder.AddArrangedSubview(customTable);
+
+            //Create RSPopup
+            rSPopup = new RSPopupRenderer();
+            //rSPopup.Title = "Custom Picker";
+            //rSPopup.Message = "Message";
+            rSPopup.Width = -1;
+            rSPopup.Height = -2;
+            rSPopup.TopMargin = 40;
+            rSPopup.BottomMargin = 40;
+            rSPopup.LeftMargin = 20;
+            rSPopup.RightMargin = 20;
+            rSPopup.BorderRadius = 16;
+            rSPopup.BorderFillColor = UIColor.White.ToColor();
+            rSPopup.DimAmount = 0.6f;
+            rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, new Command( () => { this.Control.ResignFirstResponder(); } ));
+            rSPopup.AddAction("Clear", RSPopupButtonTypeEnum.Destructive, new Command( () => { clearPicker(); } ));
+            rSPopup.SetNativeView(holder);
+            rSPopup.ShowPopup();
+
+
+            return rSPopup;
+        }
+
+        private void clearPicker()
+        {
+            if (this.Element.SelectionMode == PickerSelectionModeEnum.Single)
+                this.Element.SelectedItem = null;
+            else
+            {
+                this.Element.SelectedItems.Clear();
+                customTable.ReloadData();
+            }
+
+            SetText();
+            this.Control.EndEditing(true);
+            rSPopup.Dismiss(true);
+        }
+
+        private void searchTable(UITableView table, CustomTableSource tableSource, UISearchBar searchBar)
+        {
+            //perform the search, and refresh the table with the results  
+            tableSource.PerformSearch(searchBar.Text);
+            table.ReloadData();
         }
 
         protected override UITextField CreateNativeControl()
@@ -264,282 +374,16 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             base.Dispose(disposing);
 
-            if(disposing)
+            if (disposing)
             {
-                if(this.Control != null)
+                if (this.Control != null)
                     this.Control.EditingDidBegin -= Entry_EditingDidBegin;
             }
         }
     }
 
-    //Not used
-    public interface IModal
-    {
-        void Show(bool animated);
-        void Dismiss(bool animated);
 
-        UIView BackgroundView { get; set; }
-        UIView DialogView { get; set; }
-    }
-    public class CustomAlertView : UIView, IModal
-    {
-        public UIView BackgroundView { get; set; } = new UIView();
-        public UIView DialogView { get; set; } = new UIView();
-        private UITableView list;
-
-        public CustomAlertView(string title, RSPickerRenderer renderer)
-        {
-            this.Frame = UIScreen.MainScreen.Bounds;
-            this.Init();
-
-            BackgroundView.Frame = UIScreen.MainScreen.Bounds;
-            AddSubview(BackgroundView);
-
-            var dialogViewWidth = this.Frame.Width;
-
-            // Separator
-            var separatorLineView = new UIView();
-            var separatorFrame = separatorLineView.Frame;
-            separatorFrame.Location = new CGPoint(x: 0, y: 0);
-            separatorFrame.Size = new CGSize(width: dialogViewWidth, height: 1);
-            separatorLineView.Frame = separatorFrame;
-            separatorLineView.BackgroundColor = UIColor.GroupTableViewBackgroundColor;
-            DialogView.AddSubview(separatorLineView);
-
-            // Toolbar
-            var toolBar = new UIToolbar();
-            var toolBarFrame = toolBar.Frame;
-            toolBarFrame.Location = new CGPoint(x: 0, y: 1);
-            toolBar.Frame = toolBarFrame;
-            toolBar.BarStyle = UIBarStyle.Default;
-            toolBar.Translucent = true;
-            toolBar.SizeToFit();
-            DialogView.AddSubview(toolBar);
-
-            // Buttons
-            var doneButton = new UIBarButtonItem("Done", UIBarButtonItemStyle.Done, ((sender, ev) =>
-            {
-                Dismiss(true);
-            }));
-            var spaceButton = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace, null, null);
-            var cancelButton = new UIBarButtonItem("Clear", UIBarButtonItemStyle.Plain, ((sender, ev) =>
-            {
-                if(renderer.Element.SelectedItems != null)
-                    renderer.Element.SelectedItems.Clear();
-
-                renderer.Element.SelectedItem = null;
-                renderer.SetText();
-
-                Dismiss(true);
-            }));
-            var newItems = new List<UIBarButtonItem>();
-            newItems.Insert(0, cancelButton);
-
-
-            //SearchBar
-            UISearchBar uISearchBar;
-            if (UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.LandscapeLeft && UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.LandscapeRight)
-                uISearchBar = new UISearchBar(new CGRect(x: 0, y: 0, width: toolBar.Frame.Width - 150, height: toolBar.Frame.Height));
-            else
-                uISearchBar = new UISearchBar(new CGRect(x: 0, y: 0, width: toolBar.Frame.Width - 250, height: toolBar.Frame.Height));
-
-            //uISearchBar.BackgroundColor = UIColor.Clear;
-            uISearchBar.AutoresizingMask = UIViewAutoresizing.FlexibleWidth;
-            uISearchBar.ShowsCancelButton = false;
-            uISearchBar.Translucent = false;
-            uISearchBar.SearchBarStyle = UISearchBarStyle.Minimal;
-            uISearchBar.Placeholder = "Search";
-            UIBarButtonItem textfieldBarButton = new UIBarButtonItem(customView: uISearchBar);
-
-            newItems.Insert(1, spaceButton);
-            newItems.Insert(2, textfieldBarButton);
-            newItems.Insert(3, spaceButton);
-            newItems.Insert(4, doneButton);
-            toolBar.Items = newItems.ToArray();
-            toolBar.SetNeedsDisplay();
-
-
-            // List
-            list = new UITableView(new CGRect(x: 0, y: separatorLineView.Frame.Height + toolBar.Frame.Height, width: dialogViewWidth, height: 210));
-            list.AllowsMultipleSelection = false;
-            //list.SetEditing(true, true);
-            //list.AllowsMultipleSelectionDuringEditing = true;
-            list.Source = new TableSource(renderer.Element.Items.ToArray(), renderer);
-
-
-
-            // UIPicker
-            //
-            // Empty is used, since UIPickerViews have auto-sizing,
-            // all that is required is the origin
-            //
-            UIPickerView uIPickerView = new UIPickerView(CGRect.Empty)
-            {
-                ShowSelectionIndicator = true,
-                Model = new CustomUIPickerViewModel(renderer.Element.ItemsSource, renderer.Element, renderer),
-                BackgroundColor = UIColor.LightGray
-            };
-            // Now update it:
-            uIPickerView.Frame = new CGRect(0f, separatorLineView.Frame.Height + toolBar.Frame.Height, dialogViewWidth, uIPickerView.Frame.Height);
-
-            DialogView.AddSubview(uIPickerView);
-
-            //Fixes selectedindicator not showing
-            if (renderer.Element.SelectedItem != null)
-                uIPickerView.Select(renderer.Element.SelectedIndex, 0, true);
-
-
-            // DialogView
-            var dialogViewHeight = toolBar.Frame.Height + uIPickerView.Frame.Height;
-            var DialogViewFrame = DialogView.Frame; 
-            DialogViewFrame.Location = new CGPoint(x: 0, y: Frame.Height);
-            DialogViewFrame.Size = new CGSize(width: Frame.Width, height: dialogViewHeight);
-            DialogView.Frame = DialogViewFrame;
-            DialogView.BackgroundColor = UIColor.Clear;
-            DialogView.ClipsToBounds = true;
-            AddSubview(DialogView);
-
-            UITapGestureRecognizer didTappedOnBackgroundView = new UITapGestureRecognizer((obj) =>
-            {
-                Dismiss(true);
-            });
-
-            BackgroundView.AddGestureRecognizer(didTappedOnBackgroundView);
-        }
-
-        // Animation part
-        public void Dismiss(bool animated)
-        {
-            if (animated)
-            {
-                UIView.Animate(0.33, () => { this.BackgroundView.Alpha = 0f; }, () => { });
-
-                UIView.Animate(0.33, 0,
-                               UIViewAnimationOptions.CurveEaseInOut,
-                               () => { this.DialogView.Center = new CGPoint(this.Center.X, this.Frame.Height + this.DialogView.Frame.Height / 2); },
-                               () => { this.RemoveFromSuperview(); });
-            }
-            else
-            {
-                this.RemoveFromSuperview();
-            }
-        }
-
-        public void Show(bool animated)
-        {
-            this.BackgroundView.Alpha = 0;
-            this.DialogView.Center = new CGPoint(x: this.Center.X, y: this.Frame.Height + this.DialogView.Frame.Height / 2);
-            UIApplication.SharedApplication.Delegate?.GetWindow()?.RootViewController?.View.AddSubview(this);
-
-            if (animated)
-            {
-                UIView.Animate(0.33, () => { this.BackgroundView.Alpha = 0.66f; });
-
-                UIView.Animate(0.33, 0,
-                               UIViewAnimationOptions.CurveEaseInOut,
-                               () => { this.DialogView.Center = new CGPoint(this.Center.X, this.Frame.Height - this.DialogView.Frame.Height / 2); },
-                               () => { });
-            }
-            else
-            {
-                this.BackgroundView.Alpha = 0.66f;
-                this.DialogView.Center = new CGPoint(this.Center.X, this.Frame.Height - this.DialogView.Frame.Height / 2);
-            }
-        }
-    }
-
-
-
-    public class TableSource : UITableViewSource
-    {
-        private string[] tableItems;
-        private List<object> tableItemsSource;
-        private string cellIdentifier = "TableCell";
-        private RSPickerRenderer renderer;
-
-        public TableSource(string[] items, RSPickerRenderer Renderer)
-        {
-            renderer = Renderer;
-
-            if (renderer.Element.ItemsSource == null)
-                return;
-
-            tableItems = items;
-
-            if (tableItemsSource == null)
-                tableItemsSource = new List<object>();
-            else
-            {
-                tableItemsSource.Clear();
-            }
-
-            foreach (object item in renderer.Element.ItemsSource)
-            {
-                tableItemsSource.Add(item);
-            }
-        }
-
-        public override nint RowsInSection(UITableView tableview, nint section)
-        {
-            return tableItems.Length;
-        }
-
-        public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
-        {
-            UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
-            string item = tableItems[indexPath.Row];
-
-
-            if (renderer.Element.ItemTemplate == null)
-            {
-                //if there are no cells to reuse, create a new one
-                if (cell == null)
-                {
-                    cell = new UITableViewCell(UITableViewCellStyle.Default, cellIdentifier) { BackgroundColor = UIColor.Clear };
-
-                    //Set new selected background so it wont higlight background but only tick left checkbox
-                    cell.SelectedBackgroundView = new UIView(cell.Frame);
-                    cell.SelectedBackgroundView.BackgroundColor = UIColor.Clear;
-                }
-
-                cell.TextLabel.Text = item;
-            }
-            else
-            {
-                //if there are no cells to reuse, create a new one
-                if (cell == null)
-                {
-                    Xamarin.Forms.View formsView = renderer.Element.ItemTemplate.CreateContent() as Xamarin.Forms.View;
-                    cell = new CustomCell(new NSString(cellIdentifier), formsView) { BackgroundColor = UIColor.Clear };
-                }
-
-                //Update bindings
-                (cell as CustomCell).formsView.BindingContext = tableItemsSource[indexPath.Row];
-            }
-
-            //Set selected
-            if (renderer.Element.SelectedItems.Contains(tableItemsSource.ElementAt(indexPath.Row)))
-            {
-                tableView.SelectRow(indexPath, false, UITableViewScrollPosition.None);
-            }
-
-
-            return cell;
-        }
-
-        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
-        {
-            renderer.Element.SelectedItems.Add(tableItemsSource[indexPath.Row]);
-            renderer.SetText();
-        }
-
-        public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
-        {
-            renderer.Element.SelectedItems.Remove(tableItemsSource[indexPath.Row]);
-            renderer.SetText();
-        }
-    }
-
+    //Native picker
     public class CustomUIPickerViewModel : UIPickerViewModel
     {
         private IList<object> myItems;
@@ -624,12 +468,11 @@ namespace Xamarin.RSControls.iOS.Controls
             this.rSPickerRenderer.SetText();
         }
     }
-
     public class CustomCell : UITableViewCell
     {
         public Forms.View formsView;
         private IVisualElementRenderer renderer;
-         
+
         public CustomCell(NSString cellId, Forms.View formsView) : base(UITableViewCellStyle.Default, cellId)
         {
             this.formsView = formsView;
@@ -660,17 +503,148 @@ namespace Xamarin.RSControls.iOS.Controls
         }
     }
 
+
+
+
     public class CustomUITableView : UITableView
     {
-        public CustomUITableView(CGRect frame) : base(frame)
+        public CustomUITableView() : base()
         {
         }
 
-        public override void LayoutSubviews()
+        public override CGSize IntrinsicContentSize 
         {
-            base.LayoutSubviews();
+            get
+            {
+                return new CGSize(ContentSize.Width, ContentSize.Height);
+            }
+        }
+
+        public override void ReloadData()
+        {
+            base.ReloadData();
+        }
+    }
+    public class CustomTableSource : UITableViewSource
+    {
+        private List<object> list;
+        private List<object> searchItems;
+        private RSPickerRenderer rsPicker;
 
 
+        public CustomTableSource(object[] list, RSPickerRenderer rsPicker)
+        {
+            this.list = rsPicker.Element.ItemsSource as List<object>;
+            this.searchItems = rsPicker.Element.ItemsSource as List<object>; 
+            this.rsPicker = rsPicker;
+        }
+
+        public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+        {
+            // iOS will create a cell automatically if one isn't available in the reuse pool
+            UITableViewCell cell = tableView.DequeueReusableCell("MyCellId");
+
+            if(cell == null)
+                cell = new UITableViewCell(UITableViewCellStyle.Default, "MyCellId");
+
+
+            var item = GetItemValue(indexPath.Row);
+            if(item != null)
+                cell.TextLabel.Text = item;
+
+
+
+            //Set selected row
+            if(rsPicker.Element.SelectionMode == PickerSelectionModeEnum.Multiple)
+            {
+                if (rsPicker.Element.SelectedItems.Contains(searchItems[indexPath.Row]))
+                {
+                    tableView.SelectRow(indexPath, false, UITableViewScrollPosition.None);
+                }
+            }
+            else
+            {
+                if(rsPicker.Element.SelectedItem != null && rsPicker.Element.SelectedItem == searchItems[indexPath.Row])
+                    tableView.SelectRow(indexPath, false, UITableViewScrollPosition.None);
+            }
+
+
+            //Set transparent background to cell
+            UIView clearBackgroundView = new UIView();
+            clearBackgroundView.BackgroundColor = UIColor.Clear;
+            cell.SelectedBackgroundView = clearBackgroundView;
+
+            if(rsPicker.Element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
+                cell.BackgroundColor = UIColor.Clear;
+
+            return cell;
+        }
+
+        public override nint RowsInSection(UITableView tableview, nint section)
+        {
+            var lolool = this.searchItems.Count();
+            return lolool;
+        }
+
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+            if (!rsPicker.Control.IsFirstResponder)
+            {
+                rsPicker.canUpdate = false;
+                rsPicker.Control.BecomeFirstResponder();
+            }
+
+            if (rsPicker.Element.SelectionMode == PickerSelectionModeEnum.Multiple)
+            {
+                rsPicker.Element.SelectedItems.Add(searchItems[indexPath.Row]);
+            }
+            else
+            {
+                rsPicker.Element.SelectedItem = searchItems[indexPath.Row];
+                rsPicker.rSPopup.Dismiss(true);
+                rsPicker.Control.ResignFirstResponder();
+            }
+
+            rsPicker.canUpdate = true;
+            rsPicker.SetText();
+        }
+
+        public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
+        {
+            if (!rsPicker.Control.IsFirstResponder)
+            {
+                rsPicker.canUpdate = false;
+                rsPicker.Control.BecomeFirstResponder();
+            }
+
+            rsPicker.Element.SelectedItems.Remove(searchItems[indexPath.Row]);
+
+            rsPicker.canUpdate = true;
+            rsPicker.SetText();
+        }
+
+
+        public void PerformSearch(string searchText)
+        {
+            searchText = searchText.ToLower();
+            this.searchItems = list.Where(x => GetItemValue2(x).ToString().ToLower().Contains(searchText)).ToList();
+        }
+
+
+        public string GetItemValue(int row)
+        {
+            if ((this.rsPicker != null && rsPicker.Element is RSPicker) && !string.IsNullOrEmpty((rsPicker.Element as RSPicker).DisplayMemberPath))
+                return Helpers.TypeExtensions.GetPropValue(searchItems[(int)row], (rsPicker.Element as RSPicker).DisplayMemberPath).ToString();
+            else
+                return searchItems[(int)row].ToString();
+        }
+
+        public string GetItemValue2(object item)
+        {
+            if ((this.rsPicker != null && rsPicker.Element is RSPicker) && !string.IsNullOrEmpty((rsPicker.Element as RSPicker).DisplayMemberPath))
+                return Helpers.TypeExtensions.GetPropValue(item, (rsPicker.Element as RSPicker).DisplayMemberPath).ToString();
+            else
+                return item.ToString();
         }
     }
 }

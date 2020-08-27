@@ -19,7 +19,6 @@ namespace Xamarin.RSControls.iOS.Controls
         public UIView DialogView { get; set; }
         private UIStackView dialogStack { get; set; }
         private UIStackView contentStack { get; set; }
-        private UIScrollView contentScroll { get; set; }
         private UIStackView buttonsStack { get; set; }
         private UIView topBorderButtonsStack;
         public RSButtonNative positiveButton;
@@ -46,6 +45,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public bool UserSetPosition { get; set; }
         public bool UserSetSize { get; set; }
         public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
+        public RSPopupStyleEnum RSPopupStyleEnum { get; set; }
         public bool IsModal { get; set; }
         public bool UserSetMargin { get; set; }
         public bool HasCloseButton { get; set; }
@@ -63,11 +63,8 @@ namespace Xamarin.RSControls.iOS.Controls
         private NSLayoutConstraint maxWidthConstraint;
         private NSLayoutConstraint heightConstraint; 
         private NSLayoutConstraint maxHeightConstraint;
-
         private NSLayoutConstraint positionXConstraint;
         private NSLayoutConstraint positionYConstraint;
-
-
         private NSLayoutConstraint dialogPositionXConstraint;
         private NSLayoutConstraint dialogPositionYConstraint;
 
@@ -241,6 +238,8 @@ namespace Xamarin.RSControls.iOS.Controls
             //content stack
             contentStack.Axis = UILayoutConstraintAxis.Vertical;
             contentStack.Distribution = UIStackViewDistribution.Fill;
+            contentStack.LayoutMarginsRelativeArrangement = true;
+            contentStack.LayoutMargins = new UIEdgeInsets(5, 5, 5, 5);
         }
 
         //Create buttons stack
@@ -309,6 +308,12 @@ namespace Xamarin.RSControls.iOS.Controls
             this.contentStack.AddArrangedSubview(convertView);
         }
 
+        //Set native view 
+        public void SetNativeView(UIView nativeView)
+        {
+            this.contentStack.AddArrangedSubview(nativeView);
+        }
+
         //Buttons
         public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter = null)
         {
@@ -355,20 +360,26 @@ namespace Xamarin.RSControls.iOS.Controls
                 var constant = (int)Math.Abs(position.X) - LeftMargin;
                 this.Frame.Width.ToString();
                 maxWidthConstraint.Constant = constant;
-                dialogStack.UpdateConstraints();
-                messageLabel.UpdateConstraints();
-            }
+                //dialogStack.UpdateConstraints();
+                if (orientation != UIDevice.CurrentDevice.Orientation)
+                {
+                    messageLabel.UpdateConstraints();
+                    orientation = UIDevice.CurrentDevice.Orientation;
+                }            }
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
             {
                 var constant = ((int)Math.Abs(position.X) + arrow.Frame.Width + RightMargin);
                 this.Frame.Width.ToString();
                 maxWidthConstraint.Constant = - constant;
-                dialogStack.UpdateConstraints();
-                messageLabel.UpdateConstraints();
+                //dialogStack.UpdateConstraints();
+                if (orientation != UIDevice.CurrentDevice.Orientation)
+                {
+                    messageLabel.UpdateConstraints();
+                    orientation = UIDevice.CurrentDevice.Orientation;
+                }
             }
 
 
-            //messageLabel.UpdateConstraints();
         }
 
         //Size
@@ -752,9 +763,9 @@ namespace Xamarin.RSControls.iOS.Controls
                     dialogPositionXConstraint.Constant = 0;
 
                 //Y Position
-                if((Math.Abs(position.Y) + DialogView.Frame.Height) > maxYPositionAllowed)
+                if((postionAtRelativeView + DialogView.Frame.Height) > maxYPositionAllowed)
                 {
-                    var constant = (Math.Abs(position.Y) + DialogView.Frame.Height) - maxYPositionAllowed;
+                    var constant = (postionAtRelativeView + DialogView.Frame.Height) - maxYPositionAllowed;
                     dialogPositionYConstraint.Constant = -(nfloat)constant;
                 }
                 else
@@ -857,10 +868,8 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             base.LayoutSubviews();
 
-
             if(RelativeView != null)
             {
-                orientation = UIDevice.CurrentDevice.Orientation;
                 var position = relativeViewAsNativeView.ConvertRectFromView(relativeViewAsNativeView.Bounds, this.mainView);
                 updateConstriants(arrow.Frame);
                 updateArrowPosition(position);
@@ -907,7 +916,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
         }
     }
-
 
 
 
@@ -1021,7 +1029,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
         private void DrawArrowTop()
         {
-            this.Layer.ShadowOffset = new CGSize(0f, 1.1f);
+            this.Layer.ShadowOffset = new CGSize(0f, 1.6f);
 
             var context = UIGraphics.GetCurrentContext();
             UIColor.White.SetFill();
@@ -1042,7 +1050,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
         private void DrawArrowBottom()
         {
-            this.Layer.ShadowOffset = new CGSize(0f, -1.1f);
+            this.Layer.ShadowOffset = new CGSize(0f, -1.6f);
 
             var context = UIGraphics.GetCurrentContext();
             UIColor.White.SetFill();
@@ -1063,7 +1071,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
         private void DrawArrowRight()
         {
-            this.Layer.ShadowOffset = new CGSize(-1.1f, 0f);
+            this.Layer.ShadowOffset = new CGSize(-1.6f, 0f);
 
             var context = UIGraphics.GetCurrentContext();
             UIColor.White.SetFill();
@@ -1084,7 +1092,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
         private void DrawArrowLeft()
         {
-            this.Layer.ShadowOffset = new CGSize(1.1f, 0f);
+            this.Layer.ShadowOffset = new CGSize(1.6f, 0f);
 
             var context = UIGraphics.GetCurrentContext();
             UIColor.White.SetFill();

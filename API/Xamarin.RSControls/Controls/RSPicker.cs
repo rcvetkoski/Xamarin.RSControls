@@ -188,12 +188,17 @@ namespace Xamarin.RSControls.Controls
         }
     }
 
-    public class RSPickerBase : Picker, IHaveError, IRSControl
+    public class RSPickerBase : Picker, IHaveError, IRSControl, IHaveDialogPopup
     {
         public RSPickerBase()
         {
             this.TextColor = Color.Black;
         }
+
+
+        public RSPopupStyleEnum RSPopupStyleEnum { get; set; }
+        public bool IsSearchEnabled { get; set; }
+
 
         public static readonly BindableProperty IsPlaceholderAlwaysFloatingProperty = BindableProperty.Create("IsPlaceholderAlwaysFloating", typeof(bool), typeof(RSPickerBase), false);
         public bool IsPlaceholderAlwaysFloating

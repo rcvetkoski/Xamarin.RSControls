@@ -199,10 +199,5 @@ namespace Xamarin.RSControls.Controls
         {
             service.AddAction(title, rSPopupButtonType, command, commandParameter);
         }
-
-        public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, EventHandler handler)
-        {
-            service.AddAction(title, rSPopupButtonType, null, null);
-        }
     }
 }

@@ -14,6 +14,7 @@ namespace Xamarin.RSControls.Interfaces
         int Height { get; set; }
         bool UserSetPosition { get; set; }
         RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
+        RSPopupStyleEnum RSPopupStyleEnum { get; set; }
         bool UserSetSize { get; set; }
         bool UserSetMargin { get; set; }
         bool HasCloseButton { get; set; }
@@ -32,5 +33,11 @@ namespace Xamarin.RSControls.Interfaces
         Forms.View CustomView { get; set; }
         void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter);
         void ShowPopup();
+    }
+
+    public interface IHaveDialogPopup
+    {
+        RSPopupStyleEnum RSPopupStyleEnum { get; set; }
+        bool IsSearchEnabled { get; set; }
     }
 }
