@@ -277,9 +277,10 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             customTable = new CustomUITableView();
             customTable.Source = new CustomTableSource(this.Element.Items.ToArray(), this);
+            customTable.BackgroundColor = UIColor.Clear;
 
             //Scroll to selected item if single selection mode
-            if(this.Element.SelectedItem != null)
+            if (this.Element.SelectedItem != null)
             {
                 var selectedIndex = this.Element.ItemsSource.IndexOf(this.Element.SelectedItem);
                 customTable.ScrollToRow(NSIndexPath.FromItemSection(selectedIndex, 0), UITableViewScrollPosition.Top, false);
@@ -323,17 +324,17 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //Create RSPopup
             rSPopup = new RSPopupRenderer();
-            //rSPopup.Title = "Custom Picker";
-            //rSPopup.Message = "Message";
+            rSPopup.Title = this.Element.RSPopupTitle;
+            rSPopup.Message = this.Element.RSPopupMessage;
             rSPopup.Width = -1;
             rSPopup.Height = -2;
-            rSPopup.TopMargin = 40;
-            rSPopup.BottomMargin = 40;
+            rSPopup.TopMargin = 50;
+            rSPopup.BottomMargin = 50;
             rSPopup.LeftMargin = 20;
             rSPopup.RightMargin = 20;
             rSPopup.BorderRadius = 16;
-            rSPopup.BorderFillColor = UIColor.White.ToColor();
-            rSPopup.DimAmount = 0.6f;
+            rSPopup.BorderFillColor = this.Element.RSPopupBackgroundColor;
+            rSPopup.DimAmount = 0.8f;
             rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, new Command( () => { this.Control.ResignFirstResponder(); } ));
             rSPopup.AddAction("Clear", RSPopupButtonTypeEnum.Destructive, new Command( () => { clearPicker(); } ));
             rSPopup.SetNativeView(holder);
@@ -592,7 +593,7 @@ namespace Xamarin.RSControls.iOS.Controls
             clearBackgroundView.BackgroundColor = UIColor.Clear;
             cell.SelectedBackgroundView = clearBackgroundView;
 
-            if(rsPicker.Element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
+            //if(rsPicker.Element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
                 cell.BackgroundColor = UIColor.Clear;
 
             return cell;

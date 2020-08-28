@@ -37,6 +37,9 @@ namespace Xamarin.RSControls.Interfaces
 
     public interface IHaveDialogPopup
     {
+        string RSPopupTitle { get; set; }
+        string RSPopupMessage { get; set; }
+        Forms.Color RSPopupBackgroundColor { get; set; }
         RSPopupStyleEnum RSPopupStyleEnum { get; set; }
         bool IsSearchEnabled { get; set; }
     }

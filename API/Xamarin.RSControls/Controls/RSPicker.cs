@@ -196,8 +196,19 @@ namespace Xamarin.RSControls.Controls
         }
 
 
+        //Popup////////////////////////////////////////////////
+        public string RSPopupTitle { get; set; }
+        public string RSPopupMessage { get; set; }
+        public static readonly BindableProperty RSPopupBackgroundColorProperty = BindableProperty.Create("RSPopupBackgroundColor", typeof(Color), typeof(RSPickerBase), Color.White);
+        public Color RSPopupBackgroundColor
+        {
+            get { return (Color)GetValue(RSPopupBackgroundColorProperty); }
+            set { SetValue(RSPopupBackgroundColorProperty, value); }
+        }
         public RSPopupStyleEnum RSPopupStyleEnum { get; set; }
         public bool IsSearchEnabled { get; set; }
+        //Popup////////////////////////////////////////////////
+
 
 
         public static readonly BindableProperty IsPlaceholderAlwaysFloatingProperty = BindableProperty.Create("IsPlaceholderAlwaysFloating", typeof(bool), typeof(RSPickerBase), false);

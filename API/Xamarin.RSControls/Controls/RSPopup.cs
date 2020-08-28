@@ -6,30 +6,6 @@ using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Controls
 {
-    public class RSPopup2
-    {
-        private RSPopup2()
-        {
-
-        }
-
-
-        private static RSPopup2 instance;
-        public static RSPopup2 GetInstance()
-        {
-            if (instance == null)
-                instance = new RSPopup2();
-            return instance;
-        }
-
-        public double X, Y;
-
-        public void CretaeFragment()
-        {
-            
-        }
-    }
-
     public class RSPopup
     {
         private IDialogPopup service;
