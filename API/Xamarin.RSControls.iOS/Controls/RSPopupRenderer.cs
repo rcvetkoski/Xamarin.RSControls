@@ -177,7 +177,7 @@ namespace Xamarin.RSControls.iOS.Controls
             //Setup graphics
             DialogView.Layer.CornerRadius = BorderRadius;
             DialogView.Layer.BorderWidth = 1;
-            DialogView.Layer.BorderColor = UIColor.White.CGColor;
+            DialogView.Layer.BorderColor = BorderFillColor.ToCGColor();
             DialogView.Layer.ShadowColor = UIColor.Gray.CGColor;
             DialogView.Layer.ShadowOpacity = 0.5f;
             DialogView.Layer.ShadowRadius = 10;
@@ -667,7 +667,7 @@ namespace Xamarin.RSControls.iOS.Controls
         private void updatePosition(CGRect position)
         {
             var minXPositionAllowed = this.LeftMargin;
-            var maxXPositionAllowed = this.Frame.Width - RightMargin - LeftMargin;
+            var maxXPositionAllowed = this.Frame.Width - RightMargin;
             var minYPositionAllowed = this.TopMargin;
             var maxYPositionAllowed = this.Frame.Height - BottomMargin;
             var postionAtRelativeView = Math.Abs(position.Y);
@@ -678,15 +678,18 @@ namespace Xamarin.RSControls.iOS.Controls
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom || RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
             {
                 //X Position
-                if ((relativeViewAsNativeView.Frame.GetMidX() + DialogView.Frame.Width / 2) > maxXPositionAllowed)
+                var projectedPositionRight = (arrow.Frame.GetMidX() + DialogView.Frame.Width / 2);
+                var projectedPositionLeft = (arrow.Frame.GetMidX() - DialogView.Frame.Width / 2);
+
+                if (projectedPositionRight > maxXPositionAllowed)
                 {
-                    var constant = (relativeViewAsNativeView.Frame.GetMidX() + DialogView.Frame.Width / 2) - maxXPositionAllowed;
+                    var constant = projectedPositionRight - maxXPositionAllowed;
                     dialogPositionXConstraint.Constant = -constant;
                 }
-                else if((relativeViewAsNativeView.Frame.GetMidX() - DialogView.Frame.Width / 2) < minXPositionAllowed)
+                else if(projectedPositionLeft < minXPositionAllowed)
                 {
-                    var constant = (relativeViewAsNativeView.Frame.GetMidX() - DialogView.Frame.Width / 2);
-                    dialogPositionXConstraint.Constant = (nfloat)Math.Abs(constant);
+                    var constant = Math.Abs(projectedPositionLeft) + minXPositionAllowed;
+                    dialogPositionXConstraint.Constant = (nfloat)constant;
                 }
                 else
                     dialogPositionXConstraint.Constant = 0;

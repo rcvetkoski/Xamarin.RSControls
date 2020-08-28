@@ -19,7 +19,7 @@
 
             <Button Text="Right Dialog" TextColor="White" BackgroundColor="Green" HorizontalOptions="Start" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked2"></Button>
 
-            <Button x:Name="left2" TextColor="White" Text="Bottom Dialog" BackgroundColor="Green" HorizontalOptions="End" Margin="0,40,0,0" CommandParameter="" Clicked="Button_Clicked6"></Button>
+            <Button x:Name="left2" TextColor="White" Text="Bottom Dialog" BackgroundColor="Green" HorizontalOptions="Start" Margin="0,40,0,0" CommandParameter="" Clicked="Button_Clicked6"></Button>
 
             <Button x:Name="left1" TextColor="White" Text="Top Dialog" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked5"></Button>
 
@@ -38,7 +38,7 @@
 
 
 
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Single" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
+            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupTitle="Custom Picker" RSPopupMessage="Message" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Single" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
                 <rs:RSPicker.Behaviors>
                     <validators:ValidationBehaviour PropertyName="SelectedItem">
                         <validators:ValidationBehaviour.Validators>
