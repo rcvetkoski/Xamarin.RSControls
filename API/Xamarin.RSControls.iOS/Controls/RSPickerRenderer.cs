@@ -456,6 +456,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 var nativeView = renderer.NativeView;
                 nativeView.SetNeedsLayout();
 
+
                 return nativeView;
             }
         }
@@ -468,6 +469,8 @@ namespace Xamarin.RSControls.iOS.Controls
             this.rSPickerRenderer.SetText();
         }
     }
+
+
     public class CustomCell : UITableViewCell
     {
         public Forms.View formsView;
@@ -476,7 +479,6 @@ namespace Xamarin.RSControls.iOS.Controls
         public CustomCell(NSString cellId, Forms.View formsView) : base(UITableViewCellStyle.Default, cellId)
         {
             this.formsView = formsView;
-
             this.ContentView.AddSubview(FormsToNativeView());
 
             //Set new selected background so it wont higlight background but only tick left checkbox
@@ -487,7 +489,13 @@ namespace Xamarin.RSControls.iOS.Controls
         private UIView FormsToNativeView()
         {
             renderer = Platform.CreateRenderer(formsView);
-            this.ContentView.AddSubview(renderer.NativeView);
+            renderer.NativeView.Frame = new CGRect(0, 0, this.Frame.Width, this.Frame.Height);
+            renderer.NativeView.AutoresizingMask = UIViewAutoresizing.All;
+            renderer.NativeView.ContentMode = UIViewContentMode.ScaleToFill;
+            renderer.Element.Layout(new CGRect(0, 0, this.Frame.Width, this.Frame.Height).ToRectangle());
+            var nativeView = renderer.NativeView;
+            nativeView.SetNeedsLayout();
+
 
             return renderer.NativeView;
         }
@@ -499,13 +507,9 @@ namespace Xamarin.RSControls.iOS.Controls
             //nativeView.Frame = new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height);
             //nativeView.AutoresizingMask = UIViewAutoresizing.All;
             //nativeView.ContentMode = UIViewContentMode.ScaleToFill;
-            renderer.Element.Layout(new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height).ToRectangle());
+            //renderer.Element.Layout(new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height).ToRectangle());
         }
     }
-
-
-
-
     public class CustomUITableView : UITableView
     {
         public CustomUITableView() : base()
@@ -544,13 +548,27 @@ namespace Xamarin.RSControls.iOS.Controls
             // iOS will create a cell automatically if one isn't available in the reuse pool
             UITableViewCell cell = tableView.DequeueReusableCell("MyCellId");
 
-            if(cell == null)
-                cell = new UITableViewCell(UITableViewCellStyle.Default, "MyCellId");
+            if(rsPicker.Element.ItemTemplate == null)
+            {
+                if (cell == null)
+                    cell = new UITableViewCell(UITableViewCellStyle.Default, "MyCellId");
 
 
-            var item = GetItemValue(indexPath.Row);
-            if(item != null)
-                cell.TextLabel.Text = item;
+                var item = GetItemValue(indexPath.Row);
+                if (item != null)
+                    cell.TextLabel.Text = item;
+            }
+            else
+            {
+                if(cell == null)
+                {
+                    Forms.View formsView = rsPicker.Element.ItemTemplate.CreateContent() as Forms.View;
+                    cell = new CustomCell(new NSString("MyCellId"), formsView);
+                }
+
+                //Update bindings
+                (cell as CustomCell).formsView.BindingContext = searchItems[indexPath.Row];
+            }
 
 
 

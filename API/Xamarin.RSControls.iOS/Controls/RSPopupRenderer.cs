@@ -305,6 +305,7 @@ namespace Xamarin.RSControls.iOS.Controls
             var renderer = Platform.CreateRenderer(CustomView);
             Platform.SetRenderer(CustomView, renderer);
             var convertView = new Extensions.FormsToiosCustomDialogView(CustomView, renderer, this.DialogView);
+
             this.contentStack.AddArrangedSubview(convertView);
         }
 
