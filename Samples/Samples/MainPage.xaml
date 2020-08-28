@@ -27,7 +27,10 @@
             <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
                 <rs:RSPicker.ItemTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding Name}"></Label>
+                        <StackLayout>
+                          <Label Text="{Binding Name}"></Label>
+                          <Label Text="65605"></Label>
+                        </StackLayout>
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>
             </rs:RSPicker>
@@ -61,6 +64,7 @@
                     <DataTemplate>
                         <StackLayout>
                             <Label FontSize="Subtitle" Text="{Binding Name}" HorizontalOptions="CenterAndExpand"></Label>
+                            <Label Text="65605"></Label>
                         </StackLayout>
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>
