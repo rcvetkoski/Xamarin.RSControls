@@ -56,6 +56,7 @@ namespace Xamarin.RSControls.Droid.Controls
         public global::Android.Views.View arrow;
         public global::Android.Graphics.Point arrowSize;
         public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
+        public RSPopupStyleEnum RSPopupStyleEnum { get; set; }
         public bool ShadowEnabled { get; set; }
         public bool IsModal { get; set; }
         private RSAndroidButton positiveButton;
@@ -249,9 +250,9 @@ namespace Xamarin.RSControls.Droid.Controls
             //Default value can be changed by user
             if (!UserSetMargin && RelativeView == null)
             {
-                LeftMargin = 30;
+                LeftMargin = 20;
                 TopMargin = 30;
-                RightMargin = 30;
+                RightMargin = 20;
                 BottomMargin = 30;
             }
 
