@@ -246,8 +246,35 @@ namespace Xamarin.RSControls.Droid.Controls
                 sPopupRenderer.Dismiss();
             });
 
-            //alertDialog = dialog.Show();
             sPopupRenderer.ShowPopup();
+
+
+
+            ////Populate linear layout
+            //layout.AddView(searchView);
+            //layout.AddView(listViewAndroid);
+
+            ////SetView to dialog
+            //dialog.SetView(layout);
+            //dialog.SetTitle(ElementCasted.Title);
+
+
+            //dialog.SetPositiveButton("Done", (senderAlert, args) =>
+            //{
+            //    SetText();
+            //});
+            //dialog.SetNegativeButton("Clear Item", (senderAlert, args) =>
+            //{
+            //    ElementCasted.SelectedItem = null;
+            //    ElementCasted.SelectedIndex = -1;
+            //    adapter.CheckedItems.Clear();
+            //    if (this.ElementCasted.SelectedItems != null)
+            //        this.ElementCasted.SelectedItems.Clear();
+
+            //    SetText();
+            //});
+
+            //alertDialog = dialog.Show();
         }
 
         private void SearchView_QueryTextChange(object sender, global::Android.Widget.SearchView.QueryTextChangeEventArgs e)
