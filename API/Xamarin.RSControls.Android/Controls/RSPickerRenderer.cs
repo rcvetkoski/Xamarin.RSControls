@@ -153,13 +153,13 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void CreatePickerDialog()
         {
-            sPopupRenderer = new RSPopupRenderer();
+            sPopupRenderer = new RSPopupRenderer((this.Element as RSPickerBase).RSPopupTitle, (this.Element as RSPickerBase).RSPopupMessage);
             sPopupRenderer.BorderRadius = 14;
             sPopupRenderer.DimAmount = 0.7f;
-            sPopupRenderer.BorderFillColor = Color.White;
-            //sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.MatchParent;
-            //sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.MatchParent;
-            //sPopupRenderer.UserSetSize = true;
+            sPopupRenderer.BorderFillColor = (this.Element as RSPickerBase).RSPopupBackgroundColor;
+            sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.MatchParent;
+            sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.WrapContent;
+            sPopupRenderer.UserSetSize = true;
             //AlertDialog.Builder dialog = new AlertDialog.Builder(Context);
 
 
@@ -169,12 +169,20 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             //SearchView
-            searchView = new global::Android.Widget.SearchView(Context);
-            searchView.SetQueryHint("Search");
-            searchView.SetImeOptions((global::Android.Views.InputMethods.ImeAction)global::Android.Views.InputMethods.ImeFlags.NoExtractUi | global::Android.Views.InputMethods.ImeAction.Search);
-            searchView.QueryTextChange -= SearchView_QueryTextChange;
-            searchView.QueryTextChange += SearchView_QueryTextChange;
-            searchView.SetIconifiedByDefault(false);
+            if(this.ElementCasted.IsSearchEnabled)
+            {
+                searchView = new global::Android.Widget.SearchView(Context);
+                searchView.SetPadding(searchView.PaddingLeft,
+                                           searchView.PaddingTop,
+                                           searchView.PaddingRight,
+                                           (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics));
+                searchView.SetQueryHint("Search");
+                searchView.SetImeOptions((global::Android.Views.InputMethods.ImeAction)global::Android.Views.InputMethods.ImeFlags.NoExtractUi | global::Android.Views.InputMethods.ImeAction.Search);
+                searchView.QueryTextChange -= SearchView_QueryTextChange;
+                searchView.QueryTextChange += SearchView_QueryTextChange;
+                searchView.SetIconifiedByDefault(false);
+            }
+
 
 
             //ListView
@@ -214,13 +222,12 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             //Populate linear layout
-            layout.AddView(searchView);
+            if (this.ElementCasted.IsSearchEnabled)
+                layout.AddView(searchView);
             layout.AddView(listViewAndroid);
 
             //SetView to dialog
             sPopupRenderer.SetNativeView(layout);
-            sPopupRenderer.Title = ElementCasted.Title;
-
 
 
             sPopupRenderer.AddAction("Done", Enums.RSPopupButtonTypeEnum.Positive, (senderAlert, args) =>
@@ -255,8 +262,18 @@ namespace Xamarin.RSControls.Droid.Controls
             var instInfo = obj.GetType().GetProperty("Instance");
             var instance = instInfo.GetValue(obj, null);
 
+            if(this.ElementCasted.ItemTemplate != null)
+            {
+                //Force check when using custom template, when not using custom template CheckedTextView gets checked or not (Android implemantation) since it's the main view for the row
+                var item = ((view as LinearLayout).GetChildAt(0) as CheckedTextView);
 
-            if(this.ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+                if (item.Checked)
+                    item.Checked = false;
+                else
+                    item.Checked = true;
+            }
+
+            if (this.ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
             {
                 ElementCasted.SelectedItem = instance;
                 //alertDialog.Dismiss();
@@ -410,25 +427,42 @@ namespace Xamarin.RSControls.Droid.Controls
                     var renderer = Platform.CreateRendererWithContext(view, context);
                     //renderer.ElementCasted.HeightRequest = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, context.Resources.DisplayMetrics); ;
                     Platform.SetRenderer(view, renderer);
-                    convertView = new ViewCellContainer(this.context, view, renderer);
+                    var nativeView = new ViewCellContainer(this.context, view, renderer); 
+
+
+                    global::Android.Views.View selectionIndicator = new CheckedTextView(context);
+                    if (rsPicker.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+                        selectionIndicator = LayoutInflater.From(context).Inflate(Resource.Layout.select_dialog_singlechoice_material, null);
+                    else
+                        selectionIndicator = LayoutInflater.From(context).Inflate(Resource.Layout.select_dialog_multichoice_material, null);
+
+                    (selectionIndicator as CheckedTextView).SetPadding((selectionIndicator as CheckedTextView).PaddingLeft,
+                                                                       (selectionIndicator as CheckedTextView).PaddingTop,
+                                                                       0,
+                                                                       (selectionIndicator as CheckedTextView).PaddingBottom);
+
+
+                    convertView = new LinearLayout(this.context);
+                    (convertView as LinearLayout).AddView(selectionIndicator);
+                    (convertView as LinearLayout).AddView(nativeView);
                 }
 
                 var obj = this.GetItem(position);
                 var instInfo = obj.GetType().GetProperty("Instance");
                 var instance = instInfo.GetValue(obj, null);
-                (convertView as ViewCellContainer)._formsView.BindingContext = instance;
+                ((convertView as LinearLayout).GetChildAt(1) as ViewCellContainer)._formsView.BindingContext = instance;
                 //(convertView as IVisualElementRenderer).ElementCasted.BindingContext = instance;
                 if (CheckedItems.Any())
                 {
                     if (CheckedItems.Contains(instance))
                     {
                         listViewAndroid.SetItemChecked(position, true);
-                        convertView.SetBackgroundColor(global::Android.Graphics.Color.LightGray);
+                        ((convertView as LinearLayout).GetChildAt(0) as CheckedTextView).Checked = true;
                     }
                     else
                     {
                         listViewAndroid.SetItemChecked(position, false);
-                        convertView.SetBackgroundColor(global::Android.Graphics.Color.Transparent);
+                        ((convertView as LinearLayout).GetChildAt(0) as CheckedTextView).Checked = false;
                     }
                 }
             }

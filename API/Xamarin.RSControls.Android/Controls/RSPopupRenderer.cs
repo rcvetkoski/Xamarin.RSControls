@@ -89,6 +89,25 @@ namespace Xamarin.RSControls.Droid.Controls
             linearLayout.SetOnClickListener(this);
         }
 
+
+        //Picker usage
+        public RSPopupRenderer(string title, string message)
+        {
+            this.Title = title;
+            this.Message = message;
+
+            //Inflate custom layout
+            this.customLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as global::Android.Widget.RelativeLayout;
+            this.contentView = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
+            linearLayout = customLayout.FindViewById<CustomLinearLayout>(Resource.Id.linearLayout);
+            buttonsLayout = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.buttons);
+            arrow = customLayout.FindViewById<global::Android.Views.View>(Resource.Id.arrow);
+            closeButton = customLayout.FindViewById<global::Android.Widget.ImageButton>(Resource.Id.closeButton);
+
+            customLayout.SetOnClickListener(this);
+            linearLayout.SetOnClickListener(this);
+        }
+
         public RSPopupRenderer(System.IntPtr intPtr, global::Android.Runtime.JniHandleOwnership jniHandleOwnership) : base(intPtr, jniHandleOwnership)
         {
             //Inflate custom layout
@@ -432,7 +451,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 if (pos < 0 + TopMargin && pos < (screenUsableHeight + TopMargin) && posBottom < (screenUsableHeight - BottomMargin))
                     RSPopupPositionSideEnum = RSPopupPositionSideEnum.Bottom;
                 else if (pos < 0 + TopMargin)
-                    linearLayout.SetY((int)(arrow.GetY() + arrowSize.Y + System.Math.Abs(pos + TopMargin)));
+                    linearLayout.SetY((int)(arrow.GetY() - linearLayout.MeasuredHeight + 1 + System.Math.Abs(pos) + TopMargin));
                 else if(arrow.GetY() > (screenUsableHeight - BottomMargin))
                     linearLayout.SetY((screenUsableHeight - BottomMargin) - linearLayout.MeasuredHeight + 1);
                 else
@@ -588,7 +607,7 @@ namespace Xamarin.RSControls.Droid.Controls
             GradientDrawable gradientDrawable = new GradientDrawable();
             gradientDrawable.SetColor(BorderFillColor.ToAndroid());
             gradientDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics));
-            gradientDrawable.SetStroke(1, global::Android.Graphics.Color.LightGray);
+            gradientDrawable.SetStroke(1, BorderFillColor.ToAndroid());
             linearLayout.SetBackground(gradientDrawable);
 
 

@@ -24,7 +24,7 @@
             <Button x:Name="left1" TextColor="White" Text="Top Dialog" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked5"></Button>
 
 
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
+            <rs:RSPicker ItemsSource="{Binding ListPicker}" RSPopupBackgroundColor="Green" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
                 <rs:RSPicker.ItemTemplate>
                     <DataTemplate>
                         <StackLayout>
@@ -34,7 +34,6 @@
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>
             </rs:RSPicker>
-
 
 
 
@@ -64,7 +63,7 @@
                     <DataTemplate>
                         <StackLayout>
                             <Label FontSize="Subtitle" Text="{Binding Name}" HorizontalOptions="CenterAndExpand"></Label>
-                            <Label Text="65605"></Label>
+                            <Label Text="65605" HorizontalOptions="CenterAndExpand"></Label>
                         </StackLayout>
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>
