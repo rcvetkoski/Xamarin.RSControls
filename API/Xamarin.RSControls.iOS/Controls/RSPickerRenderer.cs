@@ -71,7 +71,9 @@ namespace Xamarin.RSControls.iOS.Controls
                 entry.InputView = new UIView(); // Hide original keyboard
 
 
-
+            //Hides shortcut bar
+            entry.InputAssistantItem.LeadingBarButtonGroups = null;
+            entry.InputAssistantItem.TrailingBarButtonGroups = null;
 
             entry.EditingDidBegin += Entry_EditingDidBegin;
 
@@ -82,7 +84,7 @@ namespace Xamarin.RSControls.iOS.Controls
         //If collection has changed meanwhile update the data on click
         private void Entry_EditingDidBegin(object sender, EventArgs e)
         {
-            if(canUpdate)
+            if (canUpdate)
             {
                 if (this.Element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
                 {
@@ -268,7 +270,7 @@ namespace Xamarin.RSControls.iOS.Controls
             multipleSelectionList.SetEditing(true, true);
             multipleSelectionList.AllowsMultipleSelectionDuringEditing = true;
             multipleSelectionList.Source = new CustomTableSource(this.Element.Items.ToArray(), this);
-
+            multipleSelectionList.RegisterClassForCellReuse(typeof(CustomCell), "MyCellId");
 
             return multipleSelectionList;
         }
@@ -290,6 +292,7 @@ namespace Xamarin.RSControls.iOS.Controls
             customTable.SetEditing(true, true);
             customTable.AllowsMultipleSelectionDuringEditing = true;
 
+
             customTable.TableFooterView = new UIView(); //Hide empty separators
 
             //Holder
@@ -298,7 +301,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //Search Bar
 
-            if(this.Element.IsSearchEnabled)
+            if (this.Element.IsSearchEnabled)
             {
                 UISearchBar searchBar = new UISearchBar();
                 searchBar.SizeToFit();
@@ -310,6 +313,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 searchBar.AutocorrectionType = UITextAutocorrectionType.No;
                 searchBar.AutocapitalizationType = UITextAutocapitalizationType.None;
                 searchBar.SearchBarStyle = UISearchBarStyle.Minimal;
+                searchBar.InputAccessoryView = null;
                 searchBar.Placeholder = "Search";
                 searchBar.TextChanged += (sender, e) =>
                 {
@@ -335,8 +339,8 @@ namespace Xamarin.RSControls.iOS.Controls
             rSPopup.BorderRadius = 16;
             rSPopup.BorderFillColor = this.Element.RSPopupBackgroundColor;
             rSPopup.DimAmount = 0.8f;
-            rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, new Command( () => { this.Control.ResignFirstResponder(); } ));
-            rSPopup.AddAction("Clear", RSPopupButtonTypeEnum.Destructive, new Command( () => { clearPicker(); } ));
+            rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, new Command(() => { this.Control.ResignFirstResponder(); }));
+            rSPopup.AddAction("Clear", RSPopupButtonTypeEnum.Destructive, new Command(() => { clearPicker(); }));
             rSPopup.SetNativeView(holder);
             rSPopup.ShowPopup();
 
@@ -391,6 +395,7 @@ namespace Xamarin.RSControls.iOS.Controls
         protected int selectedIndex = 0;
         private RSPickerBase rsPicker;
         private RSPickerRenderer rSPickerRenderer;
+        private Xamarin.Forms.View formsView;
 
         public CustomUIPickerViewModel(System.Collections.IEnumerable items, RSPickerBase rsPicker, RSPickerRenderer rSPickerRenderer)
         {
@@ -413,6 +418,20 @@ namespace Xamarin.RSControls.iOS.Controls
         public object SelectedItem
         {
             get { return myItems[selectedIndex]; }
+        }
+
+        public override nfloat GetRowHeight(UIPickerView pickerView, nint component)
+        {
+            if (formsView != null)
+            {
+                var sizeRequest = formsView.Measure(double.PositiveInfinity, nfloat.PositiveInfinity, MeasureFlags.IncludeMargins);
+                if (sizeRequest.Request.Height > 32)
+                    return (nfloat)sizeRequest.Request.Height;
+                else
+                    return 32;
+            }
+            else
+                return 32;
         }
 
         public override nint GetComponentCount(UIPickerView pickerView)
@@ -446,14 +465,15 @@ namespace Xamarin.RSControls.iOS.Controls
                 return label;
             }
             else
-            {
-                Xamarin.Forms.View formsView = rsPicker.ItemTemplate.CreateContent() as Xamarin.Forms.View;
+            { 
+                formsView = rsPicker.ItemTemplate.CreateContent() as Xamarin.Forms.View;
                 formsView.BindingContext = myItems[(int)row];
                 var renderer = Platform.CreateRenderer(formsView);
-                renderer.NativeView.Frame = new CGRect(0, 0, pickerView.RowSizeForComponent(component).Width, pickerView.RowSizeForComponent(component).Height);
+                var sizeRequest = formsView.Measure(pickerView.RowSizeForComponent(component).Width, nfloat.PositiveInfinity, MeasureFlags.IncludeMargins);
+                renderer.NativeView.Frame = new CGRect(0, 0, pickerView.RowSizeForComponent(component).Width, sizeRequest.Request.Height);
                 renderer.NativeView.AutoresizingMask = UIViewAutoresizing.All;
                 renderer.NativeView.ContentMode = UIViewContentMode.ScaleToFill;
-                renderer.Element.Layout(new CGRect(0, 0, pickerView.RowSizeForComponent(component).Width, pickerView.RowSizeForComponent(component).Height).ToRectangle());
+                renderer.Element.Layout(new CGRect(0, 0, pickerView.RowSizeForComponent(component).Width, sizeRequest.Request.Height).ToRectangle());
                 var nativeView = renderer.NativeView;
                 nativeView.SetNeedsLayout();
 
@@ -476,48 +496,94 @@ namespace Xamarin.RSControls.iOS.Controls
     {
         public Forms.View formsView;
         private IVisualElementRenderer renderer;
+        private UIView nativeView;
+        public bool IsInit;
+        private bool IsCustomTemplate;
+
+        public CustomCell(IntPtr handle) : base(handle)
+        {
+        }
 
         public CustomCell(NSString cellId, Forms.View formsView) : base(UITableViewCellStyle.Default, cellId)
-        {
+        {            
             this.formsView = formsView;
-            this.ContentView.AddSubview(FormsToNativeView());
+            UIStackView holder = new UIStackView();
+            holder.Axis = UILayoutConstraintAxis.Vertical;
+            renderer = Platform.CreateRenderer(formsView);
+            var convertView = new Extensions.FormsToiosCustomDialogView(formsView, renderer, this);
+            var sizeRequest = formsView.Measure(this.Frame.Width, double.PositiveInfinity, MeasureFlags.IncludeMargins);
+            var ccc = Extensions.ViewExtensions.ConvertFormsToNative(formsView, new CGRect(formsView.X, formsView.Y, this.Frame.Width, this.Frame.Height));
+            //holder.AddArrangedSubview(ccc);
+
+
+            this.ContentView.AddSubview(ccc);
+            ccc.TranslatesAutoresizingMaskIntoConstraints = false;
+            if (sizeRequest.Request.Height > this.Frame.Height)
+                ccc.HeightAnchor.ConstraintEqualTo((nfloat)sizeRequest.Request.Height).Active = true;
+            ccc.TopAnchor.ConstraintEqualTo(this.ContentView.TopAnchor).Active = true;
+            ccc.BottomAnchor.ConstraintEqualTo(this.ContentView.BottomAnchor).Active = true;
+            ccc.LeadingAnchor.ConstraintEqualTo(this.ContentView.LeadingAnchor).Active = true;
+            ccc.TrailingAnchor.ConstraintEqualTo(this.ContentView.TrailingAnchor).Active = true;
+
+            //this.ContentView.AutoresizingMask = UIViewAutoresizing.FlexibleHeight;
+
+
+            //this.ContentView.TranslatesAutoresizingMaskIntoConstraints = false;
+            //label.TranslatesAutoresizingMaskIntoConstraints = false;
+            //this.ContentView.TopAnchor.ConstraintEqualTo(label.TopAnchor).Active = true;
+            //this.ContentView.LeadingAnchor.ConstraintEqualTo(label.LeadingAnchor).Active = true;
+            //this.ContentView.BottomAnchor.ConstraintEqualTo(label.BottomAnchor).Active = true;
+
+            //label.TopAnchor.ConstraintEqualTo(this.ContentView.TopAnchor).Active = true;
+            //label.BottomAnchor.ConstraintEqualTo(this.ContentView.BottomAnchor).Active = true;
+            //label.LeadingAnchor.ConstraintEqualTo(this.ContentView.LeadingAnchor).Active = true;
+            //label.TrailingAnchor.ConstraintEqualTo(this.ContentView.TrailingAnchor).Active = true;
+
 
             //Set new selected background so it wont higlight background but only tick left checkbox
             this.SelectedBackgroundView = new UIView(this.Frame);
             this.SelectedBackgroundView.BackgroundColor = UIColor.Clear;
         }
 
-        private UIView FormsToNativeView()
+        public void CellInit(Forms.View formsView, UITableView uITableView)
         {
-            renderer = Platform.CreateRenderer(formsView);
-            renderer.NativeView.Frame = new CGRect(0, 0, this.Frame.Width, this.Frame.Height);
-            renderer.NativeView.AutoresizingMask = UIViewAutoresizing.All;
-            renderer.NativeView.ContentMode = UIViewContentMode.ScaleToFill;
-            renderer.Element.Layout(new CGRect(0, 0, this.Frame.Width, this.Frame.Height).ToRectangle());
-            var nativeView = renderer.NativeView;
-            nativeView.SetNeedsLayout();
+            this.formsView = formsView;
+            renderer = Platform.CreateRenderer(this.formsView);
+            nativeView = Extensions.ViewExtensions.ConvertFormsToNative(this.formsView, new CGRect(this.formsView.X, this.formsView.Y, this.Frame.Width, this.Frame.Height));
+            this.ContentView.AddSubview(nativeView);
 
+          
+            //Set new selected background so it wont higlight background but only tick left checkbox
+            this.SelectedBackgroundView = new UIView(this.Frame);
+            this.SelectedBackgroundView.BackgroundColor = UIColor.Clear;
 
-            return renderer.NativeView;
+            IsInit = true;
+            IsCustomTemplate = true;
         }
 
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
 
-            //nativeView.Frame = new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height);
-            //nativeView.AutoresizingMask = UIViewAutoresizing.All;
-            //nativeView.ContentMode = UIViewContentMode.ScaleToFill;
-            //renderer.Element.Layout(new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height).ToRectangle());
+            if(IsCustomTemplate)
+            {
+                nativeView.Frame = new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height);
+                nativeView.AutoresizingMask = UIViewAutoresizing.All;
+                nativeView.ContentMode = UIViewContentMode.ScaleToFill;
+                renderer.Element.Layout(new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height).ToRectangle());
+            }
         }
     }
     public class CustomUITableView : UITableView
     {
         public CustomUITableView() : base()
         {
+            this.RowHeight = UITableView.AutomaticDimension;
+            this.EstimatedRowHeight = 44f;
+            this.RegisterClassForCellReuse(typeof(CustomCell), "MyCellId");
         }
 
-        public override CGSize IntrinsicContentSize 
+        public override CGSize IntrinsicContentSize
         {
             get
             {
@@ -544,15 +610,42 @@ namespace Xamarin.RSControls.iOS.Controls
             this.rsPicker = rsPicker;
         }
 
+
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
             // iOS will create a cell automatically if one isn't available in the reuse pool
-            UITableViewCell cell = tableView.DequeueReusableCell("MyCellId");
+            UITableViewCell cell = tableView.DequeueReusableCell("MyCellId", indexPath);
 
-            if(rsPicker.Element.ItemTemplate == null)
+
+            //Create tamplate if ItemTemplate set
+            if (rsPicker.Element.ItemTemplate != null && !(cell as CustomCell).IsInit)
             {
-                if (cell == null)
-                    cell = new UITableViewCell(UITableViewCellStyle.Default, "MyCellId");
+                Forms.View formsView = rsPicker.Element.ItemTemplate.CreateContent() as Forms.View;
+                formsView.BindingContext = searchItems[indexPath.Row];
+                (cell as CustomCell).CellInit(formsView, tableView);
+
+                //Set proper height
+                var sizeRequest = formsView.Measure(tableView.Frame.Width, nfloat.PositiveInfinity, MeasureFlags.IncludeMargins);
+                if (sizeRequest.Request.Height > cell.Frame.Height)
+                {
+                    formsView.HeightRequest = sizeRequest.Request.Height;
+                    var frame = cell.Frame;
+                    frame.Height = (nfloat)sizeRequest.Request.Height;
+                    cell.Frame = frame;
+                    tableView.RowHeight = (nfloat)sizeRequest.Request.Height;
+                }
+                else
+                {
+                    formsView.HeightRequest = cell.Frame.Height;
+                }
+            }
+
+
+            //Binding/Value update
+            if (rsPicker.Element.ItemTemplate == null)
+            {
+                //if (cell == null)
+                //    cell = new UITableViewCell(UITableViewCellStyle.Default, "MyCellId");
 
 
                 var item = GetItemValue(indexPath.Row);
@@ -561,11 +654,12 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             else
             {
-                if(cell == null)
-                {
-                    Forms.View formsView = rsPicker.Element.ItemTemplate.CreateContent() as Forms.View;
-                    cell = new CustomCell(new NSString("MyCellId"), formsView);
-                }
+                //if (cell == null)
+                //{
+                //    Forms.View formsView = rsPicker.Element.ItemTemplate.CreateContent() as Forms.View;
+                //    formsView.BindingContext = searchItems[indexPath.Row];
+                //    cell = new CustomCell(new NSString("MyCellId"), formsView);
+                //}
 
                 //Update bindings
                 (cell as CustomCell).formsView.BindingContext = searchItems[indexPath.Row];
@@ -574,7 +668,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
             //Set selected row
-            if(rsPicker.Element.SelectionMode == PickerSelectionModeEnum.Multiple)
+            if (rsPicker.Element.SelectionMode == PickerSelectionModeEnum.Multiple)
             {
                 if (rsPicker.Element.SelectedItems.Contains(searchItems[indexPath.Row]))
                 {
@@ -595,6 +689,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //if(rsPicker.Element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
                 cell.BackgroundColor = UIColor.Clear;
+
 
             return cell;
         }

@@ -21,12 +21,45 @@ namespace Xamarin.RSControls.iOS.Extensions
 
             var nativeView = renderer.NativeView;
 
-            nativeView.SetNeedsLayout();
 
-            //return nativeView;
+            //nativeView.BackgroundColor = UIColor.Red;
+            //nativeView.LayoutIfNeeded();
+            //nativeView.InvalidateIntrinsicContentSize();
+            //nativeView.SetNeedsLayout();
+            return nativeView;
 
 
-            return nativeView.Subviews[0];
+            //CustomNativeView customNativeView = new CustomNativeView(nativeView);
+            //customNativeView.BackgroundColor = UIColor.Green;
+
+            //customNativeView.InvalidateIntrinsicContentSize();
+            //customNativeView.SetNeedsLayout();
+
+            //return customNativeView;
+        }
+    }
+
+    public class CustomNativeView : UIView
+    {
+        private UIView natView;
+        public CustomNativeView( UIView nativeView)
+        {
+            natView = nativeView;
+            this.AddSubview(nativeView);
+        }
+
+        public override CGSize IntrinsicContentSize
+        {
+            get
+            {
+                return new CGSize(natView.Frame.Width, natView.Frame.Height);
+            }
+        }
+
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
         }
     }
 
@@ -52,10 +85,6 @@ namespace Xamarin.RSControls.iOS.Extensions
 
             var width = _parent != null ? _parent.Frame.Width : 0;
             var height = _parent != null ? _parent.Frame.Height : 0;
-
-
-            _formsView.Layout(new Forms.Rectangle(0, 0, 170, 150));
-
         }
     }
 
