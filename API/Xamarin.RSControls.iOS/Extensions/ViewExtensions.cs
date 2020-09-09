@@ -12,30 +12,48 @@ namespace Xamarin.RSControls.iOS.Extensions
         {
             var renderer = Platform.CreateRenderer(view);
 
+            if(size == CGRect.Empty)
+            {
+                var sizeRequest = view.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+                size = new CGRect(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height);
+            }
+            
             renderer.NativeView.Frame = size;
-
             renderer.NativeView.AutoresizingMask = UIViewAutoresizing.All;
             renderer.NativeView.ContentMode = UIViewContentMode.ScaleToFill;
-
             renderer.Element.Layout(size.ToRectangle());
-
             var nativeView = renderer.NativeView;
 
-
-            //nativeView.BackgroundColor = UIColor.Red;
-            //nativeView.LayoutIfNeeded();
-            //nativeView.InvalidateIntrinsicContentSize();
             //nativeView.SetNeedsLayout();
             return nativeView;
+        }
 
+        public static UIView ConvertFormsToNative(Xamarin.Forms.View view, double x, double y, double width, double height)
+        {
+            var renderer = Platform.CreateRenderer(view);
+            Platform.SetRenderer(view, renderer);
 
-            //CustomNativeView customNativeView = new CustomNativeView(nativeView);
-            //customNativeView.BackgroundColor = UIColor.Green;
+            CGRect size = new CGRect(view.X, view.Y, width, height);
 
-            //customNativeView.InvalidateIntrinsicContentSize();
-            //customNativeView.SetNeedsLayout();
+            if (width == 0 || height == 0)
+            {
+                var sizeRequest = view.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
 
-            //return customNativeView;
+                if (width == 0)
+                    size.Width = (nfloat)sizeRequest.Request.Width;
+
+                if (height == 0)
+                    size.Height = (nfloat)sizeRequest.Request.Height;
+            }
+
+            renderer.NativeView.Frame = size;
+            //renderer.NativeView.AutoresizingMask = UIViewAutoresizing.All;
+            //renderer.NativeView.ContentMode = UIViewContentMode.ScaleToFill;
+            renderer.Element.Layout(size.ToRectangle());
+            var nativeView = renderer.NativeView;
+
+            //nativeView.SetNeedsLayout();
+            return nativeView;
         }
     }
 

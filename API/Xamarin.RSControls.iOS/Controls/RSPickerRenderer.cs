@@ -75,6 +75,7 @@ namespace Xamarin.RSControls.iOS.Controls
             entry.InputAssistantItem.LeadingBarButtonGroups = null;
             entry.InputAssistantItem.TrailingBarButtonGroups = null;
 
+
             entry.EditingDidBegin += Entry_EditingDidBegin;
 
             //Delete placeholder as we use floating hint instead
@@ -99,7 +100,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 else
                     CreateCustomUiPickerPopup();
             }
-
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -468,15 +468,7 @@ namespace Xamarin.RSControls.iOS.Controls
             { 
                 formsView = rsPicker.ItemTemplate.CreateContent() as Xamarin.Forms.View;
                 formsView.BindingContext = myItems[(int)row];
-                var renderer = Platform.CreateRenderer(formsView);
-                var sizeRequest = formsView.Measure(pickerView.RowSizeForComponent(component).Width, nfloat.PositiveInfinity, MeasureFlags.IncludeMargins);
-                renderer.NativeView.Frame = new CGRect(0, 0, pickerView.RowSizeForComponent(component).Width, sizeRequest.Request.Height);
-                renderer.NativeView.AutoresizingMask = UIViewAutoresizing.All;
-                renderer.NativeView.ContentMode = UIViewContentMode.ScaleToFill;
-                renderer.Element.Layout(new CGRect(0, 0, pickerView.RowSizeForComponent(component).Width, sizeRequest.Request.Height).ToRectangle());
-                var nativeView = renderer.NativeView;
-                nativeView.SetNeedsLayout();
-
+                var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(formsView, 0, 0, pickerView.RowSizeForComponent(component).Width, 0);
 
                 return nativeView;
             }
@@ -549,7 +541,7 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             this.formsView = formsView;
             renderer = Platform.CreateRenderer(this.formsView);
-            nativeView = Extensions.ViewExtensions.ConvertFormsToNative(this.formsView, new CGRect(this.formsView.X, this.formsView.Y, this.Frame.Width, this.Frame.Height));
+            nativeView = Extensions.ViewExtensions.ConvertFormsToNative(this.formsView, this.formsView.X, this.formsView.Y, this.Frame.Width, 0);
             this.ContentView.AddSubview(nativeView);
 
           
@@ -565,6 +557,7 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             base.LayoutSubviews();
 
+            //Update size
             if(IsCustomTemplate)
             {
                 nativeView.Frame = new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height);

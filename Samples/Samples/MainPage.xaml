@@ -23,19 +23,13 @@
 
             <Button x:Name="left1" TextColor="White" Text="Top Dialog" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked5"></Button>
 
-                        <StackLayout BackgroundColor="Green" Padding="10,50,10,50">
-                          <Label Text="Name" BackgroundColor="Yellow" VerticalTextAlignment="Center" VerticalOptions="FillAndExpand"></Label>
-                            <Label Text="65605" HorizontalOptions="CenterAndExpand"></Label>
-                            <Label Text="65605" HorizontalOptions="CenterAndExpand"></Label>
-                            <Label Text="65605" HorizontalOptions="CenterAndExpand"></Label>
-                        </StackLayout>
 
             <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
                 <rs:RSPicker.ItemTemplate>
                     <DataTemplate>
                         <StackLayout>
                           <Label Text="{Binding Name}" VerticalTextAlignment="Center" VerticalOptions="FillAndExpand"></Label>
-                          <Label Text="65605"></Label>
+                          <Label Text="65605h"></Label>
                         </StackLayout>
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>
@@ -79,7 +73,8 @@
                 <rs:RSPicker.ItemTemplate>
                     <DataTemplate>
                         <StackLayout>
-                            <Label FontSize="Subtitle" Text="{Binding Name}" HorizontalOptions="CenterAndExpand"></Label>
+                            <Label FontSize="Subtitle" Text="{Binding Name}" HorizontalTextAlignment="Center"></Label>
+                            <Label FontSize="Subtitle" Text="{Binding Name}" HorizontalTextAlignment="Center"></Label>
                         </StackLayout>
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>
