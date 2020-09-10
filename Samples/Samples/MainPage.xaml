@@ -27,9 +27,8 @@
             <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
                 <rs:RSPicker.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout>
-                          <Label Text="{Binding Name}" VerticalTextAlignment="Center" VerticalOptions="FillAndExpand"></Label>
-                          <Label Text="65605h"></Label>
+                        <StackLayout BackgroundColor="Red">
+                          <Label Text="{Binding Name}" VerticalTextAlignment="Center" BackgroundColor="Green" VerticalOptions="CenterAndExpand"></Label>
                         </StackLayout>
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>
@@ -50,13 +49,8 @@
             <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="Native" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker native">
                 <rs:RSPicker.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout>
-                          <Label Text="{Binding Name}" VerticalTextAlignment="Center" VerticalOptions="FillAndExpand"></Label>
-                          <Label Text="Troll"></Label>
-                          <Label Text="Mehe"></Label>
-                          <Label Text="6474435983475"></Label>
-                          <Label Text="Troll"></Label>
-
+                        <StackLayout BackgroundColor="Blue">
+                          <Label Text="Troll" BackgroundColor="Yellow" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="FillAndExpand"></Label>
                         </StackLayout>
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>

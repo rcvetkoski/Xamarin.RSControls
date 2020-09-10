@@ -17,6 +17,7 @@ namespace Xamarin.RSControls.iOS.Controls
 {
     public class RSPickerRenderer : ViewRenderer<RSPickerBase, UITextField>
     {
+        private UITextField entry;
         private UIPickerView uIPickerView;
         private UITableView multipleSelectionList;
         CustomUITableView customTable;
@@ -31,6 +32,10 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             base.OnElementChanged(e);
 
+            if(e.OldElement != null)
+            {
+                this.entry.EditingDidBegin -= Entry_EditingDidBegin;
+            }
 
             if (Control != null)
                 return;
@@ -40,7 +45,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
             //Create uitextfield and set it as control
-            var entry = CreateNativeControl();
+            entry = CreateNativeControl();
             entry.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
             this.SetNativeControl(entry);
 
@@ -281,6 +286,10 @@ namespace Xamarin.RSControls.iOS.Controls
             customTable.Source = new CustomTableSource(this.Element.Items.ToArray(), this);
             customTable.BackgroundColor = UIColor.Clear;
 
+            if(this.Element.SelectionMode == PickerSelectionModeEnum.Single)
+                customTable.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+
+
             //Scroll to selected item if single selection mode
             if (this.Element.SelectedItem != null)
             {
@@ -339,7 +348,7 @@ namespace Xamarin.RSControls.iOS.Controls
             rSPopup.BorderRadius = 16;
             rSPopup.BorderFillColor = this.Element.RSPopupBackgroundColor;
             rSPopup.DimAmount = 0.8f;
-            rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, new Command(() => { this.Control.ResignFirstResponder(); }));
+            rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, new Command(() => { if (this.Control != null) { this.Control.ResignFirstResponder(); } }));
             rSPopup.AddAction("Clear", RSPopupButtonTypeEnum.Destructive, new Command(() => { clearPicker(); }));
             rSPopup.SetNativeView(holder);
             rSPopup.ShowPopup();
@@ -383,6 +392,8 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 if (this.Control != null)
                     this.Control.EditingDidBegin -= Entry_EditingDidBegin;
+
+                this.rSPopup.Dismiss(false);
             }
         }
     }
@@ -544,7 +555,6 @@ namespace Xamarin.RSControls.iOS.Controls
             nativeView = Extensions.ViewExtensions.ConvertFormsToNative(this.formsView, this.formsView.X, this.formsView.Y, this.Frame.Width, 0);
             this.ContentView.AddSubview(nativeView);
 
-          
             //Set new selected background so it wont higlight background but only tick left checkbox
             this.SelectedBackgroundView = new UIView(this.Frame);
             this.SelectedBackgroundView.BackgroundColor = UIColor.Clear;
@@ -560,10 +570,10 @@ namespace Xamarin.RSControls.iOS.Controls
             //Update size
             if(IsCustomTemplate)
             {
-                nativeView.Frame = new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height);
+                nativeView.Frame = new CGRect(20, 0, this.ContentView.Frame.Width - 20, this.ContentView.Frame.Height);
                 nativeView.AutoresizingMask = UIViewAutoresizing.All;
                 nativeView.ContentMode = UIViewContentMode.ScaleToFill;
-                renderer.Element.Layout(new CGRect(0, 0, this.ContentView.Frame.Width, this.ContentView.Frame.Height).ToRectangle());
+                renderer.Element.Layout(new CGRect(20, 0, this.ContentView.Frame.Width - 20, this.ContentView.Frame.Height).ToRectangle());
             }
         }
     }

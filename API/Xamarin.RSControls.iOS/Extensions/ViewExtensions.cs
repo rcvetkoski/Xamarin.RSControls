@@ -33,7 +33,7 @@ namespace Xamarin.RSControls.iOS.Extensions
             var renderer = Platform.CreateRenderer(view);
             Platform.SetRenderer(view, renderer);
 
-            CGRect size = new CGRect(view.X, view.Y, width, height);
+            CGRect size = new CGRect(x, y, width, height);
 
             if (width == 0 || height == 0)
             {

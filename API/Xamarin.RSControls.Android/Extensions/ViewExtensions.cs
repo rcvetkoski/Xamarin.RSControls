@@ -98,11 +98,56 @@ namespace Xamarin.RSControls.Droid.Extensions
             return nativeView;
         }
 
+        public static global::Android.Views.View ConvertFormsToNative(Context context, Xamarin.Forms.View view, double x, double y, double width, double height)
+        {
+            var renderer = Platform.CreateRendererWithContext(view, context);
+            Platform.SetRenderer(view, renderer);
+            Xamarin.Forms.Rectangle size = new Xamarin.Forms.Rectangle(x, y, ContextExtensions.FromPixels(context, width), ContextExtensions.FromPixels(context, height));
+
+            var sizeRequest = view.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+
+
+            //Width
+            if (width == 0)
+                size.Width = sizeRequest.Request.Width;
+            else
+                if (size.Width < sizeRequest.Request.Width)
+                    size.Width = sizeRequest.Request.Width;
+
+            //Height
+            if(height == 0)
+                size.Height = sizeRequest.Request.Height;
+            else
+                if (size.Height < sizeRequest.Request.Height)
+                    size.Height = sizeRequest.Request.Height;
+
+
+            renderer.View.LayoutParameters = new ViewGroup.LayoutParams(
+                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)size.Width, context.Resources.DisplayMetrics),
+                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)size.Height, context.Resources.DisplayMetrics));
+
+
+
+            renderer.Element.Layout(size);
+            renderer.View.Layout(0, 0,
+                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)size.Width, context.Resources.DisplayMetrics),
+                (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)size.Height, context.Resources.DisplayMetrics));
+
+
+            renderer.View.Measure(1000, 300);
+            renderer.View.MeasuredWidth.ToString();
+            var nativeView = renderer.View;
+
+            return nativeView;
+        }
+
+
         public static int IntToDip (int value, global::Android.Content.Context context)
         {
            return (int)global::Android.Util.TypedValue.ApplyDimension(global::Android.Util.ComplexUnitType.Dip, value, context.Resources.DisplayMetrics);
         }
     }
+
 
 
     public class ViewCellContainer : global::Android.Widget.LinearLayout
