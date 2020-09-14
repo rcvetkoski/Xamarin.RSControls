@@ -21,7 +21,7 @@ using Xamarin.RSControls.Interfaces;
 [assembly: ExportRenderer(typeof(RSPickerBase), typeof(RSPickerRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSPickerRenderer : PickerRenderer, AdapterView.IOnItemClickListener, IDisposable
+    public class RSPickerRenderer : PickerRenderer, AdapterView.IOnItemClickListener, IDisposable, IDialogInterfaceOnClickListener
     {
         private RSPopupRenderer sPopupRenderer;
         private AlertDialog alertDialog;
@@ -160,8 +160,8 @@ namespace Xamarin.RSControls.Droid.Controls
             sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.MatchParent;
             sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.WrapContent;
             sPopupRenderer.UserSetSize = true;
-            //AlertDialog.Builder dialog = new AlertDialog.Builder(Context);
-
+            AlertDialog.Builder dialog = new AlertDialog.Builder(Context);
+            
 
             //LinearLayout
             LinearLayout layout = new LinearLayout(Context);
@@ -184,11 +184,11 @@ namespace Xamarin.RSControls.Droid.Controls
             }
 
 
-
             //ListView
             listViewAndroid = new global::Android.Widget.ListView(Context);
+            listViewAndroid.SetFooterDividersEnabled(true);
+            listViewAndroid.AddFooterView(new global::Android.Views.View(Context), null, true);
             listViewAndroid.OnItemClickListener = this;
-
 
 
             //Listview Adapter
@@ -228,8 +228,7 @@ namespace Xamarin.RSControls.Droid.Controls
             layout.AddView(listViewAndroid);
 
             //SetView to dialog
-            sPopupRenderer.SetNativeView(layout);
-
+            //sPopupRenderer.SetNativeView(layout);
 
             sPopupRenderer.AddAction("Done", Enums.RSPopupButtonTypeEnum.Positive, (senderAlert, args) =>
             {
@@ -247,35 +246,32 @@ namespace Xamarin.RSControls.Droid.Controls
                 sPopupRenderer.Dismiss();
             });
 
-            sPopupRenderer.ShowPopup();
+            //sPopupRenderer.ShowPopup();
 
 
-
-            ////Populate linear layout
-            //layout.AddView(searchView);
-            //layout.AddView(listViewAndroid);
 
             ////SetView to dialog
-            //dialog.SetView(layout);
-            //dialog.SetTitle(ElementCasted.Title);
+            dialog.SetView(layout);
+            //dialog.SetAdapter(adapter, this);
+            dialog.SetTitle(ElementCasted.Title);
 
 
-            //dialog.SetPositiveButton("Done", (senderAlert, args) =>
-            //{
-            //    SetText();
-            //});
-            //dialog.SetNegativeButton("Clear Item", (senderAlert, args) =>
-            //{
-            //    ElementCasted.SelectedItem = null;
-            //    ElementCasted.SelectedIndex = -1;
-            //    adapter.CheckedItems.Clear();
-            //    if (this.ElementCasted.SelectedItems != null)
-            //        this.ElementCasted.SelectedItems.Clear();
+            dialog.SetPositiveButton("Done", (senderAlert, args) =>
+            {
+                SetText();
+            });
+            dialog.SetNegativeButton("Clear Item", (senderAlert, args) =>
+            {
+                ElementCasted.SelectedItem = null;
+                ElementCasted.SelectedIndex = -1;
+                adapter.CheckedItems.Clear();
+                if (this.ElementCasted.SelectedItems != null)
+                    this.ElementCasted.SelectedItems.Clear();
 
-            //    SetText();
-            //});
+                SetText();
+            });
 
-            //alertDialog = dialog.Show();
+            alertDialog = dialog.Show();
         }
 
         private void SearchView_QueryTextChange(object sender, global::Android.Widget.SearchView.QueryTextChangeEventArgs e)
@@ -363,6 +359,11 @@ namespace Xamarin.RSControls.Droid.Controls
 
             if(sPopupRenderer != null && sPopupRenderer.Dialog != null)
                 sPopupRenderer.Dialog.Dismiss();
+        }
+
+        public void OnClick(IDialogInterface dialog, int which)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -468,18 +469,14 @@ namespace Xamarin.RSControls.Droid.Controls
                                                                        0,
                                                                        (selectionIndicator as CheckedTextView).PaddingBottom);
 
-                    selectionIndicator.TextAlignment = global::Android.Views.TextAlignment.Center;
-
-
 
                     //Item template
                     formsView = rsPicker.ItemTemplate.CreateContent() as Xamarin.Forms.View;
-                    var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(context, formsView, formsView.X, formsView.Y, 300, selectionIndicator.MinimumHeight);
-
-                    //var renderer = Platform.CreateRendererWithContext(view, context);
-                    //var nativeView = new ViewCellContainer(context, view, renderer);
-
+                    //var nativeView = Extensions.ViewExtensions.ConvertFormsToNative(context, formsView, formsView.X, formsView.Y, 300, selectionIndicator.MinimumHeight);
+                    var renderer = Platform.CreateRendererWithContext(formsView, context);
+                    var nativeView = new ViewCellContainer(context, formsView, renderer, selectionIndicator.MinimumHeight);
                     convertView = new LinearLayout(this.context);
+                    (convertView as LinearLayout).SetGravity(GravityFlags.CenterVertical);
                     (convertView as LinearLayout).AddView(selectionIndicator);
                     (convertView as LinearLayout).AddView(nativeView);
                 }
@@ -487,8 +484,8 @@ namespace Xamarin.RSControls.Droid.Controls
                 var obj = this.GetItem(position);
                 var instInfo = obj.GetType().GetProperty("Instance");
                 var instance = instInfo.GetValue(obj, null);
-                formsView.BindingContext = instance;
-                //((convertView as LinearLayout).GetChildAt(1) as ViewCellContainer)._formsView.BindingContext = instance;
+                //formsView.BindingContext = instance;
+                ((convertView as LinearLayout).GetChildAt(1) as ViewCellContainer)._formsView.BindingContext = instance;
                 //(convertView as IVisualElementRenderer).Element.BindingContext = instance;
                 if (CheckedItems.Any())
                 {
@@ -513,12 +510,14 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             public  Xamarin.Forms.View _formsView;
             private IVisualElementRenderer _renderer;
+            private double minCellHeight;
 
-            public ViewCellContainer(global::Android.Content.Context context, Xamarin.Forms.View formsView, IVisualElementRenderer renderer) : base(context)
+            public ViewCellContainer(global::Android.Content.Context context, Xamarin.Forms.View formsView, IVisualElementRenderer renderer, double minCellHeight) : base(context)
             {
                 _formsView = formsView;
                  _renderer = renderer;
                 this.AddView(_renderer.View);
+                this.minCellHeight = ContextExtensions.FromPixels(this.Context, minCellHeight);
             }
 
             // this will layout the cell in xamarin forms and then get the height
@@ -527,10 +526,16 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
 
+
                 double pixelsWidth = MeasureSpec.GetSize(widthMeasureSpec);
                 double numWidth = ContextExtensions.FromPixels(this.Context, pixelsWidth);
                 SizeRequest sizeRequest = _formsView.Measure(numWidth, double.PositiveInfinity);
-                _formsView.Layout(new Rectangle(0.0, 0.0, numWidth, sizeRequest.Request.Height));
+
+                if(this.minCellHeight < sizeRequest.Request.Height)
+                    _formsView.Layout(new Rectangle(0.0, 0.0, numWidth, sizeRequest.Request.Height));
+                else
+                    _formsView.Layout(new Rectangle(0.0, 0.0, numWidth, this.minCellHeight));
+
                 double width = _formsView.Width;
                 int measuredWidth = MeasureSpec.MakeMeasureSpec((int)ContextExtensions.ToPixels(this.Context, width), MeasureSpecMode.Exactly);
                 double height = _formsView.Height;
