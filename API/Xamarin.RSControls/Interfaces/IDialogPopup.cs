@@ -42,5 +42,6 @@ namespace Xamarin.RSControls.Interfaces
         Forms.Color RSPopupBackgroundColor { get; set; }
         RSPopupStyleEnum RSPopupStyleEnum { get; set; }
         bool IsSearchEnabled { get; set; }
+        bool RsPopupSeparatorsEnabled { get; set; }
     }
 }

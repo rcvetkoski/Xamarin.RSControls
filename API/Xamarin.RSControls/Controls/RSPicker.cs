@@ -207,6 +207,9 @@ namespace Xamarin.RSControls.Controls
         }
         public RSPopupStyleEnum RSPopupStyleEnum { get; set; }
         public bool IsSearchEnabled { get; set; }
+        private bool rsPopupSeparatorsEnabled;
+        public bool RsPopupSeparatorsEnabled { get => rsPopupSeparatorsEnabled; set { rsPopupSeparatorsEnabled = value; RsPopupSeparatorsUserSet = true; } }
+        public bool RsPopupSeparatorsUserSet;
         //Popup////////////////////////////////////////////////
 
 

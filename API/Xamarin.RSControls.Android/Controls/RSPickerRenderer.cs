@@ -21,7 +21,7 @@ using Xamarin.RSControls.Interfaces;
 [assembly: ExportRenderer(typeof(RSPickerBase), typeof(RSPickerRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSPickerRenderer : PickerRenderer, AdapterView.IOnItemClickListener, IDisposable, IDialogInterfaceOnClickListener
+    public class RSPickerRenderer : PickerRenderer, AdapterView.IOnItemClickListener, IDisposable
     {
         private RSPopupRenderer sPopupRenderer;
         private AlertDialog alertDialog;
@@ -71,6 +71,17 @@ namespace Xamarin.RSControls.Droid.Controls
 
             if (e.PropertyName == "Error" && this.Control is CustomEditText && !isTextInputLayout)
                 (this.Control as CustomEditText).ErrorMessage = (this.Element as RSPickerBase).Error;
+        }
+
+        protected override EditText CreateNativeControl()
+        {
+            if ((this.Element as IRSControl).RightIcon == null)
+                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
+                {
+                    View = new RSSvgImage() { Source = "Samples/Data/SVG/arrow.svg" }
+                };
+
+            return new CustomEditText(Context, this.Element as IRSControl);
         }
 
 
@@ -151,25 +162,15 @@ namespace Xamarin.RSControls.Droid.Controls
             }
         }
 
-        private void CreatePickerDialog()
+        private global::Android.Views.View CreateDialogLayout()
         {
-            sPopupRenderer = new RSPopupRenderer((this.Element as RSPickerBase).RSPopupTitle, (this.Element as RSPickerBase).RSPopupMessage);
-            sPopupRenderer.BorderRadius = 14;
-            sPopupRenderer.DimAmount = 0.7f;
-            sPopupRenderer.BorderFillColor = (this.Element as RSPickerBase).RSPopupBackgroundColor;
-            sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.MatchParent;
-            sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.WrapContent;
-            sPopupRenderer.UserSetSize = true;
-            AlertDialog.Builder dialog = new AlertDialog.Builder(Context);
-            
-
             //LinearLayout
             LinearLayout layout = new LinearLayout(Context);
             layout.Orientation = Orientation.Vertical;
 
 
             //SearchView
-            if(this.ElementCasted.IsSearchEnabled)
+            if (this.ElementCasted.IsSearchEnabled && this.ElementCasted.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
             {
                 searchView = new global::Android.Widget.SearchView(Context);
                 searchView.SetPadding(searchView.PaddingLeft,
@@ -196,9 +197,15 @@ namespace Xamarin.RSControls.Droid.Controls
             listViewAndroid.Adapter = adapter;
 
             //Set selected item's
-            if(ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+            if (ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
             {
-                listViewAndroid.Divider = null;
+                //Separator visibility
+                if(this.ElementCasted.RsPopupSeparatorsUserSet)
+                    if(!this.ElementCasted.RsPopupSeparatorsEnabled)
+                        listViewAndroid.Divider = null;
+                else
+                        listViewAndroid.Divider = null;
+
                 listViewAndroid.ChoiceMode = ChoiceMode.Single;
                 //listViewAndroid.SetItemChecked(ElementCasted.SelectedIndex, true);
                 listViewAndroid.SetSelection(ElementCasted.SelectedIndex);
@@ -210,9 +217,15 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 listViewAndroid.ChoiceMode = ChoiceMode.Multiple;
 
+                //Separator visibility
+                if (this.ElementCasted.RsPopupSeparatorsUserSet)
+                    if (!this.ElementCasted.RsPopupSeparatorsEnabled)
+                        listViewAndroid.Divider = null;
+
+
                 if (ElementCasted.SelectedItems != null)
                 {
-                    foreach(object item in ElementCasted.SelectedItems)
+                    foreach (object item in ElementCasted.SelectedItems)
                     {
                         if (ElementCasted.ItemsSource.Contains(item))
                             adapter.CheckedItems.Add(item);
@@ -222,17 +235,35 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             //Populate linear layout
-            if (this.ElementCasted.IsSearchEnabled)
+            if (this.ElementCasted.IsSearchEnabled && this.ElementCasted.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
                 layout.AddView(searchView);
 
             layout.AddView(listViewAndroid);
 
+            return layout;
+        }
+
+        private void CreatePickerDialog()
+        {
+            sPopupRenderer = new RSPopupRenderer((this.Element as RSPickerBase).RSPopupTitle, (this.Element as RSPickerBase).RSPopupMessage);
+            sPopupRenderer.BorderRadius = 14;
+            sPopupRenderer.DimAmount = 0.7f;
+            sPopupRenderer.BorderFillColor = (this.Element as RSPickerBase).RSPopupBackgroundColor;
+            sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.MatchParent;
+            sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.WrapContent;
+            sPopupRenderer.UserSetSize = true;
+
+
+            //Create layout
+            var layout = CreateDialogLayout();
+
             //SetView to dialog
-            //sPopupRenderer.SetNativeView(layout);
+            sPopupRenderer.SetNativeView(layout);
 
             sPopupRenderer.AddAction("Done", Enums.RSPopupButtonTypeEnum.Positive, (senderAlert, args) =>
             {
                 SetText();
+                this.Control.ClearFocus();
             });
             sPopupRenderer.AddAction("Clear Item", Enums.RSPopupButtonTypeEnum.Neutral, (senderAlert, args) =>
             {
@@ -243,12 +274,21 @@ namespace Xamarin.RSControls.Droid.Controls
                     this.ElementCasted.SelectedItems.Clear();
 
                 SetText();
+                this.Control.ClearFocus();
                 sPopupRenderer.Dismiss();
             });
 
-            //sPopupRenderer.ShowPopup();
+            sPopupRenderer.ShowPopup();
+        }
+
+        private void CreateNativePickerDialog()
+        {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(Context);
 
 
+            //Create layout
+            var layout = CreateDialogLayout();
+            //layout.SetPadding(0, (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics), 0, 0);
 
             ////SetView to dialog
             dialog.SetView(layout);
@@ -259,6 +299,7 @@ namespace Xamarin.RSControls.Droid.Controls
             dialog.SetPositiveButton("Done", (senderAlert, args) =>
             {
                 SetText();
+                this.Control.ClearFocus();
             });
             dialog.SetNegativeButton("Clear Item", (senderAlert, args) =>
             {
@@ -269,6 +310,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     this.ElementCasted.SelectedItems.Clear();
 
                 SetText();
+                this.Control.ClearFocus();
             });
 
             alertDialog = dialog.Show();
@@ -323,24 +365,22 @@ namespace Xamarin.RSControls.Droid.Controls
         private void OnPickerClick(object sender, EventArgs e)
         {
             if (this.Control.HasFocus)
-                CreatePickerDialog();
+            {
+                if (this.ElementCasted.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
+                    CreatePickerDialog();
+                else
+                    CreateNativePickerDialog();
+            }
         }
         private void OnPickerFocusChange(object sender, FocusChangeEventArgs e)
         {
             if (e.HasFocus)
-                CreatePickerDialog();
-        }
-
-
-        protected override EditText CreateNativeControl()
-        {
-            if ((this.Element as IRSControl).RightIcon == null)
-                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
-                { 
-                    View = new RSSvgImage() { Source = "Samples/Data/SVG/arrow.svg" }
-                };
-
-            return new CustomEditText(Context, this.Element as IRSControl);
+            {
+                if (this.ElementCasted.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
+                    CreatePickerDialog();
+                else
+                    CreateNativePickerDialog();
+            }
         }
 
 
@@ -359,11 +399,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             if(sPopupRenderer != null && sPopupRenderer.Dialog != null)
                 sPopupRenderer.Dialog.Dismiss();
-        }
-
-        public void OnClick(IDialogInterface dialog, int which)
-        {
-            throw new NotImplementedException();
         }
     }
 

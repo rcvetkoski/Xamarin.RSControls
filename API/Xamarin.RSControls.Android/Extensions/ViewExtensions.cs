@@ -1,8 +1,11 @@
-﻿using Android.Content;
+﻿using Android.AccessibilityServices;
+using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Util;
 using Android.Views;
+using Android.Widget;
+using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 namespace Xamarin.RSControls.Droid.Extensions
@@ -13,7 +16,7 @@ namespace Xamarin.RSControls.Droid.Extensions
         {
             if (width > 0 && height > 0)
             {
-                view.Measure(View.MeasureSpec.MakeMeasureSpec(width, MeasureSpecMode.Exactly), View.MeasureSpec.MakeMeasureSpec(height, MeasureSpecMode.Exactly));
+                view.Measure(global::Android.Views.View.MeasureSpec.MakeMeasureSpec(width, MeasureSpecMode.Exactly), global::Android.Views.View.MeasureSpec.MakeMeasureSpec(height, MeasureSpecMode.Exactly));
             }
 
             view.Layout(0, 0, view.MeasuredWidth, view.MeasuredHeight);
@@ -98,12 +101,13 @@ namespace Xamarin.RSControls.Droid.Extensions
             return nativeView;
         }
 
-        public static global::Android.Views.View ConvertFormsToNative(Context context, Xamarin.Forms.View view, double x, double y, double width, double height)
+        public static global::Android.Views.View ConvertFormsToNative(Context context, Xamarin.Forms.View view, double x, double y, double width, double height, global::Android.Views.ViewGroup parent = null)
         {
             var renderer = Platform.CreateRendererWithContext(view, context);
             Platform.SetRenderer(view, renderer);
+            renderer.Tracker.UpdateLayout();
+            
             Xamarin.Forms.Rectangle size = new Xamarin.Forms.Rectangle(x, y, ContextExtensions.FromPixels(context, width), ContextExtensions.FromPixels(context, height));
-
             var sizeRequest = view.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
 
 
@@ -126,16 +130,12 @@ namespace Xamarin.RSControls.Droid.Extensions
                 (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)size.Width, context.Resources.DisplayMetrics),
                 (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)size.Height, context.Resources.DisplayMetrics));
 
-
-
             renderer.Element.Layout(size);
             renderer.View.Layout(0, 0,
                 (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)size.Width, context.Resources.DisplayMetrics),
                 (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)size.Height, context.Resources.DisplayMetrics));
 
 
-            renderer.View.Measure(1000, 300);
-            renderer.View.MeasuredWidth.ToString();
             var nativeView = renderer.View;
 
             return nativeView;
@@ -149,51 +149,85 @@ namespace Xamarin.RSControls.Droid.Extensions
     }
 
 
-
-    public class ViewCellContainer : global::Android.Widget.LinearLayout
+    public class ViewCellContainer : ViewGroup
     {
         public Xamarin.Forms.View _formsView;
+        private Forms.StackLayout stack;
         private IVisualElementRenderer _renderer;
+        private double minCellHeight;
 
-        public ViewCellContainer(global::Android.Content.Context context, Xamarin.Forms.View formsView, IVisualElementRenderer renderer) : base(context)
+        public ViewCellContainer(global::Android.Content.Context context, Xamarin.Forms.View formsView, IVisualElementRenderer renderer, double minCellHeight, ViewGroup contentView) : base(context)
         {
+            stack = new StackLayout();
+            stack.Children.Add(formsView);
+            stack.BackgroundColor = Forms.Color.Blue;
             _formsView = formsView;
-            _renderer = renderer;
-            this.AddView(_renderer.View);
+            _renderer = Platform.CreateRendererWithContext(stack, Context);
+            Platform.SetRenderer(stack, _renderer);
+             this.AddView(_renderer.View);
+            this.minCellHeight = ContextExtensions.FromPixels(this.Context, minCellHeight);
+            this.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            _renderer.View.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+
+            contentView.AddView(this);
         }
 
-        //// this will layout the cell in xamarin forms and then get the height
-        //// it means you can variable height cells / wrap to content etc
+        // this will layout the cell in xamarin forms and then get the height
+        // it means you can variable height cells / wrap to content etc
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
             base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
 
-            double pixels = MeasureSpec.GetSize(widthMeasureSpec);
-            double num = ContextExtensions.FromPixels(this.Context, pixels);
-            Forms.SizeRequest sizeRequest = _formsView.Measure(num, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+
+            double pixelsWidth = MeasureSpec.GetSize(widthMeasureSpec);
+            double numWidth = ContextExtensions.FromPixels(this.Context, pixelsWidth);
+            Forms.SizeRequest sizeRequest = _formsView.Measure(numWidth, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
 
 
-            if (num < sizeRequest.Request.Width)
-                _formsView.Layout(new Forms.Rectangle(0.0, 0.0, num, sizeRequest.Request.Height));
-            else
-                _formsView.Layout(new Forms.Rectangle(0.0, 0.0, sizeRequest.Request.Width, sizeRequest.Request.Height));
-
-            //_formsView.Layout(new Forms.Rectangle(0.0, 0.0, sizeRequest.Request.Width, sizeRequest.Request.Height));
-
+            double layoutWidth = 0;
+            //if (numWidth != 0 && (this.Parent.Parent as global::Android.Views.View).LayoutParameters.Width == -1)
+            //    layoutWidth = numWidth;
+            //else
+                layoutWidth = sizeRequest.Request.Width;
 
 
-            double width = _formsView.Width;
-            int measuredWidth = MeasureSpec.MakeMeasureSpec((int)ContextExtensions.ToPixels(this.Context, width), MeasureSpecMode.Exactly);
+            //if (this.minCellHeight < sizeRequest.Request.Height)
+            //    _formsView.Layout(new Forms.Rectangle(_formsView.X, _formsView.Y, layoutWidth, sizeRequest.Request.Height ));
+            //else
+            //    _formsView.Layout(new Forms.Rectangle(_formsView.X, _formsView.Y, layoutWidth, this.minCellHeight));
+
+            stack.Layout(new Forms.Rectangle(0.0, 0.0, numWidth, sizeRequest.Request.Height));
+
+            double width = stack.Width;
+            double parentWidth = ContextExtensions.FromPixels(this.Context, (this.Parent.Parent as global::Android.Views.View).MeasuredWidth);
+
+            int measuredWidth = 0;
+            measuredWidth = MeasureSpec.MakeMeasureSpec((int)ContextExtensions.ToPixels(this.Context, width), MeasureSpecMode.Exactly);
+
+            //if (width >= parentWidth)
+            //{
+            //    measuredWidth = MeasureSpec.MakeMeasureSpec((int)ContextExtensions.ToPixels(this.Context, width), MeasureSpecMode.Exactly);
+            //    //stack.Layout(new Forms.Rectangle(0.0, 0.0, width, sizeRequest.Request.Height));
+            //}
+            //else
+            //{
+            //    measuredWidth = MeasureSpec.MakeMeasureSpec((this.Parent.Parent as global::Android.Views.View).MeasuredWidth, MeasureSpecMode.Exactly);
+            //    //stack.Layout(new Forms.Rectangle(0.0, 0.0, parentWidth, sizeRequest.Request.Height));
+            //}
+
+
+
             double height = _formsView.Height;
             int measuredHeight = MeasureSpec.MakeMeasureSpec((int)ContextExtensions.ToPixels(this.Context, height), MeasureSpecMode.Exactly);
-            _renderer.View.Measure(widthMeasureSpec, heightMeasureSpec);
+            //_renderer.View.Measure(widthMeasureSpec, heightMeasureSpec);
+
 
             this.SetMeasuredDimension(measuredWidth, measuredHeight);
         }
 
-        //protected override void OnLayout(bool changed, int l, int t, int r, int b)
-        //{
-        //    _renderer.UpdateLayout();
-        //}
+        protected override void OnLayout(bool changed, int l, int t, int r, int b)
+        {
+            _renderer.UpdateLayout();
+        }
     }
 }

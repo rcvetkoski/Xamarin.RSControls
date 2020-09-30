@@ -11,7 +11,7 @@
 
     <ScrollView Orientation="Both">
 
-        <StackLayout x:Name="stack" Margin="10">
+        <!--<StackLayout x:Name="stack" Margin="10">
 
             <Button Text="Center Dialog" TextColor="White" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked1"></Button>
 
@@ -23,14 +23,15 @@
 
             <Button x:Name="left1" TextColor="White" Text="Top Dialog" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked5"></Button>
 
-
             <Picker ItemsSource="{Binding ListPicker}"></Picker>
 
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
+            <rs:RSPicker ItemsSource="{Binding ListPicker}" RsPopupSeparatorsEnabled="True" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
                 <rs:RSPicker.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout>
-                          <Label Text="{Binding Name}"></Label>
+                        <StackLayout BackgroundColor="Red">
+                          <Label Text="{Binding Name}" ></Label>
+                            <Label BackgroundColor="Green" Text="Treere" HorizontalTextAlignment="End" HorizontalOptions="FillAndExpand"></Label>
+                            <Label Text="Mehe"></Label>
                         </StackLayout>
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>
@@ -78,10 +79,62 @@
                         </StackLayout>
                     </DataTemplate>
                 </rs:RSPicker.ItemTemplate>
+                <rs:RSPicker.RSPopupStyleEnum>
+                    <OnPlatform x:TypeArguments="enums:RSPopupStyleEnum"
+                        iOS="Native"
+                        Android="RsPopopStyle">
+                    </OnPlatform>
+                </rs:RSPicker.RSPopupStyleEnum>
             </rs:RSPicker>
         
             <Button Text="Switch to Page1" TextColor="White" VerticalOptions="EndAndExpand" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
         
+        </StackLayout>-->
+
+
+        <StackLayout Margin="10">
+
+
+            <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
+                <rs:RSEntry.LeftIcon>
+                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                        <helpers:RSEntryIcon.View>
+                            <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                        </helpers:RSEntryIcon.View>
+                    </helpers:RSEntryIcon>
+                </rs:RSEntry.LeftIcon>
+
+                <rs:RSEntry.LeadingIcon>
+                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                        <helpers:RSEntryIcon.View>
+                            <rs:RSSvgImage Source="Samples/Data/SVG/time.svg"/>
+                        </helpers:RSEntryIcon.View>
+                    </helpers:RSEntryIcon>
+                </rs:RSEntry.LeadingIcon>
+
+
+                <rs:RSEntry.RightIcon>
+                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                        <helpers:RSEntryIcon.View>
+                            <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                        </helpers:RSEntryIcon.View>
+                    </helpers:RSEntryIcon>
+                </rs:RSEntry.RightIcon>
+
+                <rs:RSEntry.TrailingIcon>
+                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                        <helpers:RSEntryIcon.View>
+                            <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                        </helpers:RSEntryIcon.View>
+                    </helpers:RSEntryIcon>
+                </rs:RSEntry.TrailingIcon>
+
+            </rs:RSEntry>
+
+
+            <Button Text="Switch to Page1" TextColor="White" VerticalOptions="EndAndExpand" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
+
+
         </StackLayout>
 
     </ScrollView>

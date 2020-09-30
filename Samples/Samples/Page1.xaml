@@ -27,7 +27,7 @@
 
                 </rs:RSEntry>
 
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
+                <rs:RSEntry Placeholder="No left icon" ShadowEnabled="True" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
                     <rs:RSEntry.LeftIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
@@ -51,7 +51,7 @@
 
                 <Entry Placeholder="Native entry"></Entry>
 
-                <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
+                <rs:RSEntry Placeholder="No left icon" ShadowColor="Gray" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!" IsPassword="False">
 
                     <rs:RSEntry.TrailingIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">

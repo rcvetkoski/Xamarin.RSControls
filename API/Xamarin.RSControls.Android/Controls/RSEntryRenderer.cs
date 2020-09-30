@@ -92,6 +92,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private TextPaint counterPaint;
         private Rect floatingHintBoundsFloating;
         private Rect floatingHintBoundsNotFloating;
+        private int baselinePosition;
         private Rect counterMessageBounds;
         private Paint borderPaint;
         private Paint filledPaint;
@@ -234,7 +235,7 @@ namespace Xamarin.RSControls.Droid.Controls
             if (this.rSControl.HasError || !string.IsNullOrEmpty(this.rSControl.Helper) || this.rSControl.CounterMaxLength != -1)
                 bottomSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics);
             else
-                bottomSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics);
+                bottomSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics);
 
 
             if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
@@ -247,7 +248,7 @@ namespace Xamarin.RSControls.Droid.Controls
             }
             else if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
             {
-                this.SetPadding((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 4, Context.Resources.DisplayMetrics) + (int)this.shadowRadius + (int)this.rSControl.Padding.Left,
+                this.SetPadding((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics) + (int)this.shadowRadius + (int)this.rSControl.Padding.Left,
                                 (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Top,
                                 (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 6, Context.Resources.DisplayMetrics) + (int)this.shadowRadius + (int)this.rSControl.Padding.Right,
                                 (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 20, Context.Resources.DisplayMetrics) + (int)this.rSControl.Padding.Bottom);
@@ -781,6 +782,11 @@ namespace Xamarin.RSControls.Droid.Controls
                 else
                     IsFloating = false;
 
+                baselinePosition = this.Baseline;
+
+                //Create Icons if any
+                CreateIcons();
+
                 if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
                 {
                     //X
@@ -789,7 +795,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
                     //Y
                     floatingHintYPostionFloating = -this.Paint.Ascent() + topSpacing; 
-                    floatingHintYPostionNotFloating = this.Baseline - Math.Abs(topSpacing - bottomSpacing) / 2 - Math.Abs(PaddingTop - PaddingBottom) / 2;
+                    floatingHintYPostionNotFloating = baselinePosition - Math.Abs(topSpacing - bottomSpacing) / 2 - Math.Abs(PaddingTop - PaddingBottom) / 2;
                 }
                 else if(this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
                 {
@@ -799,7 +805,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
                     //Y
                     floatingHintYPostionFloating = topSpacing + floatingHintBoundsFloating.Height() / 2;
-                    floatingHintYPostionNotFloating = this.Baseline;
+                    floatingHintYPostionNotFloating = baselinePosition;
                 }
                 else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
                 {
@@ -809,7 +815,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
                     //Y
                     floatingHintYPostionFloating = -this.Paint.Ascent(); /*topSpacing + floatingHintBoundsFloating.Height();*/
-                    floatingHintYPostionNotFloating = this.Baseline;
+                    floatingHintYPostionNotFloating = baselinePosition;
                 }
 
 
@@ -836,8 +842,6 @@ namespace Xamarin.RSControls.Droid.Controls
                 if (counterPaint != null)
                     counterYPosition = this.Height - bottomSpacing - counterPaint.Ascent() + 2 + textRect.Top;
 
-                //Create Icons if any
-                CreateIcons();
 
                 hasInitfloatingHintYPosition = true;
             }
@@ -1004,7 +1008,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 //Clip top border first and check if api < 26
                 canvas.Save();
 
-                if (IsFloating)
+                if (IsFloating && !string.IsNullOrEmpty(floatingHintText))
                 {
                     if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
                     {
@@ -1053,8 +1057,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
                 Path path2 = new Path();
-                path2.MoveTo(textRect.Left + this.shadowRadius, textRect.Top + this.Height - bottomSpacing - borderWidth / 2);
-                path2.LineTo(textRect.Right - this.shadowRadius, textRect.Top + this.Height - bottomSpacing - borderWidth / 2);
+                path2.MoveTo(textRect.Left + this.shadowRadius + leadingIconWidth, textRect.Top + this.Height - bottomSpacing - borderWidth / 2);
+                path2.LineTo(textRect.Right - this.shadowRadius - trailingIconWidth, textRect.Top + this.Height - bottomSpacing - borderWidth / 2);
                 path2.Close();//Given close, last lineto can be removed.
                 canvas.DrawPath(path2, borderPaint);
 
@@ -1095,10 +1099,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 //                textRect.Bottom - bottomSpacing,
                 //                borderPaint);
 
-                var path = RoundedRect(textRect.Left + this.shadowRadius, textRect.Top + topSpacing, textRect.Right - this.shadowRadius, textRect.Top + this.Height - bottomSpacing, this.borderRadius, this.borderRadius, true);
+                var path = RoundedRect(textRect.Left + this.shadowRadius + leadingIconWidth, textRect.Top + topSpacing, textRect.Right - this.shadowRadius - trailingIconWidth, textRect.Top + this.Height - bottomSpacing, this.borderRadius, this.borderRadius, true);
                 Path path2 = new Path();
-                path2.MoveTo(textRect.Left + this.shadowRadius, textRect.Top + this.Height - bottomSpacing - borderWidth / 2);
-                path2.LineTo(textRect.Right - this.shadowRadius, textRect.Top + this.Height - bottomSpacing - borderWidth / 2);
+                path2.MoveTo(textRect.Left + this.shadowRadius + leadingIconWidth, textRect.Top + this.Height - bottomSpacing - borderWidth / 2);
+                path2.LineTo(textRect.Right - this.shadowRadius - trailingIconWidth, textRect.Top + this.Height - bottomSpacing - borderWidth / 2);
                 path2.Close();//Given close, last lineto can be removed.
 
                 canvas.DrawPath(path, filledPaint);

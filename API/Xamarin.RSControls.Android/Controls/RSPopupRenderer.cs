@@ -250,11 +250,15 @@ namespace Xamarin.RSControls.Droid.Controls
         //Set and add custom view 
         private void SetCustomView()
         {
-            var renderer = Platform.CreateRendererWithContext(CustomView, Context);
-            Platform.SetRenderer(CustomView, renderer);
-            convertView = new Extensions.ViewCellContainer(Context, CustomView, renderer);
-            this.contentView.AddView(convertView);
-            convertView.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //var renderer = Platform.CreateRendererWithContext(CustomView, Context);
+            //Platform.SetRenderer(CustomView, renderer);
+            convertView = new Extensions.ViewCellContainer(Context, CustomView, null, 0, this.contentView);
+
+            //var convertView = Extensions.ViewExtensions.ConvertFormsToNative(Context, CustomView, 0, 0, 0, 0);
+
+            //this.contentView.AddView(convertView);
+            //convertView.SetBackgroundColor(global::Android.Graphics.Color.Pink);
+            // convertView.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
         }
 
         //Set native view 
@@ -744,7 +748,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
         public void OnClick(global::Android.Views.View v)
         {
-            linearLayout.RequestLayout();
             if (v.Id == customLayout.Id && !IsModal)
             {
                 this.Arguments = null;

@@ -156,16 +156,28 @@ namespace Samples
         private void Button_Clicked5(object sender, EventArgs e)
         {
             Entry entry = new Entry();
-            entry.Text = "TrolololhghghhgjggjhghgfghgfholoWhr ";
-            entry.HorizontalOptions = LayoutOptions.FillAndExpand;
+            entry.Text = "Trolololh wegewgewgw";
+            entry.HorizontalOptions = LayoutOptions.End;
+
+
+            Label label = new Label();
+            label.MaxLines = 100;
+            label.BackgroundColor = Color.Green;
+            label.Text = "Trolololh wegewgewgw";
+            label.HorizontalOptions = LayoutOptions.Start;
+            //label.Margin = new Thickness(10, 10, 10, 10);
+            label.HorizontalTextAlignment = TextAlignment.Start;
+            label.VerticalOptions = LayoutOptions.Start;
 
             ListView listView = new ListView();
-            listView.HeightRequest = 150;
-            listView.HorizontalOptions = LayoutOptions.Center;
+            listView.BackgroundColor = Color.Yellow;
+            //listView.WidthRequest = 200;
+            listView.Margin = new Thickness(50, 10, 50, 10);
+            //listView.HorizontalOptions = LayoutOptions.FillAndExpand;
             listView.ItemsSource = (this.BindingContext as MainPageViewModel).ListPicker;
 
-            RSPopup rsPopup = new RSPopup("RSPopup !", "Message wef fw fewfwe wef wef ew ewfwe wef ewfewf ewfewwefwe fewf wef ewf ewf wef wef ewf we");
-            rsPopup.SetCustomView(listView);
+            RSPopup rsPopup = new RSPopup("RSPopup !", "Message");
+            rsPopup.SetCustomView(label);
             rsPopup.SetDimAmount(0.0f);
             rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 10, 10, 10);
@@ -188,8 +200,8 @@ namespace Samples
             entry.HorizontalOptions = LayoutOptions.FillAndExpand;
 
             ListView listView = new ListView();
-            listView.HeightRequest = 150;
-            listView.HorizontalOptions = LayoutOptions.Center;
+            //listView.WidthRequest = 50;
+            listView.HorizontalOptions = LayoutOptions.Start;
             listView.ItemsSource = (this.BindingContext as MainPageViewModel).ListPicker;
 
             RSPopup rsPopup = new RSPopup("", "");
@@ -197,7 +209,7 @@ namespace Samples
             rsPopup.SetDimAmount(0.0f);
             rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 10, 10, 10);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.WrapContent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
