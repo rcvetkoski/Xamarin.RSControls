@@ -681,12 +681,12 @@ namespace Xamarin.RSControls.iOS.Controls
                 var projectedPositionRight = (arrow.Frame.GetMidX() + DialogView.Frame.Width / 2);
                 var projectedPositionLeft = (arrow.Frame.GetMidX() - DialogView.Frame.Width / 2);
 
-                if (projectedPositionRight > maxXPositionAllowed)
+                if (projectedPositionRight > maxXPositionAllowed && projectedPositionLeft - (projectedPositionRight - maxXPositionAllowed) >= minXPositionAllowed)
                 {
                     var constant = projectedPositionRight - maxXPositionAllowed;
                     dialogPositionXConstraint.Constant = -constant;
                 }
-                else if(projectedPositionLeft < minXPositionAllowed)
+                else if(projectedPositionLeft < minXPositionAllowed && (Math.Abs(projectedPositionLeft) + minXPositionAllowed + projectedPositionRight) <= maxXPositionAllowed)
                 {
                     var constant = Math.Abs(projectedPositionLeft) + minXPositionAllowed;
                     dialogPositionXConstraint.Constant = (nfloat)constant;

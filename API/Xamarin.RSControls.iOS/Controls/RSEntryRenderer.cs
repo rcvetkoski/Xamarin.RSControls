@@ -65,6 +65,20 @@ namespace Xamarin.RSControls.iOS.Controls
         private CustomCATextLayer errorLabel;
         private CustomCATextLayer helperLabel;
         private CustomCATextLayer counterLabel;
+        private UIView iconsSeparatorView;
+        private nfloat iconsSeparationWidth;
+        private UIView leftView;
+        private nfloat leftViewWidth;
+        private UIView leftHelpingView;
+        private nfloat leftHelpingViewWidth;
+        private UIView leadingView;
+        private nfloat leadingViewWidth;
+        private UIView trailingView;
+        private nfloat trailingViewWidth;
+        private UIView rightHelpingView;
+        private nfloat rightHelpingViewWidth;
+        private UIView rightView;
+        private nfloat rightViewWidth;
         private nfloat leftRightSpacingLabels;
         private int counterMaxLength;
         private int counter;
@@ -159,6 +173,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
         //Device orientation observer
         private NSObject deviceRotationObserver;
+        private UIDeviceOrientation orientation;
 
 
         //Constructor
@@ -166,11 +181,11 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             this.rSControl = rSControl;
 
-            if(rSControl.FontSize < 12)
+            if (rSControl.FontSize < 12)
                 this.floatingFontSize = (nfloat)rSControl.FontSize;
             else
                 this.floatingFontSize = 12;
-            if(rSControl.Placeholder != null)
+            if (rSControl.Placeholder != null)
                 this.floatingHintMaskPadding = 3;
             else
                 this.floatingHintMaskPadding = 0;
@@ -185,6 +200,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.topSpacing = 5;
             this.bottomSpacing = 20;
             this.leftRightSpacingLabels = 5;
+            this.iconsSeparationWidth = 6;
 
             //Padding
             SetPadding();
@@ -226,6 +242,8 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //Set event for device orientation change so we can reset border frame and mask
             deviceRotationObserver = NSNotificationCenter.DefaultCenter.AddObserver(new NSString("UIDeviceOrientationDidChangeNotification"), DeviceRotated);
+            orientation = UIDevice.CurrentDevice.Orientation;
+
         }
 
 
@@ -243,12 +261,12 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 this.leftPadding = 8 + (nfloat)rSControl.Padding.Left;
                 this.rightPadding = 8 + (nfloat)rSControl.Padding.Right;
-                this.topPadding = 25 + (nfloat)rSControl.Padding.Top; 
-                this.bottomPadding = 20 + (nfloat)rSControl.Padding.Bottom; 
+                this.topPadding = 25 + (nfloat)rSControl.Padding.Top;
+                this.bottomPadding = 20 + (nfloat)rSControl.Padding.Bottom;
             }
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
             {
-                this.leftPadding = 2 + (nfloat)rSControl.Padding.Left;
+                this.leftPadding = 8 + (nfloat)rSControl.Padding.Left;
                 this.rightPadding = 8 + (nfloat)rSControl.Padding.Right;
                 this.topPadding = 20 + (nfloat)rSControl.Padding.Top;
                 this.bottomPadding = 20 + (nfloat)rSControl.Padding.Bottom;
@@ -266,17 +284,119 @@ namespace Xamarin.RSControls.iOS.Controls
             else if (rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
                 correctiveY = (topSpacing - bottomSpacing) / 2;
 
-            RSSvgImage rightSvgIcon = new RSSvgImage() { Source = "Samples/Data/SVG/arrow.svg", HeightRequest = 22, WidthRequest = 22, Color = Color.Gray };
-            var convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, new CGRect(0, 0, 22, 22));
-            UIView outerView = new UIView(new CGRect(0, 0, 22 + rightPadding, this.Frame.Height - bottomSpacing - topSpacing)) { BackgroundColor = UIColor.Green};
-            //outerView.AddSubview(convertedView);
-            this.RightView = convertedView;
-            this.RightViewMode = UITextFieldViewMode.Always;
-            UITapGestureRecognizer uITapGestureRecognizer = new UITapGestureRecognizer(() => {
-                // Do something
-                this.BecomeFirstResponder();
-            });
-            this.RightView.AddGestureRecognizer(uITapGestureRecognizer);
+
+            if (this.rSControl.LeadingIcon != null)
+            {
+                Forms.View leadingSvgIcon = rSControl.LeadingIcon.View;
+                leadingView = Extensions.ViewExtensions.ConvertFormsToNative(leadingSvgIcon, 0, floatingHintYPostionNotFloating, rSControl.LeadingIcon.IconWidth, rSControl.LeadingIcon.IconHeight);
+                this.AddSubview(leadingView);
+
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => {
+                    // Do something
+                    //this.BecomeFirstResponder();
+                    RSPopup rSPopup = new RSPopup("Title", "Message rthtrhttrhtrhtr hrthrt rthrt rth rth rgreggregreregergergregregergreg ergerg ergergre ergerg erg ");
+                    rSPopup.SetPopupSize(Enums.RSPopupSizeEnum.WrapContent, Enums.RSPopupSizeEnum.WrapContent);
+                    rSPopup.SetPopupPositionRelativeTo(this.rSControl as Forms.View, Enums.RSPopupPositionSideEnum.Top);
+                    rSPopup.SetDimAmount(0f);
+                    rSPopup.SetMargin(40, 0, 40, 0);
+                    rSPopup.Show();
+
+
+                    if (rSControl.LeadingIcon.Source == null)
+                        rSControl.LeadingIcon.Source = (rSControl as Forms.View).BindingContext;
+
+                    System.Reflection.MethodInfo methodInfo;
+                    methodInfo = rSControl.LeadingIcon.Source.GetType().GetMethod(rSControl.LeadingIcon.Command, new Type[] { rSControl.LeadingIcon.CommandParameter.GetType() });
+                    if (methodInfo != null)
+                    {
+                        if (rSControl.LeadingIcon.CommandParameter != null)
+                        {
+                            methodInfo.Invoke(rSControl.LeadingIcon.Source, new object[] { rSControl.LeadingIcon.CommandParameter });
+                        }
+                        else
+                            methodInfo.Invoke(rSControl.LeadingIcon.Source, null);
+                    }
+                });
+
+                leadingView.AddGestureRecognizer(gest);
+                leadingViewWidth = leadingView.Frame.Width + iconsSeparationWidth;
+            }
+
+            if (this.rSControl.LeftIcon != null)
+            {
+                Forms.View leftSvgIcon = rSControl.LeftIcon.View as Forms.View;
+                //RSSvgImage leftSvgIcon = new RSSvgImage() { Source = rSControl.LeftIcon.Path, HeightRequest = 22, WidthRequest = 22, Color = Color.Gray };
+                leftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new CGRect(0, 0, 22, 22));
+                this.AddSubview(leftView);
+                leftViewWidth = leftView.Frame.Width + iconsSeparationWidth;
+            }
+
+            if (this.rSControl.LeftHelpingIcon != null)
+            {
+                Forms.View leftHelpingSvgIcon = rSControl.LeftHelpingIcon.View;
+                leftHelpingView = Extensions.ViewExtensions.ConvertFormsToNative(leftHelpingSvgIcon, new CGRect(0, 0, 22, 22));
+                this.AddSubview(leftHelpingView);
+                leftHelpingViewWidth = leftHelpingView.Frame.Width + iconsSeparationWidth;
+            }
+
+            if (rSControl.RightHelpingIcon != null)
+            {
+                Forms.View rightHelpingSvgIcon = rSControl.RightHelpingIcon.View;
+                rightHelpingView = Extensions.ViewExtensions.ConvertFormsToNative(rightHelpingSvgIcon, this.Frame.Right, floatingHintYPostionNotFloating, 22, 22);
+                this.AddSubview(rightHelpingView);
+                rightHelpingViewWidth = rightHelpingView.Frame.Width + iconsSeparationWidth;
+            }
+
+            if (rSControl.RightIcon != null)
+            {
+                Forms.View rightSvgIcon = rSControl.RightIcon.View;
+                rightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, 0, 0, 22, 22);
+                this.AddSubview(rightView);
+                rightViewWidth = rightView.Frame.Width + iconsSeparationWidth;
+            }
+
+            if (this.rSControl.TrailingIcon != null)
+            {
+                Forms.View trailoingSvgIcon = rSControl.TrailingIcon.View;
+                trailingView = Extensions.ViewExtensions.ConvertFormsToNative(trailoingSvgIcon, this.Frame.Right, floatingHintYPostionNotFloating, 22, 22);
+                this.AddSubview(trailingView);
+
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => {
+                    // Do something
+                    //this.BecomeFirstResponder();
+                    RSPopup rSPopup = new RSPopup("Title", "Message rthtrhttrhtrhtr hrthrt rthrt rth rth rgreggregreregergergregregergreg ergerg ergergre ergerg erg ");
+                    rSPopup.SetPopupSize(Enums.RSPopupSizeEnum.WrapContent, Enums.RSPopupSizeEnum.WrapContent);
+                    rSPopup.SetPopupPositionRelativeTo(this.rSControl as Forms.View, Enums.RSPopupPositionSideEnum.Top);
+                    rSPopup.SetDimAmount(0f);
+                    rSPopup.SetMargin(40, 0, 40, 0);
+                    rSPopup.Show();
+
+                });
+
+                trailingView.AddGestureRecognizer(gest);
+                trailingViewWidth = trailingView.Frame.Width + iconsSeparationWidth;
+            }
+        }
+        //Update Icons position
+        private void UpdateIconsPosition()
+        {
+            if (leadingView != null)
+                leadingView.Frame = new CGRect(0, floatingHintYPostionNotFloating - 11, 22, 22);
+
+            if (leftView != null)
+                leftView.Frame = new CGRect(leftPadding + leadingViewWidth, floatingHintYPostionNotFloating - 11, 22, 22);
+
+            if (leftHelpingView != null)
+                leftHelpingView.Frame = new CGRect(leftPadding + leadingViewWidth + leftViewWidth, floatingHintYPostionNotFloating - 11, 22, 22);
+
+            if (rightHelpingView != null)
+                rightHelpingView.Frame = new CGRect(this.Frame.Right - rightPadding - trailingViewWidth - rightViewWidth - rightHelpingViewWidth + iconsSeparationWidth, floatingHintYPostionNotFloating - 11, 22, 22);
+
+            if (rightView != null)
+                rightView.Frame = new CGRect(this.Frame.Right - rightPadding - trailingViewWidth - rightViewWidth + iconsSeparationWidth, floatingHintYPostionNotFloating - 11, 22, 22);
+
+            if (trailingView != null)
+                trailingView.Frame = new CGRect(this.Frame.Right - trailingViewWidth + iconsSeparationWidth, floatingHintYPostionNotFloating - 11, 22, 22);
         }
 
 
@@ -330,7 +450,7 @@ namespace Xamarin.RSControls.iOS.Controls
             floatingHintXPostion = floatingHintXPostionNotFloating;
             floatingHintYPostion = floatingHintYPostionNotFloating;
 
-            if(!IsFloating)
+            if (!IsFloating)
                 AnimateFloatingHint(rSControl.FontSize);
 
             UpdateFloatingLabel();
@@ -368,7 +488,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 ZPosition = -1 // So its behind floating label
             };
 
-            if(rSControl.ShadowEnabled)
+            if (rSControl.ShadowEnabled)
             {
                 border.ShadowColor = rSControl.ShadowColor.ToCGColor();
                 border.ShadowOpacity = 0.5f;
@@ -398,7 +518,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             filledBorder.MaskedCorners = CACornerMask.MinXMinYCorner | CACornerMask.MaxXMinYCorner;
 
-            if(rSControl.ShadowEnabled)
+            if (rSControl.ShadowEnabled)
             {
                 filledBorder.ShadowColor = rSControl.ShadowColor.ToCGColor();
                 filledBorder.ShadowOpacity = 0.5f;
@@ -520,7 +640,7 @@ namespace Xamarin.RSControls.iOS.Controls
             counterLabel.String = string.Format("{0}/{1}", this.counter, this.counterMaxLength);
 
             counterLabel.Bounds = new CGRect(0.0f, 0.0f, counterLabel.Size.Width, counterLabel.Size.Height);
-            counterLabel.Position = new CGPoint(this.Frame.Width - this.rightPadding - leftRightSpacingLabels - counterLabel.Size.Width / 2,
+            counterLabel.Position = new CGPoint(this.Frame.Width - this.rightPadding - trailingViewWidth - leftRightSpacingLabels - counterLabel.Size.Width / 2,
                                                 this.Frame.Height - counterLabel.Size.Height / 2 - 1);
 
             if (this.counter > this.counterMaxLength)
@@ -553,6 +673,13 @@ namespace Xamarin.RSControls.iOS.Controls
                     this.errorEnabled = true;
                 }
             }
+        }
+        //Update counter position
+        private void UpdateCounterPosition()
+        {
+            counterLabel.Bounds = new CGRect(0.0f, 0.0f, counterLabel.Size.Width, counterLabel.Size.Height);
+            counterLabel.Position = new CGPoint(this.Frame.Width - this.rightPadding - trailingViewWidth - leftRightSpacingLabels - counterLabel.Size.Width / 2,
+                                                this.Frame.Height - counterLabel.Size.Height / 2 - 1);
         }
         //Create Password
         private void CreatePassword()
@@ -603,7 +730,7 @@ namespace Xamarin.RSControls.iOS.Controls
             nfloat shadowOffset = rSControl.ShadowRadius;
 
             //Border frame
-            border.Frame = new CGRect(0, topSpacing, this.Frame.Width, this.Frame.Height - this.bottomSpacing);
+            border.Frame = new CGRect(leadingViewWidth, topSpacing, this.Frame.Width - leadingViewWidth - trailingViewWidth, this.Frame.Height - this.bottomSpacing);
 
             var frame = this.Frame;
 
@@ -636,8 +763,8 @@ namespace Xamarin.RSControls.iOS.Controls
         public void UpdateFilledBorder()
         {
             //Border frame
-            filledBorder.Frame = new CGRect(0, topSpacing, this.Frame.Width, this.Frame.Height - this.bottomSpacing);
-            border.Frame = new CGRect(0, topSpacing + this.Frame.Height - this.bottomSpacing - border.BorderWidth, this.Frame.Width, border.BorderWidth);
+            filledBorder.Frame = new CGRect(leadingViewWidth, topSpacing, this.Frame.Width - leadingViewWidth - trailingViewWidth, this.Frame.Height - this.bottomSpacing);
+            border.Frame = new CGRect(leadingViewWidth, topSpacing + this.Frame.Height - this.bottomSpacing - border.BorderWidth, this.Frame.Width - leadingViewWidth - trailingViewWidth, border.BorderWidth);
 
 
             //CAShapeLayer borderMask = new CAShapeLayer();
@@ -660,8 +787,8 @@ namespace Xamarin.RSControls.iOS.Controls
         public void UpdateUnderlineBorder()
         {
             //Border frame
-            filledBorder.Frame = new CGRect(0, 0, this.Frame.Width, this.Frame.Height - this.bottomSpacing + topSpacing);
-            border.Frame = new CGRect(0, this.Frame.Height - this.bottomSpacing + topSpacing - border.BorderWidth, this.Frame.Width, border.BorderWidth);
+            filledBorder.Frame = new CGRect(leadingViewWidth, 0, this.Frame.Width - leadingViewWidth - trailingViewWidth, this.Frame.Height - this.bottomSpacing + topSpacing);
+            border.Frame = new CGRect(leadingViewWidth, this.Frame.Height - this.bottomSpacing + topSpacing - border.BorderWidth, this.Frame.Width - leadingViewWidth - trailingViewWidth, border.BorderWidth);
         }
 
 
@@ -685,11 +812,18 @@ namespace Xamarin.RSControls.iOS.Controls
         //Device orientation change event
         private void DeviceRotated(NSNotification notification)
         {
+            //System.Console.WriteLine("Rotate");
             //Reset border frame and mask
             //if (UIDevice.CurrentDevice.Orientation != UIDeviceOrientation.PortraitUpsideDown)
             // SetBorder();
 
-            SetNeedsDisplay();
+            //Update icons position if any
+            //UpdateIconsPosition();
+
+            //SetNeedsDisplay();
+
+            //UpdateFloatingLabel();
+            //UpdateIconsPosition();
         }
 
 
@@ -705,27 +839,26 @@ namespace Xamarin.RSControls.iOS.Controls
         //Text padding
         public override CGRect TextRect(CGRect forBounds)
         {
-            return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(this.topPadding, this.leftPadding, this.bottomPadding, this.rightPadding));
+            return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(this.topPadding, this.leftPadding + leadingViewWidth + leftViewWidth + leftHelpingViewWidth, this.bottomPadding, this.rightPadding + trailingViewWidth + rightViewWidth + rightHelpingViewWidth));
         }
         //Placeholder padding
         public override CGRect PlaceholderRect(CGRect forBounds)
         {
-            return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(this.topPadding, this.leftPadding, this.bottomPadding, this.rightPadding));
+            return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(this.topPadding, this.leftPadding + leadingViewWidth + leftViewWidth + leftHelpingViewWidth, this.bottomPadding, this.rightPadding + trailingViewWidth + rightViewWidth + rightHelpingViewWidth));
         }
         //Edit rectangle padding
         public override CGRect EditingRect(CGRect forBounds)
         {
-            return InsetRect(base.EditingRect(forBounds), new UIEdgeInsets(this.topPadding, this.leftPadding, this.bottomPadding, this.rightPadding));
+            return InsetRect(base.EditingRect(forBounds), new UIEdgeInsets(this.topPadding, this.leftPadding + leadingViewWidth + leftViewWidth + leftHelpingViewWidth, this.bottomPadding, this.rightPadding + trailingViewWidth + rightViewWidth + rightHelpingViewWidth));
         }
 
-        public override CGRect RightViewRect(CGRect forBounds)
-        {
-            //return base.RightViewRect(forBounds);
+        //public override CGRect RightViewRect(CGRect forBounds)
+        //{
+        //    //return base.RightViewRect(forBounds);
 
-            CGRect rightBounds = new CGRect(border.Bounds.Right - rightPadding - 22, floatingHintYPostionNotFloating - 11, 22, 22);
-            return rightBounds;
-        }
-
+        //    CGRect rightBounds = new CGRect(forBounds.Right - rightPadding - trailingViewWidth - this.RightView.Frame.Width, floatingHintYPostionNotFloating - 22 / 2, 22, this.RightView.Frame.Height);
+        //    return rightBounds;
+        //}
 
         //Draw
         public override void Draw(CGRect rect)
@@ -760,8 +893,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
                 {
                     //X
-                    floatingHintXPostionFloating = this.leftPadding + floatinghHintSizeNotFloating.Width / 2;
-                    floatingHintXPostionNotFloating = this.leftPadding + floatinghHintSizeNotFloating.Width / 2;
+                    floatingHintXPostionFloating = this.leftPadding + leadingViewWidth + leftHelpingViewWidth + leftViewWidth + floatinghHintSizeNotFloating.Width / 2;
+                    floatingHintXPostionNotFloating = this.leftPadding + leadingViewWidth + leftHelpingViewWidth + leftViewWidth + floatinghHintSizeNotFloating.Width / 2;
 
                     //Y
                     floatingHintYPostionFloating = (this.Frame.Height / 2 + (topPadding - bottomPadding + topSpacing - bottomSpacing) / 2) - floatinghHintSizeFloating.Height / 2 - 2;
@@ -770,8 +903,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
                 {
                     //X
-                    floatingHintXPostionFloating = this.leftPadding + floatinghHintSizeNotFloating.Width / 2 + leftRightSpacingLabels;
-                    floatingHintXPostionNotFloating = this.leftPadding + floatinghHintSizeNotFloating.Width / 2;
+                    floatingHintXPostionFloating = this.leftPadding + leadingViewWidth + floatinghHintSizeNotFloating.Width / 2 + leftRightSpacingLabels;
+                    floatingHintXPostionNotFloating = this.leftPadding + leadingViewWidth + leftHelpingViewWidth + leftViewWidth + floatinghHintSizeNotFloating.Width / 2;
 
                     //Y
                     floatingHintYPostionFloating = 0 + topSpacing + (floatinghHintSizeNotFloating.Height - floatinghHintSizeFloating.Height) / 2;
@@ -780,8 +913,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
                 {
                     //X
-                    floatingHintXPostionFloating = this.leftPadding + floatinghHintSizeNotFloating.Width / 2;
-                    floatingHintXPostionNotFloating = this.leftPadding + floatinghHintSizeNotFloating.Width / 2;
+                    floatingHintXPostionFloating = this.leftPadding + leadingViewWidth + floatinghHintSizeNotFloating.Width / 2;
+                    floatingHintXPostionNotFloating = this.leftPadding + leadingViewWidth + leftHelpingViewWidth + leftViewWidth + floatinghHintSizeNotFloating.Width / 2;
 
                     //Y
                     floatingHintYPostionFloating = (this.Frame.Height / 2 + (topPadding - bottomPadding + topSpacing - bottomSpacing) / 2) - floatinghHintSizeFloating.Height / 2 - 2;
@@ -804,11 +937,11 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
                 if (errorLabel != null)
-                    errorLabel.Position = new CGPoint(this.leftPadding + leftRightSpacingLabels + errorLabel.Size.Width / 2,
+                    errorLabel.Position = new CGPoint(this.leftPadding + leadingViewWidth + leftRightSpacingLabels + errorLabel.Size.Width / 2,
                                                        this.Frame.Height - errorLabel.Size.Height / 2 - 1);
 
                 if (helperLabel != null)
-                    helperLabel.Position = new CGPoint(this.leftPadding + leftRightSpacingLabels + helperLabel.Size.Width / 2,
+                    helperLabel.Position = new CGPoint(this.leftPadding + leadingViewWidth + leftRightSpacingLabels + helperLabel.Size.Width / 2,
                                                        this.Frame.Height - helperLabel.Size.Height / 2 - 1);
 
                 //if (counterLabel != null)
@@ -818,6 +951,10 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 //Init here because text property not yet set in create floatinghint method
                 FloatingHintFramePlacement();
+
+
+                //Update icons position if any
+                UpdateIconsPosition();
 
 
                 hasInitfinished = true;
@@ -841,6 +978,17 @@ namespace Xamarin.RSControls.iOS.Controls
             set => base.AttributedPlaceholder = value;
         }
 
+
+        //Update ui 
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            UpdateFloatingLabel();
+            UpdateIconsPosition();
+            if(counterLabel != null)
+                UpdateCounterPosition();
+        }
 
         //Remove any events when closed
         protected override void Dispose(bool disposing)

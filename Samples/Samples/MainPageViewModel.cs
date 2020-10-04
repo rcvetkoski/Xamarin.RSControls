@@ -241,7 +241,7 @@ namespace Samples
         }
         public void TestMethod2(object obj)
         {
-
+            
         }
 
     }

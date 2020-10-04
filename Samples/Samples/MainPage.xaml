@@ -92,10 +92,10 @@
         </StackLayout>-->
 
 
-        <StackLayout Margin="10">
+        <StackLayout Margin="10" x:Name="stack">
 
 
-            <rs:RSEntry Placeholder="No left icon" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
+            <rs:RSEntry Placeholder="No left icon"  Counter="3" CounterMaxLength="6" RSEntryStyle="Underline" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!">
                 <rs:RSEntry.LeftIcon>
                     <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                         <helpers:RSEntryIcon.View>
@@ -103,6 +103,14 @@
                         </helpers:RSEntryIcon.View>
                     </helpers:RSEntryIcon>
                 </rs:RSEntry.LeftIcon>
+
+                <rs:RSEntry.LeftHelpingIcon>
+                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                        <helpers:RSEntryIcon.View>
+                            <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                        </helpers:RSEntryIcon.View>
+                    </helpers:RSEntryIcon>
+                </rs:RSEntry.LeftHelpingIcon>
 
                 <rs:RSEntry.LeadingIcon>
                     <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
@@ -113,10 +121,18 @@
                 </rs:RSEntry.LeadingIcon>
 
 
+                <rs:RSEntry.RightHelpingIcon>
+                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                        <helpers:RSEntryIcon.View>
+                            <rs:RSSvgImage Source="Samples/Data/SVG/time.svg"/>
+                        </helpers:RSEntryIcon.View>
+                    </helpers:RSEntryIcon>
+                </rs:RSEntry.RightHelpingIcon>
+
                 <rs:RSEntry.RightIcon>
                     <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                         <helpers:RSEntryIcon.View>
-                            <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                            <rs:RSSvgImage Source="Samples/Data/SVG/time.svg"/>
                         </helpers:RSEntryIcon.View>
                     </helpers:RSEntryIcon>
                 </rs:RSEntry.RightIcon>

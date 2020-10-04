@@ -393,7 +393,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (this.Control != null)
                     this.Control.EditingDidBegin -= Entry_EditingDidBegin;
 
-                this.rSPopup.Dismiss(false);
+                if(this.rSPopup != null)
+                    this.rSPopup.Dismiss(false);
             }
         }
     }

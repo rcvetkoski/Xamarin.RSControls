@@ -24,7 +24,7 @@ namespace Xamarin.RSControls.iOS.Extensions
             renderer.Element.Layout(size.ToRectangle());
             var nativeView = renderer.NativeView;
 
-            //nativeView.SetNeedsLayout();
+            nativeView.SetNeedsLayout();
             return nativeView;
         }
 

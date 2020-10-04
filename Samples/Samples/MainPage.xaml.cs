@@ -20,6 +20,12 @@ namespace Samples
         {
             InitializeComponent();
             this.BindingContext = new MainPageViewModel();
+
+
+            //for(int i = 0; i < 500; i++)
+            //{
+            //    stack.Children.Add(new RSEntry() { Text = "lol", Helper = "Helper" });
+            //}
         }
 
 
@@ -181,7 +187,7 @@ namespace Samples
             rsPopup.SetDimAmount(0.0f);
             rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 10, 10, 10);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.WrapContent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Top);
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
