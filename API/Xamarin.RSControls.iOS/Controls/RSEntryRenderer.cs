@@ -68,7 +68,8 @@ namespace Xamarin.RSControls.iOS.Controls
         private CustomCATextLayer errorLabel;
         private CustomCATextLayer helperLabel;
         private CustomCATextLayer counterLabel;
-        private UIView iconsSeparatorView;
+        private UIView leftIconSeparatorView;
+        private UIView rightIconSeparatorView;
         private nfloat iconsSeparationWidth;
         private UIView leftView;
         private nfloat leftViewWidth;
@@ -275,6 +276,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 this.bottomPadding = 20 + (nfloat)rSControl.Padding.Bottom;
             }
         }
+
+
         //Set Icons
         private void CreateIcons()
         {
@@ -286,6 +289,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 correctiveY = (topSpacing - bottomSpacing) / 2;
             else if (rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
                 correctiveY = (topSpacing - bottomSpacing) / 2;
+
 
 
             if (this.rSControl.LeadingIcon != null)
@@ -305,6 +309,7 @@ namespace Xamarin.RSControls.iOS.Controls
                     rSPopup.Show();
 
                     CreateAndExecuteIconMethod(this.rSControl.LeadingIcon);
+                    AddRippleEffect(leadingView);
                 });
 
                 leadingView.AddGestureRecognizer(gest);
@@ -317,9 +322,15 @@ namespace Xamarin.RSControls.iOS.Controls
                 //RSSvgImage leftSvgIcon = new RSSvgImage() { Source = rSControl.LeftIcon.Path, HeightRequest = 22, WidthRequest = 22, Color = Color.Gray };
                 leftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new CGRect(0, 0, 22, 22));
                 this.AddSubview(leftView);
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => {CreateAndExecuteIconMethod(this.rSControl.LeftIcon);});
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => {CreateAndExecuteIconMethod(this.rSControl.LeftIcon); AddRippleEffect(leftView);});
                 leftView.AddGestureRecognizer(gest);
-                leftViewWidth = leftView.Frame.Width + iconsSeparationWidth;
+                leftViewWidth = leftView.Frame.Width + iconsSeparationWidth + 10;
+            }
+
+            if (rSControl.HasLeftIconSeparator)
+            {
+                leftIconSeparatorView = new UIView(new CGRect(leftPadding + leadingViewWidth + leftViewWidth - (iconsSeparationWidth + 10) / 2, 0, 1, 22)) { BackgroundColor = UIColor.LightGray };
+                this.AddSubview(leftIconSeparatorView);
             }
 
             if (this.rSControl.LeftHelpingIcon != null)
@@ -327,7 +338,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 Forms.View leftHelpingSvgIcon = rSControl.LeftHelpingIcon.View;
                 leftHelpingView = Extensions.ViewExtensions.ConvertFormsToNative(leftHelpingSvgIcon, new CGRect(0, 0, 22, 22));
                 this.AddSubview(leftHelpingView);
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.LeftHelpingIcon); });
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.LeftHelpingIcon); AddRippleEffect(leftHelpingView); });
                 leftHelpingView.AddGestureRecognizer(gest);
                 leftHelpingViewWidth = leftHelpingView.Frame.Width + iconsSeparationWidth;
             }
@@ -337,9 +348,15 @@ namespace Xamarin.RSControls.iOS.Controls
                 Forms.View rightHelpingSvgIcon = rSControl.RightHelpingIcon.View;
                 rightHelpingView = Extensions.ViewExtensions.ConvertFormsToNative(rightHelpingSvgIcon, this.Frame.Right, floatingHintYPostionNotFloating, 22, 22);
                 this.AddSubview(rightHelpingView);
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.RightHelpingIcon); });
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.RightHelpingIcon); AddRippleEffect(rightHelpingView); });
                 rightHelpingView.AddGestureRecognizer(gest);
-                rightHelpingViewWidth = rightHelpingView.Frame.Width + iconsSeparationWidth;
+                rightHelpingViewWidth = rightHelpingView.Frame.Width + iconsSeparationWidth + 10;
+            }
+
+            if(rSControl.HasRighIconSeparator)
+            {
+                rightIconSeparatorView = new UIView(new CGRect(0, 0, 1, 22)) { BackgroundColor = UIColor.LightGray };
+                this.AddSubview(rightIconSeparatorView);
             }
 
             if (rSControl.RightIcon != null)
@@ -347,7 +364,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 Forms.View rightSvgIcon = rSControl.RightIcon.View;
                 rightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, 0, 0, 22, 22);
                 this.AddSubview(rightView);
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.RightIcon); });
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.RightIcon); AddRippleEffect(rightView); });
                 rightView.AddGestureRecognizer(gest);
                 rightViewWidth = rightView.Frame.Width + iconsSeparationWidth;
             }
@@ -357,7 +374,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 Forms.View trailoingSvgIcon = rSControl.TrailingIcon.View;
                 trailingView = Extensions.ViewExtensions.ConvertFormsToNative(trailoingSvgIcon, this.Frame.Right, floatingHintYPostionNotFloating, 22, 22);
                 this.AddSubview(trailingView);
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.TrailingIcon); });
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.TrailingIcon); AddRippleEffect(trailingView); });
                 trailingView.AddGestureRecognizer(gest);
                 trailingViewWidth = trailingView.Frame.Width + iconsSeparationWidth;
             }
@@ -371,11 +388,17 @@ namespace Xamarin.RSControls.iOS.Controls
             if (leftView != null)
                 leftView.Frame = new CGRect(leftPadding + leadingViewWidth, floatingHintYPostionNotFloating - 11, 22, 22);
 
+            if(leftIconSeparatorView != null)
+                leftIconSeparatorView.Frame = new CGRect(leftPadding + leadingViewWidth + leftViewWidth - (iconsSeparationWidth + 10) / 2, floatingHintYPostionNotFloating - 11, 1, 22);
+
             if (leftHelpingView != null)
                 leftHelpingView.Frame = new CGRect(leftPadding + leadingViewWidth + leftViewWidth, floatingHintYPostionNotFloating - 11, 22, 22);
 
             if (rightHelpingView != null)
                 rightHelpingView.Frame = new CGRect(this.Frame.Right - rightPadding - trailingViewWidth - rightViewWidth - rightHelpingViewWidth + iconsSeparationWidth, floatingHintYPostionNotFloating - 11, 22, 22);
+
+            if (rightIconSeparatorView != null)
+                rightIconSeparatorView.Frame = new CGRect(this.Frame.Right - rightPadding - trailingViewWidth - rightViewWidth - (iconsSeparationWidth ) / 2, floatingHintYPostionNotFloating - 11, 1, 22);
 
             if (rightView != null)
                 rightView.Frame = new CGRect(this.Frame.Right - rightPadding - trailingViewWidth - rightViewWidth + iconsSeparationWidth, floatingHintYPostionNotFloating - 11, 22, 22);
@@ -446,6 +469,42 @@ namespace Xamarin.RSControls.iOS.Controls
                 else
                     methodInfo.Invoke(source, null);
             }
+        }
+        //Add ripple effect to icon click
+        private void AddRippleEffect(UIView uIView)
+        {
+            var path = UIBezierPath.FromOval(new CGRect(0, 0, uIView.Bounds.Size.Width, uIView.Bounds.Size.Height));
+
+            var shapePosition = new CGPoint(uIView.Bounds.Size.Width / 2, uIView.Bounds.Size.Height / 2);
+
+            var rippleShape = new CAShapeLayer();
+            rippleShape.Bounds = new CGRect(0, 0, uIView.Bounds.Size.Width, uIView.Bounds.Size.Height);
+            rippleShape.Path = path.CGPath;
+            rippleShape.FillColor = UIColor.LightGray.CGColor;
+            rippleShape.StrokeColor = UIColor.LightGray.CGColor;
+            rippleShape.LineWidth = 1;
+            rippleShape.Position = shapePosition;
+            rippleShape.Opacity = 0;
+
+            uIView.Layer.AddSublayer(rippleShape);
+
+            var scaleAnim = CABasicAnimation.FromKeyPath("transform.scale");
+            scaleAnim.SetFrom(NSValue.FromCATransform3D(CATransform3D.Identity));
+            scaleAnim.SetTo(NSValue.FromCATransform3D(CATransform3D.MakeScale(2, 2, 1)));
+
+            var opacityAnim = CABasicAnimation.FromKeyPath("opacity");
+            opacityAnim.SetFrom(NSNumber.FromDouble(1));
+            opacityAnim.SetTo(NSNumber.FromDouble(0));
+
+            var animation = new CAAnimationGroup(); 
+            animation.Animations = new CAAnimation[] { scaleAnim, opacityAnim };
+            animation.TimingFunction = CAMediaTimingFunction.FromName(new NSString(CAMediaTimingFunction.EaseOut));
+            animation.Duration = 0.4;
+            
+            animation.RepeatCount = 1;
+            animation.RemovedOnCompletion = true;
+
+            rippleShape.AddAnimation(animation, "rippleEffect");
         }
 
 
@@ -524,7 +583,8 @@ namespace Xamarin.RSControls.iOS.Controls
             floatingHint.FontSize = (nfloat)toValue;
             floatingHint.Position = new CGPoint(floatingHintXPostion, floatingHintYPostion);
         }
-        
+
+
         //Rounded Border
         private void CreateRoundedBorder()
         {
@@ -840,7 +900,7 @@ namespace Xamarin.RSControls.iOS.Controls
             border.Frame = new CGRect(leadingViewWidth, this.Frame.Height - this.bottomSpacing + topSpacing - border.BorderWidth, this.Frame.Width - leadingViewWidth - trailingViewWidth, border.BorderWidth);
         }
 
-
+        
         //Only set at start to place hint
         private void FloatingHintFramePlacement()
         {
@@ -1026,7 +1086,6 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             set => base.AttributedPlaceholder = value;
         }
-
 
         //Update ui 
         public override void LayoutSubviews()

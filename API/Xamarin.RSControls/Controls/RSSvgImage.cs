@@ -17,7 +17,7 @@ namespace Xamarin.RSControls.Controls
             set => SetValue(SourceProperty, value);
         }
 
-        public static readonly BindableProperty ColorProperty = BindableProperty.Create(nameof(Color), typeof(Color), typeof(RSSvgImage), Color.Transparent);
+        public static readonly BindableProperty ColorProperty = BindableProperty.Create(nameof(Color), typeof(Color), typeof(RSSvgImage), Color.DimGray);
         public Color Color
         {
             get => (Color)GetValue(ColorProperty);
