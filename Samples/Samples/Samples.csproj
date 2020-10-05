@@ -29,9 +29,6 @@
     <None Remove="Data\SVG\time.svg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Remove="Page1.xaml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Data\SVG\agenda.svg" />
     <EmbeddedResource Include="Data\SVG\arrow.svg" />
     <EmbeddedResource Include="Data\SVG\calendar.svg" />
@@ -39,8 +36,5 @@
     <EmbeddedResource Include="Data\SVG\minus.svg" />
     <EmbeddedResource Include="Data\SVG\plus.svg" />
     <EmbeddedResource Include="Data\SVG\time.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Page1.xaml" />
   </ItemGroup>
 </Project>

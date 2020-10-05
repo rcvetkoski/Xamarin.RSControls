@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using CoreAnimation;
 using CoreGraphics;
 using CoreText;
@@ -11,6 +13,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Enums;
+using Xamarin.RSControls.Helpers;
 using Xamarin.RSControls.Interfaces;
 using Xamarin.RSControls.iOS.Controls;
 using Xamarin.RSControls.iOS.Extensions;
@@ -301,21 +304,7 @@ namespace Xamarin.RSControls.iOS.Controls
                     rSPopup.SetMargin(40, 0, 40, 0);
                     rSPopup.Show();
 
-
-                    if (rSControl.LeadingIcon.Source == null)
-                        rSControl.LeadingIcon.Source = (rSControl as Forms.View).BindingContext;
-
-                    System.Reflection.MethodInfo methodInfo;
-                    methodInfo = rSControl.LeadingIcon.Source.GetType().GetMethod(rSControl.LeadingIcon.Command, new Type[] { rSControl.LeadingIcon.CommandParameter.GetType() });
-                    if (methodInfo != null)
-                    {
-                        if (rSControl.LeadingIcon.CommandParameter != null)
-                        {
-                            methodInfo.Invoke(rSControl.LeadingIcon.Source, new object[] { rSControl.LeadingIcon.CommandParameter });
-                        }
-                        else
-                            methodInfo.Invoke(rSControl.LeadingIcon.Source, null);
-                    }
+                    CreateAndExecuteIconMethod(this.rSControl.LeadingIcon);
                 });
 
                 leadingView.AddGestureRecognizer(gest);
@@ -328,6 +317,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 //RSSvgImage leftSvgIcon = new RSSvgImage() { Source = rSControl.LeftIcon.Path, HeightRequest = 22, WidthRequest = 22, Color = Color.Gray };
                 leftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, new CGRect(0, 0, 22, 22));
                 this.AddSubview(leftView);
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => {CreateAndExecuteIconMethod(this.rSControl.LeftIcon);});
+                leftView.AddGestureRecognizer(gest);
                 leftViewWidth = leftView.Frame.Width + iconsSeparationWidth;
             }
 
@@ -336,6 +327,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 Forms.View leftHelpingSvgIcon = rSControl.LeftHelpingIcon.View;
                 leftHelpingView = Extensions.ViewExtensions.ConvertFormsToNative(leftHelpingSvgIcon, new CGRect(0, 0, 22, 22));
                 this.AddSubview(leftHelpingView);
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.LeftHelpingIcon); });
+                leftHelpingView.AddGestureRecognizer(gest);
                 leftHelpingViewWidth = leftHelpingView.Frame.Width + iconsSeparationWidth;
             }
 
@@ -344,6 +337,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 Forms.View rightHelpingSvgIcon = rSControl.RightHelpingIcon.View;
                 rightHelpingView = Extensions.ViewExtensions.ConvertFormsToNative(rightHelpingSvgIcon, this.Frame.Right, floatingHintYPostionNotFloating, 22, 22);
                 this.AddSubview(rightHelpingView);
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.RightHelpingIcon); });
+                rightHelpingView.AddGestureRecognizer(gest);
                 rightHelpingViewWidth = rightHelpingView.Frame.Width + iconsSeparationWidth;
             }
 
@@ -352,6 +347,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 Forms.View rightSvgIcon = rSControl.RightIcon.View;
                 rightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, 0, 0, 22, 22);
                 this.AddSubview(rightView);
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.RightIcon); });
+                rightView.AddGestureRecognizer(gest);
                 rightViewWidth = rightView.Frame.Width + iconsSeparationWidth;
             }
 
@@ -360,19 +357,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 Forms.View trailoingSvgIcon = rSControl.TrailingIcon.View;
                 trailingView = Extensions.ViewExtensions.ConvertFormsToNative(trailoingSvgIcon, this.Frame.Right, floatingHintYPostionNotFloating, 22, 22);
                 this.AddSubview(trailingView);
-
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => {
-                    // Do something
-                    //this.BecomeFirstResponder();
-                    RSPopup rSPopup = new RSPopup("Title", "Message rthtrhttrhtrhtr hrthrt rthrt rth rth rgreggregreregergergregregergreg ergerg ergergre ergerg erg ");
-                    rSPopup.SetPopupSize(Enums.RSPopupSizeEnum.WrapContent, Enums.RSPopupSizeEnum.WrapContent);
-                    rSPopup.SetPopupPositionRelativeTo(this.rSControl as Forms.View, Enums.RSPopupPositionSideEnum.Top);
-                    rSPopup.SetDimAmount(0f);
-                    rSPopup.SetMargin(40, 0, 40, 0);
-                    rSPopup.Show();
-
-                });
-
+                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.TrailingIcon); });
                 trailingView.AddGestureRecognizer(gest);
                 trailingViewWidth = trailingView.Frame.Width + iconsSeparationWidth;
             }
@@ -398,6 +383,71 @@ namespace Xamarin.RSControls.iOS.Controls
             if (trailingView != null)
                 trailingView.Frame = new CGRect(this.Frame.Right - trailingViewWidth + iconsSeparationWidth, floatingHintYPostionNotFloating - 11, 22, 22);
         }
+        //Icon tap method
+        private void CreateAndExecuteIconMethod(RSEntryIcon rsIcon)
+        {
+            if (rsIcon.Source == null)
+                rsIcon.Source = (rSControl as Forms.View).BindingContext;
+
+            MethodInfo methodInfo;
+
+            if (rsIcon.Bindings.Any())
+            {
+                List<object> objects = new List<object>();
+                foreach (RSCommandParameter rSCommandParameter in rsIcon.Bindings)
+                {
+                    //objects.Add(GetDeepPropertyValue(binding.Source, binding.Path));
+                    objects.Add(rSCommandParameter.CommandParameter);
+                }
+
+                Type[] types = new Type[rsIcon.Bindings.Count];
+                for (int i = 0; i < objects.Count; i++)
+                {
+                    types[i] = objects[i].GetType();
+                }
+
+                methodInfo = rsIcon.Source.GetType().GetMethod(rsIcon.Command, types);
+                ExecuteCommand(methodInfo, rsIcon.Source, objects.ToArray());
+            }
+            else if (rsIcon.CommandParameter != null)
+            {
+                methodInfo = rsIcon.Source.GetType().GetMethod(rsIcon.Command, new Type[] { rsIcon.CommandParameter.GetType() });
+                ExecuteCommand(methodInfo, rsIcon.Source, rsIcon.CommandParameter);
+            }
+            else
+            {
+                if (rsIcon.Command != null)
+                {
+                    methodInfo = rsIcon.Source.GetType().GetMethod(rsIcon.Command, new Type[] { });
+                    ExecuteCommand(methodInfo, rsIcon.Source, rsIcon.CommandParameter);
+                }
+            }
+        }
+        private void ExecuteCommand(MethodInfo methodInfo, object source, object[] parameters)
+        {
+            if (methodInfo != null)
+            {
+                if (parameters.Any())
+                {
+                    methodInfo.Invoke(source, parameters);
+                }
+                else
+                    methodInfo.Invoke(source, null);
+            }
+        }
+        private void ExecuteCommand(MethodInfo methodInfo, object source, object parameter)
+        {
+            if (methodInfo != null)
+            {
+                if (parameter != null)
+                {
+                    methodInfo.Invoke(source, new object[] { parameter });
+                }
+                else
+                    methodInfo.Invoke(source, null);
+            }
+        }
+
 
 
         //Edit started
