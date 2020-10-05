@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Xamarin.Forms;
+using Xamarin.RSControls.Controls;
+using Xamarin.RSControls.iOS.Controls;
 
-using Foundation;
-using UIKit;
-
+[assembly: ExportRenderer(typeof(RSNumericEntry), typeof(RSNumericEntryRenderer))]
 namespace Xamarin.RSControls.iOS.Controls
 {
     public class RSNumericEntryRenderer : RSEntryRenderer
     {
-
+        public RSNumericEntryRenderer()
+        {
+        }
     }
 }

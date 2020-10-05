@@ -55,6 +55,8 @@
     <Compile Include="Extensions\NSObjectConverter.cs" />
     <Compile Include="Controls\RSEditorRenderer.cs" />
     <Compile Include="Controls\RSPopupRenderer.cs" />
+    <Compile Include="Controls\RSNumericUpDownRenderer.cs" />
+    <Compile Include="Controls\RSNumericEntryRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.RSControls\Xamarin.RSControls.csproj">

@@ -148,6 +148,10 @@
             </rs:RSEntry>
 
 
+
+            <rs:RSNumericUpDown Placeholder="Numeric up down" Maximum="10" RSEntryStyle="FilledBorder"></rs:RSNumericUpDown>
+
+
             <Button Text="Switch to Page1" TextColor="White" VerticalOptions="EndAndExpand" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
 
 

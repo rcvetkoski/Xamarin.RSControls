@@ -524,8 +524,7 @@ namespace Xamarin.RSControls.iOS.Controls
             floatingHint.FontSize = (nfloat)toValue;
             floatingHint.Position = new CGPoint(floatingHintXPostion, floatingHintYPostion);
         }
-
-
+        
         //Rounded Border
         private void CreateRoundedBorder()
         {
