@@ -288,7 +288,18 @@ namespace Xamarin.RSControls.iOS.Controls
             customTable.BackgroundColor = UIColor.Clear;
 
             if(this.Element.SelectionMode == PickerSelectionModeEnum.Single)
-                customTable.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+            {
+                //Separator visibility
+                if (this.Element.RsPopupSeparatorsUserSet)
+                {
+                    if (!this.Element.RsPopupSeparatorsEnabled)
+                        customTable.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+                    else
+                        customTable.SeparatorStyle = UITableViewCellSeparatorStyle.SingleLine;
+                }
+                else
+                    customTable.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+            }
 
 
             //Scroll to selected item if single selection mode

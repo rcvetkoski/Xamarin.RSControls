@@ -9,7 +9,7 @@
              xmlns:helpers="clr-namespace:Xamarin.RSControls.Helpers;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
-    <ScrollView Orientation="Both">
+    <ScrollView Orientation="Neither">
 
         <!--<StackLayout x:Name="stack" Margin="10">
 
@@ -94,11 +94,7 @@
 
         <StackLayout Margin="10" x:Name="stack">
 
-
-           <rs:RSPicker ItemsSource="{Binding ListPicker}" RsPopupSeparatorsEnabled="True" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
-                
-            </rs:RSPicker>
-
+            <!--RSEntry-->
             <rs:RSEntry Placeholder="No left icon" Counter="3" CounterMaxLength="6" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!">
                 <rs:RSEntry.LeftIcon>
                     <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
@@ -144,15 +140,18 @@
 
             </rs:RSEntry>
 
-            <rs:RSDatePicker Placeholder="Select a date" DateSelectionMode="Default"></rs:RSDatePicker>
-            <DatePicker></DatePicker>
-            <rs:RSNumericUpDown Value="{Binding NumericEntryValue}" UpdateSourceTrigger="Default" RSNumericUpDownStyle="Split" NumberDecimalDigits="3" Placeholder="Numeric up down" Minimum="3" Maximum="10" RSEntryStyle="FilledBorder"></rs:RSNumericUpDown>
-            <rs:RSNumericEntry Value="{Binding NumericEntryValue}" Maximum="10" Placeholder="Enter number"></rs:RSNumericEntry>
-            <Entry Text="{Binding NumericEntryValue}" Placeholder="Enter number"></Entry>
+            <!--RSNumericEntry-->
+            <rs:RSNumericEntry Value="6" Placeholder="Numeric entry"></rs:RSNumericEntry>
 
-            <rs:RSPicker ItemsSource="{Binding ListPicker}"></rs:RSPicker>
+             <!--RSNumericEntryUpDown-->
+            <rs:RSNumericUpDown Placeholder="Numeric up dowm"></rs:RSNumericUpDown>
 
-            <rs:RSSvgImage HorizontalOptions="Start" BackgroundColor="Red" Source="Samples/Data/SVG/time.svg"></rs:RSSvgImage>
+            <!--RSEditor-->
+            <rs:RSEditor Placeholder="Editor" AutoSize="TextChanges" MaxHeight="150"></rs:RSEditor>
+
+            <!--RSSearch-->
+            <rs:RSSearchView ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" Placeholder="Search"></rs:RSSearchView>
+
 
 
             <Button Text="Switch to Page1" TextColor="White" VerticalOptions="EndAndExpand" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>

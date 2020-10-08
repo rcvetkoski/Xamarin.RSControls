@@ -131,6 +131,11 @@ namespace Xamarin.RSControls.Droid.Controls
             rSSearchView.SelectedItem = objectList[originalIndex];
             rSSearchView.Unfocus();
         }
+
+        protected override global::Android.Widget.SearchView CreateNativeControl()
+        {
+            return base.CreateNativeControl();
+        }
     }
 
     public class AutoCompleteTextViewAdapter<T> : global::Android.Widget.ArrayAdapter<T>

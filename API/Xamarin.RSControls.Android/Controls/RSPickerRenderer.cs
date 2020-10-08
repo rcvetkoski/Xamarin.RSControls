@@ -201,10 +201,12 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 //Separator visibility
                 if(this.ElementCasted.RsPopupSeparatorsUserSet)
-                    if(!this.ElementCasted.RsPopupSeparatorsEnabled)
+                {
+                    if (!this.ElementCasted.RsPopupSeparatorsEnabled)
                         listViewAndroid.Divider = null;
+                }
                 else
-                        listViewAndroid.Divider = null;
+                    listViewAndroid.Divider = null;
 
                 listViewAndroid.ChoiceMode = ChoiceMode.Single;
                 //listViewAndroid.SetItemChecked(ElementCasted.SelectedIndex, true);
