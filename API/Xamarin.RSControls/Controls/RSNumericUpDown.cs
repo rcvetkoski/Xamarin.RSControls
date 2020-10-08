@@ -1,5 +1,6 @@
 ﻿using System;
 using Xamarin.Forms;
+using Xamarin.RSControls.Enums;
 
 namespace Xamarin.RSControls.Controls
 {
@@ -12,14 +13,25 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(IncrementValueProperty, value); }
         }
 
+        public static readonly BindableProperty RSNumericUpDownStyleProperty = BindableProperty.Create("RSNumericUpDownStyle", typeof(RSNumericUpDownStyleEnum), typeof(RSNumericUpDown), RSNumericUpDownStyleEnum.Right);
+        public RSNumericUpDownStyleEnum RSNumericUpDownStyle
+        {
+            get { return (RSNumericUpDownStyleEnum)GetValue(RSNumericUpDownStyleProperty); }
+            set { SetValue(RSNumericUpDownStyleProperty, value); }
+        }
+
         public void Increase()
         {
+            this.Unfocus();
+            double number;
+
             if (Value == null)
-                Value = Minimum > 0 ? Minimum : 0;
+                number = Minimum > 0 ? Minimum : 0;
+            else
+                number = Convert.ToDouble(Value.ToString());
 
-            var number = Convert.ToDouble(Value.ToString());
+
             number += IncrementValue;
-
 
             if (number > Maximum)
                 number -= IncrementValue;
@@ -29,10 +41,15 @@ namespace Xamarin.RSControls.Controls
 
         public void Decrease()
         {
-            if (Value == null)
-                Value = Minimum > 0 ? Minimum : 0;
+            this.Unfocus();
 
-            var number = Convert.ToDouble(Value.ToString());
+            double number;
+
+            if (Value == null)
+                number = Minimum > 0 ? Minimum : 0;
+            else
+                number = Convert.ToDouble(Value.ToString());
+
             number -= IncrementValue;
 
             if (number < Minimum)

@@ -95,6 +95,10 @@
         <StackLayout Margin="10" x:Name="stack">
 
 
+           <rs:RSPicker ItemsSource="{Binding ListPicker}" RsPopupSeparatorsEnabled="True" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
+                
+            </rs:RSPicker>
+
             <rs:RSEntry Placeholder="No left icon" Counter="3" CounterMaxLength="6" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!">
                 <rs:RSEntry.LeftIcon>
                     <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
@@ -105,7 +109,7 @@
                 </rs:RSEntry.LeftIcon>
 
                 <rs:RSEntry.LeftHelpingIcon>
-                    <helpers:RSEntryIcon IconColor="Red" Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                         <helpers:RSEntryIcon.View>
                             <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
                         </helpers:RSEntryIcon.View>
@@ -137,22 +141,19 @@
                     </helpers:RSEntryIcon>
                 </rs:RSEntry.RightIcon>
 
-                <rs:RSEntry.TrailingIcon>
-                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
-                        <helpers:RSEntryIcon.View>
-                            <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.TrailingIcon>
 
             </rs:RSEntry>
 
-
-
-            <rs:RSNumericUpDown Placeholder="Numeric up down" Maximum="10" RSEntryStyle="FilledBorder"></rs:RSNumericUpDown>
-
-
+            <rs:RSDatePicker Placeholder="Select a date" DateSelectionMode="Default"></rs:RSDatePicker>
             <DatePicker></DatePicker>
+            <rs:RSNumericUpDown Value="{Binding NumericEntryValue}" UpdateSourceTrigger="Default" RSNumericUpDownStyle="Split" NumberDecimalDigits="3" Placeholder="Numeric up down" Minimum="3" Maximum="10" RSEntryStyle="FilledBorder"></rs:RSNumericUpDown>
+            <rs:RSNumericEntry Value="{Binding NumericEntryValue}" Maximum="10" Placeholder="Enter number"></rs:RSNumericEntry>
+            <Entry Text="{Binding NumericEntryValue}" Placeholder="Enter number"></Entry>
+
+            <rs:RSPicker ItemsSource="{Binding ListPicker}"></rs:RSPicker>
+
+            <rs:RSSvgImage HorizontalOptions="Start" BackgroundColor="Red" Source="Samples/Data/SVG/time.svg"></rs:RSSvgImage>
+
 
             <Button Text="Switch to Page1" TextColor="White" VerticalOptions="EndAndExpand" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
 

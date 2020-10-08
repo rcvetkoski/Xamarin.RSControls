@@ -36,7 +36,7 @@ namespace Xamarin.RSControls.Controls
 
             SKCanvas canvas = e.Surface.Canvas;
             canvas.Clear();
-
+            
             if (string.IsNullOrEmpty(Source))
                 return;
 

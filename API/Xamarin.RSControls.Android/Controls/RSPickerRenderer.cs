@@ -342,8 +342,12 @@ namespace Xamarin.RSControls.Droid.Controls
             if (this.ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
             {
                 ElementCasted.SelectedItem = instance;
-                //alertDialog.Dismiss();
-                sPopupRenderer.Dismiss();
+
+                if(alertDialog != null)
+                    alertDialog.Dismiss();
+
+                if(sPopupRenderer != null)
+                    sPopupRenderer.Dismiss();
             }
             else
             {

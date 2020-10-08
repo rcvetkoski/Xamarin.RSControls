@@ -115,6 +115,7 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 SetText();
 
+                (this.Control as RSUITextField).ForceFloatingHintFloatOrNot();
                 (this.Control as RSUITextField).UpdateFloatingLabel();
             }
             else if (e.PropertyName == "Error")
@@ -392,9 +393,6 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 if (this.Control != null)
                     this.Control.EditingDidBegin -= Entry_EditingDidBegin;
-
-                if(this.rSPopup != null)
-                    this.rSPopup.Dismiss(false);
             }
         }
     }

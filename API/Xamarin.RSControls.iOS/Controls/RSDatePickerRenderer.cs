@@ -32,7 +32,7 @@ namespace Xamarin.RSControls.iOS.Controls
             elementCasted = this.Element as RSDatePicker;
 
 
-            SetPlaceHolderText();
+            //SetPlaceHolderText();
 
 
             if (this.elementCasted.DateSelectionMode == DateSelectionModeEnum.Default)
@@ -59,7 +59,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.Control.InputAssistantItem.TrailingBarButtonGroups = null;
             this.Control.AccessibilityTraits = UIAccessibilityTrait.Button;
 
-            if(!this.elementCasted.HasCustomFormat())
+            if (!this.elementCasted.HasCustomFormat())
                 SetDateFormat();
 
             //Set correct value for nulabledate if greater than max date or smaller than min date
@@ -72,11 +72,33 @@ namespace Xamarin.RSControls.iOS.Controls
                 SetText();
             }
 
-            SetNativeControl(this.Control);
+            //SetNativeControl(this.Control);
 
             //Delete placeholder as we use floating hint instead
             elementCasted.Placeholder = "";
+
+            this.Control.EditingDidBegin += Control_EditingDidBegin;
     }
+
+        private void Control_EditingDidBegin(object sender, EventArgs e)
+        {
+            //var rSPopup = new RSPopupRenderer();
+            //rSPopup.Title = "";
+            //rSPopup.Message = "";
+            //rSPopup.Width = -2;
+            //rSPopup.Height = -2;
+            //rSPopup.TopMargin = 0;
+            //rSPopup.BottomMargin = 0;
+            //rSPopup.LeftMargin = 20;
+            //rSPopup.RightMargin = 20;
+            //rSPopup.BorderRadius = 16;
+            //rSPopup.BorderFillColor = UIColor.White.ToColor();
+            //rSPopup.DimAmount = 0.8f;
+            //rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, new Command(() => { if (this.Control != null) { this.Control.ResignFirstResponder(); } }));
+            //rSPopup.AddAction("Clear", RSPopupButtonTypeEnum.Destructive, new Command(() => { }));
+            //rSPopup.SetNativeView(uIPickerViewMonthsYears);
+            //rSPopup.ShowPopup();
+        }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -150,12 +172,12 @@ namespace Xamarin.RSControls.iOS.Controls
         private void CreateDatePicker()
         {
             uIDatePicker = new UIDatePicker();
-            uIDatePicker.Mode = UIDatePickerMode.Date;
+            uIDatePicker.PreferredDatePickerStyle = UIDatePickerStyle.Wheels;
+            uIDatePicker.Mode = UIDatePickerMode.DateAndTime;
             uIDatePicker.Date = this.elementCasted.Date.ToNSDate();
             uIDatePicker.MinimumDate = this.elementCasted.MinimumDate.ToNSDate();
             uIDatePicker.MaximumDate = this.elementCasted.MaximumDate.ToNSDate();
             uIDatePicker.ValueChanged += UIDatePicker_ValueChanged;
-
             this.Control.InputView = uIDatePicker;
         }
 
@@ -179,7 +201,11 @@ namespace Xamarin.RSControls.iOS.Controls
                 BackgroundColor = UIColor.Clear
             };
 
-            this.Control.InputView = uIPickerViewMonthsYears;
+            //this.Control.InputView = uIPickerViewMonthsYears;
+
+
+
+
         }
 
         private void CreateYearPicker()
@@ -228,7 +254,7 @@ namespace Xamarin.RSControls.iOS.Controls
         private void SetPlaceHolderText()
         {
             if(this.elementCasted.Placeholder != null)
-                this.Control.AttributedPlaceholder = new NSAttributedString(this.elementCasted.Placeholder, null, this.elementCasted.PlaceholderColor.ToUIColor());
+                this.Control.AttributedPlaceholder = new NSAttributedString(this.elementCasted.Placeholder, null, UIColor.Red);
         }
 
         public void SetText()
@@ -349,6 +375,8 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 if(uIDatePicker != null)
                     uIDatePicker.ValueChanged -= UIDatePicker_ValueChanged;
+
+                this.Control.EditingDidBegin -= Control_EditingDidBegin;
             }
 
             base.Dispose(disposing);
@@ -420,7 +448,7 @@ namespace Xamarin.RSControls.iOS.Controls
             else
                 dateTime = DateTime.Now;
 
-            if (component == 0)
+            if (component == 0 && (rsDatePicker.DateSelectionMode == DateSelectionModeEnum.Month || rsDatePicker.DateSelectionMode == DateSelectionModeEnum.MonthYear))
             {
                 dateTime = new DateTime(dateTime.Year, (int)row + 1, dateTime.Day);
 
