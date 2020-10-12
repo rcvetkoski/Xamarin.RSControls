@@ -9,7 +9,7 @@
              xmlns:helpers="clr-namespace:Xamarin.RSControls.Helpers;assembly=Xamarin.RSControls"
              x:Class="Samples.MainPage">
 
-    <ScrollView Orientation="Neither">
+    <ScrollView Orientation="Both">
 
         <!--<StackLayout x:Name="stack" Margin="10">
 
@@ -96,13 +96,7 @@
 
             <!--RSEntry-->
             <rs:RSEntry Placeholder="No left icon" Counter="3" CounterMaxLength="6" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!">
-                <rs:RSEntry.LeftIcon>
-                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
-                        <helpers:RSEntryIcon.View>
-                            <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.LeftIcon>
+
 
                 <rs:RSEntry.LeftHelpingIcon>
                     <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
@@ -144,7 +138,7 @@
             <rs:RSNumericEntry Value="6" Placeholder="Numeric entry"></rs:RSNumericEntry>
 
              <!--RSNumericEntryUpDown-->
-            <rs:RSNumericUpDown Placeholder="Numeric up dowm"></rs:RSNumericUpDown>
+            <rs:RSNumericUpDown Placeholder="Numeric up dowm" RSNumericUpDownStyle="Split" Maximum="10"></rs:RSNumericUpDown>
 
             <!--RSEditor-->
             <rs:RSEditor Placeholder="Editor" AutoSize="TextChanges" MaxHeight="150"></rs:RSEditor>

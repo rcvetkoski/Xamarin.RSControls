@@ -403,8 +403,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
             base.Dispose(disposing);
 
-            if(sPopupRenderer != null && sPopupRenderer.Dialog != null)
-                sPopupRenderer.Dialog.Dismiss();
+            //if(sPopupRenderer != null && sPopupRenderer.Dialog != null)
+            //    sPopupRenderer.Dialog.Dismiss();
         }
     }
 
