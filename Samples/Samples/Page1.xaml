@@ -10,7 +10,7 @@
              mc:Ignorable="d"
              x:Class="Samples.Page1">
     <ContentPage.Content>
-        <ScrollView Orientation="Vertical">
+        <ScrollView Orientation="Vertical" BackgroundColor="Yellow">
             <StackLayout Grid.Row="1" Margin="10" x:Name="stack">
 
 

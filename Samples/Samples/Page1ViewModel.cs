@@ -6,6 +6,6 @@ namespace Samples
 {
     public class Page1ViewModel
     {
-
+        public string Mehe { get; set; } = "Lolol";
     }
 }

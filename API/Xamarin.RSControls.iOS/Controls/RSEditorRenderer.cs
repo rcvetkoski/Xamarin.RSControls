@@ -819,6 +819,14 @@ namespace Xamarin.RSControls.iOS.Controls
                 SetCounter();
         }
 
+        //Update ui 
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            UpdateBorder();
+        }
+
 
         //Remove any events when closed
         protected override void Dispose(bool disposing)

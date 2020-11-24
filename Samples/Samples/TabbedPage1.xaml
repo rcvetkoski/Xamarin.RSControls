@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:controls="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls" xmlns:samples="clr-namespace:Samples"
+             x:Class="Samples.TabbedPage1">
+
+    <ContentPage.BindingContext>
+        <samples:Page1ViewModel></samples:Page1ViewModel>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="TabbedPage" VerticalOptions="Center"></Label>
+            <controls:RSEntry Helper="{Binding Mehe, Mode=TwoWay}"></controls:RSEntry>
+                        <!--RSEditor-->
+            <Editor Placeholder="Editor" AutoSize="TextChanges" ></Editor>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

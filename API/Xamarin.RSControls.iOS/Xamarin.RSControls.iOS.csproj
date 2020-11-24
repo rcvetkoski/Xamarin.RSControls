@@ -39,7 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.3.0.947036</Version>
+      <Version>4.3.0.991250</Version>
     </PackageReference>
     <PackageReference Condition="'$(CreateUITestProject)' == true" Include="Xamarin.TestCloud.Agent" Version="0.21.8" />
   </ItemGroup>
@@ -57,6 +57,7 @@
     <Compile Include="Controls\RSPopupRenderer.cs" />
     <Compile Include="Controls\RSNumericUpDownRenderer.cs" />
     <Compile Include="Controls\RSNumericEntryRenderer.cs" />
+    <Compile Include="Controls\RSTabbedPageRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.RSControls\Xamarin.RSControls.csproj">

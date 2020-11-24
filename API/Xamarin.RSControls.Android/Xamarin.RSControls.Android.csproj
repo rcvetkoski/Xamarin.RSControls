@@ -57,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controls\RSPopupRenderer.cs" />
     <Compile Include="RSContext.cs" />
+    <Compile Include="Controls\RSTabbedPageRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -70,7 +71,7 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.3.0.947036</Version>
+      <Version>4.3.0.991250</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

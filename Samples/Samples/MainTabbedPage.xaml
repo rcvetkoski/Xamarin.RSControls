@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<controls:RSTabbedPage  xmlns:controls="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls"
+                        xmlns="http://xamarin.com/schemas/2014/forms"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:samples="clr-namespace:Samples"
+                        xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+                        TabbarPlacement="Top" Title="tabbed page"
+                        x:Class="Samples.MainTabbedPage">
+
+    <controls:RSTabbedPage.Children>
+        <samples:TabbedPage1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page1ihwfbhjwfwfhh"/>
+        <samples:MainPage IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page2fewwfewfewf"/>
+        <samples:Page1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page3wefewfewfewwfe"/>
+    </controls:RSTabbedPage.Children>
+
+</controls:RSTabbedPage>
