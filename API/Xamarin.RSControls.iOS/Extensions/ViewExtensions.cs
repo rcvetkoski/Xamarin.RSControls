@@ -55,6 +55,18 @@ namespace Xamarin.RSControls.iOS.Extensions
             //nativeView.SetNeedsLayout();
             return nativeView;
         }
+
+        public static UIView EdgeTo(UIView parent, UIView view, bool leading = true, bool trailing = true, bool top = true, bool bottom = true)
+        {
+            view.TranslatesAutoresizingMaskIntoConstraints = false;
+            view.LeadingAnchor.ConstraintEqualTo(parent.LeadingAnchor).Active = leading;
+            view.TrailingAnchor.ConstraintEqualTo(parent.TrailingAnchor).Active = trailing;
+            view.TopAnchor.ConstraintEqualTo(parent.TopAnchor).Active = top;
+            view.BottomAnchor.ConstraintEqualTo(parent.BottomAnchor).Active = bottom;
+
+            return view;
+        }
+
     }
 
     public class CustomNativeView : UIView

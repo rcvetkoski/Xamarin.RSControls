@@ -10,9 +10,11 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="TabbedPage" VerticalOptions="Center"></Label>
-            <controls:RSEntry Helper="{Binding Mehe, Mode=TwoWay}"></controls:RSEntry>
-                        <!--RSEditor-->
-            <Editor Placeholder="Editor" AutoSize="TextChanges" ></Editor>
+
+            <!--RSEditor-->
+            <controls:RSEditor Placeholder="Editor" AutoSize="TextChanges" ></controls:RSEditor>
+
+            <Button Text="Right" BackgroundColor="Blue" VerticalOptions="Center" HorizontalOptions="FillAndExpand" Clicked="Button_Clicked"></Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

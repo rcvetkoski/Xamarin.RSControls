@@ -3,13 +3,13 @@
                         xmlns="http://xamarin.com/schemas/2014/forms"
                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:samples="clr-namespace:Samples"
                         xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
-                        TabbarPlacement="Top" Title="tabbed page"
+                        TabbarPlacement="Top" Title="tabbed page" 
                         x:Class="Samples.MainTabbedPage">
 
     <controls:RSTabbedPage.Children>
-        <samples:TabbedPage1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page1ihwfbhjwfwfhh"/>
-        <samples:MainPage IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page2fewwfewfewf"/>
-        <samples:Page1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page3wefewfewfewwfe"/>
+        <samples:TabbedPage1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page1 ggggg"/>
+        <samples:Page1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page2-1"/>
+        <samples:Page1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page3 gg"/>
     </controls:RSTabbedPage.Children>
 
 </controls:RSTabbedPage>

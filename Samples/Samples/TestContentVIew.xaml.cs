@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Xamarin.Forms;
 
 namespace Samples
 {
-    public partial class TabbedPage1 : ContentPage
+    public partial class TestContentVIew : ContentView
     {
-        public TabbedPage1()
+        public TestContentVIew()
         {
             InitializeComponent();
-            this.BindingContext = new MainPageViewModel();
         }
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new MainPage());
+            Navigation.PushAsync(new MainTabbedPage());
         }
     }
 }

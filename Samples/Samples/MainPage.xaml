@@ -7,152 +7,28 @@
              xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls"
              xmlns:enums="clr-namespace:Xamarin.RSControls.Enums;assembly=Xamarin.RSControls"
              xmlns:helpers="clr-namespace:Xamarin.RSControls.Helpers;assembly=Xamarin.RSControls"
+             Title="MainPage"
              x:Class="Samples.MainPage">
 
-    <ScrollView Orientation="Vertical">
+   
+        <StackLayout>
 
-        <!--<StackLayout x:Name="stack" Margin="10">
+            
+        <rs:RSTabbedViews>
+            <rs:RSTabbedViews.Views>
+                <local:TabbedPage1 rs:RSTabbedViews.Title="TabbedPage1" IconImageSource="Samples/Data/SVG/calendarAndTime.svg"/>
+                <local:Page1 rs:RSTabbedViews.Title="Page1" IconImageSource="Samples/Data/SVG/calendarAndTime.svg"/>
+                <local:TestContentVIew rs:RSTabbedViews.Title="TestContentVIew"/>
+            </rs:RSTabbedViews.Views>
+        </rs:RSTabbedViews>
 
-            <Button Text="Center Dialog" TextColor="White" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked1"></Button>
-
-            <Button Text="Left Dialog" TextColor="White" BackgroundColor="Green" HorizontalOptions="End" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked3"></Button>
-
-            <Button Text="Right Dialog" TextColor="White" BackgroundColor="Green" HorizontalOptions="Start" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked2"></Button>
-
-            <Button x:Name="left2" TextColor="White" Text="Bottom Dialog" BackgroundColor="Green" HorizontalOptions="Start" Margin="0,40,0,0" CommandParameter="" Clicked="Button_Clicked6"></Button>
-
-            <Button x:Name="left1" TextColor="White" Text="Top Dialog" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,50,0,0" CommandParameter="" Clicked="Button_Clicked5"></Button>
-
-            <Picker ItemsSource="{Binding ListPicker}"></Picker>
-
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" RsPopupSeparatorsEnabled="True" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker">
-                <rs:RSPicker.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout BackgroundColor="Red">
-                          <Label Text="{Binding Name}" ></Label>
-                            <Label BackgroundColor="Green" Text="Treere" HorizontalTextAlignment="End" HorizontalOptions="FillAndExpand"></Label>
-                            <Label Text="Mehe"></Label>
-                        </StackLayout>
-                    </DataTemplate>
-                </rs:RSPicker.ItemTemplate>
-            </rs:RSPicker>
-
-
-
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="False" RSPopupTitle="Custom Picker" RSPopupMessage="Message" RSPopupStyleEnum="RsPopopStyle" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Single" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-                <rs:RSPicker.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="SelectedItem">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSPicker.Behaviors>
-            </rs:RSPicker>
-
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="Native" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Multiple" SelectedItems="{Binding SelectedPersons}" Placeholder="Multiple picker native">
-                <rs:RSPicker.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout>
-                            <Label Text="{Binding Name}" ></Label>
-                            <Label Text="Troll" ></Label>
-                            <Label Text="Troll" ></Label>
-                            <Label Text="Troll" ></Label>
-                            <Label Text="Trollf" ></Label>
-                        </StackLayout>
-                    </DataTemplate>
-                </rs:RSPicker.ItemTemplate>
-            </rs:RSPicker>
-
-            <rs:RSPicker ItemsSource="{Binding ListPicker}" IsSearchEnabled="True" RSPopupStyleEnum="Native" RSEntryStyle="FilledBorder" Helper="Troll" DisplayMemberPath="Name" SelectionMode="Single" SelectedItem="{Binding SelectedPerson}" Placeholder="Single picker">
-                <rs:RSPicker.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="SelectedItem">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSPicker.Behaviors>
-                <rs:RSPicker.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout>
-                            <Label FontSize="Subtitle" Text="{Binding Name}" HorizontalTextAlignment="Center"></Label>
-                            <Label FontSize="Subtitle" Text="{Binding Name}" HorizontalTextAlignment="Center"></Label>
-                        </StackLayout>
-                    </DataTemplate>
-                </rs:RSPicker.ItemTemplate>
-                <rs:RSPicker.RSPopupStyleEnum>
-                    <OnPlatform x:TypeArguments="enums:RSPopupStyleEnum"
-                        iOS="Native"
-                        Android="RsPopopStyle">
-                    </OnPlatform>
-                </rs:RSPicker.RSPopupStyleEnum>
-            </rs:RSPicker>
-        
-            <Button Text="Switch to Page1" TextColor="White" VerticalOptions="EndAndExpand" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
-        
-        </StackLayout>-->
-
-
-        <StackLayout Margin="10" x:Name="stack">
-
-            <!--RSEntry-->
-            <rs:RSEntry Placeholder="No left icon" Counter="3" CounterMaxLength="6" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!">
-
-
-                <rs:RSEntry.LeftHelpingIcon>
-                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
-                        <helpers:RSEntryIcon.View>
-                            <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.LeftHelpingIcon>
-
-                <rs:RSEntry.LeadingIcon>
-                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
-                        <helpers:RSEntryIcon.View>
-                            <rs:RSSvgImage Source="Samples/Data/SVG/time.svg"/>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.LeadingIcon>
-
-
-                <rs:RSEntry.RightHelpingIcon>
-                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
-                        <helpers:RSEntryIcon.View>
-                            <rs:RSSvgImage Source="Samples/Data/SVG/time.svg"/>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.RightHelpingIcon>
-
-                <rs:RSEntry.RightIcon>
-                    <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
-                        <helpers:RSEntryIcon.View>
-                            <rs:RSSvgImage Source="Samples/Data/SVG/time.svg"/>
-                        </helpers:RSEntryIcon.View>
-                    </helpers:RSEntryIcon>
-                </rs:RSEntry.RightIcon>
-
-
-            </rs:RSEntry>
-
-            <!--RSNumericEntry-->
-            <rs:RSNumericEntry Value="6" Placeholder="Numeric entry"></rs:RSNumericEntry>
-
-             <!--RSNumericEntryUpDown-->
-            <rs:RSNumericUpDown Placeholder="Numeric up dowm" RSNumericUpDownStyle="Split" Maximum="10"></rs:RSNumericUpDown>
-
-            <!--RSEditor-->
-            <rs:RSEditor Placeholder="Editor" AutoSize="TextChanges" ></rs:RSEditor>
-
-            <!--RSSearch-->
-            <rs:RSSearchView ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" Placeholder="Search"></rs:RSSearchView>
-
-
-
-            <Button Text="Switch to Page1" TextColor="White" VerticalOptions="EndAndExpand" BackgroundColor="Green" CommandParameter="" Clicked="Button_Clicked"></Button>
-
+        <!--<Button Text="Right" BackgroundColor="Blue" VerticalOptions="Center" HorizontalOptions="FillAndExpand" Clicked="Button_Clicked"></Button>-->
 
         </StackLayout>
 
-    </ScrollView>
+
+
+
+
 
 </ContentPage>

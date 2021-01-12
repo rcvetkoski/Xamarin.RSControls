@@ -84,7 +84,7 @@ namespace Xamarin.RSControls.iOS.Controls
             entry.EditingDidBegin += Entry_EditingDidBegin;
 
             //Delete placeholder as we use floating hint instead
-            Element.Placeholder = "";
+            //Element.Placeholder = "";
         }
 
         //If collection has changed meanwhile update the data on click

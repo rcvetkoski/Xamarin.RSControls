@@ -37,5 +37,10 @@ namespace Samples
 
             rsPopup.Show();
         }
+
+        protected override void OnBindingContextChanged()
+        {
+            base.OnBindingContextChanged();
+        }
     }
 }

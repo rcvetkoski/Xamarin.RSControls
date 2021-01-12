@@ -11,8 +11,7 @@ namespace Samples
             InitializeComponent();
 
             //MainPage = new NavigationPage(new MainPage());
-            MainPage = new NavigationPage(new MainTabbedPage());
-
+            MainPage = new NavigationPage(new MainPage());
         }
 
         protected override void OnStart()

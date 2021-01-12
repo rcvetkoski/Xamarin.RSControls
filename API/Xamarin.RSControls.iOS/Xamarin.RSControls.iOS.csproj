@@ -58,6 +58,7 @@
     <Compile Include="Controls\RSNumericUpDownRenderer.cs" />
     <Compile Include="Controls\RSNumericEntryRenderer.cs" />
     <Compile Include="Controls\RSTabbedPageRenderer.cs" />
+    <Compile Include="Controls\RSTabbedViewsRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.RSControls\Xamarin.RSControls.csproj">
