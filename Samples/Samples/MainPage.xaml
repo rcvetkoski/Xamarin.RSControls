@@ -11,7 +11,7 @@
              x:Class="Samples.MainPage">
 
    
-        <StackLayout Margin="0,32,0,0">
+        <StackLayout>
 
             
         <rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray">

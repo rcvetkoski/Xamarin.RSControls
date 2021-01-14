@@ -52,6 +52,7 @@
     <Compile Include="Controls\RSNumericUpDownRenderer.cs" />
     <Compile Include="Controls\RSPickerRenderer.cs" />
     <Compile Include="Controls\RSSearchViewRenderer.cs" />
+    <Compile Include="Controls\RSTabbedViewsRenderer.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,6 +8,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.RSControls.Controls;
+using Xamarin.RSControls.Helpers;
 using Xamarin.RSControls.iOS.Controls;
 
 [assembly: ExportRenderer(typeof(RSTabbedViews), typeof(RSTabbedViewsRenderer))]
@@ -55,7 +56,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 {
                     if(this.Element.Views.ElementAt(i) is ContentPage)
                     {
-                        Page currentPage = GetParentPage(this.Element);
+                        Page currentPage = TypeExtensions.GetParentPage(this.Element);
                         var page = this.Element.Views.ElementAt(i) as ContentPage;
                         page.Parent = currentPage; //Assign parent page otherwise it doesnt belong to a page
                         page.Content.BindingContext = page.BindingContext;
@@ -78,23 +79,23 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
  
-        //Return page of element
-        public Page GetParentPage(VisualElement element)
-        {
-            if (element != null)
-            {
-                var parent = element.Parent;
-                while (parent != null)
-                {
-                    if (parent is Page)
-                    {
-                        return parent as Page;
-                    }
-                    parent = parent.Parent;
-                }
-            }
-            return null;
-        }
+        ////Return page of element
+        //public Page GetParentPage(VisualElement element)
+        //{
+        //    if (element != null)
+        //    {
+        //        var parent = element.Parent;
+        //        while (parent != null)
+        //        {
+        //            if (parent is Page)
+        //            {
+        //                return parent as Page;
+        //            }
+        //            parent = parent.Parent;
+        //        }
+        //    }
+        //    return null;
+        //}
 
         //Set pages scroll
         private void SetPages()
