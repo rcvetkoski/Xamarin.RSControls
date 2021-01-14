@@ -175,9 +175,9 @@ namespace Xamarin.RSControls.iOS.Controls
                 UITapGestureRecognizer tabTap = new UITapGestureRecognizer(() =>
                 {
                     ////Highlight selected tab
-                    ((tabsStack.ArrangedSubviews[currentPageIndex] as UIStackView).ArrangedSubviews[0] as UILabel).TintColor = this.Element.BarTextColor.ToUIColor();
+                    ((tabsStack.ArrangedSubviews[currentPageIndex] as UIStackView).ArrangedSubviews[0] as UIView).TintColor = this.Element.BarTextColor.ToUIColor();
                     ((tabsStack.ArrangedSubviews[currentPageIndex] as UIStackView).ArrangedSubviews[1] as UILabel).TextColor = this.Element.BarTextColor.ToUIColor();
-                    ((tabsStack.ArrangedSubviews[currentPage] as UIStackView).ArrangedSubviews[0] as UILabel).TintColor = UIColor.Black;
+                    ((tabsStack.ArrangedSubviews[currentPage] as UIStackView).ArrangedSubviews[0] as UIView).TintColor = UIColor.Black;
                     ((tabsStack.ArrangedSubviews[currentPage] as UIStackView).ArrangedSubviews[1] as UILabel).TextColor = UIColor.Black;
 
                     //manualTabs = true;
