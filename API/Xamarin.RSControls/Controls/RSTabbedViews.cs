@@ -29,8 +29,32 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(CurrentViewProperty, value); }
         }
 
-        public static readonly BindableProperty TitleProperty = BindableProperty.CreateAttached("Title", typeof(string), typeof(RSTabbedViews), string.Empty);
+        //Bar Text Color
+        public static readonly BindableProperty BarTextColorProperty = BindableProperty.Create("BarTextColor", typeof(Color), typeof(RSTabbedViews), Color.SlateGray);
+        public Color BarTextColor
+        {
+            get { return (Color)GetValue(BarTextColorProperty); }
+            set { SetValue(BarTextColorProperty, value); }
+        }
 
+        //Menu Color
+        public static readonly BindableProperty BarColorProperty = BindableProperty.Create("BarColor", typeof(Color), typeof(RSTabbedViews), Color.Transparent);
+        public Color BarColor
+        {
+            get { return (Color)GetValue(BarColorProperty); }
+            set { SetValue(BarColorProperty, value); }
+        }
+
+        //Slider Color
+        public static readonly BindableProperty SliderColorProperty = BindableProperty.Create("SliderColor", typeof(Color), typeof(RSTabbedViews), Color.Gray);
+        public Color SliderColor
+        {
+            get { return (Color)GetValue(SliderColorProperty); }
+            set { SetValue(SliderColorProperty, value); }
+        }
+
+        //Title
+        public static readonly BindableProperty TitleProperty = BindableProperty.CreateAttached("Title", typeof(string), typeof(RSTabbedViews), string.Empty);
         public static string GetTitle(BindableObject view)
         {
             return (string)view.GetValue(TitleProperty);
@@ -39,6 +63,18 @@ namespace Xamarin.RSControls.Controls
         public static void SetTitle(BindableObject view, string value)
         {
             view.SetValue(TitleProperty, value);
+        }
+
+        //Icon
+        public static readonly BindableProperty IconProperty = BindableProperty.CreateAttached("Icon", typeof(string), typeof(RSTabbedViews), string.Empty);
+        public static string GetIcon(BindableObject view)
+        {
+            return (string)view.GetValue(IconProperty);
+        }
+
+        public static void SetIcon(BindableObject view, string value)
+        {
+            view.SetValue(IconProperty, value);
         }
     }
 }

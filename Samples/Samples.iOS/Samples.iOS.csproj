@@ -219,5 +219,7 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Lobster-Regular.ttf" />
+    <BundleResource Include="Resources\tab_about.png" />
+    <BundleResource Include="Resources\tab_feed.png" />
   </ItemGroup>
 </Project>

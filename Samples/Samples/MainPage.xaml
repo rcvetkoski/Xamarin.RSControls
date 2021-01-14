@@ -11,14 +11,14 @@
              x:Class="Samples.MainPage">
 
    
-        <StackLayout>
+        <StackLayout Margin="0,32,0,0">
 
             
-        <rs:RSTabbedViews>
+        <rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray">
             <rs:RSTabbedViews.Views>
-                <local:TabbedPage1 rs:RSTabbedViews.Title="TabbedPage1" IconImageSource="Samples/Data/SVG/calendarAndTime.svg"/>
-                <local:Page1 rs:RSTabbedViews.Title="Page1" IconImageSource="Samples/Data/SVG/calendarAndTime.svg"/>
-                <local:TestContentVIew rs:RSTabbedViews.Title="TestContentVIew"/>
+                <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
+                <local:Page1 IconImageSource="tab_feed.png" rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
+                <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
             </rs:RSTabbedViews.Views>
         </rs:RSTabbedViews>
 
