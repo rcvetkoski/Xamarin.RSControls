@@ -19,11 +19,12 @@
                 <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
                 <local:Page1 IconImageSource="tab_feed.png" rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
                 <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-                                <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
+                <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
                 <local:Page1 IconImageSource="tab_feed.png" rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
                 <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
             </rs:RSTabbedViews.Views>
         </rs:RSTabbedViews>
+
 
         <!--<Button Text="Right" BackgroundColor="Blue" VerticalOptions="Center" HorizontalOptions="FillAndExpand" Clicked="Button_Clicked"></Button>-->
 

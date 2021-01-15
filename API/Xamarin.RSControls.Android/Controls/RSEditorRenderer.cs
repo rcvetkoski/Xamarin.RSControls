@@ -27,8 +27,25 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.Element.Placeholder = "";
 
 
-            //This fixes scroll problem when inside scrollview
-            this.Control.SetOnTouchListener(this);
+            if(Control != null)
+            {
+                //This fixes scroll problem when inside scrollview
+                //this.Control.SetOnTouchListener(this);
+
+                //This fixes xamarin forms bug when next button available in keyboard => cannot pass focus to unfocusable object 
+                Control.ImeOptions = global::Android.Views.InputMethods.ImeAction.Done;
+                Control.EditorAction += Control_EditorAction;
+            }
+        }
+
+        private void Control_EditorAction(object sender, global::Android.Widget.TextView.EditorActionEventArgs e)
+        {
+            if (e.ActionId == global::Android.Views.InputMethods.ImeAction.Done)
+            {
+                Control.ClearFocus();
+            }
+            e.Handled = false;
+
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -52,6 +69,14 @@ namespace Xamarin.RSControls.Droid.Controls
                 v.Parent?.RequestDisallowInterceptTouchEvent(false);
             }
             return false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if(Control != null)
+                Control.EditorAction -= Control_EditorAction;
+
+            base.Dispose(disposing);
         }
     }
 }

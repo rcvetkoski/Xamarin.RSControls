@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Support.V4.View;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Xamarin.Forms;
@@ -20,11 +21,13 @@ using Xamarin.RSControls.Helpers;
 [assembly: ExportRenderer(typeof(RSTabbedViews), typeof(RSTabbedViewsRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSTabbedViewsRenderer : ViewRenderer<RSTabbedViews, global::Android.Views.View>
+    public class RSTabbedViewsRenderer : ViewRenderer<RSTabbedViews, global::Android.Views.View>, TabLayout.IOnTabSelectedListener
     {
         private List<global::Android.Views.View> pages;
+        private ViewPager pager;
         private LinearLayout nativeView;
-        private TabLayout menuBar;
+        private CustomTabLayout menuBar;
+        private bool doOnce = false;
 
 
         public RSTabbedViewsRenderer(Context context) : base(context)
@@ -44,18 +47,15 @@ namespace Xamarin.RSControls.Droid.Controls
             if (Control == null)
             {
                 nativeView = new LinearLayout(Context) { Orientation = Orientation.Vertical };
-                nativeView.SetBackgroundColor(global::Android.Graphics.Color.Pink);
+                nativeView.LayoutChange += NativeView_LayoutChange;
 
-                
-                menuBar = new TabLayout(Context);
-                menuBar.SetSelectedTabIndicatorColor(global::Android.Graphics.Color.White);
-                menuBar.TabMode = TabLayout.ModeScrollable;
-
-
-
-                menuBar.SetBackgroundColor(global::Android.Graphics.Color.Blue);
-                menuBar.SetMinimumHeight(60);
-
+                menuBar = new CustomTabLayout(Context);
+                menuBar.TabGravity = CustomTabLayout.GravityFill;
+                menuBar.TabMode = CustomTabLayout.ModeScrollable;
+                menuBar.SetSelectedTabIndicatorColor(this.Element.SliderColor.ToAndroid());
+                menuBar.SetBackgroundColor(this.Element.BarColor.ToAndroid());
+                menuBar.SetTabTextColors(menuBar.TabTextColors.DefaultColor, this.Element.BarTextColor.ToAndroid());
+                menuBar.AddOnTabSelectedListener(this);
                 nativeView.AddView(menuBar);
 
 
@@ -71,20 +71,30 @@ namespace Xamarin.RSControls.Droid.Controls
 
                     menuBar.AddView(new TabItem(Context) { Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty).ToString()) });
                 }
-
                 this.Element.SizeChanged += Element_SizeChanged;
 
-                ViewPager pager = new ViewPager(Context);
+
+                pager = new ViewPager(Context);
                 pager.Adapter = new pageAdapter(Context, pages);
                 pager.AddOnPageChangeListener(pager.Adapter as pageAdapter);
-                pager.SetBackgroundColor(global::Android.Graphics.Color.Red);
                 pager.AddOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(menuBar));
-
-
                 nativeView.AddView(pager);
 
-
                 this.SetNativeControl(nativeView);
+            }
+        }
+
+        private void NativeView_LayoutChange(object sender, LayoutChangeEventArgs e)
+        {
+            if(!doOnce)
+            {
+                foreach (var formsView in this.Element.Views)
+                {
+                    double menuBarHeightToFormsUnit = ContextExtensions.FromPixels(this.Context, menuBar.Height);
+                    formsView.Layout(new Rectangle(0, 0, this.Element.Width, this.Element.Height - menuBarHeightToFormsUnit));
+                }
+
+                doOnce = true;
             }
         }
 
@@ -92,21 +102,40 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             foreach (var formsView in this.Element.Views)
             {
-                formsView.Layout(new Rectangle(0, 0, this.Element.Width, this.Element.Height));
+                double menuBarHeightToFormsUnit = ContextExtensions.FromPixels(this.Context, menuBar.Height);
+                formsView.Layout(new Rectangle(0, 0, this.Element.Width, this.Element.Height - menuBarHeightToFormsUnit));
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
+            if(this.Element != null)
+                this.Element.SizeChanged -= Element_SizeChanged;
 
-            this.Element.SizeChanged -= Element_SizeChanged;
+            if(nativeView != null)
+                nativeView.LayoutChange -= NativeView_LayoutChange;
+
+            base.Dispose(disposing);
+        }
+
+        public void OnTabReselected(TabLayout.Tab tab)
+        {
+            
+        }
+
+        public void OnTabSelected(TabLayout.Tab tab)
+        {
+            if(pager != null)
+                pager.SetCurrentItem(tab.Position, true);
+        }
+
+        public void OnTabUnselected(TabLayout.Tab tab)
+        {
+            
         }
 
 
-
-
-
+        //PagerAdapter
         private class pageAdapter : PagerAdapter, IOnClickListener, ViewPager.IOnPageChangeListener
         {
             private Context context;
@@ -156,6 +185,36 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 container.RemoveView(@object as global::Android.Views.View);
             }
+        }
+    }
+
+
+    public class CustomTabLayout : TabLayout
+    {
+        public CustomTabLayout(Context context) : base(context) { }
+
+        public CustomTabLayout(Context context, IAttributeSet attrs) : base(context, attrs) { }
+
+        public CustomTabLayout(Context context, IAttributeSet attrs, int defStyleAttr) : base(context, attrs, defStyleAttr) { }
+
+        protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
+        {
+            ViewGroup tabLayout = (ViewGroup)GetChildAt(0);
+
+            int childCount = tabLayout.ChildCount;
+
+            if (childCount != 0)
+            {
+                DisplayMetrics displayMetrics = Context.Resources.DisplayMetrics;
+                int tabMinWidth = displayMetrics.WidthPixels / childCount;
+
+                for (int i = 0; i < childCount; ++i)
+                {
+                    tabLayout.GetChildAt(i).SetMinimumWidth(tabMinWidth);
+                }
+            }
+
+            base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
 
         }
     }

@@ -12,7 +12,11 @@
             <Label Text="TabbedPage" VerticalOptions="Center"></Label>
 
             <!--RSEditor-->
+            <controls:RSEntry Placeholder="Entry" ></controls:RSEntry>
+
             <controls:RSEditor Placeholder="Editor" AutoSize="TextChanges" ></controls:RSEditor>
+
+            <Editor Placeholder="LOLOLOL" AutoSize="TextChanges"></Editor>
 
             <Button Text="Right" BackgroundColor="Blue" VerticalOptions="Center" HorizontalOptions="FillAndExpand" Clicked="Button_Clicked"></Button>
         </StackLayout>
