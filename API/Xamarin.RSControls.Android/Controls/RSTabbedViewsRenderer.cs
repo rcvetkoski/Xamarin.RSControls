@@ -7,6 +7,7 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.Design.Widget;
 using Android.Support.V4.View;
 using Android.Views;
 using Android.Widget;
@@ -23,8 +24,7 @@ namespace Xamarin.RSControls.Droid.Controls
     {
         private List<global::Android.Views.View> pages;
         private LinearLayout nativeView;
-        private LinearLayout menuBar;
-        private global::Android.Widget.ScrollView menuBarScroll;
+        private TabLayout menuBar;
 
 
         public RSTabbedViewsRenderer(Context context) : base(context)
@@ -46,8 +46,13 @@ namespace Xamarin.RSControls.Droid.Controls
                 nativeView = new LinearLayout(Context) { Orientation = Orientation.Vertical };
                 nativeView.SetBackgroundColor(global::Android.Graphics.Color.Pink);
 
-                menuBarScroll = new global::Android.Widget.ScrollView(Context);
-                menuBar = new LinearLayout(Context) { Orientation = Orientation.Horizontal };
+                
+                menuBar = new TabLayout(Context);
+                menuBar.SetSelectedTabIndicatorColor(global::Android.Graphics.Color.White);
+                menuBar.TabMode = TabLayout.ModeScrollable;
+
+
+
                 menuBar.SetBackgroundColor(global::Android.Graphics.Color.Blue);
                 menuBar.SetMinimumHeight(60);
 
@@ -61,6 +66,10 @@ namespace Xamarin.RSControls.Droid.Controls
                     var renderer = Platform.CreateRendererWithContext(formsView, Context);
                     var natView = renderer.View;
                     pages.Add(natView);
+
+                    var title = formsView.GetValue(RSTabbedViews.TitleProperty).ToString();
+
+                    menuBar.AddView(new TabItem(Context) { Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty).ToString()) });
                 }
 
                 this.Element.SizeChanged += Element_SizeChanged;
@@ -69,6 +78,8 @@ namespace Xamarin.RSControls.Droid.Controls
                 pager.Adapter = new pageAdapter(Context, pages);
                 pager.AddOnPageChangeListener(pager.Adapter as pageAdapter);
                 pager.SetBackgroundColor(global::Android.Graphics.Color.Red);
+                pager.AddOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(menuBar));
+
 
                 nativeView.AddView(pager);
 
