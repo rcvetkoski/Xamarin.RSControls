@@ -5,6 +5,7 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.Design.Widget;
@@ -50,13 +51,22 @@ namespace Xamarin.RSControls.Droid.Controls
                 nativeView.LayoutChange += NativeView_LayoutChange;
 
                 menuBar = new CustomTabLayout(Context);
+                menuBar.Elevation = 8;
                 menuBar.TabGravity = CustomTabLayout.GravityFill;
                 menuBar.TabMode = CustomTabLayout.ModeScrollable;
                 menuBar.SetSelectedTabIndicatorColor(this.Element.SliderColor.ToAndroid());
                 menuBar.SetBackgroundColor(this.Element.BarColor.ToAndroid());
-                menuBar.SetTabTextColors(menuBar.TabTextColors.DefaultColor, this.Element.BarTextColor.ToAndroid());
+                int[][] states = new int[][] {
+                    new int[] { global::Android.Resource.Attribute.StateSelected }, // enabled
+                    new int[] {-global::Android.Resource.Attribute.StateSelected }, // disabled
+                };
+                int[] colors = new int[] { this.Element.BarTextColorSelected.ToAndroid(), this.Element.BarTextColor.ToAndroid() };
+                menuBar.TabIconTint = new global::Android.Content.Res.ColorStateList(states, colors);
+                menuBar.SetTabTextColors(this.Element.BarTextColor.ToAndroid(), this.Element.BarTextColorSelected.ToAndroid());
                 menuBar.AddOnTabSelectedListener(this);
-                nativeView.AddView(menuBar);
+
+                if(this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
+                    nativeView.AddView(menuBar);
 
 
                 foreach (var formsView in this.Element.Views)
@@ -67,10 +77,45 @@ namespace Xamarin.RSControls.Droid.Controls
                     var natView = renderer.View;
                     pages.Add(natView);
 
-                    var title = formsView.GetValue(RSTabbedViews.TitleProperty).ToString();
 
-                    menuBar.AddView(new TabItem(Context) { Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty).ToString()) });
+                    if (!(formsView.GetValue(RSTabbedViews.IconProperty).ToString().Contains("svg")))
+                    {
+                        Drawable drawableImage = null;
+                        if (!string.IsNullOrEmpty(formsView.GetValue(RSTabbedViews.IconProperty) as string))
+                        {
+                            string image = System.IO.Path.GetFileNameWithoutExtension(formsView.GetValue(RSTabbedViews.IconProperty) as string);
+                            int resImage = Resources.GetIdentifier(image, "drawable", Essentials.AppInfo.PackageName);
+                            drawableImage = global::Android.Support.V4.Content.ContextCompat.GetDrawable(Context, resImage);
+                        }
+
+                        menuBar.AddView(new TabItem(Context)
+                        {
+                            Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty).ToString()),
+                            Icon = drawableImage
+                        });
+                    }
+                    else
+                    {
+                        BitmapDrawable bitmapDrawable = null;
+
+                        if (!string.IsNullOrEmpty(formsView.GetValue(RSTabbedViews.IconProperty) as string))
+                        {
+                            var iconSize = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 25, Context.Resources.DisplayMetrics);
+                            RSSvgImage svgIcon = new RSSvgImage() { Source = formsView.GetValue(RSTabbedViews.IconProperty).ToString(), Color = this.Element.BarTextColor };
+                            var convertedView = Extensions.ViewExtensions.ConvertFormsToNative(svgIcon, new Rectangle(0, 0, iconSize, iconSize), Context);
+
+                            if (convertedView != null)
+                                bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, iconSize, iconSize));
+                        }
+
+                        menuBar.AddView(new TabItem(Context)
+                        {
+                            Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty).ToString()),
+                            Icon = bitmapDrawable
+                        });
+                    }
                 }
+
                 this.Element.SizeChanged += Element_SizeChanged;
 
 
@@ -80,10 +125,20 @@ namespace Xamarin.RSControls.Droid.Controls
                 pager.AddOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(menuBar));
                 nativeView.AddView(pager);
 
+
+                if(this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Bottom)
+                {
+                    var pagerParams = new LinearLayout.LayoutParams(LayoutParams.MatchParent, 0);
+                    pagerParams.Weight = 1;
+                    pager.LayoutParameters = pagerParams;
+                    nativeView.AddView(menuBar);
+                }
+
+
                 this.SetNativeControl(nativeView);
             }
         }
-
+       
         private void NativeView_LayoutChange(object sender, LayoutChangeEventArgs e)
         {
             if(!doOnce)
@@ -215,7 +270,6 @@ namespace Xamarin.RSControls.Droid.Controls
             }
 
             base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
-
         }
     }
 }

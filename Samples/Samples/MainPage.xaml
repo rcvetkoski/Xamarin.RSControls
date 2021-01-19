@@ -14,13 +14,13 @@
         <StackLayout>
 
             
-        <rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray">
+        <rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Bottom" >
             <rs:RSTabbedViews.Views>
                 <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-                <local:Page1 IconImageSource="tab_feed.png" rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
+                <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
                 <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
                 <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-                <local:Page1 IconImageSource="tab_feed.png" rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
+                <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
                 <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
             </rs:RSTabbedViews.Views>
         </rs:RSTabbedViews>

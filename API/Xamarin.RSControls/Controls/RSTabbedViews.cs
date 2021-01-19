@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
+using Xamarin.RSControls.Enums;
 
 namespace Xamarin.RSControls.Controls
 {
@@ -29,12 +30,28 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(CurrentViewProperty, value); }
         }
 
+        //Bar placement
+        public static readonly BindableProperty RSTabPlacementProperty = BindableProperty.CreateAttached("RSTabPlacement", typeof(RSTabPlacementEnum), typeof(RSTabbedViews), RSTabPlacementEnum.Top);
+        public RSTabPlacementEnum RSTabPlacement
+        {
+            get { return (RSTabPlacementEnum)GetValue(RSTabPlacementProperty); }
+            set { SetValue(RSTabPlacementProperty, value); }
+        }
+
         //Bar Text Color
         public static readonly BindableProperty BarTextColorProperty = BindableProperty.Create("BarTextColor", typeof(Color), typeof(RSTabbedViews), Color.SlateGray);
         public Color BarTextColor
         {
             get { return (Color)GetValue(BarTextColorProperty); }
             set { SetValue(BarTextColorProperty, value); }
+        }
+
+        //Bar Text Color Selected
+        public static readonly BindableProperty BarTextColorSelectedProperty = BindableProperty.Create("BarTextColorSelected", typeof(Color), typeof(RSTabbedViews), Color.Black);
+        public Color BarTextColorSelected
+        {
+            get { return (Color)GetValue(BarTextColorSelectedProperty); }
+            set { SetValue(BarTextColorSelectedProperty, value); }
         }
 
         //Menu Color
