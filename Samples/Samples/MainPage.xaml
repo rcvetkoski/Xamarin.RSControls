@@ -14,7 +14,7 @@
         <StackLayout>
 
             
-        <rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Bottom" >
+        <rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
             <rs:RSTabbedViews.Views>
                 <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
                 <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>

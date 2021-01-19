@@ -270,7 +270,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 //Title
                 TabsTitle title = new TabsTitle() { TextAlignment = UITextAlignment.Center, TextColor = this.Element.BarTextColor.ToUIColor() };
                 title.Lines = 1;
-                title.Font = UIFont.BoldSystemFontOfSize(14);
+                title.Font = UIFont.BoldSystemFontOfSize(12);
                 title.Text = (string)item.GetValue(RSTabbedViews.TitleProperty);
                 tab.AddArrangedSubview(title);
                 tab.TranslatesAutoresizingMaskIntoConstraints = false;
