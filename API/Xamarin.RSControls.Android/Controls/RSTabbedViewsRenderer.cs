@@ -65,7 +65,8 @@ namespace Xamarin.RSControls.Droid.Controls
                 menuBar.SetTabTextColors(this.Element.BarTextColor.ToAndroid(), this.Element.BarTextColorSelected.ToAndroid());
                 menuBar.AddOnTabSelectedListener(this);
 
-                if(this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
+
+                if (this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
                     nativeView.AddView(menuBar);
 
 
@@ -254,15 +255,19 @@ namespace Xamarin.RSControls.Droid.Controls
 
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
-            ViewGroup tabLayout = (ViewGroup)GetChildAt(0);
+            //Fix when tabs width smaller than parent => Make it stay at center
+            //Reset original settings so measures are done based on this config
+            this.TabGravity = TabLayout.GravityFill;
+            this.TabMode = TabLayout.ModeScrollable;
 
+
+            ViewGroup tabLayout = (ViewGroup)GetChildAt(0);
             int childCount = tabLayout.ChildCount;
 
             if (childCount != 0)
             {
                 DisplayMetrics displayMetrics = Context.Resources.DisplayMetrics;
                 int tabMinWidth = displayMetrics.WidthPixels / childCount;
-
                 for (int i = 0; i < childCount; ++i)
                 {
                     tabLayout.GetChildAt(i).SetMinimumWidth(tabMinWidth);
@@ -270,6 +275,24 @@ namespace Xamarin.RSControls.Droid.Controls
             }
 
             base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
+
+            //Fix when tabs width smaller than parent => Make it stay at center
+            var maxWidth = 0;
+            for (int i = 0; i < childCount; ++i)
+            {
+                maxWidth += tabLayout.GetChildAt(i).MeasuredWidth;
+            }
+
+            if(maxWidth < tabLayout.MeasuredWidth)
+            {
+                this.TabGravity = TabLayout.GravityFill;
+                this.TabMode = TabLayout.ModeFixed;
+            }
+            else
+            {
+                this.TabGravity = TabLayout.GravityFill;
+                this.TabMode = TabLayout.ModeScrollable;
+            }
         }
     }
 }

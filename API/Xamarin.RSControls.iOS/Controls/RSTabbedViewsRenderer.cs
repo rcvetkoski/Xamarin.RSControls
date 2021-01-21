@@ -255,15 +255,15 @@ namespace Xamarin.RSControls.iOS.Controls
                     {
                         RSSvgImage svgIcon = new RSSvgImage() { Source = item.GetValue(RSTabbedViews.IconProperty).ToString(), Color = this.Element.BarTextColor };
                         var renderer = Platform.CreateRenderer(svgIcon);
-                        renderer.Element.Layout(new Rectangle(0, 0, 25, 25));
+                        renderer.Element.Layout(new Rectangle(0, 0, 24, 24));
                         renderer.NativeView.TranslatesAutoresizingMaskIntoConstraints = false;
                         icon = renderer.NativeView;
                         UIView holder = new UIView();
                         holder.TranslatesAutoresizingMaskIntoConstraints = false;
-                        holder.HeightAnchor.ConstraintEqualTo(25).Active = true;
+                        holder.HeightAnchor.ConstraintEqualTo(24).Active = true;
                         holder.AddSubview(icon);
                         tab.AddArrangedSubview(holder);
-                        renderer.NativeView.CenterXAnchor.ConstraintEqualTo(holder.CenterXAnchor, -12.5f).Active = true;
+                        renderer.NativeView.CenterXAnchor.ConstraintEqualTo(holder.CenterXAnchor, -12f).Active = true;
                     }
                 }
 
