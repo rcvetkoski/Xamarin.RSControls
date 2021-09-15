@@ -1,6 +1,6 @@
 ﻿using System;
 using Android.Content;
-using Android.Support.Design.Widget;
+using Google.Android.Material.Tabs;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.RSControls.Controls;

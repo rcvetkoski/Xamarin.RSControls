@@ -39,9 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.3.0.991250</Version>
+      <Version>5.0.0.2083</Version>
     </PackageReference>
-    <PackageReference Condition="'$(CreateUITestProject)' == true" Include="Xamarin.TestCloud.Agent" Version="0.21.8" />
+    <PackageReference Condition="'$(CreateUITestProject)' == true" Include="Xamarin.TestCloud.Agent" Version="0.22.2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

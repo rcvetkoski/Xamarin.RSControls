@@ -10,12 +10,10 @@ using Android.Graphics.Drawables;
 using Android.Graphics.Drawables.Shapes;
 using Android.OS;
 using Android.Runtime;
-using Android.Support.Constraints;
-using Android.Support.V4.App;
-using Android.Support.V7.App;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using AndroidX.AppCompat.App;
 using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -29,7 +27,7 @@ using static Android.Views.ViewTreeObserver;
 [assembly: Dependency(typeof(RSPopupRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSPopupRenderer : global::Android.Support.V4.App.DialogFragment, IDialogPopup, IDisposable, global::Android.Views.View.IOnClickListener
+    public class RSPopupRenderer : global::AndroidX.Fragment.App.DialogFragment, IDialogPopup, IDisposable, global::Android.Views.View.IOnClickListener
     {
         public int PositionX { get; set; }
         public int PositionY { get; set; }
@@ -129,7 +127,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 SetCustomView();
             }
 
-            global::Android.Support.V7.App.AlertDialog.Builder builder = new global::Android.Support.V7.App.AlertDialog.Builder(Context, Resource.Style.RSDialogAnimationTheme);
+            global::Android.App.AlertDialog.Builder builder = new global::Android.App.AlertDialog.Builder(Context, Resource.Style.RSDialogAnimationTheme);
             return builder.Create();
         }
 
@@ -189,7 +187,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 var relativeViewAsNativeRenderer = Xamarin.Forms.Platform.Android.Platform.GetRenderer(formsView);
                 relativeViewAsNativeRenderer.UpdateLayout();
                 relativeViewAsNativeView = relativeViewAsNativeRenderer.View;
-                Rect rectf = new Rect();
+                global::Android.Graphics.Rect rectf = new global::Android.Graphics.Rect();
                 relativeViewAsNativeView.GetWindowVisibleDisplayFrame(rectf);
                 int[] locationScreen = new int[2];
                 relativeViewAsNativeView.GetLocationOnScreen(locationScreen);
@@ -812,7 +810,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.Enabled = false;
         }
 
-        public global::Android.Support.V4.App.DialogFragment dialog { get; set; }
+        public global::AndroidX.Fragment.App.DialogFragment dialog { get; set; }
         //public PopupWindow dialog { get; set; }
 
 

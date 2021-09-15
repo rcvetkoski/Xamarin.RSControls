@@ -5,7 +5,6 @@ using Xamarin.RSControls.Droid.Controls;
 using Xamarin.RSControls.Controls;
 using System.ComponentModel;
 using Android.Graphics;
-using Android.Support.Design.Widget;
 using Android.Text;
 using static Android.Views.View;
 using Android.Views;
@@ -17,8 +16,6 @@ using Android.Views.Animations;
 using System.Threading;
 using Android.Graphics.Drawables;
 using Android.Text.Method;
-using Android.Support.Graphics.Drawable;
-using Android.Support.V7.Widget;
 using Xamarin.RSControls.Interfaces;
 using System.Reflection;
 using System.Linq.Expressions;
@@ -90,10 +87,10 @@ namespace Xamarin.RSControls.Droid.Controls
         private TextPaint errorPaint;
         private TextPaint helperPaint;
         private TextPaint counterPaint;
-        private Rect floatingHintBoundsFloating;
-        private Rect floatingHintBoundsNotFloating;
+        private global::Android.Graphics.Rect floatingHintBoundsFloating;
+        private global::Android.Graphics.Rect floatingHintBoundsNotFloating;
         private int baselinePosition;
-        private Rect counterMessageBounds;
+        private global::Android.Graphics.Rect counterMessageBounds;
         private Paint borderPaint;
         private Paint filledPaint;
         private global::Android.Graphics.Color borderColor;
@@ -110,7 +107,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private float errorYPosition;
         private float helperYPosition;
         private float counterYPosition;
-        private Rect textRect;
+        private global::Android.Graphics.Rect textRect;
 
         //icon drawables
         private CustomDrawable leadingDrawable;
@@ -428,8 +425,8 @@ namespace Xamarin.RSControls.Droid.Controls
         private void CreateFloatingHint()
         {
             floatingHintPaint = new TextPaint();
-            floatingHintBoundsFloating = new Rect();
-            floatingHintBoundsNotFloating = new Rect();
+            floatingHintBoundsFloating = new global::Android.Graphics.Rect();
+            floatingHintBoundsNotFloating = new global::Android.Graphics.Rect();
 
             if (rSControl.PlaceholderStyle.FontFamily != null && rSControl.PlaceholderStyle.FontFamily.Contains("#"))
             {
@@ -496,7 +493,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private void CreateCounterMessage()
         {
             counterPaint = new TextPaint();
-            counterMessageBounds = new Rect();
+            counterMessageBounds = new global::Android.Graphics.Rect();
             counterMessage = string.Format("{0}/{1}", this.Length(), rSControl.CounterMaxLength);
 
 
@@ -769,7 +766,7 @@ namespace Xamarin.RSControls.Droid.Controls
         public override void Draw(Canvas canvas)
         {
             //Text rect bounds
-            textRect = new Rect();
+            textRect = new global::Android.Graphics.Rect();
             this.GetDrawingRect(textRect);
 
             //Init floatingHint X and Y values
