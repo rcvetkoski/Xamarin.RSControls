@@ -86,7 +86,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         {
                             string image = System.IO.Path.GetFileNameWithoutExtension(formsView.GetValue(RSTabbedViews.IconProperty) as string);
                             int resImage = Resources.GetIdentifier(image, "drawable", Essentials.AppInfo.PackageName);
-                            drawableImage = global::Android.Support.V4.Content.ContextCompat.GetDrawable(Context, resImage);
+                            drawableImage = global::AndroidX.Core.Content.ContextCompat.GetDrawable(Context, resImage);
                         }
 
                         menuBar.AddView(new TabItem(Context)
