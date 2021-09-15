@@ -36,7 +36,7 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>UIAppFonts</key>
 	<array>
-	    <string>Lobster-Regular.ttf</string>
+		<string>Lobster-Regular.ttf</string>
 	</array>
 </dict>
 </plist>

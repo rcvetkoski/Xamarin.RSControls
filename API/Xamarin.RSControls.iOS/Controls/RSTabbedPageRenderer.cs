@@ -9,7 +9,7 @@ using Xamarin.Forms.Platform.iOS;
 using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.iOS.Controls;
 
-[assembly: ExportRenderer(typeof(RSTabbedPage), typeof(RSTabbedPageRenderer))]
+//[assembly: ExportRenderer(typeof(RSTabbedPage), typeof(RSTabbedPageRenderer))]
 namespace Xamarin.RSControls.iOS.Controls
 {
     public class RSTabbedPageRenderer : PageRenderer

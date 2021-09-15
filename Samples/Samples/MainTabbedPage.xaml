@@ -7,9 +7,11 @@
                         x:Class="Samples.MainTabbedPage">
 
     <controls:RSTabbedPage.Children>
-        <samples:TabbedPage1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page1 ggggg"/>
-        <samples:Page1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page2-1"/>
-        <samples:Page1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Page3 gg"/>
+        <samples:TabbedPage1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="TabbedPage1"/>
+        <samples:MainPage IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Main Page"/>
+        <samples:Page1 IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="PPage1"/>
+        <samples:MainPage IconImageSource="Samples/Data/SVG/calendarAndTime.svg" Title="Main Page"/>
+
     </controls:RSTabbedPage.Children>
 
 </controls:RSTabbedPage>
