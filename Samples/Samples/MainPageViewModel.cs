@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Enums;
 
 namespace Samples
@@ -49,7 +50,7 @@ namespace Samples
 
             Lolo = "lolo";
 
-
+            SelectedPerson = listPicker.FirstOrDefault();
 
             RSCommand = new Command(RSCommandMethod, CanExec);
         }
@@ -237,11 +238,21 @@ namespace Samples
 
         public void TestMethod(object obj, string str)
         {
-
+            //RSPopup rSPopup = new RSPopup("Title", "Message rthtrhttrhtrhtr hrthrt rthrt rth rth rgreggregreregergergregregergreg ergerg ergergre ergerg erg ");
+            //rSPopup.SetPopupSize(Xamarin.RSControls.Enums.RSPopupSizeEnum.WrapContent, Xamarin.RSControls.Enums.RSPopupSizeEnum.WrapContent);
+            //rSPopup.SetPopupPositionRelativeTo(this.rSControl as Xamarin.Forms.View, Xamarin.RSControls.Enums.RSPopupPositionSideEnum.Top);
+            //rSPopup.SetDimAmount(0f);
+            //rSPopup.SetMargin(40, 0, 40, 0);
+            //rSPopup.Show();
         }
-        public void TestMethod2(object obj)
+        public void TestMethod2(object obj, object obj2)
         {
-            
+            RSPopup rSPopup = new RSPopup("Title", "Message rthtrhttrhtrhtr hrthrt rthrt rth rth rgreggregreregergergregregergreg ergerg ergergre ergerg erg ");
+            rSPopup.SetPopupSize(Xamarin.RSControls.Enums.RSPopupSizeEnum.WrapContent, Xamarin.RSControls.Enums.RSPopupSizeEnum.WrapContent);
+            rSPopup.SetPopupPositionRelativeTo(obj2 as Xamarin.Forms.View, Xamarin.RSControls.Enums.RSPopupPositionSideEnum.Top);
+            rSPopup.SetDimAmount(0f);
+            rSPopup.SetMargin(40, 0, 40, 0);
+            rSPopup.Show();
         }
 
     }

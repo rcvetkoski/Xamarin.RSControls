@@ -335,7 +335,8 @@ namespace Xamarin.RSControls.Droid.Controls
                 else
                 {
                     borderPaint.Color = borderColor;
-                    floatingHintPaint.Color = rSControl.PlaceholderStyle.FontColor.ToAndroid();
+                    //floatingHintPaint.Color = rSControl.PlaceholderStyle.FontColor.ToAndroid();
+                    floatingHintPaint.Color = activeColor;
 
                     if (rightDrawable != null && rSControl.RightIcon.IconColor == Forms.Color.DimGray)
                         rightDrawable.drawable.SetTint(borderColor);

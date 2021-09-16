@@ -10,29 +10,51 @@
              Title="MainPage"
              x:Class="Samples.MainPage">
 
-   
-        <StackLayout>
+    <ContentPage.BindingContext>
+        <local:MainPageViewModel></local:MainPageViewModel>
+    </ContentPage.BindingContext>
 
-            
-        <rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
-            <rs:RSTabbedViews.Views>
-                <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-                <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
-                <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-                <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-                <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
-                <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-            </rs:RSTabbedViews.Views>
-        </rs:RSTabbedViews>
+    <StackLayout>
+    
+            <!--<rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+                <rs:RSTabbedViews.Views>
+                    <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
+                    <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
+                    <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
+                    <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
+                    <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
+                    <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
+                </rs:RSTabbedViews.Views>
+            </rs:RSTabbedViews>-->
+
+        <rs:RSEntry x:Name="entry" Placeholder="Name" ActiveColor="Yellow" Helper="Enter your name" RSEntryStyle="OutlinedBorder">
+            <rs:RSEntry.TrailingIcon>
+                <helpers:RSEntryIcon Command="TestMethod2">
+
+                    <helpers:RSEntryIcon.BindingContext>
+                        <local:MainPageViewModel></local:MainPageViewModel>
+                    </helpers:RSEntryIcon.BindingContext>
+                    
+                    <helpers:RSEntryIcon.Bindings>
+                        <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
+                    </helpers:RSEntryIcon.Bindings>
+                    <helpers:RSEntryIcon.View>
+                        <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                    </helpers:RSEntryIcon.View>
+                </helpers:RSEntryIcon>
+            </rs:RSEntry.TrailingIcon>
+
+            <rs:RSEntry.RightIcon>
+                <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                    <helpers:RSEntryIcon.View>
+                        <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                    </helpers:RSEntryIcon.View>
+                </helpers:RSEntryIcon>
+            </rs:RSEntry.RightIcon>
+        </rs:RSEntry>
 
 
-        <!--<Button Text="Right" BackgroundColor="Blue" VerticalOptions="Center" HorizontalOptions="FillAndExpand" Clicked="Button_Clicked"></Button>-->
-
-        </StackLayout>
-
-
-
-
-
+    </StackLayout>
 
 </ContentPage>
