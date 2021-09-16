@@ -14,7 +14,7 @@
         <local:MainPageViewModel></local:MainPageViewModel>
     </ContentPage.BindingContext>
 
-    <StackLayout>
+    <StackLayout Margin="5">
     
             <!--<rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
                 <rs:RSTabbedViews.Views>
@@ -27,14 +27,10 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" Placeholder="Name" ActiveColor="Yellow" Helper="Enter your name" RSEntryStyle="OutlinedBorder">
+        <rs:RSEntry x:Name="entry" Placeholder="Name" Helper="Enter your name" RSEntryStyle="OutlinedBorder" Error="Error">
             <rs:RSEntry.TrailingIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
 
-                    <helpers:RSEntryIcon.BindingContext>
-                        <local:MainPageViewModel></local:MainPageViewModel>
-                    </helpers:RSEntryIcon.BindingContext>
-                    
                     <helpers:RSEntryIcon.Bindings>
                         <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
                         <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
@@ -45,13 +41,13 @@
                 </helpers:RSEntryIcon>
             </rs:RSEntry.TrailingIcon>
 
-            <rs:RSEntry.RightIcon>
-                <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
-                    <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
-                    </helpers:RSEntryIcon.View>
-                </helpers:RSEntryIcon>
-            </rs:RSEntry.RightIcon>
+            <rs:RSEntry.Behaviors>
+                <validators:ValidationBehaviour PropertyName="Text">
+                    <validators:ValidationBehaviour.Validators>
+                        <validators:RequiredValidation/>
+                    </validators:ValidationBehaviour.Validators>
+                </validators:ValidationBehaviour>
+            </rs:RSEntry.Behaviors>
         </rs:RSEntry>
 
 

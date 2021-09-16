@@ -335,8 +335,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 else
                 {
                     borderPaint.Color = borderColor;
-                    //floatingHintPaint.Color = rSControl.PlaceholderStyle.FontColor.ToAndroid();
-                    floatingHintPaint.Color = activeColor;
+                    floatingHintPaint.Color = rSControl.PlaceholderColor.ToAndroid();
 
                     if (rightDrawable != null && rSControl.RightIcon.IconColor == Forms.Color.DimGray)
                         rightDrawable.drawable.SetTint(borderColor);
@@ -1258,16 +1257,6 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 if (rightIconCondition)
                 {
-                    int[] locationScreen = new int[2];
-                    this.GetLocationOnScreen(locationScreen);
-                    var x = e.GetX();
-
-                    RSPopup rSPopup = new RSPopup("Title", "Message rthtrhttrhtrhtr hrthrt rthrt rth rth rgreggregreregergergregregergreg ergerg ergergre ergerg erg ");
-                    rSPopup.SetPopupSize(Enums.RSPopupSizeEnum.WrapContent, Enums.RSPopupSizeEnum.WrapContent);
-                    rSPopup.SetPopupPositionRelativeTo(this.rSControl as Forms.View, Enums.RSPopupPositionSideEnum.Top);
-                    rSPopup.SetDimAmount(0f);
-                    rSPopup.SetMargin(40, 0, 40, 0);
-                    rSPopup.Show();
                     return true;
                 }
                 else if (trailingIconCondition)

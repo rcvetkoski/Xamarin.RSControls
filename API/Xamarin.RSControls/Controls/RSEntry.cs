@@ -189,6 +189,13 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(ShadowEnabledProperty, value); }
         }
 
+        public static readonly BindableProperty PlaceholderColorProperty = BindableProperty.Create("PlaceholderColor", typeof(Color), typeof(RSEntry), Color.DimGray);
+        public Color PlaceholderColor
+        {
+            get { return (Color)GetValue(PlaceholderColorProperty); }
+            set { SetValue(PlaceholderColorProperty, value); }
+        }
+
 
         //Placeholder Style
         public static readonly BindableProperty PlaceholderStyleProperty = BindableProperty.Create("PlaceholderStyle", typeof(AssistiveTextStyle), typeof(RSEntry), new AssistiveTextStyle());
