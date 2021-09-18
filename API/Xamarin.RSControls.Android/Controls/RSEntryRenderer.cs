@@ -1297,7 +1297,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         else
                             rightDrawable.Selected = true;
                     }
-                    else
+                    else if (rSControl.RightIcon.View.IsEnabled)
                     {
                         if ((rightDrawable as CustomDrawable).Selected)
                         {
@@ -1309,7 +1309,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         }
                     }
                 }
-                else if (trailingIconCondition)
+                else if (trailingIconCondition && rSControl.TrailingIcon.View.IsEnabled)
                 {
                     if ((trailingDrawable as CustomDrawable).Selected)
                     {
@@ -1320,7 +1320,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         (trailingDrawable as CustomDrawable).Selected = true;
                     }
                 }
-                else if (rightHelpingIconCondition)
+                else if (rightHelpingIconCondition && rSControl.RightHelpingIcon.View.IsEnabled)
                 {
                     if (rightHelpingDrawable.Selected)
                     {
@@ -1331,7 +1331,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         rightHelpingDrawable.Selected = true;
                     }
                 }
-                else if (leadingIconCondition)
+                else if (leadingIconCondition && rSControl.LeadingIcon.View.IsEnabled)
                 {
                     if ((leadingDrawable as CustomDrawable).Selected)
                     {
@@ -1342,7 +1342,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         (leadingDrawable as CustomDrawable).Selected = true;
                     }
                 }
-                else if (leftIconCondition)
+                else if (leftIconCondition && rSControl.LeftIcon.View.IsEnabled)
                 {
                     if ((leftDrawable as CustomDrawable).Selected)
                     {
@@ -1353,7 +1353,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         (leftDrawable as CustomDrawable).Selected = true;
                     }
                 }
-                else if (leftHelpingIconCondition)
+                else if (leftHelpingIconCondition && rSControl.LeftHelpingIcon.View.IsEnabled)
                 {
                     if (leftHelpingDrawable.Selected)
                     {

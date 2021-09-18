@@ -10,6 +10,13 @@ namespace Xamarin.RSControls.Controls
 {
     public class RSSvgImage : SKCanvasView
     {
+        public RSSvgImage()
+        {
+            //Default value for this inherited properties
+            this.WidthRequest = 22;
+            this.HeightRequest = 22;
+        }
+
         public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(string), typeof(RSSvgImage), default(string), propertyChanged: OnSourcePropertyChanged);
         public string Source
         {
