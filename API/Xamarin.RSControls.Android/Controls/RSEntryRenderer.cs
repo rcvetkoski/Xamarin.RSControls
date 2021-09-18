@@ -270,58 +270,58 @@ namespace Xamarin.RSControls.Droid.Controls
                     borderPaint.Color = errorColor;
                     floatingHintPaint.Color = errorColor;
 
-                    if (rightDrawable != null && rSControl.RightIcon.IconColor == Forms.Color.DimGray)
-                        rightDrawable.drawable.SetTint(borderColor);
-                    else if(rightDrawable != null)
-                        rightDrawable.drawable.SetTint(rSControl.RightIcon.IconColor.ToAndroid());
+                    //if (rightDrawable != null && rSControl.RightIcon.IconColor == Forms.Color.DimGray)
+                    //    rightDrawable.drawable.SetTint(borderColor);
+                    //else if(rightDrawable != null)
+                    //    rightDrawable.drawable.SetTint(rSControl.RightIcon.IconColor.ToAndroid());
 
-                    if (leftDrawable != null && rSControl.LeftIcon.IconColor == Forms.Color.DimGray)
-                        leftDrawable.drawable.SetTint(borderColor);
-                    else if (leftDrawable != null)
-                        leftDrawable.drawable.SetTint(rSControl.LeftIcon.IconColor.ToAndroid());
+                    //if (leftDrawable != null && rSControl.LeftIcon.IconColor == Forms.Color.DimGray)
+                    //    leftDrawable.drawable.SetTint(borderColor);
+                    //else if (leftDrawable != null)
+                    //    leftDrawable.drawable.SetTint(rSControl.LeftIcon.IconColor.ToAndroid());
 
-                    if (leadingDrawable != null && rSControl.LeadingIcon.IconColor == Forms.Color.DimGray)
-                        leadingDrawable.drawable.SetTint(borderColor);
-                    else if (leadingDrawable != null)
-                        leadingDrawable.drawable.SetTint(rSControl.LeadingIcon.IconColor.ToAndroid());
+                    //if (leadingDrawable != null && rSControl.LeadingIcon.IconColor == Forms.Color.DimGray)
+                    //    leadingDrawable.drawable.SetTint(borderColor);
+                    //else if (leadingDrawable != null)
+                    //    leadingDrawable.drawable.SetTint(rSControl.LeadingIcon.IconColor.ToAndroid());
 
-                    if (trailingDrawable != null && rSControl.TrailingIcon.IconColor == Forms.Color.DimGray)
-                        trailingDrawable.drawable.SetTint(borderColor);
-                    else if (trailingDrawable != null)
-                        trailingDrawable.drawable.SetTint(rSControl.TrailingIcon.IconColor.ToAndroid());
+                    //if (trailingDrawable != null && rSControl.TrailingIcon.IconColor == Forms.Color.DimGray)
+                    //    trailingDrawable.drawable.SetTint(borderColor);
+                    //else if (trailingDrawable != null)
+                    //    trailingDrawable.drawable.SetTint(rSControl.TrailingIcon.IconColor.ToAndroid());
 
-                    if (rightHelpingDrawable != null && rSControl.RightHelpingIcon.IconColor == Forms.Color.DimGray)
-                        rightHelpingDrawable.drawable.SetTint(borderColor);
-                    else if (rightHelpingDrawable != null)
-                        rightHelpingDrawable.drawable.SetTint(rSControl.RightHelpingIcon.IconColor.ToAndroid());
+                    //if (rightHelpingDrawable != null && rSControl.RightHelpingIcon.IconColor == Forms.Color.DimGray)
+                    //    rightHelpingDrawable.drawable.SetTint(borderColor);
+                    //else if (rightHelpingDrawable != null)
+                    //    rightHelpingDrawable.drawable.SetTint(rSControl.RightHelpingIcon.IconColor.ToAndroid());
 
-                    if (leftHelpingDrawable != null && rSControl.LeftHelpingIcon.IconColor == Forms.Color.DimGray)
-                        leftHelpingDrawable.drawable.SetTint(borderColor);
-                    else if (leftHelpingDrawable != null)
-                        leftHelpingDrawable.drawable.SetTint(rSControl.LeftHelpingIcon.IconColor.ToAndroid());
+                    //if (leftHelpingDrawable != null && rSControl.LeftHelpingIcon.IconColor == Forms.Color.DimGray)
+                    //    leftHelpingDrawable.drawable.SetTint(borderColor);
+                    //else if (leftHelpingDrawable != null)
+                    //    leftHelpingDrawable.drawable.SetTint(rSControl.LeftHelpingIcon.IconColor.ToAndroid());
                 }
                 else
                 {
                     borderPaint.Color = activeColor;
                     floatingHintPaint.Color = activeColor;
 
-                    if (rightDrawable != null)
-                        rightDrawable.drawable.SetTint(activeColor);
+                    //if (rightDrawable != null)
+                    //    rightDrawable.drawable.SetTint(activeColor);
 
-                    if (leftDrawable != null)
-                        leftDrawable.drawable.SetTint(activeColor);
+                    //if (leftDrawable != null)
+                    //    leftDrawable.drawable.SetTint(activeColor);
 
-                    if (leadingDrawable != null)
-                        leadingDrawable.drawable.SetTint(activeColor);
+                    //if (leadingDrawable != null)
+                    //    leadingDrawable.drawable.SetTint(activeColor);
 
-                    if (trailingDrawable != null)
-                        trailingDrawable.drawable.SetTint(activeColor);
+                    //if (trailingDrawable != null)
+                    //    trailingDrawable.drawable.SetTint(activeColor);
 
-                    if (rightHelpingDrawable != null)
-                        rightHelpingDrawable.drawable.SetTint(activeColor);
+                    //if (rightHelpingDrawable != null)
+                    //    rightHelpingDrawable.drawable.SetTint(activeColor);
 
-                    if (leftHelpingDrawable != null)
-                        leftHelpingDrawable.drawable.SetTint(activeColor);
+                    //if (leftHelpingDrawable != null)
+                    //    leftHelpingDrawable.drawable.SetTint(activeColor);
                 }
             }
             else
@@ -337,35 +337,35 @@ namespace Xamarin.RSControls.Droid.Controls
                     borderPaint.Color = borderColor;
                     floatingHintPaint.Color = rSControl.PlaceholderColor.ToAndroid();
 
-                    if (rightDrawable != null && rSControl.RightIcon.IconColor == Forms.Color.DimGray)
-                        rightDrawable.drawable.SetTint(borderColor);
-                    else if (rightDrawable != null)
-                        rightDrawable.drawable.SetTint(rSControl.RightIcon.IconColor.ToAndroid());
+                    //if (rightDrawable != null && rSControl.RightIcon.IconColor == Forms.Color.DimGray)
+                    //    rightDrawable.drawable.SetTint(borderColor);
+                    //else if (rightDrawable != null)
+                    //    rightDrawable.drawable.SetTint(rSControl.RightIcon.IconColor.ToAndroid());
 
-                    if (leftDrawable != null && rSControl.LeftIcon.IconColor == Forms.Color.DimGray)
-                        leftDrawable.drawable.SetTint(borderColor);
-                    else if (leftDrawable != null)
-                        leftDrawable.drawable.SetTint(rSControl.LeftIcon.IconColor.ToAndroid());
+                    //if (leftDrawable != null && rSControl.LeftIcon.IconColor == Forms.Color.DimGray)
+                    //    leftDrawable.drawable.SetTint(borderColor);
+                    //else if (leftDrawable != null)
+                    //    leftDrawable.drawable.SetTint(rSControl.LeftIcon.IconColor.ToAndroid());
 
-                    if (leadingDrawable != null && rSControl.LeadingIcon.IconColor == Forms.Color.DimGray)
-                        leadingDrawable.drawable.SetTint(borderColor);
-                    else if (leadingDrawable != null)
-                        leadingDrawable.drawable.SetTint(rSControl.LeadingIcon.IconColor.ToAndroid());
+                    //if (leadingDrawable != null && rSControl.LeadingIcon.IconColor == Forms.Color.DimGray)
+                    //    leadingDrawable.drawable.SetTint(borderColor);
+                    //else if (leadingDrawable != null)
+                    //    leadingDrawable.drawable.SetTint(rSControl.LeadingIcon.IconColor.ToAndroid());
 
-                    if (trailingDrawable != null && rSControl.TrailingIcon.IconColor == Forms.Color.DimGray)
-                        trailingDrawable.drawable.SetTint(borderColor);
-                    else if (trailingDrawable != null)
-                        trailingDrawable.drawable.SetTint(rSControl.TrailingIcon.IconColor.ToAndroid());
+                    //if (trailingDrawable != null && rSControl.TrailingIcon.IconColor == Forms.Color.DimGray)
+                    //    trailingDrawable.drawable.SetTint(borderColor);
+                    //else if (trailingDrawable != null)
+                    //    trailingDrawable.drawable.SetTint(rSControl.TrailingIcon.IconColor.ToAndroid());
 
-                    if (rightHelpingDrawable != null && rSControl.RightHelpingIcon.IconColor == Forms.Color.DimGray)
-                        rightHelpingDrawable.drawable.SetTint(borderColor);
-                    else if (rightHelpingDrawable != null)
-                        rightHelpingDrawable.drawable.SetTint(rSControl.RightHelpingIcon.IconColor.ToAndroid());
+                    //if (rightHelpingDrawable != null && rSControl.RightHelpingIcon.IconColor == Forms.Color.DimGray)
+                    //    rightHelpingDrawable.drawable.SetTint(borderColor);
+                    //else if (rightHelpingDrawable != null)
+                    //    rightHelpingDrawable.drawable.SetTint(rSControl.RightHelpingIcon.IconColor.ToAndroid());
 
-                    if (leftHelpingDrawable != null && rSControl.LeftHelpingIcon.IconColor == Forms.Color.DimGray)
-                        leftHelpingDrawable.drawable.SetTint(borderColor);
-                    else if (leftHelpingDrawable != null)
-                        leftHelpingDrawable.drawable.SetTint(rSControl.LeftHelpingIcon.IconColor.ToAndroid());
+                    //if (leftHelpingDrawable != null && rSControl.LeftHelpingIcon.IconColor == Forms.Color.DimGray)
+                    //    leftHelpingDrawable.drawable.SetTint(borderColor);
+                    //else if (leftHelpingDrawable != null)
+                    //    leftHelpingDrawable.drawable.SetTint(rSControl.LeftHelpingIcon.IconColor.ToAndroid());
                 }
             }
         }
@@ -622,6 +622,8 @@ namespace Xamarin.RSControls.Droid.Controls
             if (this.rSControl.LeadingIcon != null)
             {
                 this.leadingDrawable = CreateDrawable(rSControl.LeadingIcon, 0, null);
+                var sizeRequest = rSControl.LeadingIcon.View.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+
                 leadingIconWidth = leadingDrawable.IntrinsicWidth + (this.CompoundDrawablePadding * 2);
                 this.SetPadding(this.PaddingLeft + leadingIconWidth, this.PaddingTop, this.PaddingRight, this.PaddingBottom);
             }
@@ -666,8 +668,8 @@ namespace Xamarin.RSControls.Droid.Controls
         }
         private CustomDrawable CreateDrawable(RSEntryIcon rsIcon, int customDrawableClip, string type = null)
         {
-            int width = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rsIcon.IconWidth, Context.Resources.DisplayMetrics);
-            int height = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rsIcon.IconHeight, Context.Resources.DisplayMetrics);
+            //int width = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rsIcon.IconWidth, Context.Resources.DisplayMetrics);
+            //int height = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rsIcon.IconHeight, Context.Resources.DisplayMetrics);
 
             global::Android.Views.View convertedView = null;
             BitmapDrawable bitmapDrawable = null;
@@ -675,8 +677,10 @@ namespace Xamarin.RSControls.Droid.Controls
             if (rsIcon.View != null)
                 convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rsIcon.View, new Rectangle(0, 0, this.Width, this.Height), Context);
 
+            rsIcon.View.Width.ToString();
+
             if (convertedView != null)
-                bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, width, height));
+                bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, convertedView.Width, convertedView.Height));
 
 
             if (type != null && type == "right")

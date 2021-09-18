@@ -48,55 +48,32 @@ namespace Xamarin.RSControls.Droid.Extensions
 
         public static global::Android.Views.View ConvertFormsToNative(Xamarin.Forms.View view, Xamarin.Forms.Rectangle size, Context context)
         {
-            //var vRenderer = Platform.CreateRendererWithContext(view, context);
-            //var androidView = vRenderer.View;
-            //vRenderer.Tracker.UpdateLayout();
-
-
-            //var widthTotal = 0;
-            //var spacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 6, context.Resources.DisplayMetrics);
-            //var heightTotal = 0;
-
-            //if (androidView is ViewGroup)
-            //{
-            //    for (int i = 0; i < (androidView as ViewGroup).ChildCount; i++)
-            //    {
-            //        var v = (androidView as ViewGroup).GetChildAt(i);
-
-            //        v.MeasuredHeight.ToString();
-            //        v.Measure(View.MeasureSpec.MakeMeasureSpec((int)size.Width, MeasureSpecMode.AtMost),
-            //                  View.MeasureSpec.MakeMeasureSpec((int)size.Height, MeasureSpecMode.AtMost));
-
-            //        //(androidView as ViewGroup).Measure(View.MeasureSpec.MakeMeasureSpec((int)size.Width, MeasureSpecMode.AtMost),
-            //        //                                   View.MeasureSpec.MakeMeasureSpec((int)size.Height, MeasureSpecMode.AtMost));
-
-
-            //        widthTotal += v.MeasuredWidth;
-            //        heightTotal = v.MeasuredHeight;
-            //    }
-            //}
-            //else
-            //{
-            //    androidView.Measure((int)size.Width, (int)size.Height);
-            //    widthTotal = androidView.MeasuredWidth;
-            //    heightTotal = androidView.MeasuredHeight;
-            //}
-
-
-            //var layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            //androidView.LayoutParameters = layoutParams;
-            //view.Layout(new Forms.Rectangle(0, 0, (double)270, (double)150));
-            ////androidView.Layout(0, 0, widthTotal, heightTotal);
-            //return androidView;
-
             var vRenderer = Platform.CreateRendererWithContext(view, context);
+            Platform.SetRenderer(view, vRenderer);
+
+            //Get required size of view
+            var sizeRequest = view.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+
+            //Check if already manually set else give required size
+            int width = 0;
+            if (view.WidthRequest != -1)
+                width = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)view.WidthRequest, context.Resources.DisplayMetrics);
+            else
+                width = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Width, context.Resources.DisplayMetrics);
+
+            int height = 0;
+            if (view.HeightRequest != -1)
+                height = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)view.HeightRequest, context.Resources.DisplayMetrics);
+            else
+                height = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Height, context.Resources.DisplayMetrics);
+
+
             var nativeView = vRenderer.View;
             vRenderer.Tracker.UpdateLayout();
-            var layoutParams = new ViewGroup.LayoutParams((int)size.Width, (int)size.Height);
+            var layoutParams = new ViewGroup.LayoutParams((int)width, (int)height);
             nativeView.LayoutParameters = layoutParams;
-            view.Layout(size);
-            nativeView.Layout(0, 0, (int)view.WidthRequest, (int)view.HeightRequest);
-
+            view.Layout(new Rectangle(0,0,width,height));
+            nativeView.Layout(0, 0, (int)width, (int)height);
 
             return nativeView;
         }
