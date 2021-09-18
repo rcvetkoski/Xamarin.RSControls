@@ -91,7 +91,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private global::Android.Graphics.Rect floatingHintBoundsNotFloating;
         private int baselinePosition;
         private global::Android.Graphics.Rect counterMessageBounds;
-        private Paint borderPaint;
+        public Paint borderPaint;
         private Paint filledPaint;
         private global::Android.Graphics.Color borderColor;
         private global::Android.Graphics.Color activeColor;
@@ -684,8 +684,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             if (type != null && type == "right")
-                bitmapDrawable.SetBounds(customDrawableClip , 0, bitmapDrawable.IntrinsicWidth + customDrawableClip , bitmapDrawable.IntrinsicHeight);
-            else if(type != null && type == "left")
+                bitmapDrawable.SetBounds(customDrawableClip, 0, bitmapDrawable.IntrinsicWidth + customDrawableClip, bitmapDrawable.IntrinsicHeight);
+            else if (type != null && type == "left")
                 bitmapDrawable.SetBounds(0, 0, bitmapDrawable.IntrinsicWidth, bitmapDrawable.IntrinsicHeight);
 
             var drawable = new CustomDrawable(bitmapDrawable, this, correctiveY);

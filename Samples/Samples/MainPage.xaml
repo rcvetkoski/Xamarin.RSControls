@@ -27,26 +27,26 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" Placeholder="Name" Helper="Enter your name" RSEntryStyle="OutlinedBorder" FontSize="4" Error="Error">
-            <rs:RSEntry.RightIcon>
+        <rs:RSEntry x:Name="entry" Placeholder="Name" Helper="Enter your name" RSEntryStyle="OutlinedBorder" FontSize="14" Error="Error">
+            <rs:RSEntry.LeftIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
                         <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
                         <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
                     </helpers:RSEntryIcon.Bindings>
                     <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage WidthRequest="40" HeightRequest="40" Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                        <rs:RSSvgImage WidthRequest="100" HeightRequest="100" Source="Samples/Data/SVG/calendarAndTime.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
-            </rs:RSEntry.RightIcon>
+            </rs:RSEntry.LeftIcon>
 
-            <rs:RSEntry.Behaviors>
+            <!--<rs:RSEntry.Behaviors>
                 <validators:ValidationBehaviour PropertyName="Text">
                     <validators:ValidationBehaviour.Validators>
                         <validators:RequiredValidation/>
                     </validators:ValidationBehaviour.Validators>
                 </validators:ValidationBehaviour>
-            </rs:RSEntry.Behaviors>
+            </rs:RSEntry.Behaviors>-->
         </rs:RSEntry>
 
     </StackLayout>
