@@ -559,7 +559,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (IsFloating)
                     this.floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor();
                 else
-                    this.floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor();
+                    this.floatingHint.ForegroundColor = rSControl.PlaceholderColor.ToCGColor();
 
                 this.border.BorderColor = this.borderColor.CGColor;
             }
@@ -711,7 +711,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             floatingHint.AllowsEdgeAntialiasing = true;
             floatingHint.ContentsScale = UIScreen.MainScreen.Scale;
-            floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor();
+            floatingHint.ForegroundColor = rSControl.PlaceholderColor.ToCGColor();
             floatingHint.BackgroundColor = UIColor.Clear.CGColor;
             floatingHint.Wrapped = false;
 
@@ -800,7 +800,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 else if (string.IsNullOrEmpty(this.ErrorMessage) && !this.IsFirstResponder)
                 {
                     this.border.BorderColor = this.borderColor.CGColor;
-                    this.floatingHint.ForegroundColor = rSControl.PlaceholderStyle.FontColor.ToCGColor();
+                    this.floatingHint.ForegroundColor = rSControl.PlaceholderColor.ToCGColor();
                     this.errorEnabled = false;
                 }
                 else
