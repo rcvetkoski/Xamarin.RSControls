@@ -773,6 +773,7 @@ namespace Xamarin.RSControls.Droid.Controls
             textRect = new global::Android.Graphics.Rect();
             this.GetDrawingRect(textRect);
 
+
             //Init floatingHint X and Y values
             if (!hasInitfloatingHintYPosition)
             {
@@ -869,10 +870,9 @@ namespace Xamarin.RSControls.Droid.Controls
             if (CanAnimate() && !isFloatingHintAnimating && !rSControl.IsPlaceholderAlwaysFloating)
                 AnimateFloatingHint();
 
-
             //Update Colors
             SetColors();
-
+                
             //Update Rounded border
             UpdateBorder(canvas);
 
@@ -923,8 +923,11 @@ namespace Xamarin.RSControls.Droid.Controls
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - leftHelpingDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + leftHelpingDrawable.IntrinsicHeight / 2;
 
-            leftHelpingDrawable.drawable.SetBounds(textRect.Left + this.PaddingLeft + iconsSpacing + leftHelpingDrawable.IntrinsicWidth, center, textRect.Left + this.PaddingLeft + iconsSpacing + leftHelpingDrawable.IntrinsicWidth * 2, center2);
-            leftHelpingDrawable.SetBounds(textRect.Left + this.PaddingLeft + iconsSpacing + leftHelpingDrawable.IntrinsicWidth, center, textRect.Left + this.PaddingLeft + iconsSpacing + leftHelpingDrawable.IntrinsicWidth * 2, center2);
+            var left = textRect.Left + this.PaddingLeft + iconsSpacing + leftDrawable.IntrinsicWidth;
+            var left2 = textRect.Left + this.PaddingLeft + iconsSpacing + leftDrawable.IntrinsicWidth + leftHelpingDrawable.IntrinsicWidth;
+
+            leftHelpingDrawable.drawable.SetBounds(left, center, left2, center2);
+            leftHelpingDrawable.SetBounds(left, center, left2, center2);
 
 
             leftHelpingDrawable.Draw(canvas);
@@ -934,8 +937,11 @@ namespace Xamarin.RSControls.Droid.Controls
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - rightHelpingDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + rightHelpingDrawable.IntrinsicHeight / 2;
 
-            rightHelpingDrawable.drawable.SetBounds(textRect.Right - this.PaddingRight - iconsSpacing - rightHelpingDrawable.IntrinsicWidth * 2, center, textRect.Right - this.PaddingRight - iconsSpacing - rightHelpingDrawable.IntrinsicWidth, center2);
-            rightHelpingDrawable.SetBounds(textRect.Right - this.PaddingRight - iconsSpacing - rightHelpingDrawable.IntrinsicWidth * 2, center, textRect.Right - this.PaddingRight - iconsSpacing - rightHelpingDrawable.IntrinsicWidth, center2);
+            var right = textRect.Right - this.PaddingRight - iconsSpacing - rightDrawable.IntrinsicWidth - rightHelpingDrawable.IntrinsicWidth;
+            var right2 = textRect.Right - this.PaddingRight - iconsSpacing - rightDrawable.IntrinsicWidth;
+
+            rightHelpingDrawable.drawable.SetBounds(right, center, right2, center2);
+            rightHelpingDrawable.SetBounds(right, center, right2, center2);
 
 
             rightHelpingDrawable.Draw(canvas);
