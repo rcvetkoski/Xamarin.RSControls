@@ -72,7 +72,8 @@ namespace Xamarin.RSControls.Droid.Extensions
             vRenderer.Tracker.UpdateLayout();
             var layoutParams = new ViewGroup.LayoutParams((int)width, (int)height);
             nativeView.LayoutParameters = layoutParams;
-            view.Layout(new Rectangle(0,0,width,height));
+            view.Width.ToString();
+            view.Layout(new Rectangle(0,0, sizeRequest.Request.Width, sizeRequest.Request.Height));
             nativeView.Layout(0, 0, (int)width, (int)height);
 
             return nativeView;

@@ -108,6 +108,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private float helperYPosition;
         private float counterYPosition;
         private global::Android.Graphics.Rect textRect;
+        private double maxIconHeight = 0;
 
         //icon drawables
         private CustomDrawable leadingDrawable;
@@ -599,12 +600,6 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             this.CompoundDrawablePadding = 15;
 
-            //Corrective Y
-            if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
-                correctiveY = Math.Abs(topSpacing - bottomSpacing) / 2 + Math.Abs(PaddingTop - PaddingBottom) / 2;
-            else
-                correctiveY = 0;
-
             //Password
             if (this.rSControl.IsPassword)
                 CreatePasswordIcon();
@@ -621,22 +616,37 @@ namespace Xamarin.RSControls.Droid.Controls
             //Leading Icon
             if (this.rSControl.LeadingIcon != null)
             {
+                this.rSControl.LeadingIcon.View.HeightRequest.ToString();
+                rSControl.LeadingIcon.View.Height.ToString();
                 this.leadingDrawable = CreateDrawable(rSControl.LeadingIcon, 0, null);
-                var sizeRequest = rSControl.LeadingIcon.View.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
 
                 leadingIconWidth = leadingDrawable.IntrinsicWidth + (this.CompoundDrawablePadding * 2);
                 this.SetPadding(this.PaddingLeft + leadingIconWidth, this.PaddingTop, this.PaddingRight, this.PaddingBottom);
+
+                //Set max height of icon so we can resize RSEntry if necessary
+                if (maxIconHeight < rSControl.LeadingIcon.View.Height)
+                    maxIconHeight = rSControl.LeadingIcon.View.Height;
             }
 
             //Left Icon
             if (rSControl.LeftIcon != null)
             {
                 if (rSControl.LeftHelpingIcon != null)
+                {
                     leftHelpingDrawable = CreateDrawable(rSControl.LeftHelpingIcon, 0, null);
+
+                    //Set max height of icon so we can resize RSEntry if necessary
+                    if (maxIconHeight < rSControl.LeftHelpingIcon.View.Height)
+                        maxIconHeight = rSControl.LeftHelpingIcon.View.Height;
+                }
 
                 leftDrawableClip = leftHelpingDrawable != null ? leftHelpingDrawable.IntrinsicWidth + iconsSpacing : 0;
 
                 this.leftDrawable = CreateDrawable(rSControl.LeftIcon, leftDrawableClip, "left");
+
+                //Set max height of icon so we can resize RSEntry if necessary
+                if (maxIconHeight < rSControl.LeftIcon.View.Height)
+                    maxIconHeight = rSControl.LeftIcon.View.Height;
             }
 
             //Right Icon
@@ -644,12 +654,24 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 //Custom Icon
                 if (rSControl.RightHelpingIcon != null)
+                {
                     rightHelpingDrawable = CreateDrawable(rSControl.RightHelpingIcon, 0, null);
+
+                    //Set max height of icon so we can resize RSEntry if necessary
+                    if (maxIconHeight < rSControl.RightHelpingIcon.View.Height)
+                        maxIconHeight = rSControl.RightHelpingIcon.View.Height;
+                }
 
                 rightDrawableClip = rightHelpingDrawable != null ? rightHelpingDrawable.IntrinsicWidth + iconsSpacing : 0;
 
                 if(rSControl.RightIcon.View != null)
+                {
                     this.rightDrawable = CreateDrawable(rSControl.RightIcon, rightDrawableClip, "right");
+
+                    //Set max height of icon so we can resize RSEntry if necessary
+                    if (maxIconHeight < rSControl.RightIcon.View.Height)
+                        maxIconHeight = rSControl.RightIcon.View.Height;
+                }
             }
 
             //Trailing Icon
@@ -658,6 +680,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.trailingDrawable = CreateDrawable(rSControl.TrailingIcon, 0, null);
                 trailingIconWidth = trailingDrawable.IntrinsicWidth + (this.CompoundDrawablePadding * 2);
                 this.SetPadding(this.PaddingLeft, this.PaddingTop, this.PaddingRight + trailingIconWidth, this.PaddingBottom);
+
+                //Set max height of icon so we can resize RSEntry if necessary
+                if (maxIconHeight < rSControl.TrailingIcon.View.Height)
+                    maxIconHeight = rSControl.TrailingIcon.View.Height;
             }
 
 
@@ -766,6 +792,54 @@ namespace Xamarin.RSControls.Droid.Controls
             }
         }
 
+        private void floatingHintPositionUpdate()
+        {
+            if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
+            {
+                //X
+                floatingHintXPostionFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
+                floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
+
+                //Y
+                floatingHintYPostionFloating = -this.Paint.Ascent() + topSpacing;
+                floatingHintYPostionNotFloating = baselinePosition - Math.Abs(topSpacing - bottomSpacing) / 2 - Math.Abs(PaddingTop - PaddingBottom) / 2;
+            }
+            else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
+            {
+                //X
+                floatingHintXPostionFloating = textRect.Left + leftRightSpacingLabels + leadingIconWidth + this.shadowRadius;
+                floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
+
+                //Y
+                floatingHintYPostionFloating = topSpacing + floatingHintBoundsFloating.Height() / 2;
+                floatingHintYPostionNotFloating = baselinePosition;
+            }
+            else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
+            {
+                //X
+                floatingHintXPostionFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
+                floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
+
+                //Y
+                floatingHintYPostionFloating = -this.Paint.Ascent(); /*topSpacing + floatingHintBoundsFloating.Height();*/
+                floatingHintYPostionNotFloating = baselinePosition;
+            }
+
+
+            if (IsFloating)
+            {
+                floatingHintPaint.TextSize = labelsTextSize;
+                floatingHintXPostion = floatingHintXPostionFloating;
+                floatingHintYPostion = floatingHintYPostionFloating;
+            }
+            else
+            {
+                floatingHintPaint.TextSize = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)this.rSControl.FontSize, Context.Resources.DisplayMetrics);
+                floatingHintXPostion = floatingHintXPostionNotFloating;
+                floatingHintYPostion = floatingHintYPostionNotFloating;
+            }
+        }
+
         //Draw
         public override void Draw(Canvas canvas)
         {
@@ -773,11 +847,37 @@ namespace Xamarin.RSControls.Droid.Controls
             textRect = new global::Android.Graphics.Rect();
             this.GetDrawingRect(textRect);
 
+            this.Height.ToString();
+
+            baselinePosition = this.Baseline;
+
+            floatingHintPositionUpdate();
+
 
             //Init floatingHint X and Y values
             if (!hasInitfloatingHintYPosition)
             {
-                if(rSControl.IsPlaceholderAlwaysFloating)
+                //Corrective Y
+                if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
+                    correctiveY = Math.Abs(topSpacing - bottomSpacing) / 2 + Math.Abs(PaddingTop - PaddingBottom) / 2;
+                else
+                    correctiveY = 0;
+
+                //Create Icons if any
+                CreateIcons();
+
+                //Resize RSEntry if one of the icons too big
+                if (maxIconHeight > (this.rSControl as RSEntry).Height - topSpacing - bottomSpacing)
+                {
+                    var h = ((this.rSControl as RSEntry).Height
+                            + (maxIconHeight - topSpacing - bottomSpacing))
+                            + topSpacing * 2;
+                    (this.rSControl as RSEntry).HeightRequest = h;
+                }
+
+
+
+                if (rSControl.IsPlaceholderAlwaysFloating)
                     IsFloating = true;
                 else if (this.IsFocused || !string.IsNullOrEmpty(this.Text) || errorEnabled)
                     IsFloating = true;
@@ -786,53 +886,9 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 baselinePosition = this.Baseline;
 
-                //Create Icons if any
-                CreateIcons();
-
-                if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
-                {
-                    //X
-                    floatingHintXPostionFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
-                    floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
-
-                    //Y
-                    floatingHintYPostionFloating = -this.Paint.Ascent() + topSpacing; 
-                    floatingHintYPostionNotFloating = baselinePosition - Math.Abs(topSpacing - bottomSpacing) / 2 - Math.Abs(PaddingTop - PaddingBottom) / 2;
-                }
-                else if(this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
-                {
-                    //X
-                    floatingHintXPostionFloating = textRect.Left + leftRightSpacingLabels + leadingIconWidth + this.shadowRadius;
-                    floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
-
-                    //Y
-                    floatingHintYPostionFloating = topSpacing + floatingHintBoundsFloating.Height() / 2;
-                    floatingHintYPostionNotFloating = baselinePosition;
-                }
-                else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
-                {
-                    //X
-                    floatingHintXPostionFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
-                    floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
-
-                    //Y
-                    floatingHintYPostionFloating = -this.Paint.Ascent(); /*topSpacing + floatingHintBoundsFloating.Height();*/
-                    floatingHintYPostionNotFloating = baselinePosition;
-                }
 
 
-                if (IsFloating)
-                {
-                    floatingHintPaint.TextSize = labelsTextSize;
-                    floatingHintXPostion = floatingHintXPostionFloating;
-                    floatingHintYPostion = floatingHintYPostionFloating;
-                }
-                else
-                {
-                    floatingHintPaint.TextSize = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)this.rSControl.FontSize, Context.Resources.DisplayMetrics);
-                    floatingHintXPostion = floatingHintXPostionNotFloating;
-                    floatingHintYPostion = floatingHintYPostionNotFloating;
-                }
+                floatingHintPositionUpdate();
 
 
                 if (errorPaint != null)

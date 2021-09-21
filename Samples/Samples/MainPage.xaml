@@ -28,17 +28,17 @@
             </rs:RSTabbedViews>-->
 
         <rs:RSEntry x:Name="entry" Placeholder="Name" Counter="1" HasLeftIconSeparator="True"  CounterMaxLength="6" Helper="Enter your name" RSEntryStyle="OutlinedBorder" Error="Error">
-            <rs:RSEntry.LeftHelpingIcon>
+            <rs:RSEntry.LeadingIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
                         <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
                         <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
                     </helpers:RSEntryIcon.Bindings>
                     <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage WidthRequest="40" HeightRequest="40" Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                        <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
-            </rs:RSEntry.LeftHelpingIcon>
+            </rs:RSEntry.LeadingIcon>
 
             <rs:RSEntry.LeftIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
@@ -62,7 +62,7 @@
             </rs:RSEntry.Behaviors>
         </rs:RSEntry>
 
-        <rs:RSEntry Placeholder="Surname" Counter="1" HasLeftIconSeparator="True"  CounterMaxLength="6" Helper="Enter your Surname" RSEntryStyle="FilledBorder">
+        <!--<rs:RSEntry Placeholder="Surname" Counter="1" HasLeftIconSeparator="True"  CounterMaxLength="6" Helper="Enter your Surname" RSEntryStyle="FilledBorder">
                         <rs:RSEntry.RightIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
@@ -95,7 +95,7 @@
                     </validators:ValidationBehaviour.Validators>
                 </validators:ValidationBehaviour>
             </rs:RSEntry.Behaviors>
-        </rs:RSEntry>
+        </rs:RSEntry>-->
     </StackLayout>
 
 </ContentPage>
