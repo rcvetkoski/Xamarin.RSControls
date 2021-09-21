@@ -11,15 +11,30 @@ namespace Xamarin.RSControls.iOS.Extensions
         public static UIView ConvertFormsToNative(Xamarin.Forms.View view, CGRect size)
         {
             var renderer = Platform.CreateRenderer(view);
+            Platform.SetRenderer(view, renderer);
 
-            if(size == CGRect.Empty)
-            {
-                var sizeRequest = view.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
-                size = new CGRect(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height);
-            }
+            //Get required size of view
+            var sizeRequest = view.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+
+            //Check if already manually set else give required size
+            int width = 0;
+            if (view.WidthRequest != -1)
+                width = (int)view.WidthRequest;
+            else
+                width = (int)sizeRequest.Request.Width;
+
+            int height = 0;
+            if (view.HeightRequest != -1)
+                height = (int)view.HeightRequest;
+            else
+                height = (int)(float)sizeRequest.Request.Height;
+
+
+            size = new CGRect(0, 0, width, height);
+
             
             renderer.NativeView.Frame = size;
-            renderer.NativeView.AutoresizingMask = UIViewAutoresizing.All;
+            //renderer.NativeView.AutoresizingMask = UIViewAutoresizing.All;
             renderer.NativeView.ContentMode = UIViewContentMode.ScaleToFill;
             renderer.Element.Layout(size.ToRectangle());
             var nativeView = renderer.NativeView;
