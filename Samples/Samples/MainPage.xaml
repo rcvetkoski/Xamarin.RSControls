@@ -27,8 +27,8 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" Padding="20,0,0,0" Placeholder="Name" Counter="1" HasLeftIconSeparator="True"  CounterMaxLength="6" Helper="Enter your name" RSEntryStyle="FilledBorder" Error="Error">
-            <rs:RSEntry.LeadingIcon>
+        <rs:RSEntry x:Name="entry" Placeholder="Name" Counter="1" HasLeftIconSeparator="True"  CounterMaxLength="6" Helper="Enter your name" RSEntryStyle="OutlinedBorder">
+            <!--<rs:RSEntry.LeadingIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
                         <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
@@ -38,7 +38,7 @@
                         <rs:RSSvgImage WidthRequest="40" HeightRequest="40" Source="Samples/Data/SVG/calendarAndTime.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
-            </rs:RSEntry.LeadingIcon>
+            </rs:RSEntry.LeadingIcon>-->
 
             <rs:RSEntry.LeftIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
@@ -47,12 +47,12 @@
                         <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
                     </helpers:RSEntryIcon.Bindings>
                     <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage Color="Pink" Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                        <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
             </rs:RSEntry.LeftIcon>
 
-            <rs:RSEntry.LeftHelpingIcon>
+            <!--<rs:RSEntry.LeftHelpingIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
                         <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
@@ -62,7 +62,7 @@
                         <rs:RSSvgImage Color="Pink" Source="Samples/Data/SVG/calendarAndTime.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
-            </rs:RSEntry.LeftHelpingIcon>
+            </rs:RSEntry.LeftHelpingIcon>-->
 
 
             <rs:RSEntry.Behaviors>
@@ -74,40 +74,34 @@
             </rs:RSEntry.Behaviors>
         </rs:RSEntry>
 
-        <!--<rs:RSEntry Placeholder="Surname" Counter="1" HasLeftIconSeparator="True"  CounterMaxLength="6" Helper="Enter your Surname" RSEntryStyle="FilledBorder">
-                        <rs:RSEntry.RightIcon>
+        <!--<rs:RSEntry RSEntryStyle="Underline" Placeholder="Underline border">
+            <rs:RSEntry.LeadingIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
                         <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
                         <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
                     </helpers:RSEntryIcon.Bindings>
                     <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage Source="Samples/Data/SVG/plus.svg"/>
+                        <Label TextColor="Black" Text="Name"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
-            </rs:RSEntry.RightIcon>
+            </rs:RSEntry.LeadingIcon>
         </rs:RSEntry>
 
-                <rs:RSEntry Placeholder="Surname" Counter="1" HasLeftIconSeparator="True"  CounterMaxLength="6" Helper="Enter your Surname" RSEntryStyle="Underline">
-                        <rs:RSEntry.RightIcon>
+        <rs:RSEntry RSEntryStyle="FilledBorder" Placeholder="Outlined border" Helper="troll">
+            <rs:RSEntry.LeftIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
                         <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
                         <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
                     </helpers:RSEntryIcon.Bindings>
                     <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage Source="Samples/Data/SVG/agenda.svg"/>
+                        <rs:RSSvgImage Color="Pink" Source="Samples/Data/SVG/calendarAndTime.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
-            </rs:RSEntry.RightIcon>
-                                <rs:RSEntry.Behaviors>
-                <validators:ValidationBehaviour PropertyName="Text">
-                    <validators:ValidationBehaviour.Validators>
-                        <validators:RequiredValidation/>
-                    </validators:ValidationBehaviour.Validators>
-                </validators:ValidationBehaviour>
-            </rs:RSEntry.Behaviors>
+            </rs:RSEntry.LeftIcon>
         </rs:RSEntry>-->
+
     </StackLayout>
 
 </ContentPage>

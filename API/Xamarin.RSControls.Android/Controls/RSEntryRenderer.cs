@@ -109,6 +109,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private float counterYPosition;
         private global::Android.Graphics.Rect textRect;
         private double maxIconHeight = 0;
+        private bool shouldUpdateFloatingHintPosition = false;
 
         //icon drawables
         private CustomDrawable leadingDrawable;
@@ -128,7 +129,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private bool shouldFloat;
         private bool shouldNotFloat;
         public bool IsFloating;
-
+        
 
         //Animators
         ValueAnimator errorHelperMessageAnimator;
@@ -848,9 +849,15 @@ namespace Xamarin.RSControls.Droid.Controls
             this.GetDrawingRect(textRect);
 
 
+            if (baselinePosition != this.Baseline)
+                shouldUpdateFloatingHintPosition = true;
+            else
+                shouldUpdateFloatingHintPosition = false;
+
             baselinePosition = this.Baseline;
 
-            floatingHintPositionUpdate();
+            if(shouldUpdateFloatingHintPosition)
+                floatingHintPositionUpdate();
 
 
             //Init floatingHint X and Y values
@@ -866,12 +873,12 @@ namespace Xamarin.RSControls.Droid.Controls
                 CreateIcons();
 
                 //Resize RSEntry if one of the icons too big, 20 is top + bottom spacing not converted to android units
-                if (maxIconHeight > (this.rSControl as RSEntry).Height - 20)
+                if (maxIconHeight > (this.rSControl as Forms.View).Height - 20)
                 {
-                    var h = ((this.rSControl as RSEntry).Height
+                    var h = ((this.rSControl as Forms.View).Height
                             + (maxIconHeight - 20))
                             + 20;
-                    (this.rSControl as RSEntry).HeightRequest = h;
+                    (this.rSControl as Forms.View).HeightRequest = h;
                 }
 
 
