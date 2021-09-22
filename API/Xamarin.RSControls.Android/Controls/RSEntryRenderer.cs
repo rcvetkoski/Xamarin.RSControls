@@ -847,7 +847,6 @@ namespace Xamarin.RSControls.Droid.Controls
             textRect = new global::Android.Graphics.Rect();
             this.GetDrawingRect(textRect);
 
-            this.Height.ToString();
 
             baselinePosition = this.Baseline;
 
@@ -866,15 +865,14 @@ namespace Xamarin.RSControls.Droid.Controls
                 //Create Icons if any
                 CreateIcons();
 
-                //Resize RSEntry if one of the icons too big
-                if (maxIconHeight > (this.rSControl as RSEntry).Height - topSpacing - bottomSpacing)
+                //Resize RSEntry if one of the icons too big, 20 is top + bottom spacing not converted to android units
+                if (maxIconHeight > (this.rSControl as RSEntry).Height - 20)
                 {
                     var h = ((this.rSControl as RSEntry).Height
-                            + (maxIconHeight - topSpacing - bottomSpacing))
-                            + topSpacing * 2;
+                            + (maxIconHeight - 20))
+                            + 20;
                     (this.rSControl as RSEntry).HeightRequest = h;
                 }
-
 
 
                 if (rSControl.IsPlaceholderAlwaysFloating)
@@ -886,10 +884,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 baselinePosition = this.Baseline;
 
-
-
                 floatingHintPositionUpdate();
-
 
                 if (errorPaint != null)
                     errorYPosition = this.Height - bottomSpacing - errorPaint.Ascent() + 2 + textRect.Top;

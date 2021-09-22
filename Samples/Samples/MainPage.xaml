@@ -27,7 +27,7 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" Placeholder="Name" Counter="1" HasLeftIconSeparator="True"  CounterMaxLength="6" Helper="Enter your name" RSEntryStyle="OutlinedBorder" Error="Error">
+        <rs:RSEntry x:Name="entry" Padding="20,0,0,0" Placeholder="Name" Counter="1" HasLeftIconSeparator="True"  CounterMaxLength="6" Helper="Enter your name" RSEntryStyle="FilledBorder" Error="Error">
             <rs:RSEntry.LeadingIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
@@ -35,7 +35,7 @@
                         <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
                     </helpers:RSEntryIcon.Bindings>
                     <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                        <rs:RSSvgImage WidthRequest="40" HeightRequest="40" Source="Samples/Data/SVG/calendarAndTime.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
             </rs:RSEntry.LeadingIcon>
@@ -51,6 +51,18 @@
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
             </rs:RSEntry.LeftIcon>
+
+            <rs:RSEntry.LeftHelpingIcon>
+                <helpers:RSEntryIcon Command="TestMethod2">
+                    <helpers:RSEntryIcon.Bindings>
+                        <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
+                    </helpers:RSEntryIcon.Bindings>
+                    <helpers:RSEntryIcon.View>
+                        <rs:RSSvgImage Color="Pink" Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                    </helpers:RSEntryIcon.View>
+                </helpers:RSEntryIcon>
+            </rs:RSEntry.LeftHelpingIcon>
 
 
             <rs:RSEntry.Behaviors>
