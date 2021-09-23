@@ -333,7 +333,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (maxIconHeight < leftView.Frame.Height)
                     maxIconHeight = leftView.Frame.Height;
             }
-            if (rSControl.HasLeftIconSeparator && rSControl.LeftIcon != null)
+            if (rSControl.HasLeftIconSeparator && rSControl.LeftIcon != null && rSControl.LeftHelpingIcon != null)
             {
                 leftIconSeparatorView = new UIView(new CGRect(leftPadding + leadingViewWidth + leftViewWidth, 0, 1, 22)) { BackgroundColor = UIColor.LightGray };
                 this.AddSubview(leftIconSeparatorView);
@@ -367,7 +367,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (maxIconHeight < rightHelpingView.Frame.Height)
                     maxIconHeight = rightHelpingView.Frame.Height;
             }
-            if (rSControl.HasRighIconSeparator && rSControl.RightIcon != null)
+            if (rSControl.HasRighIconSeparator && rSControl.RightIcon != null && rSControl.RightHelpingIcon != null)
             {
                 rightIconSeparatorView = new UIView(new CGRect(0, 0, 1, 22)) { BackgroundColor = UIColor.LightGray };
                 this.AddSubview(rightIconSeparatorView);
