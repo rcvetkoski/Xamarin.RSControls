@@ -8,9 +8,16 @@ namespace Xamarin.RSControls.Validators
     {
         public string Message => "This field is required !";
 
-        public bool Validate(string value)
+        public bool Validate(object value)
         {
-            return string.IsNullOrEmpty(value) ? false : true;
+            if (value == null)
+                return false;
+            else if (value is string)
+            {
+                return string.IsNullOrEmpty(value as string) ? false : true;
+            }
+            else
+                return true;
         }
     }
 }

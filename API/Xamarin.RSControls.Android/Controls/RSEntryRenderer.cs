@@ -515,6 +515,32 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //Set bounds to get width
             counterPaint.GetTextBounds(counterMessage, 0, counterMessage.Length, counterMessageBounds);
+
+            //Set validator behaviour
+            if(rSControl.CounterMaxLength != -1)
+            {
+                bool existingBehaviour = false;
+
+                foreach(var behavior in (rSControl as Forms.View).Behaviors)
+                {
+                    if(behavior is Validators.ValidationBehaviour)
+                    {
+                        if((behavior as Validators.ValidationBehaviour).PropertyName == "Text")
+                        {
+                            (behavior as Validators.ValidationBehaviour).Validators.Add(new Validators.CounterValidation() { CounterMaxLength = rSControl.CounterMaxLength });
+                            existingBehaviour = true;
+                            return;
+                        }
+                    }
+                }
+
+                if(!existingBehaviour)
+                {
+                    Validators.ValidationBehaviour counterValidationBehaviour = new Validators.ValidationBehaviour() { PropertyName = "Text" };
+                    counterValidationBehaviour.Validators.Add(new Validators.CounterValidation() { CounterMaxLength = rSControl.CounterMaxLength });
+                    (rSControl as Forms.View).Behaviors.Add(counterValidationBehaviour);
+                }
+            }
         }
         private void CreateRoundedBorder()
         {

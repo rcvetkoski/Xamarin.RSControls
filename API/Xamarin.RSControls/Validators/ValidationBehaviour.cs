@@ -27,14 +27,10 @@ namespace Xamarin.RSControls.Validators
             {
                 foreach (IValidation validation in Validators)
                 {
-                    bool isValid = false;
+                    bool isValid = true;
                     var value = rsControl.GetType().GetProperty(PropertyName).GetValue(rsControl);
 
-                    if (value != null)
-                        isValid = validation.Validate(value.ToString());
-                    else
-                        isValid = false;
-
+                    isValid = validation.Validate(value);
 
                     if (!isValid)
                     {
