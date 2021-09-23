@@ -529,7 +529,6 @@ namespace Xamarin.RSControls.Droid.Controls
                         {
                             (behavior as Validators.ValidationBehaviour).Validators.Add(new Validators.CounterValidation() { CounterMaxLength = rSControl.CounterMaxLength });
                             existingBehaviour = true;
-                            return;
                         }
                     }
                 }
