@@ -781,6 +781,28 @@ namespace Xamarin.RSControls.iOS.Controls
             };
 
             this.Layer.AddSublayer(counterLabel);
+
+
+            bool existingBehaviour = false;
+
+            foreach (var behavior in (rSControl as Forms.View).Behaviors)
+            {
+                if (behavior is Validators.ValidationBehaviour)
+                {
+                    if ((behavior as Validators.ValidationBehaviour).PropertyName == "Text")
+                    {
+                        (behavior as Validators.ValidationBehaviour).Validators.Add(new Validators.CounterValidation() { CounterMaxLength = rSControl.CounterMaxLength });
+                        existingBehaviour = true;
+                    }
+                }
+            }
+
+            if (!existingBehaviour)
+            {
+                Validators.ValidationBehaviour counterValidationBehaviour = new Validators.ValidationBehaviour() { PropertyName = "Text" };
+                counterValidationBehaviour.Validators.Add(new Validators.CounterValidation() { CounterMaxLength = rSControl.CounterMaxLength });
+                (rSControl as Forms.View).Behaviors.Add(counterValidationBehaviour);
+            }
         }
         //Set Counter
         private void SetCounter()
