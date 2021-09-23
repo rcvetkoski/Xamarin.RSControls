@@ -6,7 +6,7 @@ namespace Xamarin.RSControls.Validators
 {
     public interface IValidation
     {
-        bool Validate(string value);
+        bool Validate(object value);
 
         string Message { get; }
     }
