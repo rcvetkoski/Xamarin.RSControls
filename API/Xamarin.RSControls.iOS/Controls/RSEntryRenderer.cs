@@ -333,7 +333,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (maxIconHeight < leftView.Frame.Height)
                     maxIconHeight = leftView.Frame.Height;
             }
-            if (rSControl.HasLeftIconSeparator && rSControl.LeftIcon != null)
+            if (rSControl.HasLeftIconSeparator && rSControl.LeftIcon != null && rSControl.LeftHelpingIcon != null)
             {
                 leftIconSeparatorView = new UIView(new CGRect(leftPadding + leadingViewWidth + leftViewWidth, 0, 1, 22)) { BackgroundColor = UIColor.LightGray };
                 this.AddSubview(leftIconSeparatorView);
@@ -367,7 +367,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (maxIconHeight < rightHelpingView.Frame.Height)
                     maxIconHeight = rightHelpingView.Frame.Height;
             }
-            if (rSControl.HasRighIconSeparator && rSControl.RightIcon != null)
+            if (rSControl.HasRighIconSeparator && rSControl.RightIcon != null && rSControl.RightHelpingIcon != null)
             {
                 rightIconSeparatorView = new UIView(new CGRect(0, 0, 1, 22)) { BackgroundColor = UIColor.LightGray };
                 this.AddSubview(rightIconSeparatorView);
@@ -781,6 +781,28 @@ namespace Xamarin.RSControls.iOS.Controls
             };
 
             this.Layer.AddSublayer(counterLabel);
+
+
+            bool existingBehaviour = false;
+
+            foreach (var behavior in (rSControl as Forms.View).Behaviors)
+            {
+                if (behavior is Validators.ValidationBehaviour)
+                {
+                    if ((behavior as Validators.ValidationBehaviour).PropertyName == "Text")
+                    {
+                        (behavior as Validators.ValidationBehaviour).Validators.Add(new Validators.CounterValidation() { CounterMaxLength = rSControl.CounterMaxLength });
+                        existingBehaviour = true;
+                    }
+                }
+            }
+
+            if (!existingBehaviour)
+            {
+                Validators.ValidationBehaviour counterValidationBehaviour = new Validators.ValidationBehaviour() { PropertyName = "Text" };
+                counterValidationBehaviour.Validators.Add(new Validators.CounterValidation() { CounterMaxLength = rSControl.CounterMaxLength });
+                (rSControl as Forms.View).Behaviors.Add(counterValidationBehaviour);
+            }
         }
         //Set Counter
         private void SetCounter()
