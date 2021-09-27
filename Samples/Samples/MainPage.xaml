@@ -27,7 +27,7 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" Placeholder="Name" Counter="1" HasLeftIconSeparator="True"  CounterMaxLength="6" Helper="Enter your name" RSEntryStyle="OutlinedBorder">
+        <rs:RSEntry x:Name="entry" Placeholder="Name" Counter="1" HasLeftIconSeparator="True" Helper="Enter your name" RSEntryStyle="OutlinedBorder">
             <!--<rs:RSEntry.LeadingIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
