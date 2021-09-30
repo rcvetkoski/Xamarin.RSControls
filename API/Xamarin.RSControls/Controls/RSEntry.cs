@@ -143,7 +143,7 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(ShadowColorProperty, value); }
         }
 
-        public static readonly BindableProperty PaddingProperty = BindableProperty.Create("Padding", typeof(Thickness), typeof(RSEntry), null);
+        public static readonly BindableProperty PaddingProperty = BindableProperty.Create("Padding", typeof(Thickness), typeof(RSEntry), default);
         public Thickness Padding
         {
             get { return (Thickness)GetValue(PaddingProperty); }
