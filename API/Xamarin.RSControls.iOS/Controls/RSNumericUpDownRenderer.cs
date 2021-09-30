@@ -23,7 +23,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if(e.PropertyName == "Value")
             {
                 (this.Control as RSUITextField).ForceFloatingHintFloatOrNot();
-                (this.Control as RSUITextField).UpdateFloatingLabel();
+                (this.Control as RSUITextField).UpdateBorder();
             }
         }
 

@@ -116,7 +116,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 SetText();
 
                 (this.Control as RSUITextField).ForceFloatingHintFloatOrNot();
-                (this.Control as RSUITextField).UpdateFloatingLabel();
+                (this.Control as RSUITextField).UpdateBorder();
             }
             else if (e.PropertyName == "Error")
             {
@@ -462,7 +462,10 @@ namespace Xamarin.RSControls.iOS.Controls
 
         public override nint GetRowsInComponent(UIPickerView pickerView, nint component)
         {
-            return myItems.Count;
+            if (myItems != null)
+                return myItems.Count;
+            else
+                return 0;
         }
 
         public override string GetTitle(UIPickerView pickerView, nint row, nint component)

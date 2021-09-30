@@ -121,7 +121,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 SetText();
 
                 if(this.Control is RSUITextField)
-                    (this.Control as RSUITextField).UpdateFloatingLabel();
+                    (this.Control as RSUITextField).UpdateBorder();
             }
         }
 
