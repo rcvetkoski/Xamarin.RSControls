@@ -27,7 +27,7 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" BackgroundColor="Transparent" Placeholder="Name" CounterMaxLength="6" Helper="Enter your name" RSEntryStyle="FilledBorder">
+        <rs:RSEntry x:Name="entry" BackgroundColor="Green" BorderFillColor="Yellow" Placeholder="Name" CounterMaxLength="6" Helper="Enter your name" RSEntryStyle="OutlinedBorder">
             <rs:RSEntry.RightIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
@@ -39,6 +39,18 @@
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
             </rs:RSEntry.RightIcon>
+
+            <rs:RSEntry.RightHelpingIcon>
+                <helpers:RSEntryIcon Command="TestMethod2">
+                    <helpers:RSEntryIcon.Bindings>
+                        <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
+                    </helpers:RSEntryIcon.Bindings>
+                    <helpers:RSEntryIcon.View>
+                        <rs:RSSvgImage Source="Samples/Data/SVG/plus.svg"/>
+                    </helpers:RSEntryIcon.View>
+                </helpers:RSEntryIcon>
+            </rs:RSEntry.RightHelpingIcon>
 
             <!--<rs:RSEntry.Behaviors>
                     <validators:ValidationBehaviour PropertyName="Text">

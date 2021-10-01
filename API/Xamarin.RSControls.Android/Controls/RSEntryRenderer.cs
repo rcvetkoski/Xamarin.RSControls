@@ -1065,7 +1065,7 @@ namespace Xamarin.RSControls.Droid.Controls
             {
 
                 canvas.DrawRect(new RectF(textRect.Left + leadingIconWidth,
-                                          textRect.Top + textSpacingFromBorderTop,
+                                          textRect.Top,
                                           textRect.Right - trailingIconWidth,
                                           textRect.Bottom - textSpacingFromBorderBottom),
                                           filledPaint);
@@ -1080,7 +1080,7 @@ namespace Xamarin.RSControls.Droid.Controls
             }
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
             {
-                var path = RoundedRect(textRect.Left + leadingIconWidth, textRect.Top + textSpacingFromBorderTop, textRect.Right - trailingIconWidth, textRect.Top + this.Height - textSpacingFromBorderBottom, this.borderRadius, this.borderRadius, true);
+                var path = RoundedRect(textRect.Left + leadingIconWidth, textRect.Top, textRect.Right - trailingIconWidth, textRect.Top + this.Height - textSpacingFromBorderBottom, this.borderRadius, this.borderRadius, true);
                 Path path2 = new Path();
                 path2.MoveTo(textRect.Left + leadingIconWidth, textRect.Top + this.Height - textSpacingFromBorderBottom);
                 path2.LineTo(textRect.Right - trailingIconWidth, textRect.Top + this.Height - textSpacingFromBorderBottom);
@@ -1138,15 +1138,11 @@ namespace Xamarin.RSControls.Droid.Controls
                 floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
 
                 //Y
+                floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height();
+                floatingHintYPostionNotFloating = Baseline - textSpacingFromBorderBottom / 2;
 
-                //floatingHintYPositionFloating = borderPosition.Y + (floatingHintSizeNotFloating.Height - floatinghHintSizeFloating.Height) / 2 + floatinghHintSizeFloating.Height / 2;
-                //floatingHintYPostionNotFloating = this.TextRect(this.Bounds).GetMidY() - textSpacingFromBorderBottom / 2;
-
-
-                floatingHintYPositionFloating = -this.Paint.Ascent() + textSpacingFromBorderTop;
-                var lolol = floatingHintYPostionNotFloating = Baseline - floatingHintBoundsNotFloating.Height() / 2;
-
-                floatingHintYPostionNotFloating = baselinePosition - Math.Abs(textSpacingFromBorderTop - textSpacingFromBorderBottom) / 2 - Math.Abs(PaddingTop - PaddingBottom) / 2;
+                var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + floatingHintBoundsNotFloating.Height() / 2;
+                floatingHintYPostionNotFloating = center;
             }
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
             {
@@ -1158,6 +1154,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height() / 2;
                 floatingHintYPostionNotFloating = Baseline;
 
+                //This gives accurate center position but the other one is used to match edit text baseline
+                //var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2  + floatingHintBoundsNotFloating.Height() / 2;
+                //floatingHintYPostionNotFloating = center;
+
             }
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
             {
@@ -1166,7 +1166,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
 
                 //Y
-                floatingHintYPositionFloating = -this.Paint.Ascent(); /*topSpacing + floatingHintBoundsFloating.Height();*/
+                floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height();
                 floatingHintYPostionNotFloating = baselinePosition;
             }
 
