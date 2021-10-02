@@ -119,12 +119,15 @@ namespace Xamarin.RSControls.Droid.Controls
         private CustomDrawable leftDrawable;
         private CustomDrawable rightDrawable;
         private Paint iconsSearator;
-        private int iconsSpacing;
+        private int iconPadding;
         private int leftDrawableWidth;
-        private int leadingIconWidth;
+        private int leadingDrawableWidth;
         private int trailingIconWidth;
-        private int leftDrawableClip;
+        private int leftHelpingDrawableWidth;
         private int rightDrawableClip;
+        private global::Android.Graphics.Rect borderPosition;
+
+
         private float correctiveY;
         private bool shouldFloat;
         private bool shouldNotFloat;
@@ -184,13 +187,15 @@ namespace Xamarin.RSControls.Droid.Controls
             corectCorners = borderWidthFocused - borderWidth;
             shadowRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.ShadowEnabled ? rSControl.ShadowRadius : borderWidth, Context.Resources.DisplayMetrics);
             leftRightSpacingLabels = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 14, Context.Resources.DisplayMetrics);
-            iconsSpacing = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics);
+            iconPadding = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics);
             errorMessage = string.Empty;
             borderColor = rSControl.BorderColor.ToAndroid();
             activeColor = rSControl.ActiveColor.ToAndroid();
             errorColor = rSControl.ErrorColor.ToAndroid();
             textSpacingFromBorderTop = TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics); 
             textSpacingFromBorderBottom = TypedValue.ApplyDimension(ComplexUnitType.Dip, 14, Context.Resources.DisplayMetrics);
+
+            borderPosition = new global::Android.Graphics.Rect();
 
             //Set Padding
             padding = new Thickness(TypedValue.ApplyDimension(ComplexUnitType.Dip, 8,
@@ -640,8 +645,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 rSControl.LeadingIcon.View.Height.ToString();
                 this.leadingDrawable = CreateDrawable(rSControl.LeadingIcon, 0, null);
 
-                leadingIconWidth = leadingDrawable.IntrinsicWidth + (this.CompoundDrawablePadding * 2);
-                this.SetPadding(this.PaddingLeft + leadingIconWidth, this.PaddingTop, this.PaddingRight, this.PaddingBottom);
+                leadingDrawableWidth = leadingDrawable.IntrinsicWidth + iconPadding;
 
                 //Set max height of icon so we can resize RSEntry if necessary
                 if (maxIconHeight < rSControl.LeadingIcon.View.Height)
@@ -660,13 +664,15 @@ namespace Xamarin.RSControls.Droid.Controls
                         maxIconHeight = rSControl.LeftHelpingIcon.View.Height;
                 }
 
-                leftDrawableClip = leftHelpingDrawable != null ? leftHelpingDrawable.IntrinsicWidth + iconsSpacing : 0;
+                leftHelpingDrawableWidth = leftHelpingDrawable != null ? leftHelpingDrawable.IntrinsicWidth + iconPadding : 0;
 
-                this.leftDrawable = CreateDrawable(rSControl.LeftIcon, leftDrawableClip, "left");
+                this.leftDrawable = CreateDrawable(rSControl.LeftIcon, leftHelpingDrawableWidth, "left");
+                leftDrawableWidth = leftDrawable != null ? leftDrawable.IntrinsicWidth + iconPadding : 0;
 
                 //Set max height of icon so we can resize RSEntry if necessary
                 if (maxIconHeight < rSControl.LeftIcon.View.Height)
                     maxIconHeight = rSControl.LeftIcon.View.Height;
+
             }
 
             //Right Icon
@@ -682,7 +688,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         maxIconHeight = rSControl.RightHelpingIcon.View.Height;
                 }
 
-                rightDrawableClip = rightHelpingDrawable != null ? rightHelpingDrawable.IntrinsicWidth + iconsSpacing : 0;
+                rightDrawableClip = rightHelpingDrawable != null ? rightHelpingDrawable.IntrinsicWidth + iconPadding : 0;
 
                 if(rSControl.RightIcon.View != null)
                 {
@@ -706,11 +712,10 @@ namespace Xamarin.RSControls.Droid.Controls
                     maxIconHeight = rSControl.TrailingIcon.View.Height;
             }
 
+            this.SetPadding(this.PaddingLeft + leadingDrawableWidth + leftDrawableWidth + leftHelpingDrawableWidth, this.PaddingTop, this.PaddingRight, this.PaddingBottom);
 
             //Set Drawable to control
             //this.SetCompoundDrawables(this.leftDrawable, null, this.rightDrawable, null);
-
-            leftDrawableWidth = leftDrawable != null ? leftDrawable.IntrinsicWidth + this.CompoundDrawablePadding : 0;
         }
         private CustomDrawable CreateDrawable(RSEntryIcon rsIcon, int customDrawableClip, string type = null)
         {
@@ -957,8 +962,8 @@ namespace Xamarin.RSControls.Droid.Controls
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - leftDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + leftDrawable.IntrinsicHeight / 2;
 
-            var left = textRect.Left + iconsSpacing;
-            var left2 = textRect.Left + iconsSpacing + leftDrawable.IntrinsicWidth;
+            var left = borderPosition.Left + iconPadding;
+            var left2 = borderPosition.Left + iconPadding + leftDrawable.IntrinsicWidth;
 
             leftDrawable.drawable.SetBounds(left, center, left2, center2);
             leftDrawable.SetBounds(left, center, left2, center2);
@@ -971,8 +976,8 @@ namespace Xamarin.RSControls.Droid.Controls
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - leftHelpingDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + leftHelpingDrawable.IntrinsicHeight / 2;
 
-            var left = textRect.Left + this.PaddingLeft + iconsSpacing + leftDrawable.IntrinsicWidth;
-            var left2 = textRect.Left + this.PaddingLeft + iconsSpacing + leftDrawable.IntrinsicWidth + leftHelpingDrawable.IntrinsicWidth;
+            var left = borderPosition.Left + iconPadding + leftDrawable.IntrinsicWidth;
+            var left2 = textRect.Left + this.PaddingLeft + iconPadding + leftDrawable.IntrinsicWidth + leftHelpingDrawable.IntrinsicWidth;
 
             leftHelpingDrawable.drawable.SetBounds(left, center, left2, center2);
             leftHelpingDrawable.SetBounds(left, center, left2, center2);
@@ -989,8 +994,8 @@ namespace Xamarin.RSControls.Droid.Controls
             var c2 = c + rightDrawable.IntrinsicHeight;
 
 
-            var right = textRect.Right - this.PaddingRight - iconsSpacing - rightDrawable.IntrinsicWidth;
-            var right2 = textRect.Right - this.PaddingRight - iconsSpacing;
+            var right = textRect.Right - this.PaddingRight - iconPadding - rightDrawable.IntrinsicWidth;
+            var right2 = textRect.Right - this.PaddingRight - iconPadding;
 
             rightDrawable.drawable.SetBounds(right, c, right2, c2);
             rightDrawable.SetBounds(right, c, right2, c2);
@@ -1008,8 +1013,8 @@ namespace Xamarin.RSControls.Droid.Controls
             var c2 = c + rightHelpingDrawable.IntrinsicHeight; 
 
 
-            var right = textRect.Right - this.PaddingRight - iconsSpacing - rightDrawable.IntrinsicWidth - rightHelpingDrawable.IntrinsicWidth;
-            var right2 = textRect.Right - this.PaddingRight - iconsSpacing - rightDrawable.IntrinsicWidth;
+            var right = textRect.Right - this.PaddingRight - iconPadding - rightDrawable.IntrinsicWidth - rightHelpingDrawable.IntrinsicWidth;
+            var right2 = textRect.Right - this.PaddingRight - iconPadding - rightDrawable.IntrinsicWidth;
 
             rightHelpingDrawable.drawable.SetBounds(right, c, right2, c2);
             rightHelpingDrawable.SetBounds(right, c, right2, c2);
@@ -1022,9 +1027,9 @@ namespace Xamarin.RSControls.Droid.Controls
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - leftDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + leftDrawable.IntrinsicHeight / 2;
 
-            canvas.DrawLine(textRect.Left + this.PaddingLeft + leftDrawable.IntrinsicWidth + iconsSpacing / 2,
+            canvas.DrawLine(textRect.Left + this.PaddingLeft + leftDrawable.IntrinsicWidth + iconPadding / 2,
                             center - correctiveY,
-                            textRect.Left + this.PaddingLeft + leftDrawable.IntrinsicWidth + iconsSpacing / 2,
+                            textRect.Left + this.PaddingLeft + leftDrawable.IntrinsicWidth + iconPadding / 2,
                             center2 - correctiveY,
                             iconsSearator);
         }
@@ -1033,9 +1038,9 @@ namespace Xamarin.RSControls.Droid.Controls
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - rightDrawable.IntrinsicHeight / 2;
             var center2 = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + rightDrawable.IntrinsicHeight / 2;
 
-            canvas.DrawLine(textRect.Right - this.PaddingRight - rightDrawable.IntrinsicWidth - iconsSpacing / 2,
+            canvas.DrawLine(textRect.Right - this.PaddingRight - rightDrawable.IntrinsicWidth - iconPadding / 2,
                             center - correctiveY,
-                            textRect.Right - this.PaddingRight - rightDrawable.IntrinsicWidth - iconsSpacing / 2,
+                            textRect.Right - this.PaddingRight - rightDrawable.IntrinsicWidth - iconPadding / 2,
                             center2 - correctiveY,
                             iconsSearator);
         }
@@ -1065,6 +1070,13 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
             {
+                //border
+                borderPosition.Left = canvas.ClipBounds.Left + leadingDrawableWidth;
+                borderPosition.Top = canvas.ClipBounds.Top + (int)textSpacingFromBorderTop;
+                borderPosition.Right = canvas.ClipBounds.Right - trailingIconWidth;
+                borderPosition.Bottom = textRect.Bottom - (int)textSpacingFromBorderBottom;
+
+
                 //Clip top border first and check if api < 26
                 canvas.Save();
 
@@ -1072,35 +1084,35 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
                     {
-                        canvas.ClipRect(textRect.Left + leftRightSpacingLabels - floatingHintClipPadding + leadingIconWidth + (int)this.shadowRadius,
+                        canvas.ClipRect(textRect.Left + leftRightSpacingLabels - floatingHintClipPadding + leadingDrawableWidth + (int)this.shadowRadius,
                                         textRect.Top,
-                                        textRect.Left + floatingHintBoundsFloating.Width() + leftRightSpacingLabels + floatingHintClipPadding + leadingIconWidth + (int)this.shadowRadius,
+                                        textRect.Left + floatingHintBoundsFloating.Width() + leftRightSpacingLabels + floatingHintClipPadding + leadingDrawableWidth + (int)this.shadowRadius,
                                         textRect.Top + textSpacingFromBorderTop + floatingHintBoundsFloating.Height(),
                                         global::Android.Graphics.Region.Op.Difference);
                     }
                     else
                     {
-                        canvas.ClipOutRect(textRect.Left + leftRightSpacingLabels - floatingHintClipPadding + leadingIconWidth + (int)this.shadowRadius,
+                        canvas.ClipOutRect(textRect.Left + leftRightSpacingLabels - floatingHintClipPadding + leadingDrawableWidth + (int)this.shadowRadius,
                                            textRect.Top,
-                                           textRect.Left + floatingHintBoundsFloating.Width() + leftRightSpacingLabels + floatingHintClipPadding + leadingIconWidth + (int)this.shadowRadius,
+                                           textRect.Left + floatingHintBoundsFloating.Width() + leftRightSpacingLabels + floatingHintClipPadding + leadingDrawableWidth + (int)this.shadowRadius,
                                            textRect.Top + textSpacingFromBorderTop + floatingHintBoundsFloating.Height());
                     }
                 }
 
 
-                canvas.DrawRoundRect(new RectF(textRect.Left + leadingIconWidth + this.shadowRadius,
-                                               textRect.Top + textSpacingFromBorderTop,
-                                               textRect.Right - trailingIconWidth - this.shadowRadius,
-                                               textRect.Bottom - textSpacingFromBorderBottom),
-                                               this.borderRadius, this.borderRadius,
+                canvas.DrawRoundRect(new RectF(borderPosition.Left,
+                                               borderPosition.Top,
+                                               borderPosition.Right,
+                                               borderPosition.Bottom),
+                                               borderRadius, borderRadius,
                                                filledPaint);
 
-                
-                canvas.DrawRoundRect(new RectF(canvas.ClipBounds.Left + leadingIconWidth + this.shadowRadius,
-                                               textRect.Top + textSpacingFromBorderTop,
-                                               textRect.Right - trailingIconWidth - this.shadowRadius,
-                                               textRect.Bottom - textSpacingFromBorderBottom),
-                                               this.borderRadius, this.borderRadius,
+
+                canvas.DrawRoundRect(new RectF(borderPosition.Left,
+                                               borderPosition.Top,
+                                               borderPosition.Right,
+                                               borderPosition.Bottom),
+                                               borderRadius, borderRadius,
                                                borderPaint);
 
                 canvas.Restore();
@@ -1108,27 +1120,40 @@ namespace Xamarin.RSControls.Droid.Controls
             }
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
             {
+                //border
+                borderPosition.Left = canvas.ClipBounds.Left + leadingDrawableWidth;
+                borderPosition.Top = canvas.ClipBounds.Top;
+                borderPosition.Right = canvas.ClipBounds.Right - trailingIconWidth;
+                borderPosition.Bottom = textRect.Bottom - (int)textSpacingFromBorderBottom;
 
-                canvas.DrawRect(new RectF(textRect.Left + leadingIconWidth,
-                                          textRect.Top,
-                                          textRect.Right - trailingIconWidth,
-                                          textRect.Bottom - textSpacingFromBorderBottom),
+
+                canvas.DrawRect(new RectF(borderPosition.Left,
+                                          borderPosition.Top,
+                                          borderPosition.Right,
+                                          borderPosition.Bottom),
                                           filledPaint);
 
 
                 Path path2 = new Path();
-                path2.MoveTo(textRect.Left + leadingIconWidth, textRect.Top + this.Height - textSpacingFromBorderBottom);
-                path2.LineTo(textRect.Right - trailingIconWidth, textRect.Top + this.Height - textSpacingFromBorderBottom);
+                path2.MoveTo(borderPosition.Left, canvas.ClipBounds.Top + this.Height - textSpacingFromBorderBottom);
+                path2.LineTo(borderPosition.Right, canvas.ClipBounds.Top + this.Height - textSpacingFromBorderBottom);
                 path2.Close();//Given close, last lineto can be removed.
                 canvas.DrawPath(path2, borderPaint);
 
             }
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
             {
-                var path = RoundedRect(textRect.Left + leadingIconWidth, textRect.Top, textRect.Right - trailingIconWidth, textRect.Top + this.Height - textSpacingFromBorderBottom, this.borderRadius, this.borderRadius, true);
+                //border
+                borderPosition.Left = canvas.ClipBounds.Left + leadingDrawableWidth;
+                borderPosition.Top = canvas.ClipBounds.Top;
+                borderPosition.Right = canvas.ClipBounds.Right - trailingIconWidth;
+                borderPosition.Bottom = textRect.Bottom - (int)textSpacingFromBorderBottom;
+
+
+                var path = RoundedRect(borderPosition.Left, borderPosition.Top, borderPosition.Right, borderPosition.Bottom, this.borderRadius, this.borderRadius, true);
                 Path path2 = new Path();
-                path2.MoveTo(textRect.Left + leadingIconWidth, textRect.Top + this.Height - textSpacingFromBorderBottom);
-                path2.LineTo(textRect.Right - trailingIconWidth, textRect.Top + this.Height - textSpacingFromBorderBottom);
+                path2.MoveTo(borderPosition.Left, borderPosition.Bottom);
+                path2.LineTo(borderPosition.Right, borderPosition.Bottom);
                 path2.Close();//Given close, last lineto can be removed.
 
                 canvas.DrawPath(path, filledPaint);
@@ -1179,8 +1204,8 @@ namespace Xamarin.RSControls.Droid.Controls
             if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
             {
                 //X
-                floatingHintXPostionFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
-                floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
+                floatingHintXPostionFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftHelpingDrawableWidth;
+                floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftHelpingDrawableWidth;
 
                 //Y
                 floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height();
@@ -1192,8 +1217,8 @@ namespace Xamarin.RSControls.Droid.Controls
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
             {
                 //X
-                floatingHintXPostionFloating = textRect.Left + leftRightSpacingLabels + leadingIconWidth + this.shadowRadius;
-                floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
+                floatingHintXPostionFloating = borderPosition.Left + leftRightSpacingLabels;
+                floatingHintXPostionNotFloating = this.PaddingLeft;
 
                 //Y
                 floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height() / 2;
@@ -1207,8 +1232,8 @@ namespace Xamarin.RSControls.Droid.Controls
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
             {
                 //X
-                floatingHintXPostionFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
-                floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftDrawableClip;
+                floatingHintXPostionFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftHelpingDrawableWidth;
+                floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftHelpingDrawableWidth;
 
                 //Y
                 floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height();
@@ -1231,19 +1256,19 @@ namespace Xamarin.RSControls.Droid.Controls
         }
         private void UpdateFloatingHint(Canvas canvas)
         {
-            canvas.DrawText(floatingHintText, textRect.Left + floatingHintXPostion, floatingHintYPostion + textRect.Top, floatingHintPaint);
+            canvas.DrawText(floatingHintText, floatingHintXPostion, floatingHintYPostion + textRect.Top, floatingHintPaint);
         }
 
         //Update error / helper / counter
         private void UpdateErrorMessage(Canvas canvas)
         {
             errorYPosition = this.Height - textSpacingFromBorderBottom - errorPaint.Ascent() + 2 + textRect.Top;
-            canvas.DrawText(errorMessage, textRect.Left + leftRightSpacingLabels + leadingIconWidth, errorYPosition, errorPaint);
+            canvas.DrawText(errorMessage, textRect.Left + leftRightSpacingLabels + leadingDrawableWidth, errorYPosition, errorPaint);
         }
         private void UpdateHelperMessage(Canvas canvas)
         {
             helperYPosition = this.Height - textSpacingFromBorderBottom - helperPaint.Ascent() + 2 + textRect.Top;
-            canvas.DrawText(helperMessage, textRect.Left + leftRightSpacingLabels + leadingIconWidth, helperYPosition, helperPaint);
+            canvas.DrawText(helperMessage, textRect.Left + leftRightSpacingLabels + leadingDrawableWidth, helperYPosition, helperPaint);
         }
         private void UpdateCounterMessage(Canvas canvas)
         {
@@ -1355,12 +1380,12 @@ namespace Xamarin.RSControls.Droid.Controls
 
         public override bool OnTouchEvent(MotionEvent e)
         {
-            bool rightIconCondition = this.rightDrawable != null && e.GetX() >= Right - trailingIconWidth - rightDrawable.IntrinsicWidth - iconsSpacing && e.GetX() <= Right - trailingIconWidth;
+            bool rightIconCondition = this.rightDrawable != null && e.GetX() >= Right - trailingIconWidth - rightDrawable.IntrinsicWidth - iconPadding && e.GetX() <= Right - trailingIconWidth;
             bool trailingIconCondition = trailingDrawable != null && e.GetX() >= Right - trailingIconWidth && e.GetX() <= Right;
-            bool rightHelpingIconCondition = rightHelpingDrawable != null && e.GetX() >= rightHelpingDrawable.Bounds.Left - textRect.Left && e.GetX() <= rightHelpingDrawable.Bounds.Right - textRect.Left + iconsSpacing;
-            bool leadingIconCondition = leadingDrawable != null && e.GetX() >= Left && e.GetX() <= Left + leadingIconWidth;
-            bool leftIconCondition = leftDrawable != null && e.GetX() >= Left + leadingIconWidth && e.GetX() <= Left + leadingIconWidth + leftDrawable.IntrinsicWidth + iconsSpacing;
-            bool leftHelpingIconCondition = leftHelpingDrawable != null && e.GetX() >= leftHelpingDrawable.Bounds.Left - textRect.Left - iconsSpacing && e.GetX() <= leftHelpingDrawable.Bounds.Right - textRect.Left;
+            bool rightHelpingIconCondition = rightHelpingDrawable != null && e.GetX() >= rightHelpingDrawable.Bounds.Left - textRect.Left && e.GetX() <= rightHelpingDrawable.Bounds.Right - textRect.Left + iconPadding;
+            bool leadingIconCondition = leadingDrawable != null && e.GetX() >= Left && e.GetX() <= Left + leadingDrawableWidth;
+            bool leftIconCondition = leftDrawable != null && e.GetX() >= Left + leadingDrawableWidth && e.GetX() <= Left + leadingDrawableWidth + leftDrawable.IntrinsicWidth + iconPadding;
+            bool leftHelpingIconCondition = leftHelpingDrawable != null && e.GetX() >= leftHelpingDrawable.Bounds.Left - textRect.Left - iconPadding && e.GetX() <= leftHelpingDrawable.Bounds.Right - textRect.Left;
 
             if (e.Action == MotionEventActions.Down)
             {
