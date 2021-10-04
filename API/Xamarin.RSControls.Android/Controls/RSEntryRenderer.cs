@@ -118,6 +118,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private CustomDrawable trailingDrawable;
         private CustomDrawable leftDrawable;
         private CustomDrawable rightDrawable;
+        private global::Android.Views.View rightView;
         private Paint iconsSearator;
         private int iconPadding;
         private int leftDrawableWidth;
@@ -723,28 +724,19 @@ namespace Xamarin.RSControls.Droid.Controls
         }
         private CustomDrawable CreateDrawable(RSEntryIcon rsIcon, int customDrawableClip, string type = null)
         {
-            //int width = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rsIcon.IconWidth, Context.Resources.DisplayMetrics);
-            //int height = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)rsIcon.IconHeight, Context.Resources.DisplayMetrics);
-
             global::Android.Views.View convertedView = null;
             BitmapDrawable bitmapDrawable = null;
 
             if (rsIcon.View != null)
                 convertedView = Extensions.ViewExtensions.ConvertFormsToNative(rsIcon.View, new Rectangle(0, 0, this.Width, this.Height), Context);
 
-            rsIcon.View.Width.ToString();
+            rightView = convertedView;
 
             if (convertedView != null)
                 bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, convertedView.Width, convertedView.Height));
 
-
-            if (type != null && type == "right")
-                bitmapDrawable.SetBounds(customDrawableClip, 0, bitmapDrawable.IntrinsicWidth + customDrawableClip, bitmapDrawable.IntrinsicHeight);
-            else if (type != null && type == "left")
-                bitmapDrawable.SetBounds(0, 0, bitmapDrawable.IntrinsicWidth, bitmapDrawable.IntrinsicHeight);
-
             var drawable = new CustomDrawable(bitmapDrawable, this, correctiveY);
-            drawable.SetBounds(0, 0, bitmapDrawable.IntrinsicWidth + customDrawableClip, bitmapDrawable.IntrinsicHeight);
+            //drawable.SetBounds(0, 0, bitmapDrawable.IntrinsicWidth + customDrawableClip, bitmapDrawable.IntrinsicHeight);
 
             if(rsIcon.Source == null)
                 rsIcon.Source = (rSControl as Forms.View).BindingContext;
@@ -1008,13 +1000,20 @@ namespace Xamarin.RSControls.Droid.Controls
             var right = borderPosition.Right - rightDrawable.IntrinsicWidth - iconPadding;
             var right2 = borderPosition.Right - iconPadding;
 
-            rightDrawable.drawable.SetBounds(right, c, right2, c2);
+            rightDrawable.SetBounds(right, c, right2, c2);
             rightDrawable.SetBounds(right, c, right2, c2);
 
 
-            rightDrawable.Draw(canvas);
-        }
 
+            //rightView.Layout(right, center, right2, center2);
+
+            canvas.Save();
+            canvas.Translate(right, center);
+            rightView.Draw(canvas);
+            canvas.Restore();
+
+            //rightDrawable.Draw(canvas);
+        }
         private void UpdateRightHelpingIcon(Canvas canvas)
         {
             var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 - rightHelpingDrawable.IntrinsicHeight / 2;
@@ -1023,14 +1022,13 @@ namespace Xamarin.RSControls.Droid.Controls
             var c = (int)floatingHintYPostionNotFloating - floatingHintBoundsNotFloating.Height() / 2 - rightHelpingDrawable.IntrinsicHeight / 2;
             var c2 = c + rightHelpingDrawable.IntrinsicHeight;
 
-
             var right = borderPosition.Right - rightDrawableWidth - rightHelpingDrawable.IntrinsicWidth - iconPadding;
             var right2 = borderPosition.Right - rightDrawableWidth - iconPadding;
 
             rightHelpingDrawable.drawable.SetBounds(right, c, right2, c2);
             rightHelpingDrawable.SetBounds(right, c, right2, c2);
 
-
+            
             rightHelpingDrawable.Draw(canvas);
         }
         private void UpdateLeftIconSeparator(Canvas canvas)
