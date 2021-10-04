@@ -27,7 +27,30 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" BackgroundColor="Red" Placeholder="Name" Helper="Enter your name" WidthRequest="150" HorizontalOptions="Center" RSEntryStyle="OutlinedBorder">
+        <rs:RSEntry x:Name="entry" Placeholder="Name" Helper="Enter your name" HorizontalOptions="Center" RSEntryStyle="OutlinedBorder">
+            <rs:RSEntry.RightIcon>
+                <helpers:RSEntryIcon Command="TestMethod2">
+                    <helpers:RSEntryIcon.Bindings>
+                        <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
+                    </helpers:RSEntryIcon.Bindings>
+                    <helpers:RSEntryIcon.View>
+                        <rs:RSSvgImage WidthRequest="35" HeightRequest="35" Source="Samples/Data/SVG/plus.svg"/>
+                    </helpers:RSEntryIcon.View>
+                </helpers:RSEntryIcon>
+            </rs:RSEntry.RightIcon>
+
+
+            <!--<rs:RSEntry.Behaviors>
+                <validators:ValidationBehaviour PropertyName="Text">
+                    <validators:ValidationBehaviour.Validators>
+                        <validators:RequiredValidation/>
+                    </validators:ValidationBehaviour.Validators>
+                </validators:ValidationBehaviour>
+            </rs:RSEntry.Behaviors>-->
+        </rs:RSEntry>
+
+                <rs:RSEntry Placeholder="Name" WidthRequest="150" Helper="Enter your name" HorizontalOptions="Center" RSEntryStyle="OutlinedBorder">
             <rs:RSEntry.RightIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
@@ -40,17 +63,51 @@
                 </helpers:RSEntryIcon>
             </rs:RSEntry.RightIcon>
 
-            <rs:RSEntry.RightHelpingIcon>
+
+            <!--<rs:RSEntry.Behaviors>
+                <validators:ValidationBehaviour PropertyName="Text">
+                    <validators:ValidationBehaviour.Validators>
+                        <validators:RequiredValidation/>
+                    </validators:ValidationBehaviour.Validators>
+                </validators:ValidationBehaviour>
+            </rs:RSEntry.Behaviors>-->
+        </rs:RSEntry>
+
+                <rs:RSEntry Placeholder="Name" Helper="Enter your name" WidthRequest="100" HorizontalOptions="Center" RSEntryStyle="OutlinedBorder">
+            <rs:RSEntry.RightIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
                         <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
                         <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
                     </helpers:RSEntryIcon.Bindings>
                     <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage WidthRequest="60" HeightRequest="60" Source="Samples/Data/SVG/plus.svg"/>
+                        <rs:RSSvgImage WidthRequest="30" HeightRequest="30" Source="Samples/Data/SVG/plus.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
-            </rs:RSEntry.RightHelpingIcon>
+            </rs:RSEntry.RightIcon>
+
+
+            <!--<rs:RSEntry.Behaviors>
+                <validators:ValidationBehaviour PropertyName="Text">
+                    <validators:ValidationBehaviour.Validators>
+                        <validators:RequiredValidation/>
+                    </validators:ValidationBehaviour.Validators>
+                </validators:ValidationBehaviour>
+            </rs:RSEntry.Behaviors>-->
+        </rs:RSEntry>
+
+                        <rs:RSEntry Placeholder="Name" Helper="Enter your name" HorizontalOptions="Center" RSEntryStyle="OutlinedBorder">
+            <rs:RSEntry.RightIcon>
+                <helpers:RSEntryIcon Command="TestMethod2">
+                    <helpers:RSEntryIcon.Bindings>
+                        <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
+                        <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
+                    </helpers:RSEntryIcon.Bindings>
+                    <helpers:RSEntryIcon.View>
+                        <rs:RSSvgImage WidthRequest="45" HeightRequest="45" Source="Samples/Data/SVG/plus.svg"/>
+                    </helpers:RSEntryIcon.View>
+                </helpers:RSEntryIcon>
+            </rs:RSEntry.RightIcon>
 
 
             <!--<rs:RSEntry.Behaviors>

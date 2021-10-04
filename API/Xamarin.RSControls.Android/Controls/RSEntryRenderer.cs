@@ -245,10 +245,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void SetPaddingValues()
         {
-            //Top and bottomSpacing
-            textSpacingFromBorderTop = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 5, Context.Resources.DisplayMetrics);
-            textSpacingFromBorderBottom = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 15, Context.Resources.DisplayMetrics);
-
             if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
             {
                 this.SetPadding((int)padding.Left + (int)this.rSControl.Padding.Left,
@@ -821,21 +817,13 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnDraw(canvas);
 
-            //Resize RSEntry if one of the icons too big, 20 is top + bottom spacing not converted to android units
-            if (maxIconHeight > (this.rSControl as Forms.View).Height - 20)
+            //Resize RSEntry if one of the icons too big, 22 is top + bottom spacing not converted to android units
+            var rsEntryHeight = (this.rSControl as Forms.View).Height;
+            if (maxIconHeight >= rsEntryHeight - 22 - 16)
             {
-                var h = ((this.rSControl as Forms.View).Height
-                        + (maxIconHeight - 20))
-                        + 20;
+                var h = rsEntryHeight + (maxIconHeight - (rsEntryHeight - 22 - 16));
                 (this.rSControl as Forms.View).HeightRequest = h;
-
-                //var prms = this.LayoutParameters;
-                //prms.Width = prms.Width;
-                //prms.Height = 1000;
-
-                //this.LayoutParameters = prms;
             }
-
 
             //Text rect bounds
             textRect = new global::Android.Graphics.Rect();
