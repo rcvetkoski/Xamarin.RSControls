@@ -15,8 +15,8 @@
     </ContentPage.BindingContext>
 
     <StackLayout Margin="5">
-    
-            <!--<rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+
+        <!--<rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
                 <rs:RSTabbedViews.Views>
                     <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
                     <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
@@ -27,7 +27,7 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" Placeholder="Name" Helper="Enter your name" WidthRequest="150" HorizontalOptions="Center" RSEntryStyle="OutlinedBorder">
+        <rs:RSEntry x:Name="entry" BackgroundColor="Red" Placeholder="Name" Helper="Enter your name" WidthRequest="150" HorizontalOptions="Center" RSEntryStyle="OutlinedBorder">
             <rs:RSEntry.RightIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
@@ -47,19 +47,19 @@
                         <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
                     </helpers:RSEntryIcon.Bindings>
                     <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage Source="Samples/Data/SVG/plus.svg"/>
+                        <rs:RSSvgImage WidthRequest="60" HeightRequest="60" Source="Samples/Data/SVG/plus.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
             </rs:RSEntry.RightHelpingIcon>
 
 
             <!--<rs:RSEntry.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
-                        <validators:ValidationBehaviour.Validators>
-                            <validators:RequiredValidation/>
-                        </validators:ValidationBehaviour.Validators>
-                    </validators:ValidationBehaviour>
-                </rs:RSEntry.Behaviors>-->
+                <validators:ValidationBehaviour PropertyName="Text">
+                    <validators:ValidationBehaviour.Validators>
+                        <validators:RequiredValidation/>
+                    </validators:ValidationBehaviour.Validators>
+                </validators:ValidationBehaviour>
+            </rs:RSEntry.Behaviors>-->
         </rs:RSEntry>
 
     </StackLayout>

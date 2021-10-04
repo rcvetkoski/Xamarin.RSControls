@@ -88,7 +88,6 @@ namespace Xamarin.RSControls.Droid.Controls
         private TextPaint counterPaint;
         private global::Android.Graphics.Rect floatingHintBoundsFloating;
         private global::Android.Graphics.Rect floatingHintBoundsNotFloating;
-        private int baselinePosition;
         private global::Android.Graphics.Rect counterMessageBounds;
         public Paint borderPaint;
         private Paint filledPaint;
@@ -108,7 +107,6 @@ namespace Xamarin.RSControls.Droid.Controls
         private float counterYPosition;
         private global::Android.Graphics.Rect textRect;
         private double maxIconHeight = 0;
-        private bool shouldUpdateFloatingHintPosition = false;
 
         //icon drawables
         private CustomDrawable leadingDrawable;
@@ -195,9 +193,11 @@ namespace Xamarin.RSControls.Droid.Controls
             borderPosition = new global::Android.Graphics.Rect();
 
             //Set Padding
-            padding = new Thickness(TypedValue.ApplyDimension(ComplexUnitType.Dip, 8,
-                                    Context.Resources.DisplayMetrics), TypedValue.ApplyDimension(ComplexUnitType.Dip, 17, Context.Resources.DisplayMetrics));
+            padding = new Thickness(TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics), TypedValue.ApplyDimension(ComplexUnitType.Dip, 17, Context.Resources.DisplayMetrics));
             SetPaddingValues();
+
+            //Create Icons if any
+            CreateIcons();
 
             //Floating Hint
             CreateFloatingHint();
@@ -233,6 +233,14 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //On touch listener
             //this.SetOnTouchListener(this);
+
+            //Is Placeholder Always Floating
+            if (rSControl.IsPlaceholderAlwaysFloating)
+                IsFloating = true;
+            else if (this.IsFocused || !string.IsNullOrEmpty(this.Text) || errorEnabled)
+                IsFloating = true;
+            else
+                IsFloating = false;
         }
 
         private void SetPaddingValues()
@@ -624,8 +632,6 @@ namespace Xamarin.RSControls.Droid.Controls
         }
         private void CreateIcons()
         {
-            this.CompoundDrawablePadding = 15;
-
             //Password
             if (this.rSControl.IsPassword)
                 CreatePasswordIcon();
@@ -815,61 +821,26 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnDraw(canvas);
 
+            //Resize RSEntry if one of the icons too big, 20 is top + bottom spacing not converted to android units
+            if (maxIconHeight > (this.rSControl as Forms.View).Height - 20)
+            {
+                var h = ((this.rSControl as Forms.View).Height
+                        + (maxIconHeight - 20))
+                        + 20;
+                (this.rSControl as Forms.View).HeightRequest = h;
+
+                //var prms = this.LayoutParameters;
+                //prms.Width = prms.Width;
+                //prms.Height = 1000;
+
+                //this.LayoutParameters = prms;
+            }
+
+
             //Text rect bounds
             textRect = new global::Android.Graphics.Rect();
             this.GetDrawingRect(textRect);
 
-
-            if (baselinePosition != this.Baseline)
-                shouldUpdateFloatingHintPosition = true;
-            else
-                shouldUpdateFloatingHintPosition = false;
-
-            baselinePosition = this.Baseline;
-
-            if(shouldUpdateFloatingHintPosition)
-                floatingHintPositionUpdate();
-
-
-            //Init floatingHint X and Y values
-            if (!hasInitfloatingHintYPosition)
-            {
-                //Create Icons if any
-                CreateIcons();
-
-                //Resize RSEntry if one of the icons too big, 20 is top + bottom spacing not converted to android units
-                if (maxIconHeight > (this.rSControl as Forms.View).Height - 20)
-                {
-                    var h = ((this.rSControl as Forms.View).Height
-                            + (maxIconHeight - 20))
-                            + 20;
-                    (this.rSControl as Forms.View).HeightRequest = h;
-                }
-
-
-                if (rSControl.IsPlaceholderAlwaysFloating)
-                    IsFloating = true;
-                else if (this.IsFocused || !string.IsNullOrEmpty(this.Text) || errorEnabled)
-                    IsFloating = true;
-                else
-                    IsFloating = false;
-
-                baselinePosition = this.Baseline;
-
-                floatingHintPositionUpdate();
-
-                if (errorPaint != null)
-                    errorYPosition = this.Height - textSpacingFromBorderBottom - errorPaint.Ascent() + 2 + textRect.Top;
-
-                if (helperPaint != null)
-                    helperYPosition = this.Height - textSpacingFromBorderBottom - helperPaint.Ascent() + 2 + textRect.Top;
-
-                if (counterPaint != null)
-                    counterYPosition = this.Height - textSpacingFromBorderBottom - counterPaint.Ascent() + 2 + textRect.Top;
-
-
-                hasInitfloatingHintYPosition = true;
-            }
 
             //When EditText is focused Animate
             if (isFocused != this.IsFocused && !isFloatingHintAnimating)
@@ -908,10 +879,15 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnLayout(changed, left, top, right, bottom);
 
-            if(changed)
+            if (changed)
             {
-                this.Baseline.ToString();
-                //floatingHintPositionUpdate();
+                //if (!hasInitfloatingHintYPosition)
+                //{
+                //    floatingHintPositionUpdate();
+                //    hasInitfloatingHintYPosition = true;
+                //}
+                floatingHintPositionUpdate();
+
             }
         }
 
@@ -1219,7 +1195,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 //Y
                 floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height();
-                floatingHintYPostionNotFloating = baselinePosition;
+                floatingHintYPostionNotFloating = Baseline;
             }
 
 
