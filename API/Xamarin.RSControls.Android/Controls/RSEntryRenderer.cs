@@ -282,8 +282,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             //Height
-            var h = maxIconHeight + textSpacingFromBorderTop + textSpacingFromBorderBottom;
-            SetMinimumHeight((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)h, Context.Resources.DisplayMetrics));
+            var h = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)maxIconHeight, Context.Resources.DisplayMetrics) + textSpacingFromBorderTop + textSpacingFromBorderBottom + iconPadding * 2;
+            SetMinimumHeight((int)h);
         }
 
         private void SetPaddingValues()
@@ -388,7 +388,9 @@ namespace Xamarin.RSControls.Droid.Controls
                 else
                 {
                     borderPaint.Color = borderColor;
-                    floatingHintPaint.Color = rSControl.PlaceholderColor.ToAndroid();
+                    //floatingHintPaint.Color = rSControl.PlaceholderColor.ToAndroid();
+                    floatingHintPaint.Color = Forms.Color.DimGray.ToAndroid();
+
 
                     //if (rightDrawable != null && rSControl.RightIcon.IconColor == Forms.Color.DimGray)
                     //    rightDrawable.drawable.SetTint(borderColor);
@@ -853,8 +855,6 @@ namespace Xamarin.RSControls.Droid.Controls
                     methodInfo.Invoke(source, null);
             }
         }
-
-
 
 
         //Draw

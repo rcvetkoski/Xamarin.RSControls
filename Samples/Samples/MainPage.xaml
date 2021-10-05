@@ -27,7 +27,7 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" Helper="Enter your name" Placeholder="Please enter your name" CounterMaxLength="6" HorizontalOptions="Start" RSEntryStyle="OutlinedBorder">
+        <rs:RSEntry x:Name="entry" Helper="Enter your name" Placeholder="Name" CounterMaxLength="6" HorizontalTextAlignment="Center" RSEntryStyle="OutlinedBorder">
             <rs:RSEntry.RightIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
@@ -35,12 +35,12 @@
                         <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
                     </helpers:RSEntryIcon.Bindings>
                     <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage WidthRequest="60" HeightRequest="60" Source="Samples/Data/SVG/plus.svg"/>
+                        <rs:RSSvgImage Source="Samples/Data/SVG/plus.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
             </rs:RSEntry.RightIcon>
 
-            <rs:RSEntry.RightHelpingIcon>
+            <rs:RSEntry.LeftIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
                         <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
@@ -50,28 +50,18 @@
                         <rs:RSSvgImage Source="Samples/Data/SVG/plus.svg"/>
                     </helpers:RSEntryIcon.View>
                 </helpers:RSEntryIcon>
-            </rs:RSEntry.RightHelpingIcon>
+            </rs:RSEntry.LeftIcon>
 
-            <rs:RSEntry.TrailingIcon>
-                <helpers:RSEntryIcon Command="TestMethod2">
-                    <helpers:RSEntryIcon.Bindings>
-                        <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
-                        <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
-                    </helpers:RSEntryIcon.Bindings>
-                    <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage Source="Samples/Data/SVG/plus.svg"/>
-                    </helpers:RSEntryIcon.View>
-                </helpers:RSEntryIcon>
-            </rs:RSEntry.TrailingIcon>
-
-            <rs:RSEntry.Behaviors>
+            <!--<rs:RSEntry.Behaviors>
                 <validators:ValidationBehaviour PropertyName="Text">
                     <validators:ValidationBehaviour.Validators>
                         <validators:RequiredValidation/>
                     </validators:ValidationBehaviour.Validators>
                 </validators:ValidationBehaviour>
-            </rs:RSEntry.Behaviors>
+            </rs:RSEntry.Behaviors>-->
         </rs:RSEntry>
+
+        <rs:RSEditor Placeholder="lol" AutoSize="TextChanges" ></rs:RSEditor>
 
     </StackLayout>
 
