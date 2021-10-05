@@ -113,6 +113,7 @@ namespace Xamarin.RSControls.iOS.Controls
         private nfloat floatingHintMaskPadding;
         private nfloat floatingFontSize;
         private nfloat maxIconHeight = 0;
+        private int requiredWidth;
 
         //Error
         private bool errorEnabled;
@@ -233,7 +234,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
             this.AutocorrectionType = UITextAutocorrectionType.No;
 
-
             //Counter needs to be called before CreateErrorLabel and CReateHelperLabel
             if (this.counterMaxLength != -1)
                 CreateCounterLabel();
@@ -257,22 +257,46 @@ namespace Xamarin.RSControls.iOS.Controls
             //SetIcons
             CreateIcons();
 
-
-
-            //var sizeRequest = this.GetSizeRequest(double.PositiveInfinity, double.PositiveInfinity);
-
-            //if(sizeRequest.Request.Width < helperLabel.Frame.Width)
-            //{
-            //    (rSControl as Forms.View).WidthRequest = leadingViewWidth + leftRightSpacingLabels + helperLabel.Size.Width
-            //        + 20;
-            //}
-
-
-
             //Edit text events
             this.Started += RSUITextField_Started;
             this.Ended += RSUITextField_Ended;
             this.EditingChanged += RSUITextField_EditingChanged;
+
+            AdjustSize();
+        }
+
+        //Adjust Size if needed
+        private void AdjustSize()
+        {
+            //Width
+            int errorLabelWidth = 0;
+            int helperLabelWidth = helperLabel != null ? (int)helperLabel.Size.Width : 0;
+            int counterLabelWidth =  counterLabel != null ? (int)counterLabel.Size.Width : 0;
+            int labelsWidth;
+
+            foreach (var behavior in (rSControl as Forms.View).Behaviors)
+            {
+                if (behavior is Validators.ValidationBehaviour)
+                {
+                    foreach (var iValidator in (behavior as Validators.ValidationBehaviour).Validators)
+                    {
+                        //errorLabel.String = iValidator.Message;
+                        //if (errorLabelWidth < errorLabel.Size.Width)
+                        //    errorLabelWidth = (int)errorLabel.Size.Width;
+                    }
+                }
+            }
+
+            if (helperLabelWidth > errorLabelWidth)
+                labelsWidth = (int)(helperLabelWidth + counterLabelWidth + leadingViewWidth + trailingViewWidth + leftRightSpacingLabels * 2 + leftViewWidth + rightViewWidth);
+            else
+                labelsWidth = (int)(errorLabelWidth + counterLabelWidth + leadingViewWidth + trailingViewWidth + leftRightSpacingLabels * 2 + leftViewWidth + rightViewWidth);
+
+
+            if (labelsWidth > floatingHintSizeNotFloating.Width + leftPadding + rightPadding + leftViewWidth)
+                requiredWidth = labelsWidth;
+            else
+                requiredWidth = (int)(floatingHintSizeNotFloating.Width + leftPadding + rightPadding);
         }
 
         //Set Padding
@@ -1136,7 +1160,6 @@ namespace Xamarin.RSControls.iOS.Controls
         }
 
 
-
         //Draw
         public override void Draw(CGRect rect)
         {
@@ -1156,15 +1179,15 @@ namespace Xamarin.RSControls.iOS.Controls
                 {
                     tempSize = this.Frame;
 
-                    //Resize RSEntry if one of the icons too big
-                    if (maxIconHeight > this.Frame.Height - topPadding - bottomPadding)
-                    {
-                        (this.rSControl as RSEntry).HeightRequest = this.Frame.Height - topPadding - bottomPadding + maxIconHeight
-                                                                  - (this.Frame.Height - topPadding - bottomPadding) + topPadding + bottomPadding;
-                        var frame = this.Frame;
-                        frame.Height = (nfloat)(this.rSControl as RSEntry).HeightRequest;
-                        this.Frame = frame;
-                    }
+                    ////Resize RSEntry if one of the icons too big
+                    //if (maxIconHeight > this.Frame.Height - topPadding - bottomPadding)
+                    //{
+                    //    (this.rSControl as RSEntry).HeightRequest = this.Frame.Height - topPadding - bottomPadding + maxIconHeight
+                    //                                              - (this.Frame.Height - topPadding - bottomPadding) + topPadding + bottomPadding;
+                    //    var frame = this.Frame;
+                    //    frame.Height = (nfloat)(this.rSControl as RSEntry).HeightRequest;
+                    //    this.Frame = frame;
+                    //}
 
 
                     //Set is floating hint or not
@@ -1215,6 +1238,18 @@ namespace Xamarin.RSControls.iOS.Controls
                 tempSize = this.Frame;
             }
         }
+
+        public override CGRect Frame
+        {   get => base.Frame;
+            set
+            {
+                if (value.Width < requiredWidth)
+                    value.Width = requiredWidth;
+
+                base.Frame = value;
+            }
+        }
+
 
         //Remove any events when closed
         protected override void Dispose(bool disposing)

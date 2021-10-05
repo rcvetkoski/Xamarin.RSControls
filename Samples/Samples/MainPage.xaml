@@ -27,7 +27,7 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" Helper="Enter your name" Placeholder="Name" CounterMaxLength="6" HorizontalTextAlignment="Center" RSEntryStyle="OutlinedBorder">
+        <!--<rs:RSEntry x:Name="entry" Helper="Enter your name" Placeholder="Name" CounterMaxLength="6" HorizontalOptions="Start" RSEntryStyle="OutlinedBorder">
             <rs:RSEntry.RightIcon>
                 <helpers:RSEntryIcon Command="TestMethod2">
                     <helpers:RSEntryIcon.Bindings>
@@ -52,16 +52,16 @@
                 </helpers:RSEntryIcon>
             </rs:RSEntry.LeftIcon>
 
-            <!--<rs:RSEntry.Behaviors>
+            <rs:RSEntry.Behaviors>
                 <validators:ValidationBehaviour PropertyName="Text">
                     <validators:ValidationBehaviour.Validators>
                         <validators:RequiredValidation/>
                     </validators:ValidationBehaviour.Validators>
                 </validators:ValidationBehaviour>
-            </rs:RSEntry.Behaviors>-->
-        </rs:RSEntry>
+            </rs:RSEntry.Behaviors>
+        </rs:RSEntry>-->
 
-        <rs:RSEditor Placeholder="lol" AutoSize="TextChanges" ></rs:RSEditor>
+        <rs:RSEditor Placeholder="lol" HorizontalOptions="Start" AutoSize="TextChanges" ></rs:RSEditor>
 
     </StackLayout>
 
