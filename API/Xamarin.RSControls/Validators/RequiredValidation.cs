@@ -14,7 +14,7 @@ namespace Xamarin.RSControls.Validators
                 return false;
             else if (value is string)
             {
-                return string.IsNullOrEmpty(value as string) ? false : true;
+                return string.IsNullOrWhiteSpace(value as string) ? false : true;
             }
             else
                 return true;

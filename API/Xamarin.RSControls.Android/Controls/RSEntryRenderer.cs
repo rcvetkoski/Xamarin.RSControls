@@ -106,6 +106,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private float helperYPosition;
         private float counterYPosition;
         private global::Android.Graphics.Rect textRect;
+        private int requiredWidth;
         private double maxIconHeight = 0;
 
         //icon drawables
@@ -131,7 +132,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
         //Padding
         private Thickness padding;
-
 
         //Animators
         ValueAnimator errorHelperMessageAnimator;
@@ -172,7 +172,6 @@ namespace Xamarin.RSControls.Droid.Controls
         public CustomEditText(Context context, IRSControl rSControl) : base(context)
         {
             this.rSControl = rSControl;
-
             //Init values
             isFocused = this.IsFocused;
             labelsTextSize = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 12, Context.Resources.DisplayMetrics);
@@ -231,9 +230,6 @@ namespace Xamarin.RSControls.Droid.Controls
             CreateErrorHelperMessageAnimator();
             CreateFloatingHintAnimator();
 
-            //On touch listener
-            //this.SetOnTouchListener(this);
-
             //Is Placeholder Always Floating
             if (rSControl.IsPlaceholderAlwaysFloating)
                 IsFloating = true;
@@ -241,6 +237,53 @@ namespace Xamarin.RSControls.Droid.Controls
                 IsFloating = true;
             else
                 IsFloating = false;
+
+
+            //Calculate required width and height of view
+            //Used in adjust Size if needed
+            AdjustSize();
+        }
+
+        //Adjust Size if needed
+        private void AdjustSize()
+        {
+            //Width
+            int errorLabelWidth = 0;
+            int helperLabelWidth = (int)helperPaint.MeasureText(helperMessage);
+            int counterLabelWidth = rSControl.CounterMaxLength != -1 ? (int)counterPaint.MeasureText(counterMessage) + leftRightSpacingLabels : 0;
+            int labelsWidth;
+
+            foreach (var behavior in (rSControl as Forms.View).Behaviors)
+            {
+                if (behavior is Validators.ValidationBehaviour)
+                {
+                    foreach (var iValidator in (behavior as Validators.ValidationBehaviour).Validators)
+                    {
+                        if (errorLabelWidth < errorPaint.MeasureText(iValidator.Message))
+                            errorLabelWidth = (int)errorPaint.MeasureText(iValidator.Message);
+                    }
+                }
+            }
+
+
+            if(helperLabelWidth > errorLabelWidth)
+                labelsWidth = helperLabelWidth + counterLabelWidth + leadingDrawableWidth + trailingDrawableWidth + leftRightSpacingLabels * 2;
+            else 
+                labelsWidth = errorLabelWidth + counterLabelWidth + leadingDrawableWidth + trailingDrawableWidth + leftRightSpacingLabels * 2;
+
+            
+            if (labelsWidth > floatingHintBoundsNotFloating.Width() + PaddingLeft + PaddingRight)
+                requiredWidth = labelsWidth;
+            else
+                requiredWidth = floatingHintBoundsNotFloating.Width() + PaddingLeft + PaddingRight;
+
+
+            SetMinimumWidth(requiredWidth);
+
+
+            //Height
+            var h = maxIconHeight + textSpacingFromBorderTop + textSpacingFromBorderBottom;
+            SetMinimumHeight((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)h, Context.Resources.DisplayMetrics));
         }
 
         private void SetPaddingValues()
@@ -812,18 +855,15 @@ namespace Xamarin.RSControls.Droid.Controls
         }
 
 
+
+
         //Draw
         public override void Draw(Canvas canvas)
         {
             base.OnDraw(canvas);
 
             //Resize RSEntry if one of the icons too big, 22 is top + bottom spacing not converted to android units
-            var rsEntryHeight = (this.rSControl as Forms.View).Height;
-            if (maxIconHeight >= rsEntryHeight - 22 - 16)
-            {
-                var h = rsEntryHeight + (maxIconHeight - (rsEntryHeight - 22 - 16));
-                (this.rSControl as Forms.View).HeightRequest = h;
-            }
+            //AdjustSize();
 
             //Text rect bounds
             textRect = new global::Android.Graphics.Rect();
@@ -871,11 +911,9 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 //if (!hasInitfloatingHintYPosition)
                 //{
-                //    floatingHintPositionUpdate();
                 //    hasInitfloatingHintYPosition = true;
                 //}
                 floatingHintPositionUpdate();
-
             }
         }
 
@@ -1045,7 +1083,6 @@ namespace Xamarin.RSControls.Droid.Controls
                                            textRect.Top + textSpacingFromBorderTop + floatingHintBoundsFloating.Height());
                     }
                 }
-
 
                 canvas.DrawRoundRect(new RectF(borderPosition.Left + borderWidth,
                                                borderPosition.Top,
