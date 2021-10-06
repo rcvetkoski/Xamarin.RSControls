@@ -862,9 +862,6 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnDraw(canvas);
 
-            //Resize RSEntry if one of the icons too big, 22 is top + bottom spacing not converted to android units
-            //AdjustSize();
-
             //Text rect bounds
             textRect = new global::Android.Graphics.Rect();
             this.GetDrawingRect(textRect);
@@ -914,6 +911,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 //    hasInitfloatingHintYPosition = true;
                 //}
                 floatingHintPositionUpdate();
+
             }
         }
 
@@ -1185,11 +1183,19 @@ namespace Xamarin.RSControls.Droid.Controls
         //Update Floating Hint
         private void floatingHintPositionUpdate()
         {
+            //floatingHintXPostionNotFloating same for all
+            if ((rSControl as RSEntry).HorizontalTextAlignment == Forms.TextAlignment.Center)
+                floatingHintXPostionNotFloating = this.Width / 2 - (PaddingRight - PaddingLeft) / 2 - floatingHintBoundsNotFloating.Width() / 2;
+            else if ((rSControl as RSEntry).HorizontalTextAlignment == Forms.TextAlignment.End)
+                floatingHintXPostionNotFloating = this.Width - PaddingRight - floatingHintBoundsNotFloating.Width();
+            else
+                floatingHintXPostionNotFloating = this.PaddingLeft;
+
+
             if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
             {
                 //X
                 floatingHintXPostionFloating = this.PaddingLeft;
-                floatingHintXPostionNotFloating = this.PaddingLeft;
 
                 //Y
                 floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height();
@@ -1201,8 +1207,7 @@ namespace Xamarin.RSControls.Droid.Controls
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
             {
                 //X
-                floatingHintXPostionFloating = borderPosition.Left + leftRightSpacingLabels;
-                floatingHintXPostionNotFloating = this.PaddingLeft;
+                floatingHintXPostionFloating = (int)leadingDrawableWidth + leftRightSpacingLabels;
 
                 //Y
                 floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height() / 2;
@@ -1215,8 +1220,7 @@ namespace Xamarin.RSControls.Droid.Controls
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
             {
                 //X
-                floatingHintXPostionFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftHelpingDrawableWidth;
-                floatingHintXPostionNotFloating = textRect.Left + this.PaddingLeft + leftDrawableWidth + leftHelpingDrawableWidth;
+                floatingHintXPostionFloating = this.PaddingLeft;
 
                 //Y
                 floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height();
