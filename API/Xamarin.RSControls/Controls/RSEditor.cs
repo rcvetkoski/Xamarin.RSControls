@@ -286,6 +286,13 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(MaxHeightProperty, value); }
         }
 
+        public static readonly BindableProperty HorizontalTextAlignmentProperty = BindableProperty.Create("HorizontalTextAlignment", typeof(TextAlignment), typeof(RSEditor), TextAlignment.Start);
+        public TextAlignment HorizontalTextAlignment
+        {
+            get { return (TextAlignment)GetValue(HorizontalTextAlignmentProperty); }
+            set { SetValue(HorizontalTextAlignmentProperty, value); }
+        }
+
         protected override void OnBindingContextChanged()
         {
             base.OnBindingContextChanged();

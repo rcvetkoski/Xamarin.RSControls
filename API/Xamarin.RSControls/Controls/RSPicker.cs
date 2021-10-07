@@ -452,9 +452,12 @@ namespace Xamarin.RSControls.Controls
         public bool HasLeftIconSeparator { get; set; }
 
 
-
-
-
+        public static readonly BindableProperty HorizontalTextAlignmentProperty = BindableProperty.Create("HorizontalTextAlignment", typeof(TextAlignment), typeof(RSPickerBase), TextAlignment.Start);
+        public TextAlignment HorizontalTextAlignment
+        {
+            get { return (TextAlignment)GetValue(HorizontalTextAlignmentProperty); }
+            set { SetValue(HorizontalTextAlignmentProperty, value); }
+        }
 
 
 

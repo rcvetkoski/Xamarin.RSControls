@@ -43,6 +43,6 @@ namespace Xamarin.RSControls.Interfaces
         bool HasRighIconSeparator { get; set; }
         bool HasLeftIconSeparator { get; set; }
         Thickness Padding { get; set; }
-
+        TextAlignment HorizontalTextAlignment { get; set; }
     }
 }
