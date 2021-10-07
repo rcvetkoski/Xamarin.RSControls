@@ -192,8 +192,8 @@ namespace Xamarin.RSControls.Droid.Controls
             textSpacingFromBorderTop = TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics); 
             textSpacingFromBorderBottom = TypedValue.ApplyDimension(ComplexUnitType.Dip, 14, Context.Resources.DisplayMetrics);
             borderPosition = new global::Android.Graphics.Rect();
-            leftHelpingIconPadding = rSControl.HasLeftIconSeparator ? (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics) : 0;
-            rightHelpingIconPadding = rSControl.HasRighIconSeparator ? (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics) : 0;
+            leftHelpingIconPadding = rSControl.LeftHelpingIcon != null ? (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics) : 0;
+            rightHelpingIconPadding = rSControl.RightHelpingIcon != null ? (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics) : 0;
 
             //Set Padding
             padding = new Thickness(TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics), TypedValue.ApplyDimension(ComplexUnitType.Dip, 17, Context.Resources.DisplayMetrics));
@@ -988,7 +988,7 @@ namespace Xamarin.RSControls.Droid.Controls
             var bottom = top + leftHelpingDrawable.IntrinsicHeight;
 
             var left = borderPosition.Left + leftDrawableWidth + iconPadding + leftHelpingIconPadding;
-            var right = left + leftHelpingDrawable.IntrinsicWidth + leftHelpingIconPadding;
+            var right = left + leftHelpingDrawable.IntrinsicWidth;
 
             leftHelpingDrawable.drawable.SetBounds(left, top, right, bottom);
             leftHelpingDrawable.SetBounds(left, top, right, bottom);
@@ -1093,17 +1093,17 @@ namespace Xamarin.RSControls.Droid.Controls
                     if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
                     {
                         canvas.ClipRect(borderPosition.Left + leftRightSpacingLabels,
-                                        0,
+                                        canvas.ClipBounds.Top,
                                         borderPosition.Left + floatingHintBoundsFloating.Width() + leftRightSpacingLabels,
-                                        textSpacingFromBorderTop + floatingHintBoundsFloating.Height(),
+                                        canvas.ClipBounds.Top + textSpacingFromBorderTop + floatingHintBoundsFloating.Height(),
                                         global::Android.Graphics.Region.Op.Difference);
                     }
                     else
                     {
                         canvas.ClipOutRect(borderPosition.Left + leftRightSpacingLabels - floatingHintClipPadding,
-                                           0,
+                                           canvas.ClipBounds.Top,
                                            borderPosition.Left + floatingHintBoundsFloating.Width() + leftRightSpacingLabels + floatingHintClipPadding,
-                                           textSpacingFromBorderTop + floatingHintBoundsFloating.Height());
+                                           canvas.ClipBounds.Top + textSpacingFromBorderTop + floatingHintBoundsFloating.Height());
                     }
                 }
 
@@ -1223,7 +1223,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 floatingHintXPostionFloating = this.PaddingLeft;
 
                 //Y
-                floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height();
+                floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height() / 2;
                 floatingHintYPostionNotFloating = Baseline - textSpacingFromBorderBottom / 2;
 
                 //var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + floatingHintBoundsNotFloating.Height() / 2;
@@ -1248,7 +1248,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 floatingHintXPostionFloating = this.PaddingLeft;
 
                 //Y
-                floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height();
+                floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height() / 2;
                 floatingHintYPostionNotFloating = Baseline;
             }
 

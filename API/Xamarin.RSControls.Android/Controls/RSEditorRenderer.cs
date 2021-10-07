@@ -35,6 +35,11 @@ namespace Xamarin.RSControls.Droid.Controls
                 //This fixes xamarin forms bug when next button available in keyboard => cannot pass focus to unfocusable object 
                 Control.ImeOptions = global::Android.Views.InputMethods.ImeAction.Done;
                 Control.EditorAction += Control_EditorAction;
+
+                if((Element as IRSControl).HorizontalTextAlignment == Forms.TextAlignment.Center)
+                    Control.Gravity = GravityFlags.CenterHorizontal;
+                if ((Element as IRSControl).HorizontalTextAlignment == Forms.TextAlignment.End)
+                    Control.Gravity = GravityFlags.End;
             }
         }
 
