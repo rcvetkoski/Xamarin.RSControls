@@ -94,6 +94,8 @@ namespace Xamarin.RSControls.iOS.Controls
         private nfloat rightHelpingViewWidth;
         private UIView rightView;
         private nfloat rightViewWidth;
+        private nfloat leftHelpingIconPadding;
+        private nfloat rightHelpingIconPadding;
 
         //Counter
         private int counterMaxLength;
@@ -110,7 +112,7 @@ namespace Xamarin.RSControls.iOS.Controls
         private nfloat floatingHintYPostionNotFloating;
         private CGSize floatinghHintSizeFloating;
         private CGSize floatingHintSizeNotFloating;
-        private nfloat floatingHintMaskPadding;
+        private int floatingHintClipPadding;
         private nfloat floatingFontSize;
         private nfloat maxIconHeight = 0;
         private int requiredWidth;
@@ -211,11 +213,7 @@ namespace Xamarin.RSControls.iOS.Controls
             else
                 this.floatingFontSize = 12;
 
-            if (rSControl.Placeholder != null)
-                this.floatingHintMaskPadding = 3;
-            else
-                this.floatingHintMaskPadding = 0;
-
+            floatingHintClipPadding = 3;
             this.borderRadius = rSControl.BorderRadius;
             this.shadowRadius = rSControl.ShadowRadius;
             this.counterMaxLength = this.rSControl.CounterMaxLength;
@@ -225,8 +223,10 @@ namespace Xamarin.RSControls.iOS.Controls
             this.activeColor = UIColor.SystemBlueColor;
             this.textSpacingFromBorderTop = 8;
             this.textSpacingFromBorderBottom = 14;
-            leftRightSpacingLabels = 12;
+            leftRightSpacingLabels = 13;
             this.iconPadding = 8;
+            leftHelpingIconPadding = rSControl.LeftHelpingIcon != null ? 10 + iconPadding : iconPadding;
+            rightHelpingIconPadding = rSControl.RightHelpingIcon != null ? 10 + iconPadding : iconPadding;
 
             //Padding
             padding = new Thickness(8, 17);
@@ -325,86 +325,50 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-        
+
         //Set Icons
+        private UIView CreateIcon(RSEntryIcon icon)
+        {
+            UIView convertedView = Extensions.ViewExtensions.ConvertFormsToNative(icon.View, CGRect.Empty);
+            this.AddSubview(convertedView);
+            UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(icon); AddRippleEffect(convertedView); });
+            convertedView.AddGestureRecognizer(gest);
+
+            //Set max height of icon so we can resize RSEntry if necessary
+            if (maxIconHeight < convertedView.Frame.Height)
+                maxIconHeight = convertedView.Frame.Height;
+
+            return convertedView;
+        }
         private void CreateIcons()
         {
             if (this.rSControl.LeadingIcon != null)
             {
-                Forms.View leadingSvgIcon = rSControl.LeadingIcon.View;
-                leadingView = Extensions.ViewExtensions.ConvertFormsToNative(leadingSvgIcon, CGRect.Empty);
-                this.AddSubview(leadingView);
-
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => {
-                    CreateAndExecuteIconMethod(this.rSControl.LeadingIcon);
-                    AddRippleEffect(leadingView);
-                });
-                leadingView.AddGestureRecognizer(gest);
-
+                leadingView = CreateIcon(rSControl.LeadingIcon);
                 leadingViewWidth = leadingView.Frame.Width + iconPadding;
-
-                //Set max height of icon so we can resize RSEntry if necessary
-                if (maxIconHeight < leadingView.Frame.Height)
-                    maxIconHeight = leadingView.Frame.Height;
             }
             if (this.rSControl.LeftIcon != null)
             {
-                Forms.View leftSvgIcon = rSControl.LeftIcon.View as Forms.View;
-                leftView = Extensions.ViewExtensions.ConvertFormsToNative(leftSvgIcon, CGRect.Empty);
-                this.AddSubview(leftView);
+                leftView = CreateIcon(rSControl.LeftIcon);
+                leftViewWidth = rSControl.LeftHelpingIcon != null ? leftView.Frame.Width + leftHelpingIconPadding : leftView.Frame.Width + iconPadding;
 
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => {
-                    CreateAndExecuteIconMethod(this.rSControl.LeftIcon);
-                    AddRippleEffect(leftView);
-                });
-                leftView.AddGestureRecognizer(gest);
-
-                leftViewWidth = leftView.Frame.Width + iconPadding;
-
-                //Set max height of icon so we can resize RSEntry if necessary
-                if (maxIconHeight < leftView.Frame.Height)
-                    maxIconHeight = leftView.Frame.Height;
+                if (this.rSControl.LeftHelpingIcon != null)
+                {
+                    leftHelpingView = CreateIcon(rSControl.LeftHelpingIcon);
+                    leftHelpingViewWidth = leftHelpingView.Frame.Width + iconPadding;
+                }
             }
             if (rSControl.LeftIcon != null && rSControl.LeftHelpingIcon != null)
             {
                 if(rSControl.HasLeftIconSeparator)
                 {
-                    leftIconSeparatorView = new UIView(new CGRect(leftPadding + leadingViewWidth + leftViewWidth, 0, 1, 22)) { BackgroundColor = UIColor.LightGray };
+                    leftIconSeparatorView = new UIView(new CGRect(leftPadding + leadingViewWidth + leftViewWidth / 2, 0, 1, 22)) { BackgroundColor = UIColor.LightGray };
                     this.AddSubview(leftIconSeparatorView);
                 }
 
-                leftIconSeparatorViewWidth = 1 + iconPadding;
+                leftIconSeparatorViewWidth = 1;
             }
-            if (this.rSControl.LeftHelpingIcon != null)
-            {
-                Forms.View leftHelpingSvgIcon = rSControl.LeftHelpingIcon.View;
-                leftHelpingView = Extensions.ViewExtensions.ConvertFormsToNative(leftHelpingSvgIcon, CGRect.Empty);
-                this.AddSubview(leftHelpingView);
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.LeftHelpingIcon); AddRippleEffect(leftHelpingView); });
-                leftHelpingView.AddGestureRecognizer(gest);
-
-                leftHelpingViewWidth = leftHelpingView.Frame.Width + iconPadding;
-
-                //Set max height of icon so we can resize RSEntry if necessary
-                if (maxIconHeight < leftHelpingView.Frame.Height)
-                    maxIconHeight = leftHelpingView.Frame.Height;
-            }
-            if (rSControl.RightHelpingIcon != null)
-            {
-                Forms.View rightHelpingSvgIcon = rSControl.RightHelpingIcon.View;
-                rightHelpingView = Extensions.ViewExtensions.ConvertFormsToNative(rightHelpingSvgIcon, CGRect.Empty);
-                this.AddSubview(rightHelpingView);
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.RightHelpingIcon); AddRippleEffect(rightHelpingView); });
-                rightHelpingView.AddGestureRecognizer(gest);
-                if(rSControl.RightIcon != null)
-                    rightHelpingViewWidth = rightHelpingView.Frame.Width + iconPadding;
-                else
-                    rightHelpingViewWidth = rightHelpingView.Frame.Width + iconPadding;
-
-                //Set max height of icon so we can resize RSEntry if necessary
-                if (maxIconHeight < rightHelpingView.Frame.Height)
-                    maxIconHeight = rightHelpingView.Frame.Height;
-            }
+            /////////////////////////////////////////////////////////////////////////
             if (rSControl.RightIcon != null && rSControl.RightHelpingIcon != null)
             {
                 if(rSControl.HasRighIconSeparator)
@@ -413,62 +377,62 @@ namespace Xamarin.RSControls.iOS.Controls
                     this.AddSubview(rightIconSeparatorView);
                 }
 
-                rightIconSeparatorViewWidth = 1 + iconPadding;
+                rightIconSeparatorViewWidth = 1;
             }
             if (rSControl.RightIcon != null)
             {
-                Forms.View rightSvgIcon = rSControl.RightIcon.View;
-                rightView = Extensions.ViewExtensions.ConvertFormsToNative(rightSvgIcon, CGRect.Empty);
-                this.AddSubview(rightView);
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.RightIcon); AddRippleEffect(rightView); });
-                rightView.AddGestureRecognizer(gest);
+                //RightIcon
+                rightView = CreateIcon(rSControl.RightIcon);
+                rightViewWidth = rSControl.RightHelpingIcon != null ? rightView.Frame.Width + rightHelpingIconPadding : rightView.Frame.Width + iconPadding;
 
-                rightViewWidth = rightView.Frame.Width + iconPadding;
-
-                //Set max height of icon so we can resize RSEntry if necessary
-                if (maxIconHeight < rightView.Frame.Height)
-                    maxIconHeight = rightView.Frame.Height;
+                //RightHelpingIcon
+                if (rSControl.RightHelpingIcon != null)
+                {
+                    rightHelpingView = CreateIcon(rSControl.RightHelpingIcon);
+                    rightHelpingViewWidth = rightHelpingView.Frame.Width + iconPadding;
+                }
             }
             if (this.rSControl.TrailingIcon != null)
             {
-                Forms.View trailoingSvgIcon = rSControl.TrailingIcon.View;
-                trailingView = Extensions.ViewExtensions.ConvertFormsToNative(trailoingSvgIcon, CGRect.Empty);
-                this.AddSubview(trailingView);
-                UITapGestureRecognizer gest = new UITapGestureRecognizer(() => { CreateAndExecuteIconMethod(this.rSControl.TrailingIcon); AddRippleEffect(trailingView); });
-                trailingView.AddGestureRecognizer(gest);
+                trailingView = CreateIcon(rSControl.TrailingIcon);
                 trailingViewWidth = trailingView.Frame.Width + iconPadding;
-
-                //Set max height of icon so we can resize RSEntry if necessary
-                if (maxIconHeight < trailingView.Frame.Height)
-                    maxIconHeight = trailingView.Frame.Height;
             }
         }
         //Update Icons position
+        private void UpdateIconPosition(UIView view, nfloat left)
+        {
+            view.Frame = new CGRect(left,
+                                    floatingHintYPostionNotFloating - view.Frame.Height / 2,
+                                    view.Frame.Width,
+                                    view.Frame.Height);
+        }
         private void UpdateIconsPosition()
         {
             if (leadingView != null)
-                leadingView.Frame = new CGRect(0, floatingHintYPostionNotFloating - leadingView.Frame.Height / 2, leadingView.Frame.Width, leadingView.Frame.Height);
+                UpdateIconPosition(leadingView, left: 0);
 
             if (leftView != null)
-                leftView.Frame = new CGRect(leftPadding + leadingViewWidth, floatingHintYPostionNotFloating - leftView.Frame.Height / 2, leftView.Frame.Width, leftView.Frame.Height);
+                UpdateIconPosition(leftView, left: leftPadding + leadingViewWidth);
 
             if(leftIconSeparatorView != null)
-                leftIconSeparatorView.Frame = new CGRect(leftPadding + leadingViewWidth + leftViewWidth, floatingHintYPostionNotFloating - leftIconSeparatorView.Frame.Height / 2, 1, leftIconSeparatorView.Frame.Height);
+                UpdateIconPosition(leftIconSeparatorView, left: leftPadding + leadingViewWidth + leftViewWidth - leftHelpingIconPadding / 2);
 
             if (leftHelpingView != null)
-                leftHelpingView.Frame = new CGRect(leftPadding + leadingViewWidth + leftViewWidth + leftIconSeparatorViewWidth, floatingHintYPostionNotFloating - leftHelpingView.Frame.Height / 2, leftHelpingView.Frame.Width, leftHelpingView.Frame.Height);
+                UpdateIconPosition(leftHelpingView, left: leftPadding + leadingViewWidth + leftViewWidth);
+
+            /////////////////////////////////////////////////////
 
             if (rightHelpingView != null)
-                rightHelpingView.Frame = new CGRect(this.Frame.Right - rightPadding - trailingViewWidth - rightViewWidth - rightHelpingViewWidth - rightIconSeparatorViewWidth + iconPadding, floatingHintYPostionNotFloating - rightHelpingView.Frame.Height / 2, rightHelpingView.Frame.Width, rightHelpingView.Frame.Height);
+                UpdateIconPosition(rightHelpingView, left: Frame.Right - rightPadding - trailingViewWidth - rightViewWidth - rightHelpingViewWidth - rightIconSeparatorViewWidth - rightHelpingIconPadding + iconPadding + rightHelpingIconPadding);
 
             if (rightIconSeparatorView != null)
-                rightIconSeparatorView.Frame = new CGRect(this.Frame.Right - rightPadding - trailingViewWidth - rightViewWidth - rightIconSeparatorViewWidth + iconPadding, floatingHintYPostionNotFloating - rightIconSeparatorView.Frame.Height / 2, 1, rightIconSeparatorView.Frame.Height);
+                UpdateIconPosition(rightIconSeparatorView, left: Frame.Right - rightPadding - trailingViewWidth - rightViewWidth - rightIconSeparatorViewWidth + rightHelpingIconPadding / 2);
 
             if (rightView != null)
-                rightView.Frame = new CGRect(this.Frame.Right - rightPadding - trailingViewWidth - rightViewWidth + iconPadding, floatingHintYPostionNotFloating - rightView.Frame.Height / 2, rightView.Frame.Width, rightView.Frame.Height);
+                UpdateIconPosition(rightView, left: Frame.Right - rightPadding - trailingViewWidth - rightViewWidth + rightHelpingIconPadding);
 
             if (trailingView != null)
-                trailingView.Frame = new CGRect(this.Frame.Right - trailingViewWidth + iconPadding, floatingHintYPostionNotFloating - trailingView.Frame.Height / 2, trailingView.Frame.Width, trailingView.Frame.Height);
+                UpdateIconPosition(trailingView, left: Frame.Right - trailingViewWidth + iconPadding);
         }
         //Icon tap method
         private void CreateAndExecuteIconMethod(RSEntryIcon rsIcon)
@@ -773,13 +737,13 @@ namespace Xamarin.RSControls.iOS.Controls
             maskPath.AddRect(new CGRect(x: 0, y: this.borderWidth + floatinghHintSizeFloating.Height / 2, width: frame.Width, height: frame.Height));
 
             //Top border right of floating label area
-            maskPath.AddRect(new CGRect(x: leftRightSpacingLabels + floatinghHintSizeFloating.Width,
+            maskPath.AddRect(new CGRect(x: leftRightSpacingLabels + floatinghHintSizeFloating.Width + floatingHintClipPadding,
                                         y: 0,
-                                        width: frame.Width,
+                                        width: frame.Width - floatingHintClipPadding,
                                         height: frame.Height));
 
             //Left border
-            maskPath.AddRect(new CGRect(x: 0, y: 0, leftRightSpacingLabels, frame.Height));
+            maskPath.AddRect(new CGRect(x: 0, y: 0, leftRightSpacingLabels - floatingHintClipPadding, frame.Height));
 
             //Top border libne full
             if (!IsFloating)
@@ -1097,6 +1061,15 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
         //Helper for padding
+        private UIEdgeInsets SetInsetRect()
+        {
+            nfloat left = leftPadding + leadingViewWidth + leftViewWidth + leftHelpingViewWidth;
+            nfloat top = topPadding;
+            nfloat bottom = bottomPadding;
+            nfloat right = rightPadding + trailingViewWidth + rightViewWidth + rightHelpingViewWidth;
+
+            return new UIEdgeInsets(top, left, bottom, right);
+        }
         private static CGRect InsetRect(CGRect rect, UIEdgeInsets insets)
         {
             return new CGRect(
@@ -1108,32 +1081,17 @@ namespace Xamarin.RSControls.iOS.Controls
         //Text padding
         public override CGRect TextRect(CGRect forBounds)
         {
-            nfloat left = leftPadding + leadingViewWidth + leftViewWidth + leftHelpingViewWidth + leftIconSeparatorViewWidth;
-            nfloat top = topPadding;
-            nfloat bottom = bottomPadding;
-            nfloat right = rightPadding + trailingViewWidth + rightViewWidth + rightHelpingViewWidth + rightIconSeparatorViewWidth;
-
-            return InsetRect(base.TextRect(forBounds), new UIEdgeInsets(top, left, bottom, right));
+            return InsetRect(base.TextRect(forBounds), SetInsetRect());
         }
 
         public override CGRect EditingRect(CGRect forBounds)
         {
-            nfloat left = leftPadding + leadingViewWidth + leftViewWidth + leftHelpingViewWidth + leftIconSeparatorViewWidth;
-            nfloat top = topPadding;
-            nfloat bottom = bottomPadding;
-            nfloat right = rightPadding + trailingViewWidth + rightViewWidth + rightHelpingViewWidth + rightIconSeparatorViewWidth;
-
-            return InsetRect(base.EditingRect(forBounds), new UIEdgeInsets(top, left, bottom, right));
+            return InsetRect(base.EditingRect(forBounds), SetInsetRect());
         }
         //Placeholder padding
         public override CGRect PlaceholderRect(CGRect forBounds)
         {
-            nfloat left = leftPadding + leadingViewWidth + leftViewWidth + leftHelpingViewWidth + leftIconSeparatorViewWidth;
-            nfloat top = topPadding;
-            nfloat bottom = bottomPadding;
-            nfloat right = rightPadding + trailingViewWidth + rightViewWidth + rightHelpingViewWidth + rightIconSeparatorViewWidth;
-
-            return InsetRect(base.PlaceholderRect(forBounds), new UIEdgeInsets(top, left, bottom, right));
+            return InsetRect(base.PlaceholderRect(forBounds), SetInsetRect());
         }
         ////Update cursor if needed
         //public override CGRect GetCaretRectForPosition(UITextPosition position)
