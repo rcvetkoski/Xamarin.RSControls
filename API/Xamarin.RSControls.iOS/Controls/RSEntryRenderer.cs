@@ -30,7 +30,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if (e.OldElement != null)
                 return;
 
-            //Delete placeholder as we use floating hint instead
+            ////Delete placeholder as we use floating hint instead
             //Element.Placeholder = "";
         }
 
@@ -115,7 +115,9 @@ namespace Xamarin.RSControls.iOS.Controls
         private int floatingHintClipPadding;
         private nfloat floatingFontSize;
         private nfloat maxIconHeight = 0;
-        private int requiredWidth;
+        private nfloat requiredWidth;
+        private nfloat requiredHeight;
+
 
         //Error
         private bool errorEnabled;
@@ -297,6 +299,10 @@ namespace Xamarin.RSControls.iOS.Controls
                 requiredWidth = labelsWidth;
             else
                 requiredWidth = (int)(floatingHintSizeNotFloating.Width + leftPadding + rightPadding);
+
+
+            //Height
+            requiredHeight = maxIconHeight + textSpacingFromBorderTop + textSpacingFromBorderBottom + iconPadding * 2;
         }
 
         //Set Padding
@@ -536,7 +542,6 @@ namespace Xamarin.RSControls.iOS.Controls
         }
 
 
-
         //Edit started
         private void RSUITextField_Started(object sender, EventArgs e)
         {
@@ -610,7 +615,6 @@ namespace Xamarin.RSControls.iOS.Controls
             floatingHint.FontSize = (nfloat)toValue;
             floatingHint.Position = new CGPoint(floatingHintXPosition, floatingHintYPosition);
         }
-
 
 
         //Create border
@@ -974,25 +978,25 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 //X
                 floatingHintXPositionFloating = this.TextRect(Bounds).X + floatingHintSizeNotFloating.Width / 2;
-                if (this.TextAlignment == UITextAlignment.Center)
+                if (rSControl.HorizontalTextAlignment == Forms.TextAlignment.Center)
                     floatingHintXPositionNotFloating = this.TextRect(this.Bounds).GetMidX();
-                else if (this.TextAlignment == UITextAlignment.Right)
+                else if (rSControl.HorizontalTextAlignment == Forms.TextAlignment.End)
                     floatingHintXPositionNotFloating = this.TextRect(this.Bounds).Right - floatingHintSizeNotFloating.Width / 2;
                 else
                     floatingHintXPositionNotFloating = this.TextRect(this.Bounds).Left + floatingHintSizeNotFloating.Width / 2;
 
 
                 //Y
-                floatingHintYPositionFloating = borderPosition.Y + (floatingHintSizeNotFloating.Height - floatinghHintSizeFloating.Height) / 2 + floatinghHintSizeFloating.Height / 2;
+                floatingHintYPositionFloating = this.TextRect(this.Bounds).GetMidY() - textSpacingFromBorderBottom / 2 - floatinghHintSizeFloating.Height / 2;
                 floatingHintYPostionNotFloating = this.TextRect(this.Bounds).GetMidY() - textSpacingFromBorderBottom / 2;
             }
             else if (this.rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
             {
                 //X
                 floatingHintXPositionFloating = leadingViewWidth + floatingHintSizeNotFloating.Width / 2 + leftRightSpacingLabels;
-                if(this.TextAlignment == UITextAlignment.Center)
+                if(rSControl.HorizontalTextAlignment == Forms.TextAlignment.Center)
                     floatingHintXPositionNotFloating = this.TextRect(this.Bounds).GetMidX();
-                else if (this.TextAlignment == UITextAlignment.Right)
+                else if (rSControl.HorizontalTextAlignment == Forms.TextAlignment.End)
                     floatingHintXPositionNotFloating = this.TextRect(this.Bounds).Right - floatingHintSizeNotFloating.Width / 2;
                 else
                     floatingHintXPositionNotFloating = this.TextRect(this.Bounds).Left + floatingHintSizeNotFloating.Width / 2;
@@ -1006,17 +1010,17 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 //X
                 floatingHintXPositionFloating = this.TextRect(Bounds).X + floatingHintSizeNotFloating.Width / 2;
-                if (this.TextAlignment == UITextAlignment.Center)
+                if (rSControl.HorizontalTextAlignment == Forms.TextAlignment.Center)
                     floatingHintXPositionNotFloating = this.TextRect(this.Bounds).GetMidX();
-                else if (this.TextAlignment == UITextAlignment.Right)
+                else if (rSControl.HorizontalTextAlignment == Forms.TextAlignment.End)
                     floatingHintXPositionNotFloating = this.TextRect(this.Bounds).Right - floatingHintSizeNotFloating.Width / 2;
                 else
                     floatingHintXPositionNotFloating = this.TextRect(this.Bounds).Left + floatingHintSizeNotFloating.Width / 2;
 
 
                 //Y
-                floatingHintYPositionFloating = borderPosition.Y + (floatingHintSizeNotFloating.Height - floatinghHintSizeFloating.Height) / 2 + floatinghHintSizeFloating.Height / 2;
-                floatingHintYPostionNotFloating = this.TextRect(this.Bounds).Y + floatingHintSizeNotFloating.Height - textSpacingFromBorderBottom / 2;
+                floatingHintYPositionFloating = this.TextRect(this.Bounds).GetMidY() - textSpacingFromBorderBottom / 2 - floatinghHintSizeFloating.Height / 2;
+                floatingHintYPostionNotFloating = this.TextRect(this.Bounds).GetMidY();
             }
 
 
@@ -1057,7 +1061,6 @@ namespace Xamarin.RSControls.iOS.Controls
             }
 
         }
-
 
 
         //Helper for padding
@@ -1124,7 +1127,6 @@ namespace Xamarin.RSControls.iOS.Controls
             base.Draw(rect);
         }
 
-
         //Update ui //Handle rotation
         public override void LayoutSubviews()
         {
@@ -1137,14 +1139,15 @@ namespace Xamarin.RSControls.iOS.Controls
                 {
                     tempSize = this.Frame;
 
-                    ////Resize RSEntry if one of the icons too big
-                    //if (maxIconHeight > this.Frame.Height - topPadding - bottomPadding)
+                    //////Resize RSEntry if one of the icons too big
+                    //if (requiredHeight > this.Frame.Height)
                     //{
-                    //    (this.rSControl as RSEntry).HeightRequest = this.Frame.Height - topPadding - bottomPadding + maxIconHeight
-                    //                                              - (this.Frame.Height - topPadding - bottomPadding) + topPadding + bottomPadding;
-                    //    var frame = this.Frame;
-                    //    frame.Height = (nfloat)(this.rSControl as RSEntry).HeightRequest;
-                    //    this.Frame = frame;
+                    //    //(this.rSControl as RSEntry).HeightRequest = requiredHeight;
+                    //    //var frame = this.Frame;
+                    //    //frame.Height = requiredHeight;
+                    //    //this.Frame = frame;
+
+                    //    this.SizeToFit();
                     //}
 
 
@@ -1196,18 +1199,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 tempSize = this.Frame;
             }
         }
-
-        public override CGRect Frame
-        {   get => base.Frame;
-            set
-            {
-                if (value.Width < requiredWidth)
-                    value.Width = requiredWidth;
-
-                base.Frame = value;
-            }
-        }
-
 
         //Remove any events when closed
         protected override void Dispose(bool disposing)

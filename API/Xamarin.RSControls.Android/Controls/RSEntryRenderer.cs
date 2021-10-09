@@ -1223,7 +1223,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 floatingHintXPostionFloating = this.PaddingLeft;
 
                 //Y
-                floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height() / 2;
+                floatingHintYPositionFloating = Baseline - textSpacingFromBorderBottom / 2 - floatingHintBoundsNotFloating.Height();
                 floatingHintYPostionNotFloating = Baseline - textSpacingFromBorderBottom / 2;
 
                 //var center = (int)(this.Height - PaddingBottom + PaddingTop) / 2 + floatingHintBoundsNotFloating.Height() / 2;
@@ -1246,13 +1246,13 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 //X
                 floatingHintXPostionFloating = this.PaddingLeft;
-
+                
                 //Y
-                floatingHintYPositionFloating = textSpacingFromBorderTop + floatingHintBoundsFloating.Height() / 2;
+                floatingHintYPositionFloating = Baseline - textSpacingFromBorderBottom / 2 - floatingHintBoundsNotFloating.Height();
                 floatingHintYPostionNotFloating = Baseline;
             }
 
-
+            
             if (IsFloating)
             {
                 floatingHintPaint.TextSize = labelsTextSize;

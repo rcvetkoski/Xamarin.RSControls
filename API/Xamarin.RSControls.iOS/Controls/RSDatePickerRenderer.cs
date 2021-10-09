@@ -78,7 +78,7 @@ namespace Xamarin.RSControls.iOS.Controls
             elementCasted.Placeholder = "";
 
             this.Control.EditingDidBegin += Control_EditingDidBegin;
-    }
+        }
 
         private void Control_EditingDidBegin(object sender, EventArgs e)
         {
