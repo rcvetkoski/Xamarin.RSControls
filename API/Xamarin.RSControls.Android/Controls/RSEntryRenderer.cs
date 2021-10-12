@@ -41,8 +41,7 @@ namespace Xamarin.RSControls.Droid.Controls
             if (e.OldElement != null)
                 return;
 
-            if (this.Element is IRSControl)
-                this.Element.Placeholder = "";
+            Element.Placeholder = "";
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)

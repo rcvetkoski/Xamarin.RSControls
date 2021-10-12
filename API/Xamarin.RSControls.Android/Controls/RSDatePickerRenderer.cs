@@ -17,12 +17,13 @@ using Xamarin.Forms.Platform.Android;
 using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Droid.Controls;
 using Xamarin.RSControls.Enums;
+using Xamarin.RSControls.Interfaces;
 using static Android.Views.View;
 
 [assembly: ExportRenderer(typeof(RSDatePicker), typeof(RSDatePickerRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSDatePickerRenderer : ViewRenderer<RSDatePicker, AppCompatEditText>, IOnClickListener, AdapterView.IOnItemClickListener
+    public class RSDatePickerRenderer : DatePickerRenderer, IOnClickListener, AdapterView.IOnItemClickListener
     {
         DatePickerDialog _dialog;
         private bool isTextInputLayout;
@@ -30,43 +31,48 @@ namespace Xamarin.RSControls.Droid.Controls
         //For custom dialogs
         private AlertDialog alert;
         AlertDialog.Builder dialog;
+        private RSDatePicker element;
 
         public RSDatePickerRenderer(Context context) : base(context)
         {
 
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<RSDatePicker> e)
+        protected override EditText CreateNativeControl()
+        {
+            if(Element != null)
+            {
+                element = Element as RSDatePicker;
+
+                //Set placeholder text
+                SetPlaceHolderText();
+
+                //Set date format
+                if (!element.HasCustomFormat())
+                    SetDateFormat();
+            }
+
+            return new CustomEditText(Context, this.Element as IRSControl);
+        }
+
+        protected override void OnElementChanged(ElementChangedEventArgs<Forms.DatePicker> e)
         {
             base.OnElementChanged(e);
-
-            var nativeEditText = new AppCompatEditText(Context);
-            this.SetNativeControl(nativeEditText);
 
             if (Control == null || e.NewElement == null)
                 return;
 
-            nativeEditText.SetSingleLine(true);
-
-            //Set icon
-            SetIcon(nativeEditText);
-
-            //Set placeholder text
-            SetPlaceHolderText();
-
-            //Set date format
-            if (!this.Element.HasCustomFormat())
-                SetDateFormat();
+            
 
             //Show datepicker
             this.Control.Click += OnPickerClick;
             this.Control.FocusChange += OnPickerFocusChange;
 
             //Set correct value for nulabledate if greater than max date or smaller than min date
-            if (this.Element.NullableDate.HasValue)
-                this.Element.NullableDate = CorrectMinMaxDateSelectedValue(this.Element.NullableDate.Value);
+            if (element.NullableDate.HasValue)
+                element.NullableDate = CorrectMinMaxDateSelectedValue(element.NullableDate.Value);
             //else
-            //    this.Element.NullableDate = CorrectMinMaxDateSelectedValue(DateTime.Now);
+            //    element.NullableDate = CorrectMinMaxDateSelectedValue(DateTime.Now);
 
             //Set picker text
             SetText();
@@ -82,10 +88,10 @@ namespace Xamarin.RSControls.Droid.Controls
             if (e.PropertyName == "NullableDate")
             {
                 //Reset value if not in allowed range
-                if (this.Element.NullableDate.HasValue)
+                if (element.NullableDate.HasValue)
                 {
-                    if (!IsCorrectMinMaxDateSelectedValue(this.Element.NullableDate.Value))
-                        this.Element.NullableDate = CorrectMinMaxDateSelectedValue(this.Element.NullableDate.Value);
+                    if (!IsCorrectMinMaxDateSelectedValue(element.NullableDate.Value))
+                        element.NullableDate = CorrectMinMaxDateSelectedValue(element.NullableDate.Value);
 
                 }
 
@@ -93,7 +99,7 @@ namespace Xamarin.RSControls.Droid.Controls
             }
 
             if (e.PropertyName == "Error" && !isTextInputLayout)
-                this.Control.Error = (this.Element as RSDatePicker).Error;
+                this.Control.Error = (element as RSDatePicker).Error;
 
             base.OnElementPropertyChanged(sender, e);
         }
@@ -105,30 +111,25 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void SetPlaceHolderText()
         {
-            if (this.Element.Placeholder == null)
+            if (element.Placeholder == null)
             {
-                if (this.Element.DateSelectionMode == DateSelectionModeEnum.MonthYear)
+                if (element.DateSelectionMode == DateSelectionModeEnum.MonthYear)
                 {
-                    this.Element.Placeholder = "Month, Year";
+                    element.Placeholder = "Month, Year";
                 }
-                else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Month)
+                else if (element.DateSelectionMode == DateSelectionModeEnum.Month)
                 {
-                    this.Element.Placeholder = "Select Month";
+                    element.Placeholder = "Select Month";
                 }
-                else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Year)
+                else if (element.DateSelectionMode == DateSelectionModeEnum.Year)
                 {
-                    this.Element.Placeholder = "Select Year";
+                    element.Placeholder = "Select Year";
                 }
                 else
                 {
-                    this.Element.Placeholder = "Select Date";
+                    element.Placeholder = "Select Date";
                 }
             }
-        }
-
-        private void SetIcon(global::Android.Widget.EditText nativeEditText)
-        {
-            
         }
 
         private void OnPickerClick(object sender, EventArgs e)
@@ -145,39 +146,39 @@ namespace Xamarin.RSControls.Droid.Controls
 
         void SetText()
         {
-            if (!Element.NullableDate.HasValue)
+            if (!element.NullableDate.HasValue)
             {
                 this.Control.Text = "";
                 if(!isTextInputLayout)
                 {
-                    this.Control.Hint = this.Element.Placeholder;
-                    this.Control.SetHintTextColor(this.Element.PlaceholderColor.ToAndroid());
+                    this.Control.Hint = element.Placeholder;
+                    this.Control.SetHintTextColor(element.PlaceholderColor.ToAndroid());
                 }
             }
             else
             {
-                this.Control.Text = Element.NullableDate.Value.ToString(Element.Format);
+                this.Control.Text = element.NullableDate.Value.ToString(Element.Format);
                 this.Control.SetTextColor(Element.TextColor.ToAndroid());
             }
         }
 
         void SetDate(DateTime date)
         {
-            Element.NullableDate = date;
+            element.NullableDate = date;
             SetText();
-            this.Element.DoInvalidate(); // TODO resize if set to auto
+            element.DoInvalidate(); // TODO resize if set to auto
         }
 
         DateTime CorrectMinMaxDateSelectedValue(DateTime date)
         {
-            if (this.Element.MinimumDate <= date && this.Element.MaximumDate >= date)
+            if (element.MinimumDate <= date && element.MaximumDate >= date)
                 return date;
             else
             {
-                if (this.Element.MinimumDate > date)
-                    return this.Element.MinimumDate;
-                else if (this.Element.MaximumDate < date)
-                    return this.Element.MaximumDate;
+                if (element.MinimumDate > date)
+                    return element.MinimumDate;
+                else if (element.MaximumDate < date)
+                    return element.MaximumDate;
                 else
                     return DateTime.Now;
             }
@@ -185,7 +186,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
         public bool IsCorrectMinMaxDateSelectedValue(DateTime date)
         {
-            if (this.Element.MinimumDate <= date && this.Element.MaximumDate >= date)
+            if (element.MinimumDate <= date && element.MaximumDate >= date)
                 return true;
             else
                 return false;
@@ -193,30 +194,30 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void SetDateFormat()
         {
-            if (this.Element.DateSelectionMode == DateSelectionModeEnum.MonthYear)
+            if (element.DateSelectionMode == DateSelectionModeEnum.MonthYear)
             {
-                this.Element.Format = "MMMM yyyy";
+                element.Format = "MMMM yyyy";
             }
-            else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Year)
+            else if (element.DateSelectionMode == DateSelectionModeEnum.Year)
             {
-                this.Element.Format = "yyyy";
+                element.Format = "yyyy";
 
             }
-            else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Month)
+            else if (element.DateSelectionMode == DateSelectionModeEnum.Month)
             {
-                this.Element.Format = "MMMM";
+                element.Format = "MMMM";
             }
         }
 
         private void ShowDatePicker(DateTime? dateTime = null)
         {
-            if (this.Element.DateSelectionMode == DateSelectionModeEnum.Default)
+            if (element.DateSelectionMode == DateSelectionModeEnum.Default)
             {
                 if (dateTime.HasValue)
                     CreateDatePickerDialog(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day);
-                else if (this.Element.NullableDate.HasValue)
+                else if (element.NullableDate.HasValue)
                 {
-                    var tempDate = CorrectMinMaxDateSelectedValue(this.Element.NullableDate.Value);
+                    var tempDate = CorrectMinMaxDateSelectedValue(element.NullableDate.Value);
                     CreateDatePickerDialog(tempDate.Year, tempDate.Month, tempDate.Day);
                 }
                 else
@@ -227,14 +228,14 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 _dialog.Show();
             }
-            else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Month ||
-                    this.Element.DateSelectionMode == DateSelectionModeEnum.MonthYear ||
-                    this.Element.DateSelectionMode == DateSelectionModeEnum.Year)
+            else if (element.DateSelectionMode == DateSelectionModeEnum.Month ||
+                    element.DateSelectionMode == DateSelectionModeEnum.MonthYear ||
+                    element.DateSelectionMode == DateSelectionModeEnum.Year)
             {
                 if (dateTime.HasValue)
                     CreateMothYearPickerDialog(dateTime.Value);
-                else if (this.Element.NullableDate.HasValue)
-                    CreateMothYearPickerDialog(CorrectMinMaxDateSelectedValue(this.Element.NullableDate.Value));
+                else if (element.NullableDate.HasValue)
+                    CreateMothYearPickerDialog(CorrectMinMaxDateSelectedValue(element.NullableDate.Value));
                 else
                     CreateMothYearPickerDialog(CorrectMinMaxDateSelectedValue(DateTime.Now));
             }
@@ -245,7 +246,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
         void CreateDatePickerDialog(int year, int month, int day)
         {
-            RSDatePicker view = Element;
+            RSDatePicker view = element;
             _dialog = new DatePickerDialog(Context, (o, e) =>
             {
                 view.Date = e.Date;
@@ -261,17 +262,17 @@ namespace Xamarin.RSControls.Droid.Controls
             _dialog.SetButton(Context.GetString(global::Android.Resource.String.Ok), (sender, e) =>
             {
                 SetDate(_dialog.DatePicker.DateTime);
-                this.Element.Format = this.Element.Format;
+                element.Format = element.Format;
                 this.Control.SetTextColor(Element.TextColor.ToAndroid());
             });
 
-            if (Element.IsClearable)
+            if (element.IsClearable)
             {
                 _dialog.SetButton2("Clear", (sender, e) =>
                 {
-                    this.Element.CleanDate();
+                    element.CleanDate();
                     SetText();
-                    this.Element.DoInvalidate(); // TODO resize if set to auto
+                    element.DoInvalidate(); // TODO resize if set to auto
                 });
             }
         }
@@ -286,9 +287,9 @@ namespace Xamarin.RSControls.Droid.Controls
         private int selectedYearIndex = 0;
         private void SetYears(DateTime? intDate)
         {
-            years = Enumerable.Range(this.Element.MinimumDate.Year, this.Element.MaximumDate.Year - this.Element.MinimumDate.Year + 1).ToArray();
+            years = Enumerable.Range(element.MinimumDate.Year, element.MaximumDate.Year - element.MinimumDate.Year + 1).ToArray();
 
-            if (this.Element != null && this.Element.DateSelectionMode != DateSelectionModeEnum.Month)
+            if (element != null && element.DateSelectionMode != DateSelectionModeEnum.Month)
             {
                 selectedYearIndex = Array.IndexOf(years, intDate.Value.Year);
             }
@@ -686,10 +687,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 day = this.internalDate.Value.Day;
 
             //Set internal date to allowed date
-            if (yearListAdapter.GetSelectedYear() == this.Element.MinimumDate.Year && this.Element.MinimumDate.Month > internalDate.Value.Month)
-                internalDate = new DateTime(yearListAdapter.GetSelectedYear(), this.Element.MinimumDate.Month, day);
-            else if (yearListAdapter.GetSelectedYear() == this.Element.MaximumDate.Year && this.Element.MaximumDate.Month < internalDate.Value.Month)
-                internalDate = new DateTime(yearListAdapter.GetSelectedYear(), this.Element.MaximumDate.Month, day);
+            if (yearListAdapter.GetSelectedYear() == element.MinimumDate.Year && element.MinimumDate.Month > internalDate.Value.Month)
+                internalDate = new DateTime(yearListAdapter.GetSelectedYear(), element.MinimumDate.Month, day);
+            else if (yearListAdapter.GetSelectedYear() == element.MaximumDate.Year && element.MaximumDate.Month < internalDate.Value.Month)
+                internalDate = new DateTime(yearListAdapter.GetSelectedYear(), element.MaximumDate.Month, day);
             else
                 internalDate = new DateTime(yearListAdapter.GetSelectedYear(), internalDate.Value.Month, day);
 
@@ -723,7 +724,7 @@ namespace Xamarin.RSControls.Droid.Controls
             internalDate = intDate;
 
             // Visibilites and header clicks enable disable
-            if (this.Element.DateSelectionMode == DateSelectionModeEnum.MonthYear)
+            if (element.DateSelectionMode == DateSelectionModeEnum.MonthYear)
             {
                 // Year
                 CreateYearView(monthYearPickerDialogView);
@@ -740,7 +741,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 headerMonthTitle.Selected = true;
                 headerMonthTitle.SetOnClickListener(this);
             }
-            else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Month)
+            else if (element.DateSelectionMode == DateSelectionModeEnum.Month)
             {
                 // Month
                 CreateMonthView(monthYearPickerDialogView);
@@ -753,7 +754,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 leftButton.Visibility = ViewStates.Gone;
                 rightButton.Visibility = ViewStates.Gone;
             }
-            else if (this.Element.DateSelectionMode == DateSelectionModeEnum.Year)
+            else if (element.DateSelectionMode == DateSelectionModeEnum.Year)
             {
                 // Year
                 CreateYearView(monthYearPickerDialogView);
@@ -774,13 +775,13 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 SetDate(date);
             });
-            if (Element.IsClearable)
+            if (element.IsClearable)
             {
                 dialog.SetNegativeButton("Clear", (sender, e) =>
                 {
-                    this.Element.CleanDate();
+                    element.CleanDate();
                     SetText();
-                    this.Element.DoInvalidate(); // TODO resize if set to auto
+                    element.DoInvalidate(); // TODO resize if set to auto
                 });
             }
             else
