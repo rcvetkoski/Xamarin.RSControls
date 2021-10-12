@@ -49,7 +49,7 @@
             </rs:RSEntry.Behaviors>
         </rs:RSEntry>-->
 
-        <rs:RSDatePicker/>
+        <rs:RSDatePicker DateSelectionMode="Default"/>
 
     </StackLayout>
 

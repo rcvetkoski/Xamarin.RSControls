@@ -44,12 +44,18 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 element = Element as RSDatePicker;
 
+                //Set default icon
+                if ((this.Element as IRSControl).RightIcon == null)
+                {
+                    (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
+                    {
+                        View = new RSSvgImage() { Source = "Samples/Data/SVG/calendar.svg" },
+                        Source = this.Element
+                    };
+                }
+
                 //Set placeholder text
                 SetPlaceHolderText();
-
-                //Set date format
-                if (!element.HasCustomFormat())
-                    SetDateFormat();
             }
 
             return new CustomEditText(Context, this.Element as IRSControl);
@@ -62,11 +68,11 @@ namespace Xamarin.RSControls.Droid.Controls
             if (Control == null || e.NewElement == null)
                 return;
 
-            
+            //Remove placeholder since we have created our own and don't need this to be shown
+            element.Placeholder = "";
 
             //Show datepicker
-            this.Control.Click += OnPickerClick;
-            this.Control.FocusChange += OnPickerFocusChange;
+            element.Focused += Element_Focused;
 
             //Set correct value for nulabledate if greater than max date or smaller than min date
             if (element.NullableDate.HasValue)
@@ -76,6 +82,16 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //Set picker text
             SetText();
+
+            //Set date format
+            if (!element.HasCustomFormat())
+                SetDateFormat();
+
+            if ((element as IRSControl).HorizontalTextAlignment == Forms.TextAlignment.Center)
+                Control.Gravity = GravityFlags.Center;
+            else if ((element as IRSControl).HorizontalTextAlignment == Forms.TextAlignment.End)
+                Control.Gravity = GravityFlags.End;
+
 
             this.Control.KeyListener = null;
             this.Control.Enabled = Element.IsEnabled;
@@ -99,14 +115,19 @@ namespace Xamarin.RSControls.Droid.Controls
             }
 
             if (e.PropertyName == "Error" && !isTextInputLayout)
-                this.Control.Error = (element as RSDatePicker).Error;
+                (this.Control as CustomEditText).ErrorMessage = (this.Element as RSDatePicker).Error;
 
             base.OnElementPropertyChanged(sender, e);
         }
 
-        internal void SetIsTextInputLayout(bool value)
+        private void Element_Focused(object sender, FocusEventArgs e)
         {
-            isTextInputLayout = value;
+            ShowDatePicker();
+        }
+
+        private void _dialog_DismissEvent(object sender, EventArgs e)
+        {
+            Control.ClearFocus();
         }
 
         private void SetPlaceHolderText()
@@ -130,18 +151,6 @@ namespace Xamarin.RSControls.Droid.Controls
                     element.Placeholder = "Select Date";
                 }
             }
-        }
-
-        private void OnPickerClick(object sender, EventArgs e)
-        {
-            if(this.Control.HasFocus)
-                ShowDatePicker();
-        }
-
-        private void OnPickerFocusChange(object sender, FocusChangeEventArgs e)
-        {
-            if (e.HasFocus)
-                ShowDatePicker();
         }
 
         void SetText()
@@ -244,20 +253,48 @@ namespace Xamarin.RSControls.Droid.Controls
 
         #region DatePickerDialog
 
-        void CreateDatePickerDialog(int year, int month, int day)
+        //void CreateDatePickerDialog(int year, int month, int day)
+        //{
+        //    RSDatePicker view = element;
+        //    _dialog = new DatePickerDialog(Context, (o, e) =>
+        //    {
+        //        view.Date = e.Date;
+        //        ((IElementController)view).SetValueFromRenderer(VisualElement.IsFocusedProperty, false);
+
+        //        _dialog = null;
+        //    }, year, month - 1, day);
+
+
+        //    _dialog.DatePicker.MaxDate = (long)view.MaximumDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+        //    _dialog.DatePicker.MinDate = (long)view.MinimumDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+
+        //    _dialog.SetButton(Context.GetString(global::Android.Resource.String.Ok), (sender, e) =>
+        //    {
+        //        SetDate(_dialog.DatePicker.DateTime);
+        //        element.Format = element.Format;
+        //        this.Control.SetTextColor(Element.TextColor.ToAndroid());
+        //    });
+
+        //    if (element.IsClearable)
+        //    {
+        //        _dialog.SetButton2("Clear", (sender, e) =>
+        //        {
+        //            element.CleanDate();
+        //            SetText();
+        //            element.DoInvalidate(); // TODO resize if set to auto
+        //        });
+        //    }
+
+        //    if (_dialog != null)
+        //        _dialog.DismissEvent += _dialog_DismissEvent;
+        //}
+
+        protected override DatePickerDialog CreateDatePickerDialog(int year, int month, int day)
         {
-            RSDatePicker view = element;
-            _dialog = new DatePickerDialog(Context, (o, e) =>
-            {
-                view.Date = e.Date;
-                ((IElementController)view).SetValueFromRenderer(VisualElement.IsFocusedProperty, false);
+            _dialog = base.CreateDatePickerDialog(year, month, day);
 
-                _dialog = null;
-            }, year, month - 1, day);
-
-
-            _dialog.DatePicker.MaxDate = (long)view.MaximumDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
-            _dialog.DatePicker.MinDate = (long)view.MinimumDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+            _dialog.DatePicker.MaxDate = (long)element.MaximumDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+            _dialog.DatePicker.MinDate = (long)element.MinimumDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
 
             _dialog.SetButton(Context.GetString(global::Android.Resource.String.Ok), (sender, e) =>
             {
@@ -273,8 +310,13 @@ namespace Xamarin.RSControls.Droid.Controls
                     element.CleanDate();
                     SetText();
                     element.DoInvalidate(); // TODO resize if set to auto
-                });
+                    });
             }
+
+            if (_dialog != null)
+                _dialog.DismissEvent += _dialog_DismissEvent;
+
+            return _dialog;
         }
 
         #endregion
@@ -795,6 +837,12 @@ namespace Xamarin.RSControls.Droid.Controls
             // Set and show monthYearPickerDialogView to dialog popup
             dialog.SetView(monthYearPickerDialogView);
             alert = dialog.Show();
+            alert.DismissEvent += Alert_DismissEvent;
+        }
+
+        private void Alert_DismissEvent(object sender, EventArgs e)
+        {
+            Control.ClearFocus();
         }
 
         #endregion
@@ -832,18 +880,22 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             if (Control != null)
             {
-                this.Control.Click -= OnPickerClick;
-                this.Control.FocusChange -= OnPickerFocusChange;
-
                 if (_dialog != null)
                 {
+                    _dialog.DismissEvent -= _dialog_DismissEvent;
                     _dialog.Hide();
                     _dialog.Dispose();
                     _dialog = null;
                 }
             }
 
-            if(leftButton != null)
+            if (element != null)
+                element.Focused -= Element_Focused;
+
+            if(alert != null)
+                alert.DismissEvent -= Alert_DismissEvent;
+
+            if (leftButton != null)
                 leftButton.Click -= leftButton_Click;
 
             if(leftButton != null)

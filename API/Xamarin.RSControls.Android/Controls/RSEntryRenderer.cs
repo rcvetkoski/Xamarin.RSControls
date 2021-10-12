@@ -503,7 +503,7 @@ namespace Xamarin.RSControls.Droid.Controls
             if(!string.IsNullOrEmpty(floatingHintText))
                 floatingHintPaint.GetTextBounds(floatingHintText, 0, floatingHintText.Length, floatingHintBoundsNotFloating);
             else
-                floatingHintPaint.GetTextBounds("Hint", 0, 4, floatingHintBoundsNotFloating); //Just to get the floatingHintBoundsNotFloating Height, hint won't be apear 
+                floatingHintPaint.GetTextBounds("Hint", 0, 4, floatingHintBoundsNotFloating); //Just to get the floatingHintBoundsNotFloating Height, hint won't be apear
         }
         private void CreateErrorMessage()
         {
