@@ -49,7 +49,8 @@
             </rs:RSEntry.Behaviors>
         </rs:RSEntry>-->
 
-        <rs:RSDatePicker DateSelectionMode="Default"/>
+        <rs:RSDatePicker DateSelectionMode="Month"  MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}"/>
+        <DatePicker MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}"/>
 
     </StackLayout>
 
