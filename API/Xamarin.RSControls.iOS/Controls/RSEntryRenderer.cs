@@ -42,6 +42,8 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 (this.Control as RSUITextField).ErrorMessage = (this.Element as RSEntry).Error;
             }
+
+            (this.Control as RSUITextField).ForceFloatingHintFloatOrNot();
         }
 
         protected override UITextField CreateNativeControl()
@@ -1119,7 +1121,6 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             set => base.AttributedPlaceholder = value;
         }
-
 
         //Draw
         public override void Draw(CGRect rect)
