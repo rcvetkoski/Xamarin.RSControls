@@ -80,12 +80,12 @@ namespace Xamarin.RSControls.Droid.Controls
             //else
             //    element.NullableDate = CorrectMinMaxDateSelectedValue(DateTime.Now);
 
-            //Set picker text
-            SetText();
-
             //Set date format
             if (!element.HasCustomFormat())
                 SetDateFormat();
+
+            //Set picker text
+            SetText();
 
             if ((element as IRSControl).HorizontalTextAlignment == Forms.TextAlignment.Center)
                 Control.Gravity = GravityFlags.Center;
@@ -108,7 +108,6 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     if (!IsCorrectMinMaxDateSelectedValue(element.NullableDate.Value))
                         element.NullableDate = CorrectMinMaxDateSelectedValue(element.NullableDate.Value);
-
                 }
 
                 SetText();
