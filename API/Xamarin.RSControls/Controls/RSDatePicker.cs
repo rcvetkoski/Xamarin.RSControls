@@ -168,7 +168,7 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(HorizontalTextAlignmentProperty, value); }
         }
 
-        public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSDatePicker), 8f);
+        public static readonly BindableProperty BorderRadiusProperty = BindableProperty.Create("BorderRadius", typeof(float), typeof(RSDatePicker), 6f);
         public float BorderRadius
         {
             get { return (float)GetValue(BorderRadiusProperty); }

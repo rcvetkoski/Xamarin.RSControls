@@ -20,11 +20,8 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             base.OnElementPropertyChanged(sender, e);
 
-            if(e.PropertyName == "Value")
-            {
-                (this.Control as RSUITextField).ForceFloatingHintFloatOrNot();
-                (this.Control as RSUITextField).UpdateBorder();
-            }
+            if (e.PropertyName == "Value" && !(sender as Forms.View).IsFocused)
+                (this.Control as RSUITextField).UpdateView();
         }
 
         protected override UITextField CreateNativeControl()

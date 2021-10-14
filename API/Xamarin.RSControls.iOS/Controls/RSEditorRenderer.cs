@@ -65,6 +65,9 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 (this.Control as RSUITextView).ErrorMessage = (this.Element as RSEditor).Error;
             }
+
+            //if (e.PropertyName == "Text" && !(sender as Forms.View).IsFocused)
+            //    (this.Control as RSUITextField).UpdateView();
         }
 
         protected override UITextView CreateNativeControl()

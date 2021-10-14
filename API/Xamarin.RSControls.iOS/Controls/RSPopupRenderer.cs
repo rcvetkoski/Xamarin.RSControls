@@ -68,6 +68,7 @@ namespace Xamarin.RSControls.iOS.Controls
         private NSLayoutConstraint dialogPositionXConstraint;
         private NSLayoutConstraint dialogPositionYConstraint;
 
+        public event EventHandler OnDismiss;
 
 
         //Constructor
@@ -910,6 +911,9 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             base.Dispose(disposing);
 
+            EventHandler handler = OnDismiss;
+            handler?.Invoke(this, new EventArgs());
+
             if (disposing)
             {
                 foreach (var item in this.contentStack.Subviews)
@@ -917,11 +921,8 @@ namespace Xamarin.RSControls.iOS.Controls
                     item.Dispose();
                 }
             }
-
         }
     }
-
-
 
     //Custom button used to assign command
     public class RSButtonNative : UIButton
@@ -990,7 +991,6 @@ namespace Xamarin.RSControls.iOS.Controls
             base.Dispose(disposing);
         }
     }
-
 
     //Arrow
     public class RSPopupArrow : UIView

@@ -43,7 +43,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 (this.Control as RSUITextField).ErrorMessage = (this.Element as RSEntry).Error;
             }
 
-            (this.Control as RSUITextField).ForceFloatingHintFloatOrNot();
+            if(e.PropertyName == "Text" && !(sender as Forms.View).IsFocused)
+                (this.Control as RSUITextField).UpdateView();
         }
 
         protected override UITextField CreateNativeControl()
@@ -217,7 +218,7 @@ namespace Xamarin.RSControls.iOS.Controls
             else
                 this.floatingFontSize = 12;
 
-            floatingHintClipPadding = 3;
+            floatingHintClipPadding = !string.IsNullOrEmpty(rSControl.Placeholder) ? 3 : 0;
             this.borderRadius = rSControl.BorderRadius;
             this.shadowRadius = rSControl.ShadowRadius;
             this.counterMaxLength = this.rSControl.CounterMaxLength;
@@ -623,13 +624,13 @@ namespace Xamarin.RSControls.iOS.Controls
         private void CreateBorder()
         {
             if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.OutlinedBorder)
-                CreateRoundedBorder();
+                CreateOutlinedBorder();
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
                 CreateFilledBorder();
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
                 CreateUnderlineBorder();
         }
-        private void CreateRoundedBorder()
+        private void CreateOutlinedBorder()
         {
             border = new CALayer()
             {
@@ -711,7 +712,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.Layer.AddSublayer(filledBorder);
         }
         //Update border
-        public void UpdateBorder()
+        private void UpdateBorder()
         {
             if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.OutlinedBorder)
                 UpdateOutlinedBorder();
@@ -720,7 +721,7 @@ namespace Xamarin.RSControls.iOS.Controls
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
                 UpdateUnderlineBorder();
         }
-        public void UpdateOutlinedBorder()
+        private void UpdateOutlinedBorder()
         {
             var frame = this.Frame;
 
@@ -760,7 +761,7 @@ namespace Xamarin.RSControls.iOS.Controls
             borderMask.Path = maskPath;
             this.border.Mask = borderMask;
         }
-        public void UpdateFilledBorder()
+        private void UpdateFilledBorder()
         {
             var frame = this.Frame;
 
@@ -774,7 +775,7 @@ namespace Xamarin.RSControls.iOS.Controls
             filledBorder.Frame = new CGRect(borderPosition.X, borderPosition.Y, borderPosition.Width, borderPosition.Height);
             border.Frame = new CGRect(borderPosition.X, borderPosition.Y + borderPosition.Height - border.BorderWidth, borderPosition.Width, border.BorderWidth); //Underline
         }
-        public void UpdateUnderlineBorder()
+        private void UpdateUnderlineBorder()
         {
             var frame = this.Frame;
 
@@ -1045,7 +1046,7 @@ namespace Xamarin.RSControls.iOS.Controls
             floatingHint.Position = new CGPoint(floatingHintXPosition, floatingHintYPosition);
         }
         //Used by external classes
-        public void ForceFloatingHintFloatOrNot()
+        private void ForceFloatingHintFloatOrNot()
         {
             if (!string.IsNullOrEmpty(this.Text) && !IsFloating)
             {
@@ -1061,7 +1062,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 floatingHintYPosition = floatingHintYPostionNotFloating;
                 AnimateFloatingHint(this.rSControl.FontSize);
             }
-
         }
 
 
@@ -1128,6 +1128,13 @@ namespace Xamarin.RSControls.iOS.Controls
             base.Draw(rect);
         }
 
+        //Used in RSControl property changed so it update when per example text changes from external code or view
+        public void UpdateView()
+        {
+            ForceFloatingHintFloatOrNot();
+            UpdateBorder();
+        }
+
         //Update ui //Handle rotation
         public override void LayoutSubviews()
         {
@@ -1192,7 +1199,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 UpdateBorder();
                 floatingHintPositionUpdate();
                 FloatingHintFramePlacement();
-                UpdateBorder();
+                //UpdateBorder();
                 UpdateIconsPosition();
                 if (counterLabel != null)
                     UpdateCounterPosition();

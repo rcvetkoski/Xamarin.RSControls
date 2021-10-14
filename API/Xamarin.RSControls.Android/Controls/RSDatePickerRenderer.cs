@@ -87,6 +87,7 @@ namespace Xamarin.RSControls.Droid.Controls
             //Set picker text
             SetText();
 
+            //Set horizontal text alignement
             if ((element as IRSControl).HorizontalTextAlignment == Forms.TextAlignment.Center)
                 Control.Gravity = GravityFlags.Center;
             else if ((element as IRSControl).HorizontalTextAlignment == Forms.TextAlignment.End)

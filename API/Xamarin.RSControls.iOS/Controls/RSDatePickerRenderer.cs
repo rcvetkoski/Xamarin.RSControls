@@ -95,6 +95,13 @@ namespace Xamarin.RSControls.iOS.Controls
             //Delete placeholder as we use floating hint instead
             (Element as RSDatePicker).Placeholder = "";
 
+            //Set horizontal text alignement
+            if ((element as IRSControl).HorizontalTextAlignment == Forms.TextAlignment.Center)
+                Control.TextAlignment = UITextAlignment.Center;
+            else if ((element as IRSControl).HorizontalTextAlignment == Forms.TextAlignment.End)
+                Control.TextAlignment = UITextAlignment.Right;
+
+
             this.Control.EditingDidBegin += Control_EditingDidBegin;
         }
 
@@ -105,21 +112,24 @@ namespace Xamarin.RSControls.iOS.Controls
             //Update picker text if binding value changes
             if (e.PropertyName == "NullableDate")
             {
-                //Reset value if not in allowed range
-                if(this.element.NullableDate.HasValue)
+                //Update only if changed by external factor
+                if(!(sender as Forms.View).IsFocused)
                 {
-                    if (!IsCorrectMinMaxDateSelectedValue(this.element.NullableDate.Value))
-                        this.element.NullableDate = CorrectMinMaxDateSelectedValue(this.element.NullableDate.Value);
+                    //Reset value if not in allowed range
+                    if (this.element.NullableDate.HasValue)
+                    {
+                        if (!IsCorrectMinMaxDateSelectedValue(this.element.NullableDate.Value))
+                            this.element.NullableDate = CorrectMinMaxDateSelectedValue(this.element.NullableDate.Value);
 
-                    SetPickerSelectedIndicator(this.element.NullableDate);
+                        SetPickerSelectedIndicator(this.element.NullableDate);
+                    }
+                    else
+                        SetPickerSelectedIndicator(CorrectMinMaxDateSelectedValue(DateTime.Now));
+
+                    SetText();
+
+                    (this.Control as RSUITextField).UpdateView();
                 }
-                else
-                    SetPickerSelectedIndicator(CorrectMinMaxDateSelectedValue(DateTime.Now));
-
-                SetText();
-
-                (this.Control as RSUITextField).UpdateBorder();
-                (this.Control as RSUITextField).ForceFloatingHintFloatOrNot();
             }
 
             if (e.PropertyName == "Error")
@@ -196,7 +206,7 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             uIDatePicker = new UIDatePicker();
             uIDatePicker.PreferredDatePickerStyle = UIDatePickerStyle.Wheels;
-            uIDatePicker.Mode = UIDatePickerMode.DateAndTime;
+            uIDatePicker.Mode = UIDatePickerMode.Date;
             uIDatePicker.Date = this.element.Date.ToNSDate();
             uIDatePicker.MinimumDate = this.element.MinimumDate.ToNSDate();
             uIDatePicker.MaximumDate = this.element.MaximumDate.ToNSDate();
@@ -463,7 +473,16 @@ namespace Xamarin.RSControls.iOS.Controls
 
             if (component == 0 && (rsDatePicker.DateSelectionMode == DateSelectionModeEnum.Month || rsDatePicker.DateSelectionMode == DateSelectionModeEnum.MonthYear))
             {
-                dateTime = new DateTime(dateTime.Year, (int)row + 1, dateTime.Day);
+                try
+                {
+                    rsDatePicker.NullableDate.ToString();
+                    dateTime = new DateTime(dateTime.Year, (int)row + 1, dateTime.Day);
+
+                }
+                catch(Exception e)
+                {
+
+                }
 
                 if (!this.renderer.IsCorrectMinMaxDateSelectedValue(dateTime))
                 {

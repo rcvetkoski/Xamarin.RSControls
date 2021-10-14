@@ -15,96 +15,71 @@ using Xamarin.RSControls.iOS.Controls;
 [assembly: ExportRenderer(typeof(RSPickerBase), typeof(RSPickerRenderer))]
 namespace Xamarin.RSControls.iOS.Controls
 {
-    public class RSPickerRenderer : ViewRenderer<RSPickerBase, UITextField>
+    public class RSPickerRenderer : PickerRenderer
     {
-        private UITextField entry;
         private UIPickerView uIPickerView;
         private UITableView multipleSelectionList;
         CustomUITableView customTable;
         public RSPopupRenderer rSPopup;
         public bool canUpdate = true;
+        private RSPickerBase element;
+
 
         public RSPickerRenderer()
         {
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<RSPickerBase> e)
+        protected override UITextField CreateNativeControl()
+        {
+            if (Element != null)
+                element = Element as RSPickerBase;
+
+            return new RSUITextField(element as IRSControl);
+        }
+
+        protected override void OnElementChanged(ElementChangedEventArgs<Picker> e)
         {
             base.OnElementChanged(e);
 
-            if(e.OldElement != null)
-            {
-                this.entry.EditingDidBegin -= Entry_EditingDidBegin;
-            }
-
-            if (Control != null)
-                return;
-
-            if (e.NewElement == null)
+            if (Control == null || e.NewElement == null)
                 return;
 
 
             //Create uitextfield and set it as control
-            entry = CreateNativeControl();
-            entry.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
-            this.SetNativeControl(entry);
-
-
-            //Set uitextfield style
-            //this.Control.BorderStyle = UITextBorderStyle.RoundedRect;
-            //Control.Layer.BorderColor = UIColor.LightGray.CGColor;
-            //Control.Font = UIFont.SystemFontOfSize((nfloat)this.Element.FontSize);
+            Control.Font = UIFont.SystemFontOfSize((nfloat)element.FontSize);
 
 
             //Set Text
             SetText();
 
-
-            if (this.Element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
+            if (element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
             {
-                entry.InputAccessoryView = CreateToolbar(entry);
-                entry.InputAssistantItem.LeadingBarButtonGroups = new UIBarButtonItemGroup[0];
-                entry.InputAssistantItem.TrailingBarButtonGroups = new UIBarButtonItemGroup[0];
+                Control.InputAccessoryView = CreateToolbar(Control);
+                Control.InputAssistantItem.LeadingBarButtonGroups = new UIBarButtonItemGroup[0];
+                Control.InputAssistantItem.TrailingBarButtonGroups = new UIBarButtonItemGroup[0];
 
 
-                if (this.Element.SelectionMode == PickerSelectionModeEnum.Single)
-                    entry.InputView = CreateUIPickerView();
+                if (element.SelectionMode == PickerSelectionModeEnum.Single)
+                    Control.InputView = CreateUIPickerView();
                 else
-                    entry.InputView = CreateMultipleSelectionPicker();
+                    Control.InputView = CreateMultipleSelectionPicker();
             }
             else
-                entry.InputView = new UIView(); // Hide original keyboard
+            {
+                Control.InputView = new UIView(); // Hide original keyboard
+                Control.InputAccessoryView = new UIView();
+            }
 
 
             //Hides shortcut bar
-            entry.InputAssistantItem.LeadingBarButtonGroups = null;
-            entry.InputAssistantItem.TrailingBarButtonGroups = null;
+            Control.InputAssistantItem.LeadingBarButtonGroups = null;
+            Control.InputAssistantItem.TrailingBarButtonGroups = null;
 
 
-            entry.EditingDidBegin += Entry_EditingDidBegin;
+            Control.EditingDidBegin += Entry_EditingDidBegin;
 
             //Delete placeholder as we use floating hint instead
             //Element.Placeholder = "";
-        }
-
-        //If collection has changed meanwhile update the data on click
-        private void Entry_EditingDidBegin(object sender, EventArgs e)
-        {
-            if (canUpdate)
-            {
-                if (this.Element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
-                {
-                    if (uIPickerView != null)
-                        uIPickerView.Model = new CustomUIPickerViewModel(this.Element.ItemsSource, this.Element, this);
-
-                    if (multipleSelectionList != null)
-                    {
-                        multipleSelectionList.Source = new CustomTableSource(this.Element.Items.ToArray(), this);
-                    }
-                }
-                else
-                    CreateCustomUiPickerPopup();
-            }
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -113,27 +88,48 @@ namespace Xamarin.RSControls.iOS.Controls
 
             if (e.PropertyName == "SelectedItem" || e.PropertyName == "SelectedItems")
             {
-                SetText();
-
-                (this.Control as RSUITextField).ForceFloatingHintFloatOrNot();
-                (this.Control as RSUITextField).UpdateBorder();
+                if (!(sender as Forms.View).IsFocused)
+                {
+                    SetText();
+                    (this.Control as RSUITextField).UpdateView();
+                }
             }
             else if (e.PropertyName == "Error")
             {
-                (this.Control as RSUITextField).ErrorMessage = this.Element.Error;
+                (this.Control as RSUITextField).ErrorMessage = element.Error;
+            }
+        }
+
+        //If collection has changed meanwhile update the data on click
+        private void Entry_EditingDidBegin(object sender, EventArgs e)
+        {
+            if (canUpdate)
+            {
+                if (element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
+                {
+                    if (uIPickerView != null)
+                        uIPickerView.Model = new CustomUIPickerViewModel(element.ItemsSource, element, this);
+
+                    if (multipleSelectionList != null)
+                    {
+                        multipleSelectionList.Source = new CustomTableSource(element.Items.ToArray(), this, element);
+                    }
+                }
+                else
+                    CreateCustomUiPickerPopup();
             }
         }
 
         public void SetText()
         {
-            if (this.Element is RSPicker)
+            if (element is RSPicker)
             {
-                if (this.Element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+                if (element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
                 {
-                    if (this.Element.SelectedItem != null)
+                    if (element.SelectedItem != null)
                     {
-                        if (!string.IsNullOrEmpty((this.Element as RSPicker).DisplayMemberPath))
-                            this.Control.Text = Helpers.TypeExtensions.GetPropValue(this.Element.SelectedItem, (Element as RSPicker).DisplayMemberPath).ToString();
+                        if (!string.IsNullOrEmpty((element as RSPicker).DisplayMemberPath))
+                            this.Control.Text = Helpers.TypeExtensions.GetPropValue(element.SelectedItem, (Element as RSPicker).DisplayMemberPath).ToString();
                         else
                             this.Control.Text = Element.SelectedItem.ToString();
                     }
@@ -146,16 +142,16 @@ namespace Xamarin.RSControls.iOS.Controls
                 {
                     this.Control.Text = "";
 
-                    if (this.Element.SelectedItems != null && this.Element.SelectedItems.Count >= 1)
+                    if (element.SelectedItems != null && element.SelectedItems.Count >= 1)
                     {
-                        foreach (object item in this.Element.SelectedItems)
+                        foreach (object item in element.SelectedItems)
                         {
-                            if (!string.IsNullOrEmpty((this.Element as RSPicker).DisplayMemberPath))
-                                this.Control.Text += Helpers.TypeExtensions.GetPropValue(item, (this.Element as RSPicker).DisplayMemberPath).ToString();
+                            if (!string.IsNullOrEmpty((element as RSPicker).DisplayMemberPath))
+                                this.Control.Text += Helpers.TypeExtensions.GetPropValue(item, (element as RSPicker).DisplayMemberPath).ToString();
                             else
                                 this.Control.Text += item.ToString();
 
-                            if (this.Element.SelectedItems.IndexOf(item) < this.Element.SelectedItems.Count - 1)
+                            if (element.SelectedItems.IndexOf(item) < element.SelectedItems.Count - 1)
                                 this.Control.Text += ", ";
                         }
                     }
@@ -168,9 +164,9 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             else
             {
-                if (this.Element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+                if (element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
                 {
-                    if (this.Element.SelectedItem != null)
+                    if (element.SelectedItem != null)
                         this.Control.Text = Element.SelectedItem.ToString();
                     else
                     {
@@ -181,13 +177,13 @@ namespace Xamarin.RSControls.iOS.Controls
                 {
                     this.Control.Text = "";
 
-                    if (this.Element.SelectedItems != null && this.Element.SelectedItems.Count >= 1)
+                    if (element.SelectedItems != null && element.SelectedItems.Count >= 1)
                     {
-                        foreach (object item in this.Element.SelectedItems)
+                        foreach (object item in element.SelectedItems)
                         {
                             this.Control.Text += item.ToString();
 
-                            if (this.Element.SelectedItems.IndexOf(item) < this.Element.SelectedItems.Count - 1)
+                            if (element.SelectedItems.IndexOf(item) < element.SelectedItems.Count - 1)
                                 this.Control.Text += ", ";
                         }
                     }
@@ -199,7 +195,7 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-        private UIToolbar CreateToolbar(UITextField entry)
+        private UIToolbar CreateToolbar(UITextField Control)
         {
             var width = UIScreen.MainScreen.Bounds.Width;
             UIToolbar toolbar = new UIToolbar(new CGRect(0, 0, width, 44)) { BarStyle = UIBarStyle.Default, Translucent = true };
@@ -211,17 +207,17 @@ namespace Xamarin.RSControls.iOS.Controls
 
             clearCancelButton = new UIBarButtonItem("Clear", UIBarButtonItemStyle.Plain, (sender, ev) =>
             {
-                if (this.Element.SelectionMode == PickerSelectionModeEnum.Single)
-                    this.Element.SelectedItem = null;
+                if (element.SelectionMode == PickerSelectionModeEnum.Single)
+                    element.SelectedItem = null;
                 else
                 {
-                    this.Element.SelectedItems.Clear();
+                    element.SelectedItems.Clear();
                     multipleSelectionList.ReloadData();
                 }
 
                 SetText();
-                entry.EndEditing(true);
-                //entry.ResignFirstResponder();
+                Control.EndEditing(true);
+                //Control.ResignFirstResponder();
             });
 
 
@@ -231,11 +227,11 @@ namespace Xamarin.RSControls.iOS.Controls
             //Done Button
             var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, (sender, ev) =>
             {
-                if (this.Element.SelectionMode == PickerSelectionModeEnum.Single)
-                    this.Element.SelectedItem = (uIPickerView.Model as CustomUIPickerViewModel).SelectedItem;
+                if (element.SelectionMode == PickerSelectionModeEnum.Single)
+                    element.SelectedItem = (uIPickerView.Model as CustomUIPickerViewModel).SelectedItem;
 
                 SetText();
-                entry.ResignFirstResponder();
+                Control.ResignFirstResponder();
             });
 
             toolbar.SetItems(new[] { clearCancelButton, spacer, doneButton }, false);
@@ -249,12 +245,12 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 ShowSelectionIndicator = true,
                 AutoresizingMask = UIViewAutoresizing.FlexibleHeight,
-                Model = new CustomUIPickerViewModel(this.Element.ItemsSource, this.Element, this),
+                Model = new CustomUIPickerViewModel(element.ItemsSource, element, this),
             };
 
             //Fixes selectedindicator not showing
-            if (this.Element.SelectedItem != null)
-                uIPickerView.Select(this.Element.SelectedIndex, 0, true);
+            if (element.SelectedItem != null)
+                uIPickerView.Select(element.SelectedIndex, 0, true);
 
             return uIPickerView;
         }
@@ -275,7 +271,7 @@ namespace Xamarin.RSControls.iOS.Controls
             multipleSelectionList.AllowsMultipleSelection = true;
             multipleSelectionList.SetEditing(true, true);
             multipleSelectionList.AllowsMultipleSelectionDuringEditing = true;
-            multipleSelectionList.Source = new CustomTableSource(this.Element.Items.ToArray(), this);
+            multipleSelectionList.Source = new CustomTableSource(element.Items.ToArray(), this, element);
             multipleSelectionList.RegisterClassForCellReuse(typeof(CustomCell), "MyCellId");
 
             return multipleSelectionList;
@@ -284,15 +280,15 @@ namespace Xamarin.RSControls.iOS.Controls
         private UIView CreateCustomUiPickerPopup()
         {
             customTable = new CustomUITableView();
-            customTable.Source = new CustomTableSource(this.Element.Items.ToArray(), this);
+            customTable.Source = new CustomTableSource(element.Items.ToArray(), this, element);
             customTable.BackgroundColor = UIColor.Clear;
 
-            if(this.Element.SelectionMode == PickerSelectionModeEnum.Single)
+            if(element.SelectionMode == PickerSelectionModeEnum.Single)
             {
                 //Separator visibility
-                if (this.Element.RsPopupSeparatorsUserSet)
+                if (element.RsPopupSeparatorsUserSet)
                 {
-                    if (!this.Element.RsPopupSeparatorsEnabled)
+                    if (!element.RsPopupSeparatorsEnabled)
                         customTable.SeparatorStyle = UITableViewCellSeparatorStyle.None;
                     else
                         customTable.SeparatorStyle = UITableViewCellSeparatorStyle.SingleLine;
@@ -303,9 +299,9 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
             //Scroll to selected item if single selection mode
-            if (this.Element.SelectedItem != null)
+            if (element.SelectedItem != null)
             {
-                var selectedIndex = this.Element.ItemsSource.IndexOf(this.Element.SelectedItem);
+                var selectedIndex = element.ItemsSource.IndexOf(element.SelectedItem);
                 customTable.ScrollToRow(NSIndexPath.FromItemSection(selectedIndex, 0), UITableViewScrollPosition.Top, false);
             }
 
@@ -322,7 +318,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //Search Bar
 
-            if (this.Element.IsSearchEnabled)
+            if (element.IsSearchEnabled)
             {
                 UISearchBar searchBar = new UISearchBar();
                 searchBar.SizeToFit();
@@ -349,8 +345,8 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //Create RSPopup
             rSPopup = new RSPopupRenderer();
-            rSPopup.Title = this.Element.RSPopupTitle;
-            rSPopup.Message = this.Element.RSPopupMessage;
+            rSPopup.Title = element.RSPopupTitle;
+            rSPopup.Message = element.RSPopupMessage;
             rSPopup.Width = -1;
             rSPopup.Height = -2;
             rSPopup.TopMargin = 50;
@@ -358,24 +354,30 @@ namespace Xamarin.RSControls.iOS.Controls
             rSPopup.LeftMargin = 20;
             rSPopup.RightMargin = 20;
             rSPopup.BorderRadius = 16;
-            rSPopup.BorderFillColor = this.Element.RSPopupBackgroundColor;
+            rSPopup.BorderFillColor = element.RSPopupBackgroundColor;
             rSPopup.DimAmount = 0.8f;
             rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, new Command(() => { if (this.Control != null) { this.Control.ResignFirstResponder(); } }));
             rSPopup.AddAction("Clear", RSPopupButtonTypeEnum.Destructive, new Command(() => { clearPicker(); }));
             rSPopup.SetNativeView(holder);
             rSPopup.ShowPopup();
 
+            rSPopup.OnDismiss += RSPopup_OnDismiss;
 
             return rSPopup;
         }
 
+        private void RSPopup_OnDismiss(object sender, EventArgs e)
+        {
+            Control.ResignFirstResponder();
+        }
+
         private void clearPicker()
         {
-            if (this.Element.SelectionMode == PickerSelectionModeEnum.Single)
-                this.Element.SelectedItem = null;
+            if (element.SelectionMode == PickerSelectionModeEnum.Single)
+                element.SelectedItem = null;
             else
             {
-                this.Element.SelectedItems.Clear();
+                element.SelectedItems.Clear();
                 customTable.ReloadData();
             }
 
@@ -391,10 +393,6 @@ namespace Xamarin.RSControls.iOS.Controls
             table.ReloadData();
         }
 
-        protected override UITextField CreateNativeControl()
-        {
-            return new RSUITextField(this.Element as IRSControl);
-        }
 
         protected override void Dispose(bool disposing)
         {
@@ -617,13 +615,22 @@ namespace Xamarin.RSControls.iOS.Controls
         private List<object> list;
         private List<object> searchItems;
         private RSPickerRenderer rsPicker;
+        private RSPickerBase element;
 
 
-        public CustomTableSource(object[] list, RSPickerRenderer rsPicker)
+        public CustomTableSource(object[] list, RSPickerRenderer rsPicker, RSPickerBase element)
         {
-            this.list = rsPicker.Element.ItemsSource as List<object>;
-            this.searchItems = rsPicker.Element.ItemsSource as List<object>; 
+            searchItems = new List<object>();
+
+            foreach (var item in element.ItemsSource)
+            {
+                searchItems.Add(item);
+            }
+
+            //this.list = element.ItemsSource as List<object>;
+            //this.searchItems = element.ItemsSource as List<object>; 
             this.rsPicker = rsPicker;
+            this.element = element;
         }
 
 
@@ -634,9 +641,9 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
             //Create tamplate if ItemTemplate set
-            if (rsPicker.Element.ItemTemplate != null && !(cell as CustomCell).IsInit)
+            if (element.ItemTemplate != null && !(cell as CustomCell).IsInit)
             {
-                Forms.View formsView = rsPicker.Element.ItemTemplate.CreateContent() as Forms.View;
+                Forms.View formsView = element.ItemTemplate.CreateContent() as Forms.View;
                 formsView.BindingContext = searchItems[indexPath.Row];
                 (cell as CustomCell).CellInit(formsView, tableView);
 
@@ -658,7 +665,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
             //Binding/Value update
-            if (rsPicker.Element.ItemTemplate == null)
+            if (element.ItemTemplate == null)
             {
                 //if (cell == null)
                 //    cell = new UITableViewCell(UITableViewCellStyle.Default, "MyCellId");
@@ -672,7 +679,7 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 //if (cell == null)
                 //{
-                //    Forms.View formsView = rsPicker.Element.ItemTemplate.CreateContent() as Forms.View;
+                //    Forms.View formsView = element.ItemTemplate.CreateContent() as Forms.View;
                 //    formsView.BindingContext = searchItems[indexPath.Row];
                 //    cell = new CustomCell(new NSString("MyCellId"), formsView);
                 //}
@@ -684,16 +691,16 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
             //Set selected row
-            if (rsPicker.Element.SelectionMode == PickerSelectionModeEnum.Multiple)
+            if (element.SelectionMode == PickerSelectionModeEnum.Multiple)
             {
-                if (rsPicker.Element.SelectedItems.Contains(searchItems[indexPath.Row]))
+                if (element.SelectedItems.Contains(searchItems[indexPath.Row]))
                 {
                     tableView.SelectRow(indexPath, false, UITableViewScrollPosition.None);
                 }
             }
             else
             {
-                if(rsPicker.Element.SelectedItem != null && rsPicker.Element.SelectedItem == searchItems[indexPath.Row])
+                if(element.SelectedItem != null && element.SelectedItem == searchItems[indexPath.Row])
                     tableView.SelectRow(indexPath, false, UITableViewScrollPosition.None);
             }
 
@@ -703,7 +710,7 @@ namespace Xamarin.RSControls.iOS.Controls
             clearBackgroundView.BackgroundColor = UIColor.Clear;
             cell.SelectedBackgroundView = clearBackgroundView;
 
-            //if(rsPicker.Element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
+            //if(element.RSPopupStyleEnum == RSPopupStyleEnum.Native)
                 cell.BackgroundColor = UIColor.Clear;
 
 
@@ -712,8 +719,10 @@ namespace Xamarin.RSControls.iOS.Controls
 
         public override nint RowsInSection(UITableView tableview, nint section)
         {
-            var lolool = this.searchItems.Count();
-            return lolool;
+            if (searchItems != null)
+                return this.searchItems.Count();
+            else
+                return 0;
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
@@ -724,13 +733,13 @@ namespace Xamarin.RSControls.iOS.Controls
                 rsPicker.Control.BecomeFirstResponder();
             }
 
-            if (rsPicker.Element.SelectionMode == PickerSelectionModeEnum.Multiple)
+            if (element.SelectionMode == PickerSelectionModeEnum.Multiple)
             {
-                rsPicker.Element.SelectedItems.Add(searchItems[indexPath.Row]);
+                element.SelectedItems.Add(searchItems[indexPath.Row]);
             }
             else
             {
-                rsPicker.Element.SelectedItem = searchItems[indexPath.Row];
+                element.SelectedItem = searchItems[indexPath.Row];
                 rsPicker.rSPopup.Dismiss(true);
                 rsPicker.Control.ResignFirstResponder();
             }
@@ -747,7 +756,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 rsPicker.Control.BecomeFirstResponder();
             }
 
-            rsPicker.Element.SelectedItems.Remove(searchItems[indexPath.Row]);
+            element.SelectedItems.Remove(searchItems[indexPath.Row]);
 
             rsPicker.canUpdate = true;
             rsPicker.SetText();
@@ -763,16 +772,16 @@ namespace Xamarin.RSControls.iOS.Controls
 
         public string GetItemValue(int row)
         {
-            if ((this.rsPicker != null && rsPicker.Element is RSPicker) && !string.IsNullOrEmpty((rsPicker.Element as RSPicker).DisplayMemberPath))
-                return Helpers.TypeExtensions.GetPropValue(searchItems[(int)row], (rsPicker.Element as RSPicker).DisplayMemberPath).ToString();
+            if ((this.rsPicker != null && element is RSPicker) && !string.IsNullOrEmpty((element as RSPicker).DisplayMemberPath))
+                return Helpers.TypeExtensions.GetPropValue(searchItems[(int)row], (element as RSPicker).DisplayMemberPath).ToString();
             else
                 return searchItems[(int)row].ToString();
         }
 
         public string GetItemValue2(object item)
         {
-            if ((this.rsPicker != null && rsPicker.Element is RSPicker) && !string.IsNullOrEmpty((rsPicker.Element as RSPicker).DisplayMemberPath))
-                return Helpers.TypeExtensions.GetPropValue(item, (rsPicker.Element as RSPicker).DisplayMemberPath).ToString();
+            if ((this.rsPicker != null && element is RSPicker) && !string.IsNullOrEmpty((element as RSPicker).DisplayMemberPath))
+                return Helpers.TypeExtensions.GetPropValue(item, (element as RSPicker).DisplayMemberPath).ToString();
             else
                 return item.ToString();
         }
