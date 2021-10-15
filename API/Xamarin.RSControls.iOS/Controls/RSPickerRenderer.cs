@@ -47,7 +47,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //Create uitextfield and set it as control
             Control.Font = UIFont.SystemFontOfSize((nfloat)element.FontSize);
-
+            Control.AutocorrectionType = UITextAutocorrectionType.No;
 
             //Set Text
             SetText();
@@ -74,7 +74,6 @@ namespace Xamarin.RSControls.iOS.Controls
             //Hides shortcut bar
             Control.InputAssistantItem.LeadingBarButtonGroups = null;
             Control.InputAssistantItem.TrailingBarButtonGroups = null;
-
 
             Control.EditingDidBegin += Entry_EditingDidBegin;
 
@@ -356,12 +355,12 @@ namespace Xamarin.RSControls.iOS.Controls
             rSPopup.BorderRadius = 16;
             rSPopup.BorderFillColor = element.RSPopupBackgroundColor;
             rSPopup.DimAmount = 0.8f;
-            rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, new Command(() => { if (this.Control != null) { this.Control.ResignFirstResponder(); } }));
+            rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, null);
             rSPopup.AddAction("Clear", RSPopupButtonTypeEnum.Destructive, new Command(() => { clearPicker(); }));
             rSPopup.SetNativeView(holder);
             rSPopup.ShowPopup();
 
-            rSPopup.OnDismiss += RSPopup_OnDismiss;
+            rSPopup.DismissEvent += RSPopup_OnDismiss;
 
             return rSPopup;
         }
@@ -402,6 +401,9 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 if (this.Control != null)
                     this.Control.EditingDidBegin -= Entry_EditingDidBegin;
+
+                if(rSPopup != null)
+                    rSPopup.DismissEvent -= RSPopup_OnDismiss;
             }
         }
     }

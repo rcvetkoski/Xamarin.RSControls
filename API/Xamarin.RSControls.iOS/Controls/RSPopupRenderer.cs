@@ -68,8 +68,6 @@ namespace Xamarin.RSControls.iOS.Controls
         private NSLayoutConstraint dialogPositionXConstraint;
         private NSLayoutConstraint dialogPositionYConstraint;
 
-        public event EventHandler OnDismiss;
-
 
         //Constructor
         public RSPopupRenderer() : base()
@@ -813,7 +811,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 this.RemoveFromSuperview();
             }
 
-
+            OnDismissed();
             this.Dispose();
         }
 
@@ -907,12 +905,18 @@ namespace Xamarin.RSControls.iOS.Controls
             Top, Bottom, Left, Right
         }
 
+        //Dismiss event
+        public delegate void DismissEventHandler(object source, EventArgs args);
+        public event EventHandler DismissEvent;
+        protected virtual void OnDismissed()
+        {
+            if (DismissEvent != null)
+                DismissEvent(this, EventArgs.Empty);
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-
-            EventHandler handler = OnDismiss;
-            handler?.Invoke(this, new EventArgs());
 
             if (disposing)
             {

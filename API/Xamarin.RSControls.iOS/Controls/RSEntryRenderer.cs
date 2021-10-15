@@ -1208,6 +1208,8 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
+        //public override UITextRange SelectedTextRange { get => null; set => base.SelectedTextRange = value; }
+
         //Remove any events when closed
         protected override void Dispose(bool disposing)
         {
