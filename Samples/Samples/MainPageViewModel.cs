@@ -247,7 +247,7 @@ namespace Samples
         }
         public void TestMethod2(object obj, object obj2)
         {
-            RSPopup rSPopup = new RSPopup("Title", "Message rthtrhttrhtrhtr hrthrt rthrt rth rth rgreggregreregergergregregergreg ergerg ergergre ergerg erg ");
+            RSPopup rSPopup = new RSPopup("Title", "Message");
             rSPopup.SetPopupSize(Xamarin.RSControls.Enums.RSPopupSizeEnum.WrapContent, Xamarin.RSControls.Enums.RSPopupSizeEnum.WrapContent);
             rSPopup.SetPopupPositionRelativeTo(obj2 as Xamarin.Forms.View, Xamarin.RSControls.Enums.RSPopupPositionSideEnum.Top);
             rSPopup.SetDimAmount(0f);

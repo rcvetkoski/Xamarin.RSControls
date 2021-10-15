@@ -55,6 +55,7 @@
 
         <rs:RSEnumPicker x:TypeArguments="enums:DateSelectionModeEnum" Placeholder="Enum picker" RSPopupStyleEnum="RsPopopStyle"/>
         <rs:RSPicker Placeholder="Picker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" RSPopupStyleEnum="RsPopopStyle"/>
+        <Picker ItemsSource="{Binding ListPicker}"/>
 
         <DatePicker/>
     </StackLayout>

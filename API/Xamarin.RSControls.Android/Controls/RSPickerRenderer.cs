@@ -166,7 +166,6 @@ namespace Xamarin.RSControls.Droid.Controls
             LinearLayout layout = new LinearLayout(Context);
             layout.Orientation = Orientation.Vertical;
 
-
             //SearchView
             if (this.ElementCasted.IsSearchEnabled && this.ElementCasted.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
             {
@@ -252,6 +251,8 @@ namespace Xamarin.RSControls.Droid.Controls
             sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.MatchParent;
             sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.WrapContent;
             sPopupRenderer.UserSetSize = true;
+            sPopupRenderer.DismissEvent += SPopupRenderer_DismissEvent;
+
 
 
             //Create layout
@@ -259,7 +260,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //SetView to dialog
             sPopupRenderer.SetNativeView(layout);
-
             sPopupRenderer.AddAction("Done", Enums.RSPopupButtonTypeEnum.Positive, (senderAlert, args) =>
             {
                 SetText();
@@ -277,8 +277,12 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.Control.ClearFocus();
                 sPopupRenderer.Dismiss();
             });
-
             sPopupRenderer.ShowPopup();
+        }
+
+        private void SPopupRenderer_DismissEvent(object sender, EventArgs e)
+        {
+            Control.ClearFocus();
         }
 
         private void CreateNativePickerDialog()
@@ -400,6 +404,9 @@ namespace Xamarin.RSControls.Droid.Controls
             }
 
             base.Dispose(disposing);
+
+            if(sPopupRenderer != null)
+                sPopupRenderer.DismissEvent -= SPopupRenderer_DismissEvent;
 
             //if(sPopupRenderer != null && sPopupRenderer.Dialog != null)
             //    sPopupRenderer.Dialog.Dismiss();
@@ -583,7 +590,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.SetMeasuredDimension(measuredWidth, measuredHeight);
             }
 
-            protected override void OnLayout(bool changed, int l, int t, int r, int b)
+            protected override void OnLayout(bool changed, int l, int t, int r, int b) 
             {
                 _renderer.UpdateLayout();
             }

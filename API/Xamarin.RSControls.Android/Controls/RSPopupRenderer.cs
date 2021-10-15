@@ -736,7 +736,6 @@ namespace Xamarin.RSControls.Droid.Controls
             return this.RelativeView;
         }
 
-
         public override void OnSaveInstanceState(Bundle outState)
         {
             base.OnSaveInstanceState(outState);
@@ -761,8 +760,17 @@ namespace Xamarin.RSControls.Droid.Controls
         public override void OnDismiss(IDialogInterface dialog)
         {
             base.OnDismiss(dialog);
-
+            OnDismissed();
             this.Dispose();
+        }
+
+        //Dismiss event
+        public delegate void DismissEventHandler(object source, EventArgs args);
+        public event EventHandler DismissEvent;
+        protected virtual void OnDismissed()
+        {
+            if (DismissEvent != null)
+                DismissEvent(this, EventArgs.Empty);
         }
 
         //Dispose
