@@ -50,7 +50,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 return;
 
 
-
+            (Element as Forms.View).HeightRequest = 80;
 
             //Control.Layer.CornerRadius = 3;
             //Control.Layer.BorderColor = Color.FromHex("F0F0F0").ToCGColor();

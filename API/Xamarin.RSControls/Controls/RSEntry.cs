@@ -262,5 +262,11 @@ namespace Xamarin.RSControls.Controls
             if (RightHelpingIcon != null)
                 RightHelpingIcon.BindingContext = this.BindingContext;
         }
+
+        //Resize control when width or height set to auto and text changes
+        public void DoInvalidate()
+        {
+            this.InvalidateMeasure();
+        }
     }
 }

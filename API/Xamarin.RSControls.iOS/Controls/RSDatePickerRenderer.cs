@@ -77,6 +77,11 @@ namespace Xamarin.RSControls.iOS.Controls
             this.Control.InputAssistantItem.LeadingBarButtonGroups = null;
             this.Control.InputAssistantItem.TrailingBarButtonGroups = null;
             this.Control.AccessibilityTraits = UIAccessibilityTrait.Button;
+            Control.SpellCheckingType = UITextSpellCheckingType.No;
+            Control.AutocorrectionType = UITextAutocorrectionType.No;
+            Control.TintColor = UIColor.Clear;
+
+
 
             if (!this.element.HasCustomFormat())
                 SetDateFormat();

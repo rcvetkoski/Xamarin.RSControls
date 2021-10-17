@@ -48,6 +48,8 @@ namespace Xamarin.RSControls.iOS.Controls
             //Create uitextfield and set it as control
             Control.Font = UIFont.SystemFontOfSize((nfloat)element.FontSize);
             Control.AutocorrectionType = UITextAutocorrectionType.No;
+            Control.TintColor = UIColor.Clear;
+            Control.SpellCheckingType = UITextSpellCheckingType.No;
 
             //Set Text
             SetText();

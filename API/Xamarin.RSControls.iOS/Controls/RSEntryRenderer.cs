@@ -204,7 +204,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
         //Store temp frame size and check if changed in layout subviews, if changed => screen has been probably rotated => update ui
         private CGRect tempSize;
-
+        private bool adjustsize = false;
 
         //Constructor
         public RSUITextField(IRSControl rSControl)
@@ -273,6 +273,13 @@ namespace Xamarin.RSControls.iOS.Controls
         //Adjust Size if needed
         private void AdjustSize()
         {
+            var frame = this.Frame;
+
+            var sizeRequest = (rSControl as Forms.View).Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+
+            var lol = this.GetSizeRequest(double.PositiveInfinity, double.PositiveInfinity);
+
+
             //Width
             int errorLabelWidth = 0;
             int helperLabelWidth = helperLabel != null ? (int)helperLabel.Size.Width : 0;
@@ -306,6 +313,27 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //Height
             requiredHeight = maxIconHeight + textSpacingFromBorderTop + textSpacingFromBorderBottom + iconPadding * 2;
+
+            if(requiredHeight > lol.Request.Height)
+            {
+                frame.Height = requiredHeight;
+                frame.Width = requiredWidth;
+
+                this.Frame = frame;
+                adjustsize = true;
+
+                //(rSControl as Forms.View).HeightRequest = requiredHeight;
+                //(rSControl as Forms.View).WidthRequest = requiredWidth;
+
+            }
+        }
+
+        public override CGRect Frame { get => base.Frame;
+            set
+            {
+                    base.Frame = value;
+
+            }
         }
 
         //Set Padding
@@ -1147,16 +1175,16 @@ namespace Xamarin.RSControls.iOS.Controls
                 {
                     tempSize = this.Frame;
 
-                    //////Resize RSEntry if one of the icons too big
-                    //if (requiredHeight > this.Frame.Height)
-                    //{
-                    //    //(this.rSControl as RSEntry).HeightRequest = requiredHeight;
-                    //    //var frame = this.Frame;
-                    //    //frame.Height = requiredHeight;
-                    //    //this.Frame = frame;
-
-                    //    this.SizeToFit();
-                    //}
+                    ////Resize RSEntry if one of the icons too big
+                    if (requiredHeight > this.Frame.Height)
+                    {
+                        //(this.rSControl as Forms.View).HeightRequest = requiredHeight;
+                        //var frame = this.Frame;
+                        //frame.Height = requiredHeight;
+                        //this.Frame = frame;
+                        //if ((this.rSControl is RSEntry))
+                        //    (this.rSControl as RSEntry).DoInvalidate();
+                    }
 
 
                     //Set is floating hint or not
@@ -1207,8 +1235,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 tempSize = this.Frame;
             }
         }
-
-        //public override UITextRange SelectedTextRange { get => null; set => base.SelectedTextRange = value; }
 
         //Remove any events when closed
         protected override void Dispose(bool disposing)
