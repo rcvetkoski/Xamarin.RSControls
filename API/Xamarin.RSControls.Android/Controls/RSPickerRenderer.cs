@@ -28,13 +28,23 @@ namespace Xamarin.RSControls.Droid.Controls
         private global::Android.Widget.ListView listViewAndroid;
         private global::Android.Widget.SearchView searchView;
         private List<object> originalItemsList;
-        private RSPickerBase ElementCasted;
+        private RSPickerBase element;
 
         public RSPickerRenderer(Context context) : base(context)
         {
             originalItemsList = new List<object>();
         }
 
+        protected override EditText CreateNativeControl()
+        {
+            if ((this.Element as IRSControl).RightIcon == null)
+                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
+                {
+                    View = new RSSvgImage() { Source = "Samples/Data/SVG/arrow.svg" }
+                };
+
+            return new CustomEditText(Context, this.Element as IRSControl);
+        }
 
         protected override void OnElementChanged(ElementChangedEventArgs<Picker> e)
         {
@@ -43,7 +53,7 @@ namespace Xamarin.RSControls.Droid.Controls
             if (Control == null || e.NewElement == null)
                 return;
 
-            ElementCasted = this.Element as RSPickerBase;
+            element = this.Element as RSPickerBase;
 
             this.Control.SetSingleLine(true);
 
@@ -58,6 +68,7 @@ namespace Xamarin.RSControls.Droid.Controls
             this.Control.KeyListener = null;
             //this.Control.Enabled = ElementCasted.IsEnabled;
         }
+
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
@@ -71,18 +82,6 @@ namespace Xamarin.RSControls.Droid.Controls
                 (this.Control as CustomEditText).ErrorMessage = (this.Element as RSPickerBase).Error;
         }
 
-        protected override EditText CreateNativeControl()
-        {
-            if ((this.Element as IRSControl).RightIcon == null)
-                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
-                {
-                    View = new RSSvgImage() { Source = "Samples/Data/SVG/arrow.svg" }
-                };
-
-            return new CustomEditText(Context, this.Element as IRSControl);
-        }
-
-
         internal void SetIsTextInputLayout(bool value)
         {
             isTextInputLayout = value;
@@ -90,16 +89,16 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void SetText()
         {
-            if (this.ElementCasted is RSPicker)
+            if (this.element is RSPicker)
             {
-                if(this.ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+                if(this.element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
                 {
-                    if (this.ElementCasted.SelectedItem != null)
+                    if (this.element.SelectedItem != null)
                     {
-                        if (!string.IsNullOrEmpty((this.ElementCasted as RSPicker).DisplayMemberPath))
-                            this.Control.Text = Helpers.TypeExtensions.GetPropValue(this.ElementCasted.SelectedItem, (ElementCasted as RSPicker).DisplayMemberPath).ToString();
+                        if (!string.IsNullOrEmpty((this.element as RSPicker).DisplayMemberPath))
+                            this.Control.Text = Helpers.TypeExtensions.GetPropValue(this.element.SelectedItem, (element as RSPicker).DisplayMemberPath).ToString();
                         else
-                            this.Control.Text = ElementCasted.SelectedItem.ToString();
+                            this.Control.Text = element.SelectedItem.ToString();
                     }
                     else
                     {
@@ -110,16 +109,16 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     this.Control.Text = "";
 
-                    if (this.ElementCasted.SelectedItems != null && this.ElementCasted.SelectedItems.Count >= 1)
+                    if (this.element.SelectedItems != null && this.element.SelectedItems.Count >= 1)
                     {
-                        foreach(object item in this.ElementCasted.SelectedItems)
+                        foreach(object item in this.element.SelectedItems)
                         {
-                            if (!string.IsNullOrEmpty((this.ElementCasted as RSPicker).DisplayMemberPath))
-                                this.Control.Text += Helpers.TypeExtensions.GetPropValue(item, (this.ElementCasted as RSPicker).DisplayMemberPath).ToString();
+                            if (!string.IsNullOrEmpty((this.element as RSPicker).DisplayMemberPath))
+                                this.Control.Text += Helpers.TypeExtensions.GetPropValue(item, (this.element as RSPicker).DisplayMemberPath).ToString();
                             else
                                 this.Control.Text += item.ToString();
 
-                            if(this.ElementCasted.SelectedItems.IndexOf(item) < this.ElementCasted.SelectedItems.Count - 1)
+                            if(this.element.SelectedItems.IndexOf(item) < this.element.SelectedItems.Count - 1)
                                 this.Control.Text += ", ";
                         }
                     }
@@ -132,10 +131,10 @@ namespace Xamarin.RSControls.Droid.Controls
             }
             else
             {
-                if (this.ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+                if (this.element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
                 {
-                    if (this.ElementCasted.SelectedItem != null)
-                        this.Control.Text = ElementCasted.SelectedItem.ToString();
+                    if (this.element.SelectedItem != null)
+                        this.Control.Text = element.SelectedItem.ToString();
                     else
                     {
                         this.Control.Text = "";
@@ -145,13 +144,13 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     this.Control.Text = "";
 
-                    if (this.ElementCasted.SelectedItems != null && this.ElementCasted.SelectedItems.Count >= 1)
+                    if (this.element.SelectedItems != null && this.element.SelectedItems.Count >= 1)
                     {
-                        foreach(object item in this.ElementCasted.SelectedItems)
+                        foreach(object item in this.element.SelectedItems)
                         {
                             this.Control.Text += item.ToString();
 
-                            if (this.ElementCasted.SelectedItems.IndexOf(item) < this.ElementCasted.SelectedItems.Count - 1)
+                            if (this.element.SelectedItems.IndexOf(item) < this.element.SelectedItems.Count - 1)
                                 this.Control.Text += ", ";
                         }
                     }
@@ -167,7 +166,7 @@ namespace Xamarin.RSControls.Droid.Controls
             layout.Orientation = Orientation.Vertical;
 
             //SearchView
-            if (this.ElementCasted.IsSearchEnabled && this.ElementCasted.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
+            if (this.element.IsSearchEnabled && this.element.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
             {
                 searchView = new global::Android.Widget.SearchView(Context);
                 searchView.SetPadding(searchView.PaddingLeft,
@@ -190,16 +189,16 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             //Listview Adapter
-            adapter = new CustomBaseAdapter<object>(Context, this.ElementCasted as RSPickerBase, ElementCasted.ItemsSource, listViewAndroid);
+            adapter = new CustomBaseAdapter<object>(Context, this.element as RSPickerBase, element.ItemsSource, listViewAndroid);
             listViewAndroid.Adapter = adapter;
 
             //Set selected item's
-            if (ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+            if (element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
             {
                 //Separator visibility
-                if(this.ElementCasted.RsPopupSeparatorsUserSet)
+                if(this.element.RsPopupSeparatorsUserSet)
                 {
-                    if (!this.ElementCasted.RsPopupSeparatorsEnabled)
+                    if (!this.element.RsPopupSeparatorsEnabled)
                         listViewAndroid.Divider = null;
                 }
                 else
@@ -207,26 +206,26 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 listViewAndroid.ChoiceMode = ChoiceMode.Single;
                 //listViewAndroid.SetItemChecked(ElementCasted.SelectedIndex, true);
-                listViewAndroid.SetSelection(ElementCasted.SelectedIndex);
+                listViewAndroid.SetSelection(element.SelectedIndex);
 
-                if (ElementCasted.SelectedIndex != -1)
-                    adapter.CheckedItems.Add(ElementCasted.ItemsSource[ElementCasted.SelectedIndex]);
+                if (element.SelectedIndex != -1)
+                    adapter.CheckedItems.Add(element.ItemsSource[element.SelectedIndex]);
             }
             else
             {
                 listViewAndroid.ChoiceMode = ChoiceMode.Multiple;
 
                 //Separator visibility
-                if (this.ElementCasted.RsPopupSeparatorsUserSet)
-                    if (!this.ElementCasted.RsPopupSeparatorsEnabled)
+                if (this.element.RsPopupSeparatorsUserSet)
+                    if (!this.element.RsPopupSeparatorsEnabled)
                         listViewAndroid.Divider = null;
 
 
-                if (ElementCasted.SelectedItems != null)
+                if (element.SelectedItems != null)
                 {
-                    foreach (object item in ElementCasted.SelectedItems)
+                    foreach (object item in element.SelectedItems)
                     {
-                        if (ElementCasted.ItemsSource.Contains(item))
+                        if (element.ItemsSource.Contains(item))
                             adapter.CheckedItems.Add(item);
                     }
                 }
@@ -234,7 +233,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             //Populate linear layout
-            if (this.ElementCasted.IsSearchEnabled && this.ElementCasted.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
+            if (this.element.IsSearchEnabled && this.element.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
                 layout.AddView(searchView);
 
             layout.AddView(listViewAndroid);
@@ -248,11 +247,10 @@ namespace Xamarin.RSControls.Droid.Controls
             sPopupRenderer.BorderRadius = 14;
             sPopupRenderer.DimAmount = 0.7f;
             sPopupRenderer.BorderFillColor = (this.Element as RSPickerBase).RSPopupBackgroundColor;
-            sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.MatchParent;
+            sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.WrapContent;
             sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.WrapContent;
             sPopupRenderer.UserSetSize = true;
             sPopupRenderer.DismissEvent += SPopupRenderer_DismissEvent;
-
 
 
             //Create layout
@@ -260,18 +258,21 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //SetView to dialog
             sPopupRenderer.SetNativeView(layout);
+            //layout.LayoutParameters 
             sPopupRenderer.AddAction("Done", Enums.RSPopupButtonTypeEnum.Positive, (senderAlert, args) =>
             {
+                layout.Width.ToString();
+
                 SetText();
                 this.Control.ClearFocus();
             });
             sPopupRenderer.AddAction("Clear Item", Enums.RSPopupButtonTypeEnum.Neutral, (senderAlert, args) =>
             {
-                ElementCasted.SelectedItem = null;
-                ElementCasted.SelectedIndex = -1;
+                element.SelectedItem = null;
+                element.SelectedIndex = -1;
                 adapter.CheckedItems.Clear();
-                if (this.ElementCasted.SelectedItems != null)
-                    this.ElementCasted.SelectedItems.Clear();
+                if (this.element.SelectedItems != null)
+                    this.element.SelectedItems.Clear();
 
                 SetText();
                 this.Control.ClearFocus();
@@ -289,7 +290,6 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             AlertDialog.Builder dialog = new AlertDialog.Builder(Context);
 
-
             //Create layout
             var layout = CreateDialogLayout();
             //layout.SetPadding(0, (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics), 0, 0);
@@ -297,21 +297,23 @@ namespace Xamarin.RSControls.Droid.Controls
             ////SetView to dialog
             dialog.SetView(layout);
             //dialog.SetAdapter(adapter, this);
-            dialog.SetTitle(ElementCasted.Title);
+            dialog.SetTitle(element.Title);
 
 
             dialog.SetPositiveButton("Done", (senderAlert, args) =>
             {
+                layout.Width.ToString();
+
                 SetText();
                 this.Control.ClearFocus();
             });
             dialog.SetNegativeButton("Clear Item", (senderAlert, args) =>
             {
-                ElementCasted.SelectedItem = null;
-                ElementCasted.SelectedIndex = -1;
+                element.SelectedItem = null;
+                element.SelectedIndex = -1;
                 adapter.CheckedItems.Clear();
-                if (this.ElementCasted.SelectedItems != null)
-                    this.ElementCasted.SelectedItems.Clear();
+                if (this.element.SelectedItems != null)
+                    this.element.SelectedItems.Clear();
 
                 SetText();
                 this.Control.ClearFocus();
@@ -322,7 +324,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
         private void SearchView_QueryTextChange(object sender, global::Android.Widget.SearchView.QueryTextChangeEventArgs e)
         {
-            if(this.ElementCasted.ItemsSource != null)
+            if(this.element.ItemsSource != null)
                 adapter.Filter.InvokeFilter(e.NewText);
         }
 
@@ -332,7 +334,7 @@ namespace Xamarin.RSControls.Droid.Controls
             var instInfo = obj.GetType().GetProperty("Instance");
             var instance = instInfo.GetValue(obj, null);
 
-            if(this.ElementCasted.ItemTemplate != null)
+            if(this.element.ItemTemplate != null)
             {
                 //Force check when using custom template, when not using custom template CheckedTextView gets checked or not (Android implemantation) since it's the main view for the row
                 var item = ((view as LinearLayout).GetChildAt(0) as CheckedTextView);
@@ -343,9 +345,9 @@ namespace Xamarin.RSControls.Droid.Controls
                     item.Checked = true;
             }
 
-            if (this.ElementCasted.SelectionMode == Enums.PickerSelectionModeEnum.Single)
+            if (this.element.SelectionMode == Enums.PickerSelectionModeEnum.Single)
             {
-                ElementCasted.SelectedItem = instance;
+                element.SelectedItem = instance;
 
                 if(alertDialog != null)
                     alertDialog.Dismiss();
@@ -355,16 +357,16 @@ namespace Xamarin.RSControls.Droid.Controls
             }
             else
             {
-                if(this.ElementCasted.SelectedItems != null)
+                if(this.element.SelectedItems != null)
                 {
-                    if (this.ElementCasted.SelectedItems.Contains(instance))
+                    if (this.element.SelectedItems.Contains(instance))
                     {
-                        this.ElementCasted.SelectedItems.Remove(instance);
+                        this.element.SelectedItems.Remove(instance);
                         adapter.CheckedItems.Remove(instance);
                     }
                     else
                     {
-                        this.ElementCasted.SelectedItems.Add(instance);
+                        this.element.SelectedItems.Add(instance);
                         adapter.CheckedItems.Add(instance);
                     }
                 }
@@ -374,7 +376,7 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             if (this.Control.HasFocus)
             {
-                if (this.ElementCasted.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
+                if (this.element.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
                     CreatePickerDialog();
                 else
                     CreateNativePickerDialog();
@@ -384,7 +386,7 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             if (e.HasFocus)
             {
-                if (this.ElementCasted.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
+                if (this.element.RSPopupStyleEnum == Enums.RSPopupStyleEnum.RsPopopStyle)
                     CreatePickerDialog();
                 else
                     CreateNativePickerDialog();
