@@ -291,8 +291,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
         protected override DatePickerDialog CreateDatePickerDialog(int year, int month, int day)
         {
-            _dialog = base.CreateDatePickerDialog(year, month, day);
-            _dialog.DatePicker.DayOfMonth.ToString();
+            _dialog = base.CreateDatePickerDialog(year, month - 1, day);
+            _dialog.DatePicker.Month.ToString();
 
             _dialog.DatePicker.MaxDate = (long)element.MaximumDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
             _dialog.DatePicker.MinDate = (long)element.MinimumDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
@@ -864,7 +864,6 @@ namespace Xamarin.RSControls.Droid.Controls
                 _dialog.Dispose();
                 _dialog = null;
                 ShowDatePicker(selectedDate);
-                _dialog.DatePicker.DateTime = selectedDate;
             }
 
             // Month/Year picker
