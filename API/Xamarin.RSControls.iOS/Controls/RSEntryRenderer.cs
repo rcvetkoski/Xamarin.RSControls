@@ -32,6 +32,13 @@ namespace Xamarin.RSControls.iOS.Controls
 
             ////Delete placeholder as we use floating hint instead
             //Element.Placeholder = "";
+
+
+            var frame = this.Frame;
+
+            var sizeRequest = (Element as Forms.View).Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+
+            var lol = this.GetSizeRequest(double.PositiveInfinity, double.PositiveInfinity);
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -204,7 +211,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
         //Store temp frame size and check if changed in layout subviews, if changed => screen has been probably rotated => update ui
         private CGRect tempSize;
-        private bool adjustsize = false;
 
         //Constructor
         public RSUITextField(IRSControl rSControl)
@@ -273,17 +279,12 @@ namespace Xamarin.RSControls.iOS.Controls
         //Adjust Size if needed
         private void AdjustSize()
         {
-            var frame = this.Frame;
-
-            var sizeRequest = (rSControl as Forms.View).Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
-
-            var lol = this.GetSizeRequest(double.PositiveInfinity, double.PositiveInfinity);
-
+            var sizeRequestNative = this.GetSizeRequest(double.PositiveInfinity, double.PositiveInfinity);
 
             //Width
             int errorLabelWidth = 0;
             int helperLabelWidth = helperLabel != null ? (int)helperLabel.Size.Width : 0;
-            int counterLabelWidth =  counterLabel != null ? (int)counterLabel.Size.Width : 0;
+            int counterLabelWidth =  counterLabel != null ? (int)counterLabel.Size.Width + (int)iconPadding * 2: 0;
             int labelsWidth;
 
             foreach (var behavior in (rSControl as Forms.View).Behaviors)
@@ -314,25 +315,13 @@ namespace Xamarin.RSControls.iOS.Controls
             //Height
             requiredHeight = maxIconHeight + textSpacingFromBorderTop + textSpacingFromBorderBottom + iconPadding * 2;
 
-            if(requiredHeight > lol.Request.Height)
+            if(requiredHeight > sizeRequestNative.Request.Height)
             {
-                frame.Height = requiredHeight;
-                frame.Width = requiredWidth;
-
-                this.Frame = frame;
-                adjustsize = true;
-
-                //(rSControl as Forms.View).HeightRequest = requiredHeight;
-                //(rSControl as Forms.View).WidthRequest = requiredWidth;
-
+                (rSControl as Forms.View).HeightRequest = requiredHeight;
             }
-        }
-
-        public override CGRect Frame { get => base.Frame;
-            set
+            if (requiredWidth > sizeRequestNative.Request.Width)
             {
-                    base.Frame = value;
-
+                (rSControl as Forms.View).WidthRequest = requiredWidth;
             }
         }
 
@@ -887,6 +876,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 AllowsEdgeAntialiasing = true,
                 Wrapped = false
             };
+            counterLabel.String = string.Format("{0}/{1}", this.counter, this.counterMaxLength);
 
             this.Layer.AddSublayer(counterLabel);
 
@@ -1168,24 +1158,12 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             base.LayoutSubviews();
 
-            if(tempSize != this.Frame)
+            if (tempSize != this.Frame)
             {
                 //Init floatingHint X and Y values
                 if (!hasInitfinished)
                 {
                     tempSize = this.Frame;
-
-                    ////Resize RSEntry if one of the icons too big
-                    if (requiredHeight > this.Frame.Height)
-                    {
-                        //(this.rSControl as Forms.View).HeightRequest = requiredHeight;
-                        //var frame = this.Frame;
-                        //frame.Height = requiredHeight;
-                        //this.Frame = frame;
-                        //if ((this.rSControl is RSEntry))
-                        //    (this.rSControl as RSEntry).DoInvalidate();
-                    }
-
 
                     //Set is floating hint or not
                     if (rSControl.IsPlaceholderAlwaysFloating)
@@ -1198,7 +1176,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
                     //Upade floating hint position coordinates
                     //floatingHintPositionUpdate();
-
 
                     if (errorLabel != null)
                         errorLabel.Position = new CGPoint(leadingViewWidth + leftRightSpacingLabels + errorLabel.Size.Width / 2,

@@ -49,12 +49,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if (e.NewElement == null)
                 return;
 
-
-            (Element as Forms.View).HeightRequest = 80;
-
-            //Control.Layer.CornerRadius = 3;
-            //Control.Layer.BorderColor = Color.FromHex("F0F0F0").ToCGColor();
-            //Control.Layer.BorderWidth = 2;
+            //(Element as Forms.View).HeightRequest = 90;
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -260,12 +255,12 @@ namespace Xamarin.RSControls.iOS.Controls
             this.Changed += RSUITextView_EditingChanged;
             if ((rSControl as RSEditor).AutoSize == EditorAutoSizeOption.Disabled || (rSControl as RSEditor).HeightRequest != -1)
                 this.Scrolled += RSUITextView_Scrolled;
-            
-            
+
+
+            (rSControl as RSEditor).MaxHeight = 200;
             //Set event for device orientation change so we can reset border frame and mask
             deviceRotationObserver = NSNotificationCenter.DefaultCenter.AddObserver(new NSString("UIDeviceOrientationDidChangeNotification"), DeviceRotated);
         }
-
 
 
         //Set Padding
@@ -847,5 +842,4 @@ namespace Xamarin.RSControls.iOS.Controls
             base.Dispose(disposing);
         }
     }
-
 }

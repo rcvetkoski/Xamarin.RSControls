@@ -56,6 +56,14 @@ namespace Xamarin.RSControls.Controls
         //        return base.OnMeasure(widthConstraint, heightConstraint);
         //}
 
+        protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
+        {
+            var sizeRequest = base.OnMeasure(widthConstraint, heightConstraint);
+
+            return new SizeRequest(new Size(sizeRequest.Request.Width, Math.Max(MaxHeight, sizeRequest.Request.Height)));
+        }
+
+
         public static readonly BindableProperty IsPlaceholderAlwaysFloatingProperty = BindableProperty.Create("IsPlaceholderAlwaysFloating", typeof(bool), typeof(RSEditor), false);
         public bool IsPlaceholderAlwaysFloating
         {
