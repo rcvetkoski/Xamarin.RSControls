@@ -11,6 +11,7 @@ namespace Xamarin.RSControls.Controls
     {
         public RSEditor()
         {
+            this.PlaceholderColor = Color.DimGray;
             //this.TextChanged += RSEditor_TextChanged;
         }
 
@@ -58,9 +59,15 @@ namespace Xamarin.RSControls.Controls
 
         protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
         {
-            var sizeRequest = base.OnMeasure(widthConstraint, heightConstraint);
+            if(MaxHeight != -0)
+            {
+                var sizeRequest = base.OnMeasure(widthConstraint, heightConstraint);
 
-            return new SizeRequest(new Size(sizeRequest.Request.Width, Math.Max(MaxHeight, sizeRequest.Request.Height)));
+                var h = sizeRequest.Request.Height < MaxHeight ? sizeRequest.Request.Height : MaxHeight;
+                return new SizeRequest(new Size(sizeRequest.Request.Width, h));
+            }
+            else
+                return base.OnMeasure(widthConstraint, heightConstraint);
         }
 
 

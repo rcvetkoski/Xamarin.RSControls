@@ -616,17 +616,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 AnimateFloatingHint(rSControl.FontSize);
 
             UpdateBorder();
-
-
-            //CABasicAnimation cABasicAnimation = new CABasicAnimation();
-            //cABasicAnimation.KeyPath = "fontSize";
-            //cABasicAnimation.SetTo(NSNumber.FromDouble(rSControl.FontSize));
-            //cABasicAnimation.SetFrom(NSNumber.FromDouble(12));
-            //cABasicAnimation.Duration = 0.2;
-            //cABasicAnimation.FillMode = CAFillMode.Forwards;
-            //cABasicAnimation.RemovedOnCompletion = false;
-            //cABasicAnimation.AutoReverses = false;
-            //floatingHint.AddAnimation(cABasicAnimation, "basic");
         }
         //Floating hint Animation properties
         private void AnimateFloatingHint(double toValue)
