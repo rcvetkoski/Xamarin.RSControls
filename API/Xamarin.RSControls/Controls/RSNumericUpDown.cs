@@ -6,6 +6,11 @@ namespace Xamarin.RSControls.Controls
 {
     public class RSNumericUpDown : RSNumericEntry
     {
+        public RSNumericUpDown()
+        {
+
+        }
+
         public static readonly BindableProperty IncrementValueProperty = BindableProperty.Create("IncrementValue", typeof(double), typeof(RSNumericUpDown), (double)1);
         public double IncrementValue
         {

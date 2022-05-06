@@ -32,7 +32,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     (this.Element as IRSControl).RightHelpingIcon = new Helpers.RSEntryIcon()
                     {
-                        View = new RSSvgImage() { Source = "Samples/Data/SVG/minus.svg" },
+                        View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/minus.svg" },
                         Command = "Decrease",
                         Source = this.Element
                     };

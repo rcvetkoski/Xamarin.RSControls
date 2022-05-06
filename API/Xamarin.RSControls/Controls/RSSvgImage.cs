@@ -48,6 +48,7 @@ namespace Xamarin.RSControls.Controls
                 return;
 
             var assemblyName = Source.Substring(0, Source.IndexOf("/", StringComparison.CurrentCulture));
+            var lololo = AppDomain.CurrentDomain.GetAssemblies();
             var assembly = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(a => a.GetName().Name == assemblyName);
 
             using (Stream stream = assembly.GetManifestResourceStream(Source.Replace("/", ".")))

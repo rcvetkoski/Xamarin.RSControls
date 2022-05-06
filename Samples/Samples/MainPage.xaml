@@ -27,43 +27,15 @@
                 </rs:RSTabbedViews.Views>
         </rs:RSTabbedViews>-->
 
-        <rs:RSEntry x:Name="entry" Helper="Enter your name" HeightRequest="100" Placeholder="Name" CounterMaxLength="6" RSEntryStyle="OutlinedBorder">
-            <rs:RSEntry.RightIcon>
-                <helpers:RSEntryIcon Command="TestMethod2">
-                    <helpers:RSEntryIcon.Bindings>
-                        <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
-                        <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
-                    </helpers:RSEntryIcon.Bindings>
-                    <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage  Source="Samples/Data/SVG/calendar.svg"/>
-                    </helpers:RSEntryIcon.View>
-                </helpers:RSEntryIcon>
-            </rs:RSEntry.RightIcon>
-
-            <rs:RSEntry.Behaviors>
-                <validators:ValidationBehaviour PropertyName="Text">
+        <rs:RSNumericUpDown IncrementValue="10">
+            <rs:RSNumericUpDown.Behaviors>
+                <validators:ValidationBehaviour PropertyName="Value">
                     <validators:ValidationBehaviour.Validators>
                         <validators:RequiredValidation/>
                     </validators:ValidationBehaviour.Validators>
                 </validators:ValidationBehaviour>
-            </rs:RSEntry.Behaviors>
-        </rs:RSEntry>
-
-        <rs:RSEditor Placeholder="Editor" BackgroundColor="Yellow" HeightRequest="100" AutoSize="TextChanges" >
-           <rs:RSEditor.RightIcon>
-                <helpers:RSEntryIcon Command="TestMethod2">
-                    <helpers:RSEntryIcon.Bindings>
-                        <helpers:RSCommandParameter BindingContext="{local:MainPageViewModel}" CommandParameter="{Binding SelectedPerson}"/>
-                        <helpers:RSCommandParameter BindingContext="{x:Reference entry}" CommandParameter="{Binding .}"/>
-                    </helpers:RSEntryIcon.Bindings>
-                    <helpers:RSEntryIcon.View>
-                        <rs:RSSvgImage  Source="Samples/Data/SVG/calendar.svg"/>
-                    </helpers:RSEntryIcon.View>
-                </helpers:RSEntryIcon>
-            </rs:RSEditor.RightIcon>
-        </rs:RSEditor>
-
-        <Editor Placeholder="lol" BackgroundColor="Red" HeightRequest="100" AutoSize="TextChanges"></Editor>
+            </rs:RSNumericUpDown.Behaviors>
+        </rs:RSNumericUpDown>
 
         <!--<rs:RSDatePicker RSEntryStyle="FilledBorder" Placeholder="Select date" DateSelectionMode="Default" NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}">
             <rs:RSDatePicker.Behaviors>
