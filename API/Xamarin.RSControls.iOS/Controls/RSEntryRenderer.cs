@@ -1105,7 +1105,7 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             return InsetRect(base.PlaceholderRect(forBounds), SetInsetRect());
         }
-        ////Update cursor if needed
+        //// Not used -- Update cursor if needed
         //public override CGRect GetCaretRectForPosition(UITextPosition position)
         //{
         //    var cursorPosition = base.GetCaretRectForPosition(position);
@@ -1142,7 +1142,10 @@ namespace Xamarin.RSControls.iOS.Controls
             UpdateBorder();
         }
 
-        //Update ui //Handle rotation
+
+        /// <summary>
+        /// Update UI and handle rotation
+        /// </summary>
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
@@ -1202,7 +1205,10 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-        //Remove any events when closed
+        /// <summary>
+        /// Remove any events when closed
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             //Remove events
@@ -1258,7 +1264,7 @@ namespace Xamarin.RSControls.iOS.Controls
             //cTFontDescriptorAttributes.FamilyName = familyName;
             //cTFontDescriptorAttributes.Traits.SymbolicTraits = CTFontSymbolicTraits.Italic;
             //CTFontDescriptor cTFontDescriptor = new CTFontDescriptor(cTFontDescriptorAttributes);
-            //CTFont ctFont = new CTFont(familyName, this.FontSize);
+            //CTFont ctFont = new CTFont(cTFontDescriptor, this.FontSize);
             //this.SetFont(ctFont);
 
             this.SetFont(familyName);

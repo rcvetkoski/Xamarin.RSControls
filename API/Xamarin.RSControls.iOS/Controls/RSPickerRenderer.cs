@@ -631,7 +631,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 searchItems.Add(item);
             }
 
-            //this.list = element.ItemsSource as List<object>;
+            this.list = element.ItemsSource as List<object>;
             //this.searchItems = element.ItemsSource as List<object>; 
             this.rsPicker = rsPicker;
             this.element = element;
@@ -769,8 +769,11 @@ namespace Xamarin.RSControls.iOS.Controls
 
         public void PerformSearch(string searchText)
         {
-            searchText = searchText.ToLower();
-            this.searchItems = list.Where(x => GetItemValue2(x).ToString().ToLower().Contains(searchText)).ToList();
+            if(list.Count > 0)
+            {
+                searchText = searchText.ToLower();
+                this.searchItems = list.Where(x => GetItemValue2(x).ToString().ToLower().Contains(searchText)).ToList();
+            }
         }
 
 
