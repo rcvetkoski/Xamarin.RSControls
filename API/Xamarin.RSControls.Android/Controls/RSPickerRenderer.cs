@@ -40,7 +40,7 @@ namespace Xamarin.RSControls.Droid.Controls
             if ((this.Element as IRSControl).RightIcon == null)
                 (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
                 {
-                    View = new RSSvgImage() { Source = "Samples/Data/SVG/arrow.svg" }
+                    View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/arrow.svg" }
                 };
 
             return new CustomEditText(Context, this.Element as IRSControl);

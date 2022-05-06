@@ -22,7 +22,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 {
                     (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
                     {
-                        View = new RSSvgImage() { Source = "Samples/Data/SVG/plus.svg" },
+                        View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/plus.svg" },
                         Command = "Increase",
                         Source = this.Element
                     };
@@ -42,14 +42,14 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 (this.Element as IRSControl).LeftIcon = new Helpers.RSEntryIcon()
                 {
-                    View = new RSSvgImage() { Source = "Samples/Data/SVG/minus.svg" },
+                    View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/minus.svg" },
                     Command = "Decrease",
                     Source = this.Element
                 };
 
                 (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
                 {
-                    View = new RSSvgImage() { Source = "Samples/Data/SVG/plus.svg" },
+                    View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/plus.svg" },
                     Command = "Increase",
                     Source = this.Element
                 };
@@ -58,14 +58,14 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 (this.Element as IRSControl).LeftIcon = new Helpers.RSEntryIcon()
                 {
-                    View = new RSSvgImage() { Source = "Samples/Data/SVG/minus.svg" },
+                    View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/minus.svg" },
                     Command = "Decrease",
                     Source = this.Element
                 };
 
                 (this.Element as IRSControl).LeftHelpingIcon = new Helpers.RSEntryIcon()
                 {
-                    View = new RSSvgImage() { Source = "Samples/Data/SVG/plus.svg" },
+                    View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/plus.svg" },
                     Command = "Increase",
                     Source = this.Element
                 };

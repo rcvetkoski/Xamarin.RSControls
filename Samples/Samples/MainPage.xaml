@@ -37,6 +37,20 @@
             </rs:RSNumericUpDown.Behaviors>
         </rs:RSNumericUpDown>
 
+        <rs:RSEntry Placeholder="No left icon" ShadowEnabled="True" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
+            <rs:RSEntry.LeftIcon>
+                <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                    <helpers:RSEntryIcon.View>
+                        <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                    </helpers:RSEntryIcon.View>
+                </helpers:RSEntryIcon>
+            </rs:RSEntry.LeftIcon>
+        </rs:RSEntry>
+
+        <rs:RSSearchView></rs:RSSearchView>
+
+        <rs:RSPicker Placeholder="mehe"></rs:RSPicker>
+
         <!--<rs:RSDatePicker RSEntryStyle="FilledBorder" Placeholder="Select date" DateSelectionMode="Default" NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}">
             <rs:RSDatePicker.Behaviors>
                 <validators:ValidationBehaviour PropertyName="NullableDate">

@@ -36,7 +36,10 @@ namespace Xamarin.RSControls.Droid.Controls
             window.SetSoftInputMode(SoftInput.AdjustResize);
 
             rSSearchView = this.Element as RSSearchView;
-           
+
+            if (rSSearchView.ItemsSource == null)
+                return;
+
             objectList = new List<object>();
             arrayList = new List<string>();
 
