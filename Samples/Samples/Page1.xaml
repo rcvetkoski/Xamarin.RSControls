@@ -31,7 +31,7 @@
                     <rs:RSEntry.LeftIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>
                     </rs:RSEntry.LeftIcon>
@@ -39,7 +39,7 @@
                     <rs:RSEntry.RightHelpingIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>
                     </rs:RSEntry.RightHelpingIcon>
@@ -56,21 +56,21 @@
                     <rs:RSEntry.TrailingIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>                    
                     </rs:RSEntry.TrailingIcon>
                     <rs:RSEntry.LeftHelpingIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>                   
                     </rs:RSEntry.LeftHelpingIcon>
                     <rs:RSEntry.LeftIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>                   
                     </rs:RSEntry.LeftIcon>
@@ -92,21 +92,21 @@
                     <rs:RSEntry.TrailingIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>                
                     </rs:RSEntry.TrailingIcon>
                     <rs:RSEntry.LeftHelpingIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>                  
                     </rs:RSEntry.LeftHelpingIcon>
                     <rs:RSEntry.LeftIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>               
                     </rs:RSEntry.LeftIcon>
@@ -143,7 +143,7 @@
                     <rs:RSEntry.LeftIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>                
                     </rs:RSEntry.LeftIcon>
@@ -151,7 +151,7 @@
                     <rs:RSEntry.RightHelpingIcon>
                         <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                             <helpers:RSEntryIcon.View>
-                                <rs:RSSvgImage Source="Samples/Data/SVG/calendarAndTime.svg"/>
+                                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                             </helpers:RSEntryIcon.View>
                         </helpers:RSEntryIcon>              
                     </rs:RSEntry.RightHelpingIcon>

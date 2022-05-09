@@ -258,8 +258,15 @@ namespace Samples
     }
 
 
-    public class Person
+    public class Person : INotifyPropertyChanged
     {
-        public string Name { get; set; }
+        private string name { get; set; }
+        public string Name { get { return name; } set { name = value; OnPropertyChanged("Name"); } }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

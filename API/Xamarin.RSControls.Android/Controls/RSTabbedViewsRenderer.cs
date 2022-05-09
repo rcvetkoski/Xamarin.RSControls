@@ -93,7 +93,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         {
                             Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty).ToString()),
                             Icon = drawableImage
-                        });
+                        }); 
                     }
                     else
                     {

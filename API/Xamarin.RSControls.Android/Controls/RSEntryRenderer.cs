@@ -48,8 +48,10 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnElementPropertyChanged(sender, e);
 
+            var control = (this.Control as CustomEditText);
+
             if (e.PropertyName == "Error" && this.Control is CustomEditText && !isTextInputLayout)
-                (this.Control as CustomEditText).ErrorMessage = (this.Element as RSEntry).Error;
+                control.ErrorMessage = (this.Element as RSEntry).Error;
         }
 
         internal void SetIsTextInputLayout(bool value)
@@ -133,7 +135,7 @@ namespace Xamarin.RSControls.Droid.Controls
         public bool IsFloating;
 
         //Padding
-        private Thickness padding;
+        public Thickness padding;
 
         //Animators
         ValueAnimator errorHelperMessageAnimator;
@@ -173,8 +175,8 @@ namespace Xamarin.RSControls.Droid.Controls
         //Constructor
         public CustomEditText(Context context, IRSControl rSControl) : base(context)
         {
-            this.rSControl = rSControl;
             //Init values
+            this.rSControl = rSControl;
             isFocused = this.IsFocused;
             labelsTextSize = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 12, Context.Resources.DisplayMetrics);
             borderWidth = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.BorderWidth, Context.Resources.DisplayMetrics);
@@ -188,7 +190,7 @@ namespace Xamarin.RSControls.Droid.Controls
             borderColor = rSControl.BorderColor.ToAndroid();
             activeColor = rSControl.ActiveColor.ToAndroid();
             errorColor = rSControl.ErrorColor.ToAndroid();
-            textSpacingFromBorderTop = TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics); 
+            textSpacingFromBorderTop = TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics);
             textSpacingFromBorderBottom = TypedValue.ApplyDimension(ComplexUnitType.Dip, 14, Context.Resources.DisplayMetrics);
             borderPosition = new global::Android.Graphics.Rect();
             leftHelpingIconPadding = rSControl.LeftHelpingIcon != null ? (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics) : 0;
@@ -213,18 +215,8 @@ namespace Xamarin.RSControls.Droid.Controls
             //Create Counter Message
             CreateCounterMessage();
 
-            //Rounded border
-            if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
-                CreateRoundedBorder();
-
-            //Filled container
-            if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.FilledBorder)
-                CreateFilledBorder();
-
-            //Underline container
-            if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.Underline)
-                CreateUnderlineBorder();
-
+            // Create border
+            CreateBorder();
 
             if (this.rSControl.CounterMaxLength != -1)
                 this.AfterTextChanged += CustomEditText_AfterTextChanged;
@@ -289,7 +281,7 @@ namespace Xamarin.RSControls.Droid.Controls
             SetMinimumHeight((int)h);
         }
 
-        private void SetPaddingValues()
+        public void SetPaddingValues()
         {
             if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
             {
@@ -593,42 +585,25 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
             }
         }
-        private void CreateRoundedBorder()
+        public void SetBorderColor()
         {
-            borderPaint = new Paint();
-
-            borderPaint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
-            borderPaint.Color = borderColor;
-            borderPaint.StrokeWidth = borderWidth;
-            borderPaint.AntiAlias = true;
-
-            //Filled
-            filledPaint = new Paint();
-            filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
-            filledPaint.Color = rSControl.BorderFillColor == Forms.Color.Default ? global::Android.Graphics.Color.Transparent : rSControl.BorderFillColor.ToAndroid();
-            filledPaint.AntiAlias = true;
-            if(rSControl.ShadowEnabled)
-                filledPaint.SetShadowLayer(this.shadowRadius, 0, this.borderWidth, rSControl.ShadowColor.ToAndroid());
-
-            if (!this.IsHardwareAccelerated)
-                this.SetLayerType(LayerType.Software, null);
+            if (rSControl.RSEntryStyle == Enums.RSEntryStyleSelectionEnum.OutlinedBorder)
+                filledPaint.Color = rSControl.BorderFillColor == Forms.Color.Default ? global::Android.Graphics.Color.Transparent : rSControl.BorderFillColor.ToAndroid();
             else
-                this.SetLayerType(LayerType.Hardware, null);
+                filledPaint.Color = rSControl.BorderFillColor == Forms.Color.Default ? Forms.Color.FromHex("#OA000000").ToAndroid() : rSControl.BorderFillColor.ToAndroid();
         }
-        private void CreateFilledBorder()
+        private void CreateBorder()
         {
-            //Border
             borderPaint = new Paint();
             borderPaint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
             borderPaint.Color = borderColor;
             borderPaint.StrokeWidth = borderWidth;
             borderPaint.AntiAlias = true;
 
-
             //Filled
             filledPaint = new Paint();
             filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
-            filledPaint.Color = rSControl.BorderFillColor == Forms.Color.Default ? Forms.Color.FromHex("#OA000000").ToAndroid() : rSControl.BorderFillColor.ToAndroid();
+            SetBorderColor();
             filledPaint.AntiAlias = true;
             if (rSControl.ShadowEnabled)
                 filledPaint.SetShadowLayer(this.shadowRadius, 0, this.borderWidth, rSControl.ShadowColor.ToAndroid());
@@ -637,30 +612,6 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.SetLayerType(LayerType.Software, null);
             else
                 this.SetLayerType(LayerType.Hardware, null);
-        }
-        private void CreateUnderlineBorder()
-        {
-            borderPaint = new Paint();
-
-            borderPaint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
-            borderPaint.Color = borderColor;
-            borderPaint.StrokeWidth = borderWidth;
-            borderPaint.AntiAlias = true;
-
-            //Filled
-            filledPaint = new Paint();
-            filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
-            filledPaint.Color = rSControl.BorderFillColor == Forms.Color.Default ? Forms.Color.FromHex("#OA000000").ToAndroid() : rSControl.BorderFillColor.ToAndroid();
-            filledPaint.AntiAlias = true;
-            if (rSControl.ShadowEnabled)
-                filledPaint.SetShadowLayer(this.shadowRadius, 0, this.borderWidth, rSControl.ShadowColor.ToAndroid());
-
-            if (!this.IsHardwareAccelerated)
-                this.SetLayerType(LayerType.Software, null);
-            else
-                this.SetLayerType(LayerType.Hardware, null);
-
-            //(this.rSControl as Forms.View).BackgroundColor = rSControl.BorderFillColor;
         }
         private void CreatePasswordIcon()
         {
@@ -692,7 +643,6 @@ namespace Xamarin.RSControls.Droid.Controls
             //Leading Icon
             if (this.rSControl.LeadingIcon != null)
             {
-                this.rSControl.LeadingIcon.View.HeightRequest.ToString();
                 rSControl.LeadingIcon.View.Height.ToString();
                 this.leadingDrawable = CreateDrawable(rSControl.LeadingIcon);
 
@@ -701,6 +651,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 //Set max height of icon so we can resize RSEntry if necessary
                 if (maxIconHeight < rSControl.LeadingIcon.View.Height)
                     maxIconHeight = rSControl.LeadingIcon.View.Height;
+            }
+            else
+            {
+                leadingDrawable = null;
             }
 
             //Left Icon
@@ -724,6 +678,11 @@ namespace Xamarin.RSControls.Droid.Controls
                 if (maxIconHeight < rSControl.LeftIcon.View.Height)
                     maxIconHeight = rSControl.LeftIcon.View.Height;
 
+            }
+            else
+            {
+                leftDrawable = null;
+                leftHelpingDrawable = null;
             }
 
             //Right Icon
@@ -751,6 +710,11 @@ namespace Xamarin.RSControls.Droid.Controls
                         maxIconHeight = rSControl.RightIcon.View.Height;
                 }
             }
+            else
+            {
+                rightDrawable = null;
+                rightHelpingDrawable = null;
+            }
 
             //Trailing Icon
             if (rSControl.TrailingIcon != null)
@@ -761,6 +725,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 //Set max height of icon so we can resize RSEntry if necessary
                 if (maxIconHeight < rSControl.TrailingIcon.View.Height)
                     maxIconHeight = rSControl.TrailingIcon.View.Height;
+            }
+            else
+            {
+                trailingDrawable = null;
             }
 
             this.SetPadding(this.PaddingLeft + leadingDrawableWidth + leftDrawableWidth + leftHelpingIconPadding + leftHelpingDrawableWidth,
@@ -1205,7 +1173,7 @@ namespace Xamarin.RSControls.Droid.Controls
         }
 
         //Update Floating Hint
-        private void floatingHintPositionUpdate()
+        public void floatingHintPositionUpdate()
         {
             //floatingHintXPostionNotFloating same for all
             if (rSControl.HorizontalTextAlignment == Forms.TextAlignment.Center)
@@ -1582,7 +1550,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
             this.drawable.Draw(canvas);
         }
-
 
         public override int Opacity => this.Opacity;
         public override void SetAlpha(int alpha)

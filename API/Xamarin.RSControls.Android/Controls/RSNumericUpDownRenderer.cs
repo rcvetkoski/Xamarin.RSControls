@@ -16,61 +16,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
         protected override FormsEditText CreateNativeControl()
         {
-            if ((this.Element as RSNumericUpDown).RSNumericUpDownStyle == Enums.RSNumericUpDownStyleEnum.Right)
-            {
-                if ((this.Element as IRSControl).RightIcon == null)
-                {
-                    (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
-                    {
-                        View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/plus.svg" },
-                        Command = "Increase",
-                        Source = this.Element
-                    };
-                }
-
-                if ((this.Element as IRSControl).RightIcon != null && (this.Element as IRSControl).RightHelpingIcon == null)
-                {
-                    (this.Element as IRSControl).RightHelpingIcon = new Helpers.RSEntryIcon()
-                    {
-                        View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/minus.svg" },
-                        Command = "Decrease",
-                        Source = this.Element
-                    };
-                }
-            }
-            else if ((this.Element as RSNumericUpDown).RSNumericUpDownStyle == Enums.RSNumericUpDownStyleEnum.Split)
-            {
-                (this.Element as IRSControl).LeftIcon = new Helpers.RSEntryIcon()
-                {
-                    View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/minus.svg" },
-                    Command = "Decrease",
-                    Source = this.Element
-                };
-
-                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
-                {
-                    View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/plus.svg" },
-                    Command = "Increase",
-                    Source = this.Element
-                };
-            }
-            else
-            {
-                (this.Element as IRSControl).LeftIcon = new Helpers.RSEntryIcon()
-                {
-                    View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/minus.svg" },
-                    Command = "Decrease",
-                    Source = this.Element
-                };
-
-                (this.Element as IRSControl).LeftHelpingIcon = new Helpers.RSEntryIcon()
-                {
-                    View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/plus.svg" },
-                    Command = "Increase",
-                    Source = this.Element
-                };
-            }
-
             return new CustomEditText(Context, this.Element as IRSControl);
         }
     }

@@ -17,27 +17,22 @@
     <StackLayout Margin="5">
 
         <!--<rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
-                <rs:RSTabbedViews.Views>
-                    <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-                    <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
-                    <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-                    <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-                    <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
-                    <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Samples/Data/SVG/calendarAndTime.svg"/>
-                </rs:RSTabbedViews.Views>
+            <rs:RSTabbedViews.Views>
+                <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
+                <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
+                <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+            </rs:RSTabbedViews.Views>
         </rs:RSTabbedViews>-->
 
-        <rs:RSNumericUpDown IncrementValue="10">
-            <rs:RSNumericUpDown.Behaviors>
-                <validators:ValidationBehaviour PropertyName="Value">
-                    <validators:ValidationBehaviour.Validators>
-                        <validators:RequiredValidation/>
-                    </validators:ValidationBehaviour.Validators>
-                </validators:ValidationBehaviour>
-            </rs:RSNumericUpDown.Behaviors>
-        </rs:RSNumericUpDown>
 
-        <rs:RSEntry Placeholder="No left icon" ShadowEnabled="True" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
+        <rs:RSPicker/>
+
+
+
+        <!--<rs:RSEntry Placeholder="No left icon" ShadowEnabled="True" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
             <rs:RSEntry.LeftIcon>
                 <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                     <helpers:RSEntryIcon.View>
@@ -47,9 +42,11 @@
             </rs:RSEntry.LeftIcon>
         </rs:RSEntry>
 
-        <rs:RSSearchView></rs:RSSearchView>
+        <rs:RSSearchView ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name">
+            
+        </rs:RSSearchView>
 
-        <rs:RSPicker Placeholder="mehe"></rs:RSPicker>
+        <rs:RSPicker Placeholder="mehe"></rs:RSPicker>-->
 
         <!--<rs:RSDatePicker RSEntryStyle="FilledBorder" Placeholder="Select date" DateSelectionMode="Default" NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}">
             <rs:RSDatePicker.Behaviors>
