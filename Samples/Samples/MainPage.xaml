@@ -14,7 +14,7 @@
         <local:MainPageViewModel></local:MainPageViewModel>
     </ContentPage.BindingContext>
 
-    <StackLayout Margin="5">
+    <StackLayout Margin="0">
 
         <!--<rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
             <rs:RSTabbedViews.Views>
@@ -28,7 +28,15 @@
         </rs:RSTabbedViews>-->
 
 
-        <rs:RSPicker/>
+        <rs:RSEntry Placeholder="lol" Text="just a test" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>
+        
+        <rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+            <rs:RSTabbedViews.Views>
+                <StackLayout rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                <StackLayout BackgroundColor="Red" rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
+                <StackLayout BackgroundColor="Red" rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
+            </rs:RSTabbedViews.Views>
+        </rs:RSTabbedViews>
 
 
 

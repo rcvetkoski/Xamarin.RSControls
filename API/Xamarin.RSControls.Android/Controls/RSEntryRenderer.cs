@@ -604,7 +604,7 @@ namespace Xamarin.RSControls.Droid.Controls
             filledPaint = new Paint();
             filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
             SetBorderColor();
-            filledPaint.AntiAlias = true;
+            filledPaint.AntiAlias = true; 
             if (rSControl.ShadowEnabled)
                 filledPaint.SetShadowLayer(this.shadowRadius, 0, this.borderWidth, rSControl.ShadowColor.ToAndroid());
 
@@ -831,8 +831,6 @@ namespace Xamarin.RSControls.Droid.Controls
         //Draw
         public override void Draw(Canvas canvas)
         {
-            base.OnDraw(canvas);
-
             //Text rect bounds
             textRect = new global::Android.Graphics.Rect();
             this.GetDrawingRect(textRect);
@@ -869,6 +867,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //Update Icons
             UpdateIconsPosition(canvas);
+
+            base.OnDraw(canvas);
         }
 
         protected override void OnLayout(bool changed, int left, int top, int right, int bottom)
