@@ -22,7 +22,7 @@ using Xamarin.RSControls.Helpers;
 [assembly: ExportRenderer(typeof(RSTabbedViews), typeof(RSTabbedViewsRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSTabbedViewsRenderer : ViewRenderer<RSTabbedViews, global::Android.Views.View>, TabLayout.IOnTabSelectedListener
+    public class RSTabbedViewsRenderer : ViewRenderer<RSTabbedViews, global::Android.Views.View>
     {
         private List<global::Android.Views.View> pages;
         private ViewPager pager;
@@ -43,13 +43,13 @@ namespace Xamarin.RSControls.Droid.Controls
             if (e.NewElement == null)
                 return;
 
-            // Instantiate the native control and assign it to the Control property with
-            // the SetNativeControl method
+            // Instantiate the native control and assign it to the Control property with the SetNativeControl method
             if (Control == null)
             {
                 nativeView = new LinearLayout(Context) { Orientation = Orientation.Vertical };
                 nativeView.LayoutChange += NativeView_LayoutChange;
 
+                // Create and set menuBar which is a TabLayout
                 menuBar = new CustomTabLayout(Context);
                 menuBar.Elevation = 8;
                 menuBar.TabGravity = CustomTabLayout.GravityFill;
@@ -60,18 +60,31 @@ namespace Xamarin.RSControls.Droid.Controls
                     new int[] { global::Android.Resource.Attribute.StateSelected }, // enabled
                     new int[] {-global::Android.Resource.Attribute.StateSelected }, // disabled
                 };
-                int[] colors = new int[] { this.Element.BarTextColorSelected.ToAndroid(), this.Element.BarTextColor.ToAndroid() };
+                int[] colors = new int[] { this.Element.BarTextColorSelected.ToAndroid(), this.Element.BarTextColor.ToAndroid()};
                 menuBar.TabIconTint = new global::Android.Content.Res.ColorStateList(states, colors);
                 menuBar.SetTabTextColors(this.Element.BarTextColor.ToAndroid(), this.Element.BarTextColorSelected.ToAndroid());
-                menuBar.AddOnTabSelectedListener(this);
+                menuBar.TabSelected += MenuBar_TabSelected;
 
 
+                // TabPlacement top
                 if (this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
                     nativeView.AddView(menuBar);
 
 
+                if(this.Element.ItemsSource != null)
+                {
+                    foreach (var item in this.Element.ItemsSource)
+                    {
+                        Forms.View formsView = (this.Element.ItemTemplate).CreateContent() as Forms.View;
+                        formsView.BindingContext = item as object;
+                        Element.Views.Add(formsView);
+                    }
+                }
+
+                // Populate tab views
                 foreach (var formsView in this.Element.Views)
                 {
+                    // Convert forms view to native and add it to pages vaiable which is later used in pageAdapter
                     Page currentPage = TypeExtensions.GetParentPage(this.Element);
                     formsView.Parent = currentPage;
                     var renderer = Platform.CreateRendererWithContext(formsView, Context);
@@ -79,6 +92,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     pages.Add(natView);
 
 
+                    // Set tab icon and title if set
                     if (!(formsView.GetValue(RSTabbedViews.IconProperty).ToString().Contains("svg")))
                     {
                         Drawable drawableImage = null;
@@ -119,14 +133,15 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 this.Element.SizeChanged += Element_SizeChanged;
 
-
+                // Set pageAdapter
                 pager = new ViewPager(Context);
                 pager.Adapter = new pageAdapter(Context, pages);
-                pager.AddOnPageChangeListener(pager.Adapter as pageAdapter);
+                //pager.AddOnPageChangeListener(pager.Adapter as pageAdapter);
                 pager.AddOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(menuBar));
                 nativeView.AddView(pager);
 
 
+                // TabPlacement bottom
                 if(this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Bottom)
                 {
                     var pagerParams = new LinearLayout.LayoutParams(LayoutParams.MatchParent, 0);
@@ -135,11 +150,17 @@ namespace Xamarin.RSControls.Droid.Controls
                     nativeView.AddView(menuBar);
                 }
 
-
+                // Set native control
                 this.SetNativeControl(nativeView);
             }
         }
-       
+
+        private void MenuBar_TabSelected(object sender, TabLayout.TabSelectedEventArgs e)
+        {
+            if (pager != null)
+                pager.SetCurrentItem((sender as TabLayout).SelectedTabPosition, true);
+        }
+
         private void NativeView_LayoutChange(object sender, LayoutChangeEventArgs e)
         {
             if(!doOnce)
@@ -171,28 +192,15 @@ namespace Xamarin.RSControls.Droid.Controls
             if(nativeView != null)
                 nativeView.LayoutChange -= NativeView_LayoutChange;
 
+            if(menuBar != null)
+                menuBar.TabSelected -= MenuBar_TabSelected;
+
             base.Dispose(disposing);
-        }
-
-        public void OnTabReselected(TabLayout.Tab tab)
-        {
-            
-        }
-
-        public void OnTabSelected(TabLayout.Tab tab)
-        {
-            if(pager != null)
-                pager.SetCurrentItem(tab.Position, true);
-        }
-
-        public void OnTabUnselected(TabLayout.Tab tab)
-        {
-            
         }
 
 
         //PagerAdapter
-        private class pageAdapter : PagerAdapter, IOnClickListener, ViewPager.IOnPageChangeListener
+        private class pageAdapter : PagerAdapter
         {
             private Context context;
             private List<global::Android.Views.View> pages;
@@ -217,26 +225,6 @@ namespace Xamarin.RSControls.Droid.Controls
                 return view == @object;
             }
 
-            public void OnClick(global::Android.Views.View v)
-            {
-                //throw new NotImplementedException();
-            }
-
-            public void OnPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
-                //throw new NotImplementedException();
-            }
-
-            public void OnPageScrollStateChanged(int state)
-            {
-                //throw new NotImplementedException();
-            }
-
-            public void OnPageSelected(int position)
-            {
-                //throw new NotImplementedException();
-            }
-
             public override void DestroyItem(ViewGroup container, int position, Java.Lang.Object @object)
             {
                 container.RemoveView(@object as global::Android.Views.View);
@@ -245,14 +233,14 @@ namespace Xamarin.RSControls.Droid.Controls
     }
 
 
+    /// <summary>
+    /// Used for size adjustment "OnMeasure" method used
+    /// </summary>
     public class CustomTabLayout : TabLayout
     {
         public CustomTabLayout(Context context) : base(context) { }
-
         public CustomTabLayout(Context context, IAttributeSet attrs) : base(context, attrs) { }
-
         public CustomTabLayout(Context context, IAttributeSet attrs, int defStyleAttr) : base(context, attrs, defStyleAttr) { }
-
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
             //Fix when tabs width smaller than parent => Make it stay at center

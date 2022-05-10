@@ -28,16 +28,18 @@
         </rs:RSTabbedViews>-->
 
 
-        <rs:RSEntry Placeholder="lol" Text="just a test" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>
-        
-        <rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
-            <rs:RSTabbedViews.Views>
-                <StackLayout rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
-                <StackLayout BackgroundColor="Red" rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
-                <StackLayout BackgroundColor="Red" rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
-            </rs:RSTabbedViews.Views>
-        </rs:RSTabbedViews>
+        <rs:RSPicker Placeholder="lol" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10">
+        </rs:RSPicker>
 
+        <rs:RSTabbedViews BarColor="White" SliderColor="Black" ItemsSource="{Binding ListPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+            <rs:RSTabbedViews.ItemsTemplate>
+                <DataTemplate>
+                    <StackLayout rs:RSTabbedViews.Title="{Binding Name}" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg">
+                        <Label Text="{Binding Name}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                    </StackLayout>
+                </DataTemplate>
+            </rs:RSTabbedViews.ItemsTemplate>
+        </rs:RSTabbedViews>
 
 
         <!--<rs:RSEntry Placeholder="No left icon" ShadowEnabled="True" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">

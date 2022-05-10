@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.RSControls.Enums;
@@ -14,11 +15,25 @@ namespace Xamarin.RSControls.Controls
             this.VerticalOptions = LayoutOptions.FillAndExpand;
         }
 
-        //Pages
-        public static readonly BindableProperty ViewsProperty = BindableProperty.Create("Views", typeof(List<VisualElement>), typeof(RSTabbedViews), null);
-        public List<VisualElement> Views
+        public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create("ItemsSource", typeof(IEnumerable), typeof(RSTabbedViews), null);
+        public IEnumerable ItemsSource
         {
-            get { return (List<VisualElement>)GetValue(ViewsProperty); }
+            get => (IEnumerable)GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
+        }
+
+        public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create("ItemTemplate", typeof(DataTemplate), typeof(RSTabbedViews), null);
+        public DataTemplate ItemTemplate
+        {
+            get => (DataTemplate)GetValue(ItemTemplateProperty);
+            set => SetValue(ItemTemplateProperty, value);
+        }
+
+        //Pages
+        public static readonly BindableProperty ViewsProperty = BindableProperty.Create("Views", typeof(IList<VisualElement>), typeof(RSTabbedViews), null);
+        public IList<VisualElement> Views
+        {
+            get { return (IList<VisualElement>)GetValue(ViewsProperty); }
             set { SetValue(ViewsProperty, value); }
         }
 
