@@ -42,8 +42,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if (e.NewElement == null)
                 return;
 
-            // Instantiate the native control and assign it to the Control property with
-            // the SetNativeControl method
+            // Instantiate the native control and assign it to the Control property with the SetNativeControl method
             if (Control == null)
             {
                 //Set current view to first if not set in binding
@@ -55,6 +54,18 @@ namespace Xamarin.RSControls.iOS.Controls
                 grid.Parent = this.Element; //So it knows on what page the grid situated
                 nativeView.AutoresizingMask = UIViewAutoresizing.None;
                 this.AutoresizingMask = UIViewAutoresizing.None;
+
+
+                if (this.Element.ItemsSource != null)
+                {
+                    foreach (var item in this.Element.ItemsSource)
+                    {
+                        Forms.View formsView = (this.Element.ItemTemplate).CreateContent() as Forms.View;
+                        formsView.BindingContext = item as object;
+                        Element.Views.Add(formsView);
+                    }
+                }
+
 
                 for (int i = 0; i < this.Element.Views.Count(); i++)
                 {
