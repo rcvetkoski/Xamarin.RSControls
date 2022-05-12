@@ -250,10 +250,11 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
                 //Icon
-                UIView icon = null;
-                if (item.GetValue(RSTabbedViews.IconProperty) != null)
+                if (!string.IsNullOrEmpty(item.GetValue(RSTabbedViews.IconProperty).ToString()))
                 {
-                    if(!(item.GetValue(RSTabbedViews.IconProperty).ToString().Contains("svg")))
+                    UIView icon = null;
+
+                    if (!(item.GetValue(RSTabbedViews.IconProperty).ToString().Contains("svg")))
                     {
                         UIImage image = new UIImage(item.GetValue(RSTabbedViews.IconProperty).ToString());
                         UIImageView imageView = new UIImageView();

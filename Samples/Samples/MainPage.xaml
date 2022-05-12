@@ -34,7 +34,7 @@
         <rs:RSTabbedViews BarColor="White" SliderColor="Black" ItemsSource="{Binding ListPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
             <rs:RSTabbedViews.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout rs:RSTabbedViews.Title="{Binding Name}" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg">
+                    <StackLayout rs:RSTabbedViews.Title="{Binding Name}" >
                         <Label Text="{Binding Name}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
                     </StackLayout>
                 </DataTemplate>
