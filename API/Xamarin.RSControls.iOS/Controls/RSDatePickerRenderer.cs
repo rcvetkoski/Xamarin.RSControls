@@ -33,7 +33,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 {
                     (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
                     {
-                        View = new RSSvgImage() { Source = "Samples/Data/SVG/calendar.svg" },
+                        View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/calendar.svg" },
                         Source = this.Element
                     };
                 }

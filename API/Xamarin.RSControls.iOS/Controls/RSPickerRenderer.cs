@@ -130,7 +130,7 @@ namespace Xamarin.RSControls.iOS.Controls
                     if (element.SelectedItem != null)
                     {
                         if (!string.IsNullOrEmpty((element as RSPicker).DisplayMemberPath))
-                            this.Control.Text = Helpers.TypeExtensions.GetPropValue(element.SelectedItem, (Element as RSPicker).DisplayMemberPath).ToString();
+                            this.Control.Text = Helpers.TypeExtensions.GetPropValue(element.SelectedItem, (Element as RSPicker).DisplayMemberPath);
                         else
                             this.Control.Text = Element.SelectedItem.ToString();
                     }
@@ -148,7 +148,7 @@ namespace Xamarin.RSControls.iOS.Controls
                         foreach (object item in element.SelectedItems)
                         {
                             if (!string.IsNullOrEmpty((element as RSPicker).DisplayMemberPath))
-                                this.Control.Text += Helpers.TypeExtensions.GetPropValue(item, (element as RSPicker).DisplayMemberPath).ToString();
+                                this.Control.Text += Helpers.TypeExtensions.GetPropValue(item, (element as RSPicker).DisplayMemberPath);
                             else
                                 this.Control.Text += item.ToString();
 
@@ -473,7 +473,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public override string GetTitle(UIPickerView pickerView, nint row, nint component)
         {
             if ((this.rsPicker != null && rsPicker is RSPicker) && !string.IsNullOrEmpty((rsPicker as RSPicker).DisplayMemberPath))
-                return Helpers.TypeExtensions.GetPropValue(myItems[(int)row], (rsPicker as RSPicker).DisplayMemberPath).ToString();
+                return Helpers.TypeExtensions.GetPropValue(myItems[(int)row], (rsPicker as RSPicker).DisplayMemberPath);
             else
                 return this.myItems[(int)row].ToString();
         }
@@ -772,7 +772,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if(list.Count > 0)
             {
                 searchText = searchText.ToLower();
-                this.searchItems = list.Where(x => GetItemValue2(x).ToString().ToLower().Contains(searchText)).ToList();
+                this.searchItems = list.Where(x => GetItemValue2(x).ToLower().Contains(searchText)).ToList();
             }
         }
 
@@ -780,7 +780,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public string GetItemValue(int row)
         {
             if ((this.rsPicker != null && element is RSPicker) && !string.IsNullOrEmpty((element as RSPicker).DisplayMemberPath))
-                return Helpers.TypeExtensions.GetPropValue(searchItems[(int)row], (element as RSPicker).DisplayMemberPath).ToString();
+                return Helpers.TypeExtensions.GetPropValue(searchItems[(int)row], (element as RSPicker).DisplayMemberPath);
             else
                 return searchItems[(int)row].ToString();
         }
@@ -788,7 +788,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public string GetItemValue2(object item)
         {
             if ((this.rsPicker != null && element is RSPicker) && !string.IsNullOrEmpty((element as RSPicker).DisplayMemberPath))
-                return Helpers.TypeExtensions.GetPropValue(item, (element as RSPicker).DisplayMemberPath).ToString();
+                return Helpers.TypeExtensions.GetPropValue(item, (element as RSPicker).DisplayMemberPath);
             else
                 return item.ToString();
         }

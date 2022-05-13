@@ -96,7 +96,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     if (this.element.SelectedItem != null)
                     {
                         if (!string.IsNullOrEmpty((this.element as RSPicker).DisplayMemberPath))
-                            this.Control.Text = Helpers.TypeExtensions.GetPropValue(this.element.SelectedItem, (element as RSPicker).DisplayMemberPath).ToString();
+                            this.Control.Text = Helpers.TypeExtensions.GetPropValue(this.element.SelectedItem, (element as RSPicker).DisplayMemberPath);
                         else
                             this.Control.Text = element.SelectedItem.ToString();
                     }
@@ -114,7 +114,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         foreach(object item in this.element.SelectedItems)
                         {
                             if (!string.IsNullOrEmpty((this.element as RSPicker).DisplayMemberPath))
-                                this.Control.Text += Helpers.TypeExtensions.GetPropValue(item, (this.element as RSPicker).DisplayMemberPath).ToString();
+                                this.Control.Text += Helpers.TypeExtensions.GetPropValue(item, (this.element as RSPicker).DisplayMemberPath);
                             else
                                 this.Control.Text += item.ToString();
 
@@ -488,7 +488,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 var instance = instInfo.GetValue(obj, null);
 
                 if ((this.rsPicker != null && rsPicker is RSPicker) && !string.IsNullOrEmpty(this.DisplayMemberPath))
-                    (convertView as CheckedTextView).Text = Helpers.TypeExtensions.GetPropValue(instance, this.DisplayMemberPath).ToString();
+                    (convertView as CheckedTextView).Text = Helpers.TypeExtensions.GetPropValue(instance, this.DisplayMemberPath);
                 else
                     (convertView as CheckedTextView).Text = this.GetItem(position).ToString();
 
@@ -630,7 +630,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     // Compare constraint to all names lowercased. 
                     // It they are contained they are added to results.
                     if(this.adapter.DisplayMemberPath != null)
-                        results.AddRange(this.adapter.originalItemsList.Where(x => Helpers.TypeExtensions.GetPropValue(x, this.adapter.DisplayMemberPath).ToString().ToLower().Contains(constraint.ToString())));
+                        results.AddRange(this.adapter.originalItemsList.Where(x => Helpers.TypeExtensions.GetPropValue(x, this.adapter.DisplayMemberPath).ToLower().Contains(constraint.ToString())));
                     else
                         results.AddRange(this.adapter.originalItemsList.Where(x => x.ToString().ToLower().Contains(constraint.ToString())));
 
