@@ -21,7 +21,7 @@ namespace Samples
             NumericEntryValue = 2657.239;
 
             listPicker = new List<Person>() { new Person() { Name = "Paris" }, new Person() { Name = "Azarenka" }, new Person() { Name = "Jake" }
-            , new Person() { Name = "Natasha" }, new Person() { Name = "Pierre" }, new Person() { Name = "Rade" }, new Person() { Name = "Stefan" }
+            , new Person() , new Person() { Name = "Pierre" }, new Person() { Name = "Rade" }, new Person() { Name = "Stefan" }
             , new Person() { Name = "John" }, new Person() { Name = "Pero" }, new Person() { Name = "Nathan" }, new Person() { Name = "Cartamn" }
             , new Person() { Name = "Emmanuel" }, new Person() { Name = "Jake" }, new Person() { Name = "Jake" }, new Person() { Name = "Jake" }
             , new Person() { Name = "Emmanuel" }, new Person() { Name = "Jake" }, new Person() { Name = "Jake" }, new Person() { Name = "Jake" }

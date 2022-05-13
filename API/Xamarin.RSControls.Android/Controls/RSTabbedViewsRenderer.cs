@@ -105,7 +105,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
                         menuBar.AddView(new TabItem(Context)
                         {
-                            Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty).ToString()),
+                            Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty) != null ? formsView.GetValue(RSTabbedViews.TitleProperty).ToString() : string.Empty),
                             Icon = drawableImage
                         }); 
                     }

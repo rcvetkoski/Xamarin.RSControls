@@ -28,8 +28,7 @@
         </rs:RSTabbedViews>-->
 
 
-        <rs:RSPicker Placeholder="lol" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10">
-        </rs:RSPicker>
+        <rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>
 
         <rs:RSTabbedViews BarColor="White" SliderColor="Black" ItemsSource="{Binding ListPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
             <rs:RSTabbedViews.ItemTemplate>

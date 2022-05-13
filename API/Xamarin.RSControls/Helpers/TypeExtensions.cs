@@ -7,9 +7,10 @@ namespace Xamarin.RSControls.Helpers
 {
     public class TypeExtensions
     {
-        public static object GetPropValue(object src, string propName)
+        public static string GetPropValue(object src, string propName)
         {
-            return src.GetType().GetRuntimeProperty(propName).GetValue(src, null);
+            var val = src.GetType().GetRuntimeProperty(propName).GetValue(src, null);
+            return val != null ? val.ToString() : string.Empty;
         }
 
         //Return page of element
