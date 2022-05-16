@@ -231,5 +231,12 @@ namespace Samples
         {
             (this.BindingContext as MainPageViewModel).RSCommand.ChangeCanExecute();
         }
+
+
+
+        void RSTabbedViews_TabSelected_1(System.Object sender, System.EventArgs e)
+        {
+            Console.WriteLine("current index " + (sender as RSTabbedViews).CurrentPageIndex);
+        }
     }
 }

@@ -25,6 +25,7 @@ namespace Xamarin.RSControls.iOS.Controls
         private UIView tabsSlider;
         private NSLayoutConstraint tabSliderWidthConstraint;
         private NSLayoutConstraint tabSliderXOffsetConstraint;
+        private bool canUpdateCurrentIndex = false;
         private bool manualScroll = true;
         private bool manualTabs = false;
         private int previousIndexOfPage = 0;
@@ -93,7 +94,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 this.SetNativeControl(nativeView);
             }
         }
-
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
@@ -114,75 +114,7 @@ namespace Xamarin.RSControls.iOS.Controls
         }
 
 
-        ////Return page of element
-        //public Page GetParentPage(VisualElement element)
-        //{
-        //    if (element != null)
-        //    {
-        //        var parent = element.Parent;
-        //        while (parent != null)
-        //        {
-        //            if (parent is Page)
-        //            {
-        //                return parent as Page;
-        //            }
-        //            parent = parent.Parent;
-        //        }
-        //    }
-        //    return null;
-        //}
-
-        //Set pages scroll
-        private void SetPages()
-        {
-            pageScrollView = new RSTabbedViewScroll();
-            pageScrollView.ShowsHorizontalScrollIndicator = false;
-            pageScrollView.Bounces = false;
-            pageScrollView.Scrolled += PageScrollView_Scrolled;
-            pageScrollView.DraggingStarted += PageScrollView_DraggingStarted;
-            if (UIDevice.CurrentDevice.CheckSystemVersion(11, 0))
-            {
-                pageScrollView.ContentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentBehavior.Never;
-            }
-            pageScrollView.PagingEnabled = true;
-            this.nativeView.AddSubview(pageScrollView);
-
-            pageScrollView.TranslatesAutoresizingMaskIntoConstraints = false;
-            pageScrollView.LeadingAnchor.ConstraintEqualTo(nativeView.LeadingAnchor).Active = true;
-            pageScrollView.TrailingAnchor.ConstraintEqualTo(nativeView.TrailingAnchor).Active = true;
-
-            if (this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
-            {
-                var top = pageScrollView.TopAnchor.ConstraintEqualTo(tabsHolder.BottomAnchor);
-                top.Active = true;
-                top.Priority = 999;
-            }
-            else
-            {
-                var bottom = pageScrollView.TopAnchor.ConstraintEqualTo(nativeView.TopAnchor);
-                bottom.Active = true;
-                bottom.Priority = 999;
-            }
-
-            if (this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
-                pageScrollView.BottomAnchor.ConstraintEqualTo(nativeView.BottomAnchor).Active = true;
-            else
-                pageScrollView.BottomAnchor.ConstraintEqualTo(tabsHolder.TopAnchor).Active = true;
-
-            pageScrollView.AddSubview(gridNativeView);
-            Extensions.ViewExtensions.EdgeTo(pageScrollView, gridNativeView, true, true, true, true);
-            gridNativeView.HeightAnchor.ConstraintEqualTo(pageScrollView.HeightAnchor).Active = true;
-            gridNativeView.WidthAnchor.ConstraintEqualTo(pageScrollView.WidthAnchor, this.Element.Views.Count()).Active = true;
-
-            pageScrollView.tabs = tabsStack;
-        }
-
-        private void PageScrollView_DraggingStarted(object sender, EventArgs e)
-        {
-            manualScroll = true;
-        }
-
-        //Set Tabs menu
+        // Set Tabs menu
         private void SetTabBar()
         {
             //Tabs holder
@@ -196,7 +128,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.nativeView.AddSubview(tabsHolder);
             tabsHolder.TranslatesAutoresizingMaskIntoConstraints = false;
 
-            if(this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
+            if (this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
                 tabsHolder.TopAnchor.ConstraintEqualTo(nativeView.TopAnchor).Active = true;
             else
                 tabsHolder.BottomAnchor.ConstraintEqualTo(nativeView.BottomAnchor).Active = true;
@@ -227,25 +159,10 @@ namespace Xamarin.RSControls.iOS.Controls
                 tab.Distribution = UIStackViewDistribution.FillEqually;
                 tabsStack.AddArrangedSubview(tab);
 
+                // Tab tap select gesture event
                 var currentView = this.Element.Views.IndexOf(item);
-                UITapGestureRecognizer tabTap = new UITapGestureRecognizer(() =>
-                {
-                    var posX = (this.Element.Width * currentView);
-                    (this.Element as RSTabbedViews).CurrentView = (this.Element as RSTabbedViews).Views.ElementAt((int)currentView);
-                    pageScrollView.SetContentOffset(new CGPoint(posX, pageScrollView.ContentOffset.Y), true);
-                    manualScroll = true;
-                    var currentSliderX = tabsStack.ArrangedSubviews[currentIndexOfPage].Frame.Left;
-                    var tabWidth = tabsStack.ArrangedSubviews[currentIndexOfPage].Frame.Width;
-                    var maxScrollAllowed = tabsHolder.ContentSize.Width - nativeView.Frame.Width;
-                    if (currentSliderX < maxScrollAllowed)
-                    {
-                        tabsHolder.SetContentOffset(new CGPoint(currentSliderX, pageScrollView.ContentOffset.Y), true);
-                    }
-                    else
-                    {
-                        tabsHolder.SetContentOffset(new CGPoint(maxScrollAllowed, pageScrollView.ContentOffset.Y), true);
-                    }
-                });
+                UITapGestureRecognizer tabTap = new UITapGestureRecognizer();
+                tabTap.AddTarget(() => TabItemTap(tabTap, currentView));
                 tab.AddGestureRecognizer(tabTap);
 
 
@@ -316,7 +233,7 @@ namespace Xamarin.RSControls.iOS.Controls
             separator.LeadingAnchor.ConstraintEqualTo(tabsStack.LeadingAnchor).Active = true;
             separator.TrailingAnchor.ConstraintEqualTo(tabsStack.TrailingAnchor).Active = true;
             separator.HeightAnchor.ConstraintEqualTo(0.5f).Active = true;
-            if(this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
+            if (this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
                 separator.BottomAnchor.ConstraintEqualTo(tabsStack.BottomAnchor, 5).Active = true;
             else
                 separator.TopAnchor.ConstraintEqualTo(tabsStack.TopAnchor, -10).Active = true;
@@ -325,13 +242,82 @@ namespace Xamarin.RSControls.iOS.Controls
             setTabItemsColor(tabsStack.ArrangedSubviews[currentIndexOfPage] as UIStackView, this.Element.BarTextColorSelected);
         }
 
+        // Tab item tap gesture method
+        private void TabItemTap(UITapGestureRecognizer uITapGesture, int currentView)
+        {
+            // Set CurrentPageIndex used for TabSelected event in RSTabbedViews
+            canUpdateCurrentIndex = false;
+            (Element as RSTabbedViews).CurrentPageIndex = currentView;
+
+            var posX = (this.Element.Width * currentView);
+            (this.Element as RSTabbedViews).CurrentView = (this.Element as RSTabbedViews).Views.ElementAt((int)currentView);
+            pageScrollView.SetContentOffset(new CGPoint(posX, pageScrollView.ContentOffset.Y), true);
+            manualScroll = true;
+            var currentSliderX = tabsStack.ArrangedSubviews[currentIndexOfPage].Frame.Left;
+            var maxScrollAllowed = tabsHolder.ContentSize.Width - nativeView.Frame.Width;
+            if (currentSliderX < maxScrollAllowed)
+            {
+                tabsHolder.SetContentOffset(new CGPoint(currentSliderX, pageScrollView.ContentOffset.Y), true);
+            }
+            else
+            {
+                tabsHolder.SetContentOffset(new CGPoint(maxScrollAllowed, pageScrollView.ContentOffset.Y), true);
+            }
+        }
+
+        // Set pages
+        private void SetPages()
+        {
+            pageScrollView = new RSTabbedViewScroll();
+            pageScrollView.ShowsHorizontalScrollIndicator = false;
+            pageScrollView.Bounces = false;
+            pageScrollView.Scrolled += PageScrollView_Scrolled;
+            pageScrollView.DraggingStarted += PageScrollView_DraggingStarted;
+            if (UIDevice.CurrentDevice.CheckSystemVersion(11, 0))
+            {
+                pageScrollView.ContentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentBehavior.Never;
+            }
+            pageScrollView.PagingEnabled = true;
+            this.nativeView.AddSubview(pageScrollView);
+
+            pageScrollView.TranslatesAutoresizingMaskIntoConstraints = false;
+            pageScrollView.LeadingAnchor.ConstraintEqualTo(nativeView.LeadingAnchor).Active = true;
+            pageScrollView.TrailingAnchor.ConstraintEqualTo(nativeView.TrailingAnchor).Active = true;
+
+            if (this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
+            {
+                var top = pageScrollView.TopAnchor.ConstraintEqualTo(tabsHolder.BottomAnchor);
+                top.Active = true;
+                top.Priority = 999;
+            }
+            else
+            {
+                var bottom = pageScrollView.TopAnchor.ConstraintEqualTo(nativeView.TopAnchor);
+                bottom.Active = true;
+                bottom.Priority = 999;
+            }
+
+            if (this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
+                pageScrollView.BottomAnchor.ConstraintEqualTo(nativeView.BottomAnchor).Active = true;
+            else
+                pageScrollView.BottomAnchor.ConstraintEqualTo(tabsHolder.TopAnchor).Active = true;
+
+            pageScrollView.AddSubview(gridNativeView);
+            Extensions.ViewExtensions.EdgeTo(pageScrollView, gridNativeView, true, true, true, true);
+            gridNativeView.HeightAnchor.ConstraintEqualTo(pageScrollView.HeightAnchor).Active = true;
+            gridNativeView.WidthAnchor.ConstraintEqualTo(pageScrollView.WidthAnchor, this.Element.Views.Count()).Active = true;
+
+            pageScrollView.tabs = tabsStack;
+        }
+
+        // Set tabs color
         private void setTabItemsColor(UIStackView tab, Color color)
         {
             foreach (var itm in tab.ArrangedSubviews)
             {
                 if (itm is UILabel)
                     (itm as UILabel).TextColor = color.ToUIColor();
-                else if(itm is UIImageView)
+                else if (itm is UIImageView)
                 {
                     itm.TintColor = color.ToUIColor();
                 }
@@ -344,7 +330,14 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-        //Scroll event used when manualy scrolled
+        // Set manual scroll to true
+        private void PageScrollView_DraggingStarted(object sender, EventArgs e)
+        {
+            manualScroll = true;
+            canUpdateCurrentIndex = true;
+        }
+
+        // Scroll event used when manualy scrolled
         private void PageScrollView_Scrolled(object sender, EventArgs e)
         {
             if (!manualScroll)
@@ -360,7 +353,12 @@ namespace Xamarin.RSControls.iOS.Controls
             pageScrollView.index = currentIndexOfPage;
             (this.Element as RSTabbedViews).CurrentView = (this.Element as RSTabbedViews).Views.ElementAt((int)currentIndexOfPage);
 
+            // Set CurrentPageIndex used for TabSelected event in RSTabbedViews
+            if((Element as RSTabbedViews).CurrentPageIndex != currentIndexOfPage && canUpdateCurrentIndex)
+                (Element as RSTabbedViews).CurrentPageIndex = currentIndexOfPage;
+
             var currentScrollingPageIdx = currentIndexOfPage;
+
             //Scroll Percentage per page
             var pageWidth = nativeView.Frame.Width;
             var currentScrollX = pageScrollView.ContentOffset.X;
@@ -390,9 +388,15 @@ namespace Xamarin.RSControls.iOS.Controls
                 //Tabs manual scroll
                 var tabsScrollX = currentSliderX + (currentScrollPercentage * tabWidth);
                 var maxScrollAllowed = tabsHolder.ContentSize.Width - nativeView.Frame.Width;
-                if (tabsScrollX < maxScrollAllowed)
+                var halfWidth = nativeView.Frame.Width / 2;
+                var halfSliderWidth = tabSliderWidthConstraint.Constant / 2;
+
+                if ( (tabsScrollX + halfSliderWidth - halfWidth) < maxScrollAllowed )
                 {
-                    tabsHolder.SetContentOffset(new CGPoint(tabsScrollX, pageScrollView.ContentOffset.Y), false);
+                    if( (tabSliderXOffsetConstraint.Constant + halfSliderWidth) >= halfWidth )
+                        tabsHolder.SetContentOffset(new CGPoint(tabsScrollX + halfSliderWidth - halfWidth, pageScrollView.ContentOffset.Y), false);
+                    else
+                        tabsHolder.SetContentOffset(new CGPoint(0, pageScrollView.ContentOffset.Y), false);
                 }
                 else
                 {
@@ -401,6 +405,7 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
+        // Do measures and adjust size
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
@@ -419,6 +424,7 @@ namespace Xamarin.RSControls.iOS.Controls
             grid.Layout(new Rectangle(0, 0, width * this.Element.Views.Count(), height - tabsHolder.Frame.Height));
         }
 
+        // Dispose
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -428,6 +434,7 @@ namespace Xamarin.RSControls.iOS.Controls
         }
     }
 
+    // Used for size adjustement
     public class RSTabbedViewScroll : UIScrollView
     {
         public UIStackView tabs;

@@ -30,7 +30,7 @@
 
         <rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>
 
-        <rs:RSTabbedViews BarColor="White" SliderColor="Black" ItemsSource="{Binding ListPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+        <rs:RSTabbedViews BarColor="White" TabSelected="RSTabbedViews_TabSelected_1" SliderColor="Black" ItemsSource="{Binding ListPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
             <rs:RSTabbedViews.ItemTemplate>
                 <DataTemplate>
                     <StackLayout rs:RSTabbedViews.Title="{Binding Name}" >
