@@ -210,7 +210,10 @@ namespace Xamarin.RSControls.iOS.Controls
         private void CreateDatePicker()
         {
             uIDatePicker = new UIDatePicker();
-            uIDatePicker.PreferredDatePickerStyle = UIDatePickerStyle.Wheels;
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
+                uIDatePicker.PreferredDatePickerStyle = UIDatePickerStyle.Wheels;
+
             uIDatePicker.Mode = UIDatePickerMode.Date;
             uIDatePicker.Date = this.element.Date.ToNSDate();
             uIDatePicker.MinimumDate = this.element.MinimumDate.ToNSDate();
