@@ -45,6 +45,10 @@ namespace Xamarin.RSControls.Controls
             set { SetValue(CurrentViewProperty, value); }
         }
 
+        // Current page index / Invoke TabSelected event property if someone subscribed to it
+        private int currentPageIndex;
+        public int CurrentPageIndex { get { return currentPageIndex; } set { currentPageIndex = value; OnTabSelected(EventArgs.Empty); } }
+
         //Bar placement
         public static readonly BindableProperty RSTabPlacementProperty = BindableProperty.CreateAttached("RSTabPlacement", typeof(RSTabPlacementEnum), typeof(RSTabbedViews), RSTabPlacementEnum.Top);
         public RSTabPlacementEnum RSTabPlacement
@@ -107,6 +111,16 @@ namespace Xamarin.RSControls.Controls
         public static void SetIcon(BindableObject view, string value)
         {
             view.SetValue(IconProperty, value);
+        }
+
+        public delegate void TabSelectedEventHandler(object sender, EventArgs e);
+
+        // Selected tab event handler
+        public event EventHandler TabSelected;
+        protected virtual void OnTabSelected(EventArgs e)
+        {
+            EventHandler handler = TabSelected;
+            handler?.Invoke(this, e);
         }
     }
 }

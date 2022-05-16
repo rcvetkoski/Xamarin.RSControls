@@ -158,8 +158,12 @@ namespace Xamarin.RSControls.Droid.Controls
         private void MenuBar_TabSelected(object sender, TabLayout.TabSelectedEventArgs e)
         {
             if (pager != null)
+            {
                 pager.SetCurrentItem((sender as TabLayout).SelectedTabPosition, true);
+                (Element as RSTabbedViews).CurrentPageIndex = (sender as TabLayout).SelectedTabPosition;
+            }
         }
+
 
         private void NativeView_LayoutChange(object sender, LayoutChangeEventArgs e)
         {
