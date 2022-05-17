@@ -15,6 +15,9 @@ namespace Xamarin.RSControls.Controls
             this.VerticalOptions = LayoutOptions.FillAndExpand;
         }
 
+        /// <summary>
+        /// Dynamically add remove views
+        /// </summary>
         public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create("ItemsSource", typeof(IEnumerable), typeof(RSTabbedViews), null);
         public IEnumerable ItemsSource
         {
@@ -29,7 +32,10 @@ namespace Xamarin.RSControls.Controls
             set => SetValue(ItemTemplateProperty, value);
         }
 
-        //Pages
+        /// <summary>
+        /// View holder / page holder
+        /// If ItemsSource set this is ignored
+        /// </summary>
         public static readonly BindableProperty ViewsProperty = BindableProperty.Create("Views", typeof(IList<VisualElement>), typeof(RSTabbedViews), null);
         public IList<VisualElement> Views
         {

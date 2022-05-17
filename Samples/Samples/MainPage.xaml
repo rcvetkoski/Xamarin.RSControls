@@ -28,17 +28,42 @@
         </rs:RSTabbedViews>-->
 
 
-        <rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>
+        <!--<rs:RSTabbedViews TabSelected="RSTabbedViews_TabSelected" BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+            <rs:RSTabbedViews.Views>
+                <StackLayout rs:RSTabbedViews.Title="lol" >
+                    <Label Text="ergergrehrwehre" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                </StackLayout>
+                <StackLayout rs:RSTabbedViews.Title="mehe" >
+                    <Label Text="ergregerg" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                </StackLayout>
+            </rs:RSTabbedViews.Views>
+        </rs:RSTabbedViews>-->
 
-        <rs:RSTabbedViews BarColor="White" TabSelected="RSTabbedViews_TabSelected_1" SliderColor="Black" ItemsSource="{Binding ListPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+
+        <!--<rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>-->
+
+        <rs:RSTabbedViews BarColor="White" SliderColor="Black" ItemsSource="{Binding ObsCollectionPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
             <rs:RSTabbedViews.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout rs:RSTabbedViews.Title="{Binding Name}" >
-                        <Label Text="{Binding Name}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                    <StackLayout rs:RSTabbedViews.Title="{Binding .}" >
+                        <rs:RSEntry Text="{Binding .}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
                     </StackLayout>
                 </DataTemplate>
             </rs:RSTabbedViews.ItemTemplate>
         </rs:RSTabbedViews>
+
+        <!--<ListView ItemsSource="{Binding ObsCollectionPicker}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Label Text="{Binding .}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>-->
+
+        <Button Text="Add" Clicked="AddItem"/>
+        <Button Text="Remove" Clicked="RemoveItem"/>
 
 
         <!--<rs:RSEntry Placeholder="No left icon" ShadowEnabled="True" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">

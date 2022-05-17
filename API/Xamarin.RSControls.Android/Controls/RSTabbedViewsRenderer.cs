@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 
@@ -70,65 +72,20 @@ namespace Xamarin.RSControls.Droid.Controls
                 if (this.Element.RSTabPlacement == Enums.RSTabPlacementEnum.Top)
                     nativeView.AddView(menuBar);
 
-
-                if(this.Element.ItemsSource != null)
+                // Check if ItemsSource is set, if set Element.Views will be ignored
+                if (this.Element.ItemsSource != null)
                 {
+                    // Register add or remove event in order to update the pages
+                    (Element.ItemsSource as INotifyCollectionChanged).CollectionChanged += RSTabbedViewsRenderer_CollectionChanged;
+
                     foreach (var item in this.Element.ItemsSource)
-                    {
-                        Forms.View formsView = (this.Element.ItemTemplate).CreateContent() as Forms.View;
-                        formsView.BindingContext = item as object;
-                        Element.Views.Add(formsView);
-                    }
+                        CreateAndAddToPager(item);
                 }
-
-                // Populate tab views
-                foreach (var formsView in this.Element.Views)
+                else
                 {
-                    // Convert forms view to native and add it to pages vaiable which is later used in pageAdapter
-                    Page currentPage = TypeExtensions.GetParentPage(this.Element);
-                    formsView.Parent = currentPage;
-                    var renderer = Platform.CreateRendererWithContext(formsView, Context);
-                    var natView = renderer.View;
-                    pages.Add(natView);
-
-
-                    // Set tab icon and title if set
-                    if (!(formsView.GetValue(RSTabbedViews.IconProperty).ToString().Contains("svg")))
-                    {
-                        Drawable drawableImage = null;
-                        if (!string.IsNullOrEmpty(formsView.GetValue(RSTabbedViews.IconProperty) as string))
-                        {
-                            string image = System.IO.Path.GetFileNameWithoutExtension(formsView.GetValue(RSTabbedViews.IconProperty) as string);
-                            int resImage = Resources.GetIdentifier(image, "drawable", Essentials.AppInfo.PackageName);
-                            drawableImage = global::AndroidX.Core.Content.ContextCompat.GetDrawable(Context, resImage);
-                        }
-
-                        menuBar.AddView(new TabItem(Context)
-                        {
-                            Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty) != null ? formsView.GetValue(RSTabbedViews.TitleProperty).ToString() : string.Empty),
-                            Icon = drawableImage
-                        }); 
-                    }
-                    else
-                    {
-                        BitmapDrawable bitmapDrawable = null;
-
-                        if (!string.IsNullOrEmpty(formsView.GetValue(RSTabbedViews.IconProperty) as string))
-                        {
-                            var iconSize = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 25, Context.Resources.DisplayMetrics);
-                            RSSvgImage svgIcon = new RSSvgImage() { Source = formsView.GetValue(RSTabbedViews.IconProperty).ToString(), Color = this.Element.BarTextColor };
-                            var convertedView = Extensions.ViewExtensions.ConvertFormsToNative(svgIcon, new Rectangle(0, 0, iconSize, iconSize), Context);
-
-                            if (convertedView != null)
-                                bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, iconSize, iconSize));
-                        }
-
-                        menuBar.AddView(new TabItem(Context)
-                        {
-                            Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty).ToString()),
-                            Icon = bitmapDrawable
-                        });
-                    }
+                    // Populate tab views
+                    foreach (var formsView in this.Element.Views)
+                        AddViewToPager(formsView);
                 }
 
                 this.Element.SizeChanged += Element_SizeChanged;
@@ -155,6 +112,96 @@ namespace Xamarin.RSControls.Droid.Controls
             }
         }
 
+        // Only used if ItemsSource set
+        private void RSTabbedViewsRenderer_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                CreateAndAddToPager(e.NewItems[0]);
+
+                // Set forms view size
+                double menuBarHeightToFormsUnit = ContextExtensions.FromPixels(this.Context, menuBar.Height);
+                Element.Views.ElementAt(e.NewStartingIndex).Layout(new Rectangle(0, 0, this.Element.Width, this.Element.Height - menuBarHeightToFormsUnit));
+
+                pager.Adapter.NotifyDataSetChanged();
+                pager.CurrentItem = e.NewStartingIndex;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                RemoveItemFromViews(e.OldStartingIndex);
+            }
+        }
+
+        // Creates and adds ItemsSource item to pager
+        private void CreateAndAddToPager(object item)
+        {
+            // Create forms view
+            Forms.View formsView = (this.Element.ItemTemplate).CreateContent() as Forms.View;
+            formsView.BindingContext = item;
+            Element.Views.Add(formsView);
+
+            // Convert to native view and add it to pager
+            AddViewToPager(formsView);
+        }
+
+        // Removes item / view from views and pager
+        private void RemoveItemFromViews(int pos)
+        {
+            Element.Views.RemoveAt(pos);
+            pages.RemoveAt(pos);
+            pager.Adapter.NotifyDataSetChanged();
+            menuBar.RemoveTabAt(pos);
+        }
+
+        // Convert forms view to native and add it to pages vaiable which is later used in pageAdapter
+        private void AddViewToPager(VisualElement formsView)
+        {
+            Page currentPage = TypeExtensions.GetParentPage(this.Element);
+            formsView.Parent = currentPage;
+            var renderer = Platform.CreateRendererWithContext(formsView, Context);
+            var natView = renderer.View;
+            pages.Add(natView);
+
+
+            // Set tab icon and title if set
+            if (!(formsView.GetValue(RSTabbedViews.IconProperty).ToString().Contains("svg")))
+            {
+                Drawable drawableImage = null;
+                if (!string.IsNullOrEmpty(formsView.GetValue(RSTabbedViews.IconProperty) as string))
+                {
+                    string image = System.IO.Path.GetFileNameWithoutExtension(formsView.GetValue(RSTabbedViews.IconProperty) as string);
+                    int resImage = Resources.GetIdentifier(image, "drawable", Essentials.AppInfo.PackageName);
+                    drawableImage = global::AndroidX.Core.Content.ContextCompat.GetDrawable(Context, resImage);
+                }
+
+                menuBar.AddView(new TabItem(Context)
+                {
+                    Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty) != null ? formsView.GetValue(RSTabbedViews.TitleProperty).ToString() : string.Empty),
+                    Icon = drawableImage
+                });
+            }
+            else
+            {
+                BitmapDrawable bitmapDrawable = null;
+
+                if (!string.IsNullOrEmpty(formsView.GetValue(RSTabbedViews.IconProperty) as string))
+                {
+                    var iconSize = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 25, Context.Resources.DisplayMetrics);
+                    RSSvgImage svgIcon = new RSSvgImage() { Source = formsView.GetValue(RSTabbedViews.IconProperty).ToString(), Color = this.Element.BarTextColor };
+                    var convertedView = Extensions.ViewExtensions.ConvertFormsToNative(svgIcon, new Rectangle(0, 0, iconSize, iconSize), Context);
+
+                    if (convertedView != null)
+                        bitmapDrawable = new BitmapDrawable(Context.Resources, Extensions.ViewExtensions.CreateBitmapFromView(convertedView, iconSize, iconSize));
+                }
+
+                menuBar.AddView(new TabItem(Context)
+                {
+                    Text = new Java.Lang.String(formsView.GetValue(RSTabbedViews.TitleProperty).ToString()),
+                    Icon = bitmapDrawable
+                });
+            }
+        }
+
         private void MenuBar_TabSelected(object sender, TabLayout.TabSelectedEventArgs e)
         {
             if (pager != null)
@@ -164,19 +211,18 @@ namespace Xamarin.RSControls.Droid.Controls
             }
         }
 
-
         private void NativeView_LayoutChange(object sender, LayoutChangeEventArgs e)
         {
-            if(!doOnce)
-            {
-                foreach (var formsView in this.Element.Views)
-                {
-                    double menuBarHeightToFormsUnit = ContextExtensions.FromPixels(this.Context, menuBar.Height);
-                    formsView.Layout(new Rectangle(0, 0, this.Element.Width, this.Element.Height - menuBarHeightToFormsUnit));
-                }
+            //if(!doOnce)
+            //{
+            //    foreach (var formsView in this.Element.Views)
+            //    {
+            //        double menuBarHeightToFormsUnit = ContextExtensions.FromPixels(this.Context, menuBar.Height);
+            //        formsView.Layout(new Rectangle(0, 0, this.Element.Width, this.Element.Height - menuBarHeightToFormsUnit));
+            //    }
 
-                doOnce = true;
-            }
+            //    doOnce = true;
+            //}
         }
 
         private void Element_SizeChanged(object sender, EventArgs e)
@@ -191,13 +237,19 @@ namespace Xamarin.RSControls.Droid.Controls
         protected override void Dispose(bool disposing)
         {
             if(this.Element != null)
+            {
                 this.Element.SizeChanged -= Element_SizeChanged;
+
+                if(Element.ItemsSource != null)
+                    (Element.ItemsSource as INotifyCollectionChanged).CollectionChanged -= RSTabbedViewsRenderer_CollectionChanged;
+            }
 
             if(nativeView != null)
                 nativeView.LayoutChange -= NativeView_LayoutChange;
 
             if(menuBar != null)
                 menuBar.TabSelected -= MenuBar_TabSelected;
+
 
             base.Dispose(disposing);
         }

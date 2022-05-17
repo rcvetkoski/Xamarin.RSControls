@@ -232,11 +232,19 @@ namespace Samples
             (this.BindingContext as MainPageViewModel).RSCommand.ChangeCanExecute();
         }
 
-
-
-        void RSTabbedViews_TabSelected_1(System.Object sender, System.EventArgs e)
+        private void RSTabbedViews_TabSelected(object sender, EventArgs e)
         {
-            Console.WriteLine("current index " + (sender as RSTabbedViews).CurrentPageIndex);
+
+        }
+
+        private void AddItem(object sender, EventArgs e)
+        {
+            (this.BindingContext as MainPageViewModel).ObsCollectionPicker.Add("Rade");
+        }
+
+        private void RemoveItem(object sender, EventArgs e)
+        {
+            (this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt((this.BindingContext as MainPageViewModel).ObsCollectionPicker.Count - 1);
         }
     }
 }
