@@ -244,7 +244,8 @@ namespace Samples
 
         private void RemoveItem(object sender, EventArgs e)
         {
-            (this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt((this.BindingContext as MainPageViewModel).ObsCollectionPicker.Count - 1);
+            if(rstabviews.CurrentPageIndex >= 0)
+                (this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(rstabviews.CurrentPageIndex);
         }
     }
 }

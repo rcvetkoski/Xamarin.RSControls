@@ -35,7 +35,7 @@ namespace Samples
             var list = new List<DateSelectionModeEnum>() { DateSelectionModeEnum.Default, DateSelectionModeEnum.Month, DateSelectionModeEnum.MonthYear, DateSelectionModeEnum.Year };
 
 
-            obsCollectionPicker = new ObservableCollection<string>() { "Tom", "Jerry", "Buldog" };
+            obsCollectionPicker = new ObservableCollection<string>() { "Tom", "Jerry", "Buldog", "Tom", "Jerry", "Buldog", "TomTomTOmTom", "Jerry", "Buldog", "Tom", "Jerry", "Buldog" };
             ObsCollectionPickerSelectedItems = new ObservableCollection<string>();
 
             listPickerEnum = list.OrderBy(x => x);

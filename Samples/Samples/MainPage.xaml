@@ -16,7 +16,7 @@
 
     <StackLayout Margin="0">
 
-        <!--<rs:RSTabbedViews BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+        <!--<rs:RSTabbedViews BarColor="White" RSTabPlacement="Top" >
             <rs:RSTabbedViews.Views>
                 <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                 <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
@@ -42,15 +42,17 @@
 
         <!--<rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>-->
 
-        <rs:RSTabbedViews BarColor="White" SliderColor="Black" ItemsSource="{Binding ObsCollectionPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+        <rs:RSTabbedViews x:Name="rstabviews" BarColor="White" SliderColor="Black" ItemsSource="{Binding ObsCollectionPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
             <rs:RSTabbedViews.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout rs:RSTabbedViews.Title="{Binding .}" >
-                        <rs:RSEntry Text="{Binding .}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                    <StackLayout Margin="20, 0, 0, 20" BackgroundColor="Green" rs:RSTabbedViews.Title="{Binding .}">
+                        <rs:RSEntry BackgroundColor="Red" Margin="20" Placeholder="Name" Text="{Binding .}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
                     </StackLayout>
                 </DataTemplate>
             </rs:RSTabbedViews.ItemTemplate>
         </rs:RSTabbedViews>
+
+
 
         <!--<ListView ItemsSource="{Binding ObsCollectionPicker}">
             <ListView.ItemTemplate>

@@ -694,7 +694,7 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 BorderColor = this.borderColor.CGColor,
                 BorderWidth = this.borderWidth,
-                BackgroundColor = UIColor.SystemGray6Color.CGColor,
+                BackgroundColor = UIColor.Gray.CGColor,
                 ZPosition = -1 // So its behind floating label
             };
 
