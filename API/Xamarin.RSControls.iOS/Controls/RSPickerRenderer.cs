@@ -34,6 +34,12 @@ namespace Xamarin.RSControls.iOS.Controls
             if (Element != null)
                 element = Element as RSPickerBase;
 
+            if ((this.Element as IRSControl).RightIcon == null)
+                (this.Element as IRSControl).RightIcon = new Helpers.RSEntryIcon()
+                {
+                    View = new RSSvgImage() { Source = "Xamarin.RSControls/Data/SVG/arrow.svg" }
+                };
+
             return new RSUITextField(element as IRSControl);
         }
 
@@ -440,7 +446,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
         public object SelectedItem
         {
-            get { return myItems[selectedIndex]; }
+            get { if (myItems != null && myItems.Any()) return myItems[selectedIndex]; else return null; }
         }
 
         public override nfloat GetRowHeight(UIPickerView pickerView, nint component)

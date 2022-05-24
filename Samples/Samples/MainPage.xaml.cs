@@ -247,5 +247,10 @@ namespace Samples
             if(rstabviews.CurrentPageIndex >= 0)
                 (this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(rstabviews.CurrentPageIndex);
         }
+
+        void RSPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+            Console.WriteLine("feff");
+        }
     }
 }

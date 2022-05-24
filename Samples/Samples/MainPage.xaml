@@ -52,6 +52,7 @@
             </rs:RSTabbedViews.ItemTemplate>
         </rs:RSTabbedViews>
 
+        <rs:RSPicker SelectedIndexChanged="RSPicker_SelectedIndexChanged" ItemsSource="{Binding ObsCollectionPicker}" Placeholder="Picker"/>
 
 
         <!--<ListView ItemsSource="{Binding ObsCollectionPicker}">
