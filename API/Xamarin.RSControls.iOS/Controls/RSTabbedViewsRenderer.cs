@@ -47,18 +47,17 @@ namespace Xamarin.RSControls.iOS.Controls
 
             if (e.PropertyName == "CurrentView")
             {
+                //Console.WriteLine("prev: " + previousIndexOfPage + "   current: " + currentIndexOfPage);
+
                 if (tabsStack != null && tabsStack.ArrangedSubviews.Any())
                 {
-                    if (previousIndexOfPage != currentIndexOfPage)
-                    {
-                        if (previousIndexOfPage < tabsStack.ArrangedSubviews.Count())
-                            setTabItemsColor(tabsStack.ArrangedSubviews[previousIndexOfPage] as UIStackView, this.Element.BarTextColor);
+                    if (previousIndexOfPage >= 0 && previousIndexOfPage < tabsStack.ArrangedSubviews.Count())
+                        setTabItemsColor(tabsStack.ArrangedSubviews[previousIndexOfPage] as UIStackView, this.Element.BarTextColor);
 
-                        setTabItemsColor(tabsStack.ArrangedSubviews[currentIndexOfPage] as UIStackView, this.Element.BarTextColorSelected);
-                    }
+                    setTabItemsColor(tabsStack.ArrangedSubviews[currentIndexOfPage] as UIStackView, this.Element.BarTextColorSelected);
+
+                    previousIndexOfPage = currentIndexOfPage;
                 }
-
-                previousIndexOfPage = currentIndexOfPage;
             }
         }
 
@@ -102,9 +101,9 @@ namespace Xamarin.RSControls.iOS.Controls
                         AddViewToPager(item);
                 }
 
-                // TODO
                 //Highlight selected tab
                 setTabItemsColor(tabsStack.ArrangedSubviews[currentIndexOfPage] as UIStackView, this.Element.BarTextColorSelected);
+
                 setGridWidthConstraint();
 
                 gridNativeView.BackgroundColor = UIColor.Purple;
@@ -237,43 +236,56 @@ namespace Xamarin.RSControls.iOS.Controls
                 (tab as RSUIStackView).Index = i;
             }
 
-            // TODO
+
+            // Layout forms views
             var width = this.Element.WidthRequest != -1 ? this.Element.WidthRequest : this.Element.Width;
             var height = this.Element.HeightRequest != -1 ? this.Element.HeightRequest : this.Element.Height;
             grid.Layout(new Rectangle(0, 0, width * this.Element.Views.Count(), height - tabsHolder.Frame.Height));
 
+
+            // Stop scroll in case previous scroll animation hasn't ended which can cause crash when removing item
             CGPoint offset = pageScrollView.ContentOffset;
             pageScrollView.SetContentOffset(offset, false);
 
-            //if (pos != 0 && Element.Views.Count() >= pos - 1)
-            //    TabItemTap(null, pos - 1);
 
             manualScroll = false;
-            canUpdateCurrentIndex = true;
-            currentIndexOfPage = pos - 1;
-
-            if (currentIndexOfPage >= 0)
-                PageScrollView_Scrolled(null, null);
-            else
+            // Set CurrentPageIndex to forms element
+            if (pos > 0)
+            {
+                currentIndexOfPage = pos - 1;
+                Element.CurrentView = Element.Views.ElementAt(pos - 1);
+                Element.CurrentPageIndex = pos - 1;
+            }
+            else if (Element.Views.Any())
             {
                 currentIndexOfPage = 0;
-                pos = 1;
-                PageScrollView_Scrolled(null, null);
-            }
-
-            Console.WriteLine(Element.CurrentPageIndex);
-
-            // Set slider position and width
-            if (tabsStack.ArrangedSubviews.Any() && (pos - 1) >= 0)
-            {
-                tabsStack.LayoutIfNeeded();
-                //Set slider X position
-                tabSliderXOffsetConstraint.Constant = tabsStack.ArrangedSubviews[pos - 1].Frame.Left;
-                //Set slider width
-                tabSliderWidthConstraint.Constant = tabsStack.ArrangedSubviews[pos - 1].Frame.Width;
+                Element.CurrentView = Element.Views.ElementAt(0);
+                Element.CurrentPageIndex = 0;
             }
             else
+            {
+                currentIndexOfPage = -1;
+                Element.CurrentView = null;
+                Element.CurrentPageIndex = -1;
+            }
+
+
+            tabsStack.LayoutIfNeeded();
+            if (currentIndexOfPage >= 0)
+            {
+                tabSliderXOffsetConstraint.Constant = tabsStack.ArrangedSubviews[currentIndexOfPage].Frame.Left;
+                tabSliderWidthConstraint.Constant = tabsStack.ArrangedSubviews[currentIndexOfPage].Frame.Width;
+            }
+            else
+            {
+                tabSliderXOffsetConstraint.Constant = 0;
                 tabSliderWidthConstraint.Constant = 0;
+            }
+
+            var posX = (this.Element.Width * currentIndexOfPage);
+
+            if(currentIndexOfPage != Element.Views.Count() - 1)
+                pageScrollView.SetContentOffset(new CGPoint(posX, pageScrollView.ContentOffset.Y), true);
         }
 
         // Set Tabs menu
@@ -407,11 +419,11 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             // Set CurrentPageIndex used for TabSelected event in RSTabbedViews
             canUpdateCurrentIndex = false;
+            currentIndexOfPage = index;
+            Element.CurrentView = Element.Views.ElementAt(index); // CurrentView needs to be set before CurrentPageIndex, becasue CurrentPageIndex setter triggers eventhandler "TabSelected"
             Element.CurrentPageIndex = index;
             manualScroll = true;
-            currentIndexOfPage = index;
             var posX = (this.Element.Width * index);
-            Element.CurrentView = Element.Views.ElementAt(index);
             pageScrollView.SetContentOffset(new CGPoint(posX, pageScrollView.ContentOffset.Y), true);
         }
 
@@ -501,15 +513,17 @@ namespace Xamarin.RSControls.iOS.Controls
             //}
 
 
-            // Set CurrentPageIndex used for TabSelected event in RSTabbedViews
+            // Set CurrentView and CurrentPageIndex used for TabSelected event in RSTabbedViews
             if (Element.CurrentPageIndex != currentIndexOfPage && canUpdateCurrentIndex)
             {
-                Element.CurrentPageIndex = currentIndexOfPage;
+                // CurrentView needs to be set before CurrentPageIndex, becasue CurrentPageIndex setter triggers eventhandler "TabSelected"
                 Element.CurrentView = Element.Views.ElementAt(currentIndexOfPage);
+                Element.CurrentPageIndex = currentIndexOfPage;
             }
 
             // Scrolling calculations
             var currentScrollingPageIdx = currentIndexOfPage;
+
 
             //Scroll Percentage per page
             var pageWidth = nativeView.Frame.Width;
@@ -526,7 +540,7 @@ namespace Xamarin.RSControls.iOS.Controls
             var tabWidth = tabsStack.ArrangedSubviews[currentScrollingPageIdx].Frame.Width;
 
             var tabWidth2 =
-                currentScrollingPageIdx + 1 < tabsStack.ArrangedSubviews.Count() ?
+                (currentScrollingPageIdx + 1) < tabsStack.ArrangedSubviews.Count() ?
                 tabsStack.ArrangedSubviews[currentScrollingPageIdx + 1].Frame.Width :
                 tabsStack.ArrangedSubviews[currentScrollingPageIdx].Frame.Width;
 
@@ -543,6 +557,7 @@ namespace Xamarin.RSControls.iOS.Controls
             var maxScrollAllowed = tabsHolder.ContentSize.Width - nativeView.Frame.Width;
             var halfWidth = nativeView.Frame.Width / 2;
             var halfSliderWidth = tabSliderWidthConstraint.Constant / 2;
+
 
             if ((tabsScrollX + halfSliderWidth - halfWidth) < maxScrollAllowed)
             {

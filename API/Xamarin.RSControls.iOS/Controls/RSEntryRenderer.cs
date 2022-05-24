@@ -273,7 +273,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.Ended += RSUITextField_Ended;
             this.EditingChanged += RSUITextField_EditingChanged;
 
-            AdjustSize();
+            //AdjustSize();
         }
 
         //Adjust Size if needed

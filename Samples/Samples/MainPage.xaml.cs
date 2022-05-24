@@ -234,7 +234,7 @@ namespace Samples
 
         private void RSTabbedViews_TabSelected(object sender, EventArgs e)
         {
-
+            Console.WriteLine((sender as RSTabbedViews).CurrentPageIndex + "  " + ((sender as RSTabbedViews).CurrentView).BindingContext);
         }
 
         private void AddItem(object sender, EventArgs e)
