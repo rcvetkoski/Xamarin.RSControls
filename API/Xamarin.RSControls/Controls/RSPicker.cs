@@ -492,7 +492,7 @@ namespace Xamarin.RSControls.Controls
 
         public void Dispose()
         {
-            if (this.ItemsSource is ObservableCollection<object> observableDataSource)
+            if (this.ItemsSource is INotifyCollectionChanged observableDataSource)
                 observableDataSource.CollectionChanged -= ObservableDataSource_CollectionChanged;
         }
     }

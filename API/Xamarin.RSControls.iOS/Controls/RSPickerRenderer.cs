@@ -413,6 +413,9 @@ namespace Xamarin.RSControls.iOS.Controls
                 if(rSPopup != null)
                     rSPopup.DismissEvent -= RSPopup_OnDismiss;
             }
+
+            if (element != null && element is RSPicker)
+                (element as RSPicker).Dispose();
         }
     }
 

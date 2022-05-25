@@ -410,6 +410,9 @@ namespace Xamarin.RSControls.Droid.Controls
             if(sPopupRenderer != null)
                 sPopupRenderer.DismissEvent -= SPopupRenderer_DismissEvent;
 
+            if (element != null && element is RSPicker)
+                (element as RSPicker).Dispose(); 
+
             //if(sPopupRenderer != null && sPopupRenderer.Dialog != null)
             //    sPopupRenderer.Dialog.Dismiss();
         }

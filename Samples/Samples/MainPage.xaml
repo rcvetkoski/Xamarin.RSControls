@@ -16,7 +16,7 @@
 
     <StackLayout Margin="0">
 
-        <!--<rs:RSTabbedViews BarColor="White" RSTabPlacement="Top" >
+        <rs:RSTabbedViews BarColor="White" RSTabPlacement="Top" >
             <rs:RSTabbedViews.Views>
                 <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                 <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
@@ -25,7 +25,7 @@
                 <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
                 <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
             </rs:RSTabbedViews.Views>
-        </rs:RSTabbedViews>-->
+        </rs:RSTabbedViews>
 
 
         <!--<rs:RSTabbedViews TabSelected="RSTabbedViews_TabSelected" BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
@@ -42,7 +42,7 @@
 
         <!--<rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>-->
 
-        <rs:RSTabbedViews x:Name="rstabviews" TabSelected="RSTabbedViews_TabSelected" BarColor="White" SliderColor="Black" ItemsSource="{Binding ObsCollectionPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+        <!--<rs:RSTabbedViews x:Name="rstabviews" TabSelected="RSTabbedViews_TabSelected" BarColor="White" SliderColor="Black" ItemsSource="{Binding ObsCollectionPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
             <rs:RSTabbedViews.ItemTemplate>
                 <DataTemplate>
                     <StackLayout Margin="20, 0, 20, 0" BackgroundColor="Green" rs:RSTabbedViews.Title="{Binding .}">
@@ -50,9 +50,9 @@
                     </StackLayout>
                 </DataTemplate>
             </rs:RSTabbedViews.ItemTemplate>
-        </rs:RSTabbedViews>
+        </rs:RSTabbedViews>-->
 
-        <rs:RSPicker SelectedIndexChanged="RSPicker_SelectedIndexChanged" ItemsSource="{Binding ObsCollectionPicker}" Placeholder="Picker"/>
+        <rs:RSPicker x:Name="picker" SelectedIndexChanged="RSPicker_SelectedIndexChanged" ItemsSource="{Binding ObsCollectionPicker}" Placeholder="Picker"/>
 
 
         <!--<ListView ItemsSource="{Binding ObsCollectionPicker}">
