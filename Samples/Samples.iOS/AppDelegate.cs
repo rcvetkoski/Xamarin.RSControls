@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Foundation;
 using UIKit;
+using Xamarin.RSControls.Controls;
+using Xamarin.RSControls.iOS;
 
 namespace Samples.iOS
 {
@@ -24,7 +25,7 @@ namespace Samples.iOS
         {
             //Fix ios destroys dll so this will make sure it stays
             Xamarin.RSControls.iOS.Controls.RSEntryRenderer.Initialize();
-
+            Xamarin.Forms.Internals.Registrar.Registered.Register(typeof(RSImageSource), typeof(SvgImageSourceHandler));
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 

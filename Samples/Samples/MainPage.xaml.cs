@@ -22,9 +22,11 @@ namespace Samples
             this.BindingContext = new MainPageViewModel();
 
 
-            //for(int i = 0; i < 500; i++)
+            //for (int i = 0; i < 200; i++)
             //{
-            //    stack.Children.Add(new RSEntry() { Text = "lol", Helper = "Helper" });
+            //    //stack.Children.Add(new RSEntry() { Text = "lol", Helper = "Helper" });
+
+            //    stack.Children.Add(new ImageButton() { Source = new RSImageSource() { Source = "Xamarin.RSControls/Data/SVG/plus.svg", Color = Color.Purple }, WidthRequest = 40, HeightRequest = 40, BackgroundColor = Color.Red });
             //}
         }
 

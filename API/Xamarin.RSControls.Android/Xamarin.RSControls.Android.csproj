@@ -59,6 +59,7 @@
     <Compile Include="Controls\RSPopupRenderer.cs" />
     <Compile Include="RSContext.cs" />
     <Compile Include="Controls\RSTabbedPageRenderer.cs" />
+    <Compile Include="SvgImageSourceHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

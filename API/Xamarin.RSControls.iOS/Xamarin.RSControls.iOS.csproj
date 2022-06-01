@@ -59,6 +59,7 @@
     <Compile Include="Controls\RSNumericEntryRenderer.cs" />
     <Compile Include="Controls\RSTabbedPageRenderer.cs" />
     <Compile Include="Controls\RSTabbedViewsRenderer.cs" />
+    <Compile Include="SvgImageSourceHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.RSControls\Xamarin.RSControls.csproj">

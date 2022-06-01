@@ -25,6 +25,7 @@ namespace Samples.Droid
             base.OnCreate(savedInstanceState);
 
             RSAppContext.RSContext = this;
+            Xamarin.Forms.Internals.Registrar.Registered.Register(typeof(Xamarin.RSControls.Controls.RSImageSource), typeof(SvgImageSourceHandler));
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());

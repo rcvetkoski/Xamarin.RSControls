@@ -14,26 +14,44 @@
         <local:MainPageViewModel></local:MainPageViewModel>
     </ContentPage.BindingContext>
 
-    <StackLayout Margin="0">
-
-        <rs:RSSvgImage x:Name="svg" Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg" HorizontalOptions="Center"/>
-        <ImageButton BackgroundColor="White" Padding="2" BorderColor="WhiteSmoke" BorderWidth="2" x:Name="testButton" HorizontalOptions="Center" WidthRequest="40" HeightRequest="40">
-            <ImageButton.Source>
-                <rs:DrawImageExtension FileName="Xamarin.RSControls/Data/SVG/plus.svg" Color="Green" Holder="{x:Reference testButton}"/>
-            </ImageButton.Source>
-        </ImageButton>
-
-        <ImageButton WidthRequest="40" HeightRequest="40" BackgroundColor="Blue" HorizontalOptions="Center">
-            <ImageButton.Source>
-                <rs:RSImageSource Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
-            </ImageButton.Source>
-        </ImageButton>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Priority="1" x:Name="toolbarItem1">
+            <ToolbarItem.IconImageSource>
+                <rs:RSImageSource Source="Xamarin.RSControls/Data/SVG/plus.svg" Color="White"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
 
 
-        <!--<rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"></rs:RSSvgImage>-->
+    <ScrollView Orientation="Vertical">
+        <StackLayout x:Name="stack" Margin="0">
+
+            <rs:RSSvgImage x:Name="svg" Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg" HorizontalOptions="Center"/>
+            <ImageButton BackgroundColor="White" Padding="2" BorderColor="WhiteSmoke" BorderWidth="2" x:Name="testButton" HorizontalOptions="Center" WidthRequest="40" HeightRequest="40">
+                <ImageButton.Source>
+                    <rs:DrawImageExtension FileName="Xamarin.RSControls/Data/SVG/plus.svg" Color="Green" Holder="{x:Reference testButton}"/>
+                </ImageButton.Source>
+            </ImageButton>
+
+            <ImageButton BackgroundColor="White" Padding="2" BorderColor="WhiteSmoke" BorderWidth="2" HorizontalOptions="Center">
+                <ImageButton.Source>
+                    <rs:RSImageSource Source="Xamarin.RSControls/Data/SVG/plus.svg" Color="Aqua" Width="50" Height="50"/>
+                </ImageButton.Source>
+            </ImageButton>
+            <rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>
 
 
-        <!--<rs:RSTabbedViews BarColor="White" RSTabPlacement="Top" >
+            <!--<Button HorizontalOptions="Center">
+            <Button.ImageSource>
+                <rs:RSImageSource Source="Xamarin.RSControls/Data/SVG/calendar.svg" Color="Red"/>
+            </Button.ImageSource>
+        </Button>-->
+
+
+            <!--<rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"></rs:RSSvgImage>-->
+
+
+            <!--<rs:RSTabbedViews BarColor="White" RSTabPlacement="Top" >
             <rs:RSTabbedViews.Views>
                 <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
                 <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_about.png"/>
@@ -45,7 +63,7 @@
         </rs:RSTabbedViews>-->
 
 
-        <!--<rs:RSTabbedViews TabSelected="RSTabbedViews_TabSelected" BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+            <!--<rs:RSTabbedViews TabSelected="RSTabbedViews_TabSelected" BarColor="White" SliderColor="Black" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
             <rs:RSTabbedViews.Views>
                 <StackLayout rs:RSTabbedViews.Title="lol" >
                     <Label Text="ergergrehrwehre" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
@@ -57,9 +75,9 @@
         </rs:RSTabbedViews>-->
 
 
-        <!--<rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>-->
+            <!--<rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>-->
 
-        <!--<rs:RSTabbedViews x:Name="rstabviews" TabSelected="RSTabbedViews_TabSelected" BarColor="White" SliderColor="Black" ItemsSource="{Binding ObsCollectionPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
+            <!--<rs:RSTabbedViews x:Name="rstabviews" TabSelected="RSTabbedViews_TabSelected" BarColor="White" SliderColor="Black" ItemsSource="{Binding ObsCollectionPicker}" BarTextColor="DimGray" BarTextColorSelected="Black" RSTabPlacement="Top" >
             <rs:RSTabbedViews.ItemTemplate>
                 <DataTemplate>
                     <StackLayout Margin="20, 0, 20, 0" BackgroundColor="Green" rs:RSTabbedViews.Title="{Binding .}">
@@ -69,10 +87,10 @@
             </rs:RSTabbedViews.ItemTemplate>
         </rs:RSTabbedViews>-->
 
-        <!--<rs:RSPicker x:Name="picker" SelectedIndexChanged="RSPicker_SelectedIndexChanged" ItemsSource="{Binding ObsCollectionPicker}" Placeholder="Picker"/>-->
+            <!--<rs:RSPicker x:Name="picker" SelectedIndexChanged="RSPicker_SelectedIndexChanged" ItemsSource="{Binding ObsCollectionPicker}" Placeholder="Picker"/>-->
 
 
-        <!--<ListView ItemsSource="{Binding ObsCollectionPicker}">
+            <!--<ListView ItemsSource="{Binding ObsCollectionPicker}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -82,11 +100,11 @@
             </ListView.ItemTemplate>
         </ListView>-->
 
-        <Button Text="Add" Clicked="AddItem"/>
-        <Button Text="Remove" Clicked="RemoveItem"/>
+            <Button Text="Add" Clicked="AddItem"/>
+            <Button Text="Remove" Clicked="RemoveItem"/>
 
 
-        <!--<rs:RSEntry Placeholder="No left icon" ShadowEnabled="True" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
+            <!--<rs:RSEntry Placeholder="No left icon" ShadowEnabled="True" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
             <rs:RSEntry.LeftIcon>
                 <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
                     <helpers:RSEntryIcon.View>
@@ -102,7 +120,7 @@
 
         <rs:RSPicker Placeholder="mehe"></rs:RSPicker>-->
 
-        <!--<rs:RSDatePicker RSEntryStyle="FilledBorder" Placeholder="Select date" DateSelectionMode="Default" NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}">
+            <!--<rs:RSDatePicker RSEntryStyle="FilledBorder" Placeholder="Select date" DateSelectionMode="Default" NullableDate="{Binding SomeDate}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}">
             <rs:RSDatePicker.Behaviors>
                 <validators:ValidationBehaviour PropertyName="NullableDate">
                     <validators:ValidationBehaviour.Validators>
@@ -117,6 +135,8 @@
         <rs:RSPicker Placeholder="Picker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" RSPopupStyleEnum="Native"/>
         <Picker ItemsSource="{Binding ListPicker}"/>-->
 
-    </StackLayout>
+        </StackLayout>
+
+    </ScrollView>
 
 </ContentPage>
