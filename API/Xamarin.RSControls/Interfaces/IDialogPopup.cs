@@ -33,6 +33,7 @@ namespace Xamarin.RSControls.Interfaces
         Forms.View CustomView { get; set; }
         void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter);
         void ShowPopup();
+        void GetDialogSize();
     }
 
     public interface IHaveDialogPopup

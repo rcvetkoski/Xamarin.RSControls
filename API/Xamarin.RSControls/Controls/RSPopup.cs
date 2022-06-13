@@ -8,7 +8,7 @@ namespace Xamarin.RSControls.Controls
 {
     public class RSPopup
     {
-        private IDialogPopup service;
+        public IDialogPopup service;
         public string Title { get; set; }
         public string Message { get; set; }
         public int PositionX { get; set; }

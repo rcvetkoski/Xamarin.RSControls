@@ -215,7 +215,7 @@ namespace Samples
             rsPopup.SetDimAmount(0.0f);
             rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 10, 10, 10);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.MatchParent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
             rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
@@ -246,11 +246,73 @@ namespace Samples
         {
             //if(rstabviews.CurrentPageIndex >= 0)
             //    (this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(rstabviews.CurrentPageIndex);
+
+
+            (this.BindingContext as MainPageViewModel).ObsCollectionPicker.RemoveAt(0);
         }
 
         void RSPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
         {
             Console.WriteLine("feff");
+        }
+
+        void Button_Clicked_1(System.Object sender, System.EventArgs e)
+        {
+            var rsPopup = new RSPopup("Edit Title", "Bidi mehe Pulitzer !");
+
+            StackLayout stack = new StackLayout() {BackgroundColor = Color.Transparent };
+            RSNumericUpDown weight = new RSNumericUpDown() { Placeholder = "Weight", Margin = new Thickness(10, 0, 10, 0) };
+            RSNumericUpDown reps = new RSNumericUpDown() { Placeholder = "Reps"};
+            stack.Children.Add(weight);
+            stack.Children.Add(reps);
+
+            //rsPopup.SetMargin(10, 10, 10, 10);
+            //rsPopup.SetCustomView(stack);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetDimAmount(1);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Top);
+            //rsPopup.SetBorderRadius(10);
+            rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
+            rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
+            {
+                rsPopup.service.GetDialogSize();
+            }));
+            rsPopup.Show();
+        }
+
+        void Button_Clicked_2(System.Object sender, System.EventArgs e)
+        {
+            var rsPopup = new RSPopup("Title trololo", "Bidi mehe Pulitzer!");
+
+            rsPopup.SetBackgroundColor(Color.Red);
+            //rsPopup.SetMargin(10, 10, 10, 10);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetDimAmount(1f);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
+            //rsPopup.SetBorderRadius(10);
+            //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
+            //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
+            //{
+            //    rsPopup.service.GetDialogSize();
+            //}));
+            rsPopup.Show();
+        }
+
+        void Button_Clicked_3(System.Object sender, System.EventArgs e)
+        {
+            var rsPopup = new RSPopup("Title trololo", "Bidi mehe Pulitzer!");
+
+            //rsPopup.SetMargin(10, 10, 10, 10);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            //rsPopup.SetDimAmount(1f);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Over);
+            //rsPopup.SetBorderRadius(10);
+            rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive, new Command(()=>
+            {
+                rsPopup.service.GetDialogSize();
+            }));
+            rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
+            rsPopup.Show();
         }
     }
 }

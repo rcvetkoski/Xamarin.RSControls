@@ -106,9 +106,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 setGridWidthConstraint();
 
-                gridNativeView.BackgroundColor = UIColor.Purple;
-                grid.BackgroundColor = Color.Brown;
-
                 orientation = UIDevice.CurrentDevice.Orientation;
                 orientationObserver = NSNotificationCenter.DefaultCenter.AddObserver(new NSString("UIDeviceOrientationDidChangeNotification"), DeviceRotated);
 

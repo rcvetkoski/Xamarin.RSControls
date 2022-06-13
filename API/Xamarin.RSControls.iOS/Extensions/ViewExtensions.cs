@@ -237,4 +237,46 @@ namespace Xamarin.RSControls.iOS.Extensions
                 _formsView.MeasureInvalidated -= _formsView_MeasureInvalidated;
         }
     }
+
+
+
+
+
+
+    public class FormsToNativeInPopup : UIView
+    {
+        Forms.View formsView;
+        UIView nativeView;
+        UIView parent;
+        Forms.SizeRequest sizeRequest;
+
+        public FormsToNativeInPopup(Forms.View formsView, UIView nativeView, UIView parent)
+        {
+            this.formsView = formsView;
+            this.nativeView = nativeView;
+            this.parent = parent;
+
+            this.AddSubview(nativeView);
+
+            nativeView.TranslatesAutoresizingMaskIntoConstraints = false;
+            nativeView.WidthAnchor.ConstraintEqualTo(this.WidthAnchor).Active = true;
+            nativeView.HeightAnchor.ConstraintEqualTo(this.HeightAnchor).Active = true;
+            nativeView.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor).Active = true;
+            nativeView.TopAnchor.ConstraintEqualTo(this.TopAnchor).Active = true;
+
+            sizeRequest = formsView.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+
+            this.TranslatesAutoresizingMaskIntoConstraints = false;
+            this.HeightAnchor.ConstraintEqualTo((nfloat)sizeRequest.Request.Height).Active = true;
+        }
+
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            //Console.WriteLine("forms " + formsView.Width + " native " + nativeView.Frame.Width + " parent " + parent.Frame.Width);
+            formsView.Layout(new Forms.Rectangle(0, 0, parent.Frame.Width, sizeRequest.Request.Height));
+        }
+    }
 }

@@ -138,7 +138,6 @@ namespace Xamarin.RSControls.Droid.Extensions
         {
             stack = new StackLayout();
             stack.Children.Add(formsView);
-            stack.BackgroundColor = Forms.Color.Blue;
             _formsView = formsView;
             _renderer = Platform.CreateRendererWithContext(stack, Context);
             Platform.SetRenderer(stack, _renderer);

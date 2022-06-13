@@ -322,6 +322,7 @@ namespace Xamarin.RSControls.iOS.Controls
             //Holder
             UIStackView holder = new UIStackView();
             holder.Axis = UILayoutConstraintAxis.Vertical;
+            holder.Distribution = UIStackViewDistribution.FillProportionally;
 
             //Search Bar
 
@@ -347,7 +348,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 holder.AddArrangedSubview(searchBar);
             }
 
-
             holder.AddArrangedSubview(customTable);
 
             //Create RSPopup
@@ -363,9 +363,9 @@ namespace Xamarin.RSControls.iOS.Controls
             rSPopup.BorderRadius = 16;
             rSPopup.BorderFillColor = element.RSPopupBackgroundColor;
             rSPopup.DimAmount = 0.8f;
+            rSPopup.SetNativeView(holder);
             rSPopup.AddAction("Done", RSPopupButtonTypeEnum.Positive, null);
             rSPopup.AddAction("Clear", RSPopupButtonTypeEnum.Destructive, new Command(() => { clearPicker(); }));
-            rSPopup.SetNativeView(holder);
             rSPopup.ShowPopup();
 
             rSPopup.DismissEvent += RSPopup_OnDismiss;

@@ -654,7 +654,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 border.ShadowRadius = this.shadowRadius;
                 border.ShadowOffset = new CGSize(0f, this.borderWidth);
             }
-
+            
             this.Layer.AddSublayer(border);
         }
         private void CreateFilledBorder()
