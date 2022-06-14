@@ -268,14 +268,14 @@ namespace Samples
 
             //rsPopup.SetMargin(10, 10, 10, 10);
             //rsPopup.SetCustomView(stack);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0.5f);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Top);
             //rsPopup.SetBorderRadius(10);
-            rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
-            rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
-            {
-            }));
+            //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
+            //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
+            //{
+            //}));
             rsPopup.Show();
         }
 
@@ -319,7 +319,7 @@ namespace Samples
             stack.Children.Add(reps);
 
             //rsPopup.SetMargin(10, 10, 10, 10);
-            rsPopup.SetCustomView(stack);
+            //rsPopup.SetCustomView(stack);
 
             rsPopup.Show();
         }

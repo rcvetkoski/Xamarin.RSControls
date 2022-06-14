@@ -176,13 +176,14 @@ namespace Xamarin.RSControls.iOS.Controls
                 this.HasArrow = true;
             }
 
-            setMargins();
-
             //Constraints
             dialogStack.TranslatesAutoresizingMaskIntoConstraints = false;
 
             // Set size
             setSize(position);
+
+            // Set margins
+            setMargins();
 
             // Set position
             setDialogPosition();
@@ -357,7 +358,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 widthConstraint = dialogStack.WidthAnchor.ConstraintEqualTo(this.WidthAnchor, 1f, - (LeftMargin + RightMargin));
                 //widthConstraint.Priority = 1000f;
                 widthConstraint.Active = true;
-                this.HasArrow = false;
+                if(RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left || RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
+                    this.HasArrow = false;
             }
             else if (this.Width == -2)//Wrap Content
             {
@@ -379,7 +381,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 heightConstraint = dialogStack.HeightAnchor.ConstraintEqualTo(this.HeightAnchor, 1f, - (TopMargin + BottomMargin));
                 //heightConstraint.Priority = 1000f;
                 heightConstraint.Active = true;
-                this.HasArrow = false;
+                if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top || RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
+                    this.HasArrow = false;
             }
             else if (this.Height == -2)//Wrap Content
             {
@@ -546,10 +549,13 @@ namespace Xamarin.RSControls.iOS.Controls
                     if(projectedPositionRight <= maxXPositionAllowed)
                     {
                         // Switch side
-                        DialogView.ArrowSide = RSPopupPositionSideEnum.Right;
-                        dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 20, 0, 10);
-                        dialogStack.LayoutIfNeeded();
-
+                        if(HasArrow)
+                        {
+                            DialogView.ArrowSide = RSPopupPositionSideEnum.Right;
+                            dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 20, 0, 10);
+                            dialogStack.LayoutIfNeeded();
+                        }
+ 
                         var constant = position.Width + dialogStack.Frame.Width;
                         dialogPositionXConstraint.Constant = constant;
                     }
@@ -577,9 +583,12 @@ namespace Xamarin.RSControls.iOS.Controls
                     if (projectedPositionLeft >= minXPositionAllowed)
                     {
                         // Switch side
-                        DialogView.ArrowSide = RSPopupPositionSideEnum.Left;
-                        dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 20);
-                        dialogStack.LayoutIfNeeded();
+                        if(HasArrow)
+                        {
+                            DialogView.ArrowSide = RSPopupPositionSideEnum.Left;
+                            dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 20);
+                            dialogStack.LayoutIfNeeded();
+                        }
 
 
                         var constant = - position.Width - dialogStack.Frame.Width;
@@ -642,10 +651,12 @@ namespace Xamarin.RSControls.iOS.Controls
                     if (projectedPositionTop >= minYPositionAllowed)
                     {
                         // Switch side
-                        DialogView.ArrowSide = RSPopupPositionSideEnum.Top;
-                        dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 10, 10);
-                        dialogStack.LayoutIfNeeded();
-
+                        if(HasArrow)
+                        {
+                            DialogView.ArrowSide = RSPopupPositionSideEnum.Top;
+                            dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 10, 10);
+                            dialogStack.LayoutIfNeeded();
+                        }
 
                         var constant = -position.Height - dialogStack.Frame.Height;
                         dialogPositionYConstraint.Constant = constant;
@@ -673,10 +684,12 @@ namespace Xamarin.RSControls.iOS.Controls
                     if (projectedPositionBottom <= maxYPositionAllowed)
                     {
                         // Switch side
-                        DialogView.ArrowSide = RSPopupPositionSideEnum.Bottom;
-                        dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(20, 10, 0, 10);
-                        dialogStack.LayoutIfNeeded();
-
+                        if(HasArrow)
+                        {
+                            DialogView.ArrowSide = RSPopupPositionSideEnum.Bottom;
+                            dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(20, 10, 0, 10);
+                            dialogStack.LayoutIfNeeded();
+                        }
 
                         var constant = position.Height + dialogStack.Frame.Height;
                         dialogPositionYConstraint.Constant = constant;
