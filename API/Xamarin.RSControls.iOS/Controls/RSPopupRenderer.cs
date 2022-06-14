@@ -127,10 +127,10 @@ namespace Xamarin.RSControls.iOS.Controls
         private void SetupBackgroundView()
         {
             BackgroundView.TranslatesAutoresizingMaskIntoConstraints = false;
-            BackgroundView.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor).Active = true;
-            BackgroundView.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor).Active = true;
-            BackgroundView.TopAnchor.ConstraintEqualTo(this.TopAnchor).Active = true;
-            BackgroundView.BottomAnchor.ConstraintEqualTo(this.BottomAnchor).Active = true;
+            BackgroundView.LeadingAnchor.ConstraintEqualTo(mainView.LeadingAnchor).Active = true;
+            BackgroundView.TrailingAnchor.ConstraintEqualTo(mainView.TrailingAnchor).Active = true;
+            BackgroundView.TopAnchor.ConstraintEqualTo(mainView.TopAnchor).Active = true;
+            BackgroundView.BottomAnchor.ConstraintEqualTo(mainView.BottomAnchor).Active = true;
              
             BackgroundView.BackgroundColor = UIColor.Black.ColorWithAlpha(DimAmount);
         }
@@ -138,6 +138,8 @@ namespace Xamarin.RSControls.iOS.Controls
         //Setup DialogView
         private void SetupDialogView()
         {
+            DialogView.SetBorderFillColor(this.BorderFillColor);
+
             // Set parameters in DialogView subclass used for arrow position
             DialogView.SetRSPopupRenderer(this);
             DialogView.ArrowSide = RSPopupPositionSideEnum;
@@ -194,9 +196,9 @@ namespace Xamarin.RSControls.iOS.Controls
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left && HasArrow)
                 dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 20);
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top && HasArrow)
-                dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(20, 10, 0, 10);
-            else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom && HasArrow)
                 dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 10, 10);
+            else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom && HasArrow)
+                dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(20, 10, 0, 10);
             else
                 dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 10);
         }
@@ -208,8 +210,8 @@ namespace Xamarin.RSControls.iOS.Controls
             buttonsStack.Distribution = UIStackViewDistribution.FillEqually;
             topBorderButtonsStack = new UIView() { BackgroundColor = UIColor.LightGray, TranslatesAutoresizingMaskIntoConstraints = false, Hidden = true };
             buttonsStack.AddSubview(topBorderButtonsStack);
-            topBorderButtonsStack.LeadingAnchor.ConstraintEqualTo(buttonsStack.LeadingAnchor).Active = true;
-            topBorderButtonsStack.TrailingAnchor.ConstraintEqualTo(buttonsStack.TrailingAnchor).Active = true;
+            topBorderButtonsStack.LeadingAnchor.ConstraintEqualTo(buttonsStack.LeadingAnchor, -10).Active = true;
+            topBorderButtonsStack.TrailingAnchor.ConstraintEqualTo(buttonsStack.TrailingAnchor, + 10).Active = true;
             topBorderButtonsStack.HeightAnchor.ConstraintEqualTo(0.5f).Active = true;
 
 
@@ -276,8 +278,31 @@ namespace Xamarin.RSControls.iOS.Controls
             //var convertView = new Extensions.FormsToiosCustomDialogView(CustomView, renderer, this.DialogView);
             var convertView = new Extensions.FormsToNativeInPopup(CustomView, renderer.NativeView, this.dialogStack);
 
+            //// Scroll view
+            //UIScrollView scrollView = new UIScrollView();
+            //scrollView.BackgroundColor = UIColor.Red;
+            //scrollView.TranslatesAutoresizingMaskIntoConstraints = false;
+            //scrollView.AddSubview(convertView);
+
+
             dialogStack.InsertArrangedSubview(convertView, (nuint)dialogStack.ArrangedSubviews.Length - 1);
-            convertView.WidthAnchor.ConstraintEqualTo(dialogStack.WidthAnchor).Active = true;
+
+
+
+            //var w = scrollView.WidthAnchor.ConstraintEqualTo(dialogStack.WidthAnchor);
+            //w.Priority = 999;
+            //w.Active = true;
+
+
+            //scrollView.HeightAnchor.ConstraintLessThanOrEqualTo(200).Active = true;
+            //var h = scrollView.HeightAnchor.ConstraintEqualTo(2000);
+            //h.Priority = 999;
+            //h.Active = true;
+
+
+
+            //convertView.TranslatesAutoresizingMaskIntoConstraints = false;
+            //Extensions.ViewExtensions.EdgeTo(scrollView, convertView, true, true, true, true);
         }
 
         //Set native view 
@@ -754,17 +779,11 @@ namespace Xamarin.RSControls.iOS.Controls
                 SetCustomView();
 
 
-            //// Set bottom margin to Custom view so it will not overlap on DialogView
-            //if(dialogStack.ArrangedSubviews.Length > 0)
-            //    dialogStack.SetCustomSpacing(BorderRadius, dialogStack.ArrangedSubviews[dialogStack.ArrangedSubviews.Length - 2]);
-
-
             UITapGestureRecognizer didTappedOnBackgroundView = new UITapGestureRecognizer((obj) =>
             {
                 Dismiss(true);
                 Dispose();
             });
-
             BackgroundView.AddGestureRecognizer(didTappedOnBackgroundView);
 
             bool animated = true;
@@ -870,13 +889,6 @@ namespace Xamarin.RSControls.iOS.Controls
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-        }
-
-        public void GetDialogSize()
-        {
-            var position = relativeViewAsNativeView.ConvertRectFromView(relativeViewAsNativeView.Bounds, this.mainView);
-
-            Console.WriteLine("d size " + DialogView.Frame + "   pos " + CurrentDialogPosition + " relativeview " + position);
         }
     }
 
@@ -984,6 +996,13 @@ namespace Xamarin.RSControls.iOS.Controls
             shape.ShadowOffset = new CGSize(0f, 5f);
             shape.FillColor = BorderFillColor.ToCGColor();
             Layer.AddSublayer(shape);
+        }
+
+        public void SetBorderFillColor(Color color)
+        {
+            shape.BorderColor = color.ToCGColor();
+            shape.BackgroundColor = color.ToCGColor();
+            shape.FillColor = color.ToCGColor();
         }
 
         public override void Draw(CGRect rect)

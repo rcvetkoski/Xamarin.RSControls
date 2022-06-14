@@ -249,34 +249,62 @@ namespace Xamarin.RSControls.iOS.Extensions
         UIView nativeView;
         UIView parent;
         Forms.SizeRequest sizeRequest;
+        nfloat offsetX;
+        nfloat offsetY;
 
         public FormsToNativeInPopup(Forms.View formsView, UIView nativeView, UIView parent)
         {
             this.formsView = formsView;
             this.nativeView = nativeView;
             this.parent = parent;
-
             this.AddSubview(nativeView);
 
+
+            // Get required size for forms view
+            sizeRequest = formsView.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+
+            offsetX = parent.DirectionalLayoutMargins.Leading + parent.DirectionalLayoutMargins.Trailing;
+            offsetY = parent.DirectionalLayoutMargins.Top + parent.DirectionalLayoutMargins.Bottom;
+
+            // Set nativeView constraints
             nativeView.TranslatesAutoresizingMaskIntoConstraints = false;
             nativeView.WidthAnchor.ConstraintEqualTo(this.WidthAnchor).Active = true;
             nativeView.HeightAnchor.ConstraintEqualTo(this.HeightAnchor).Active = true;
             nativeView.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor).Active = true;
             nativeView.TopAnchor.ConstraintEqualTo(this.TopAnchor).Active = true;
 
-            sizeRequest = formsView.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
 
+            this.BackgroundColor = UIColor.Red;
+
+            // Give size to convertedView so it can be layed out correctly in the uistackview
+            // The prioity here is lower so if parent which is a uistackview is smaller in width, he can fullfill his constraints
             this.TranslatesAutoresizingMaskIntoConstraints = false;
-            this.HeightAnchor.ConstraintEqualTo((nfloat)sizeRequest.Request.Height).Active = true;
-        }
+            var widthConstraint = this.WidthAnchor.ConstraintEqualTo((nfloat)sizeRequest.Request.Width);
+            //widthConstraint.Priority = 999;
+            widthConstraint.Active = true;
 
+            var heightConstraint = this.HeightAnchor.ConstraintEqualTo((nfloat)sizeRequest.Request.Height);
+            heightConstraint.Priority = 999;
+            heightConstraint.Active = true;
+
+            // Layout forms view
+            formsView.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+        }
 
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
-
             //Console.WriteLine("forms " + formsView.Width + " native " + nativeView.Frame.Width + " parent " + parent.Frame.Width);
-            formsView.Layout(new Forms.Rectangle(0, 0, parent.Frame.Width, sizeRequest.Request.Height));
+
+
+            if ((parent.Frame.Width - offsetX) > sizeRequest.Request.Width)
+            {
+                formsView.Layout(new Forms.Rectangle(0, 0, parent.Frame.Width - offsetX, sizeRequest.Request.Height - offsetY));
+            }
+            //else
+            //{
+            //    formsView.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width - offsetX, sizeRequest.Request.Height - offsetY));
+            //}
         }
     }
 }
