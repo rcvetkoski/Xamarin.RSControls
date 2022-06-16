@@ -7,6 +7,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.RSControls.Enums;
+using Xamarin.RSControls.Helpers;
 using Xamarin.RSControls.Interfaces;
 using Xamarin.RSControls.iOS.Controls;
 
@@ -19,6 +20,8 @@ namespace Xamarin.RSControls.iOS.Controls
         public UIView BackgroundView { get; set; }
         public RSDialogView DialogView { get; set; }
         private UIStackView dialogStack { get; set; }
+        private RSUIStackView2 contentStack { get; set; }
+        private RSUIScrollView contentScrollView { get; set; }
         private UIStackView buttonsStack { get; set; }
         private UIView topBorderButtonsStack;
         public RSButtonNative positiveButton;
@@ -114,9 +117,17 @@ namespace Xamarin.RSControls.iOS.Controls
             titleText = new UILabel();
             dialogStack.AddArrangedSubview(titleText);
 
+            // Content scrollView
+            contentScrollView = new RSUIScrollView();
+            dialogStack.AddArrangedSubview(contentScrollView);
+
+            // ContentStack
+            contentStack = new RSUIStackView2();
+            contentScrollView.AddSubview(contentStack);
+
             //Message
             messageLabel = new UILabel();
-            dialogStack.AddArrangedSubview(messageLabel);
+            contentStack.AddArrangedSubview(messageLabel);
 
             //Buttons stack
             buttonsStack = new UIStackView();
@@ -165,7 +176,6 @@ namespace Xamarin.RSControls.iOS.Controls
             dialogStack.LayoutMarginsRelativeArrangement = true;
             dialogStack.InsetsLayoutMarginsFromSafeArea = false;
 
-
             // Get Relative view position including eventual margins
             CGRect position = new CGRect();
             if (RelativeView != null)
@@ -204,7 +214,26 @@ namespace Xamarin.RSControls.iOS.Controls
                 dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 10);
         }
 
-        //Create buttons stack
+        // Set ContentStack
+        private void setContentStack()
+        {
+            contentStack.Distribution = UIStackViewDistribution.Fill;
+            contentStack.Axis = UILayoutConstraintAxis.Vertical;
+            contentStack.Spacing = 5;
+            contentStack.TranslatesAutoresizingMaskIntoConstraints = false;
+            contentStack.CenterXAnchor.ConstraintEqualTo(contentScrollView.CenterXAnchor).Active = true;
+            Extensions.ViewExtensions.EdgeTo(contentScrollView, contentStack, true, true, true, true);
+        }
+
+        // Set Content scrollView
+        private void setContentScrollView()
+        {
+            contentScrollView.ShowsVerticalScrollIndicator = false;
+            contentScrollView.TranslatesAutoresizingMaskIntoConstraints = false;
+            contentScrollView.SetContentCompressionResistancePriority(1, UILayoutConstraintAxis.Vertical);
+        }
+
+        //Create buttons 
         private void CreateButtonsStack()
         {
             buttonsStack.Axis = UILayoutConstraintAxis.Horizontal;
@@ -248,6 +277,7 @@ namespace Xamarin.RSControls.iOS.Controls
             titleText.Font = UIFont.BoldSystemFontOfSize(fontSize);
             titleText.TextAlignment = UITextAlignment.Center;
             titleText.UserInteractionEnabled = false;
+            titleText.SetContentCompressionResistancePriority(1000, UILayoutConstraintAxis.Vertical);
             //titleText.ScrollEnabled = false;
             //titleText.TextContainerInset = new UIEdgeInsets(10, 5, 0, 5);
         }
@@ -266,6 +296,7 @@ namespace Xamarin.RSControls.iOS.Controls
             messageLabel.UserInteractionEnabled = false;
             messageLabel.LineBreakMode = UILineBreakMode.WordWrap;
             messageLabel.Lines = 0;
+            messageLabel.SetContentCompressionResistancePriority(1000, UILayoutConstraintAxis.Horizontal);
 
             //messageLabel.ScrollEnabled = false;
             //messageLabel.TextContainer.LineBreakMode = UILineBreakMode.WordWrap;
@@ -276,34 +307,15 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             var renderer = Platform.CreateRenderer(CustomView);
             Platform.SetRenderer(CustomView, renderer);
+            Page currentPage = TypeExtensions.GetParentPage(CustomView);
+            CustomView.Parent = currentPage; //Assign parent page otherwise it doesnt belong to a page
+            CustomView.BindingContext = CustomView.BindingContext;
+
             //var convertView = new Extensions.FormsToiosCustomDialogView(CustomView, renderer, this.DialogView);
-            var convertView = new Extensions.FormsToNativeInPopup(CustomView, renderer.NativeView, this.dialogStack);
 
-            //// Scroll view
-            //UIScrollView scrollView = new UIScrollView();
-            //scrollView.BackgroundColor = UIColor.Red;
-            //scrollView.TranslatesAutoresizingMaskIntoConstraints = false;
-            //scrollView.AddSubview(convertView);
-
-
-            dialogStack.InsertArrangedSubview(convertView, (nuint)dialogStack.ArrangedSubviews.Length - 1);
-
-
-
-            //var w = scrollView.WidthAnchor.ConstraintEqualTo(dialogStack.WidthAnchor);
-            //w.Priority = 999;
-            //w.Active = true;
-
-
-            //scrollView.HeightAnchor.ConstraintLessThanOrEqualTo(200).Active = true;
-            //var h = scrollView.HeightAnchor.ConstraintEqualTo(2000);
-            //h.Priority = 999;
-            //h.Active = true;
-
-
-
-            //convertView.TranslatesAutoresizingMaskIntoConstraints = false;
-            //Extensions.ViewExtensions.EdgeTo(scrollView, convertView, true, true, true, true);
+            // Convert view
+            var convertView = new Extensions.FormsToNativeInPopup(CustomView, renderer.NativeView, dialogStack, this);
+            contentStack.AddArrangedSubview(convertView);
         }
 
         //Set native view 
@@ -788,6 +800,8 @@ namespace Xamarin.RSControls.iOS.Controls
             SetupDialogStack();
             SetTitle(Title, 18);
             SetMessage(Message, 12);
+            setContentStack();
+            setContentScrollView();
             if (CustomView != null)
                 SetCustomView();
 
@@ -1078,6 +1092,38 @@ namespace Xamarin.RSControls.iOS.Controls
             //bezierPath.AddLineTo(new CGPoint(x: Frame.Width / 2, y: Frame.Height));
             //bezierPath.AddLineTo(new CGPoint(x: Frame.Width / 2 - (nfloat)10.0, y: Frame.Height - (nfloat)10.0));
             //shape.Path = bezierPath.CGPath;
+        }
+    }
+
+
+    /// <summary>
+    /// Used only to set IntrinsicContentSize so it can be properly layed out in the uistackview
+    /// </summary>
+    public class RSUIScrollView : UIScrollView
+    {
+        public override CGSize IntrinsicContentSize
+        {
+            get
+            {
+                return new CGSize(this.Subviews[0].Frame.Width, this.Subviews[0].Frame.Height);
+            }
+        }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            InvalidateIntrinsicContentSize();
+        }
+    }
+
+
+    public class RSUIStackView2 : UIStackView
+    {
+        public override bool PointInside(CGPoint point, UIEvent uievent)
+        {
+            var lol = base.PointInside(point, uievent);
+            return base.PointInside(point, uievent);
         }
     }
 }

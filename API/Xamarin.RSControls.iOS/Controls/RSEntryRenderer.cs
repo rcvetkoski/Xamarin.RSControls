@@ -160,8 +160,8 @@ namespace Xamarin.RSControls.iOS.Controls
                     errorLabel.Position = new CGPoint(leadingViewWidth + leftRightSpacingLabels + errorLabel.Size.Width / 2,
                                                       this.Frame.Height - errorLabel.Size.Height / 2 - 1);
 
-                    border.BorderColor = UIColor.SystemRedColor.CGColor;
-                    floatingHint.ForegroundColor = UIColor.SystemRedColor.CGColor;
+                    border.BorderColor = UIColor.SystemRed.CGColor;
+                    floatingHint.ForegroundColor = UIColor.SystemRed.CGColor;
                 }
                 else
                 {
@@ -231,7 +231,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.borderColor = this.rSControl.BorderColor.ToUIColor();
             this.borderWidth = rSControl.BorderWidth;
             this.borderWidthFocused = rSControl.BorderWidth + 1;
-            this.activeColor = UIColor.SystemBlueColor;
+            this.activeColor = UIColor.SystemBlue;
             this.textSpacingFromBorderTop = 8;
             this.textSpacingFromBorderBottom = 14;
             leftRightSpacingLabels = 13;
@@ -826,7 +826,7 @@ namespace Xamarin.RSControls.iOS.Controls
                                                rSControl.ErrorStyle.FontFamily != null ? rSControl.ErrorStyle.FontFamily : this.Font.FamilyName)
             {
                 FontSize = 12,
-                ForegroundColor = UIColor.SystemRedColor.CGColor,
+                ForegroundColor = UIColor.SystemRed.CGColor,
                 Opacity = 1.0f,
                 ContentsScale = UIScreen.MainScreen.Scale,
                 AllowsEdgeAntialiasing = true,
@@ -903,9 +903,9 @@ namespace Xamarin.RSControls.iOS.Controls
 
             if (this.counter > this.counterMaxLength)
             {
-                counterLabel.ForegroundColor = UIColor.SystemRedColor.CGColor;
-                this.border.BorderColor = UIColor.SystemRedColor.CGColor;
-                this.floatingHint.ForegroundColor = UIColor.SystemRedColor.CGColor;
+                counterLabel.ForegroundColor = UIColor.SystemRed.CGColor;
+                this.border.BorderColor = UIColor.SystemRed.CGColor;
+                this.floatingHint.ForegroundColor = UIColor.SystemRed.CGColor;
                 this.errorEnabled = true;
             }
             else
@@ -926,8 +926,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 }
                 else
                 {
-                    this.border.BorderColor = UIColor.SystemRedColor.CGColor;
-                    this.floatingHint.ForegroundColor = UIColor.SystemRedColor.CGColor;
+                    this.border.BorderColor = UIColor.SystemRed.CGColor;
+                    this.floatingHint.ForegroundColor = UIColor.SystemRed.CGColor;
                     this.errorEnabled = true;
                 }
             }

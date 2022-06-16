@@ -246,25 +246,32 @@ namespace Xamarin.RSControls.iOS.Extensions
     public class FormsToNativeInPopup : UIView
     {
         Forms.View formsView;
-        UIView nativeView;
-        UIView parent;
+        UIStackView dialogStack;
+        UIView rSPopupRenderer;
         Forms.SizeRequest sizeRequest;
         nfloat offsetX;
         nfloat offsetY;
+        NSLayoutConstraint widthConstraint;
+        NSLayoutConstraint heightConstraint;
+        UIView nativeView;
 
-        public FormsToNativeInPopup(Forms.View formsView, UIView nativeView, UIView parent)
+        public FormsToNativeInPopup(Forms.View formsView, UIView nativeView, UIStackView dialogStack, UIView rSPopupRenderer)
         {
-            this.formsView = formsView;
             this.nativeView = nativeView;
-            this.parent = parent;
+            this.formsView = formsView;
+            this.dialogStack = dialogStack;
+            this.rSPopupRenderer = rSPopupRenderer;
+            var lol = nativeView.Superview;
             this.AddSubview(nativeView);
+            
 
+            // Take into account dialogStack's DirectionalLayoutMargins when calculating custom view sizeRequest
+            offsetX = rSPopupRenderer.DirectionalLayoutMargins.Leading + rSPopupRenderer.DirectionalLayoutMargins.Bottom;
+            offsetY = dialogStack.DirectionalLayoutMargins.Top + dialogStack.DirectionalLayoutMargins.Bottom;
 
             // Get required size for forms view
-            sizeRequest = formsView.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+            sizeRequest = formsView.Measure(rSPopupRenderer.Frame.Width - offsetX, rSPopupRenderer.Frame.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
 
-            offsetX = parent.DirectionalLayoutMargins.Leading + parent.DirectionalLayoutMargins.Trailing;
-            offsetY = parent.DirectionalLayoutMargins.Top + parent.DirectionalLayoutMargins.Bottom;
 
             // Set nativeView constraints
             nativeView.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -274,18 +281,18 @@ namespace Xamarin.RSControls.iOS.Extensions
             nativeView.TopAnchor.ConstraintEqualTo(this.TopAnchor).Active = true;
 
 
-            this.BackgroundColor = UIColor.Red;
-
             // Give size to convertedView so it can be layed out correctly in the uistackview
             // The prioity here is lower so if parent which is a uistackview is smaller in width, he can fullfill his constraints
+            // Widht
             this.TranslatesAutoresizingMaskIntoConstraints = false;
-            var widthConstraint = this.WidthAnchor.ConstraintEqualTo((nfloat)sizeRequest.Request.Width);
-            //widthConstraint.Priority = 999;
+            widthConstraint = this.WidthAnchor.ConstraintEqualTo(0);
+            widthConstraint.Priority = 999;
             widthConstraint.Active = true;
-
-            var heightConstraint = this.HeightAnchor.ConstraintEqualTo((nfloat)sizeRequest.Request.Height);
+            // Height
+            heightConstraint = this.HeightAnchor.ConstraintEqualTo(0);
             heightConstraint.Priority = 999;
             heightConstraint.Active = true;
+
 
             // Layout forms view
             formsView.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
@@ -294,17 +301,29 @@ namespace Xamarin.RSControls.iOS.Extensions
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
-            //Console.WriteLine("forms " + formsView.Width + " native " + nativeView.Frame.Width + " parent " + parent.Frame.Width);
 
+            // Take into account dialogStack's DirectionalLayoutMargins when calculating custom view sizeRequest
+            offsetX = dialogStack.DirectionalLayoutMargins.Leading + dialogStack.DirectionalLayoutMargins.Trailing;
+            offsetY = dialogStack.DirectionalLayoutMargins.Top + dialogStack.DirectionalLayoutMargins.Bottom;
 
-            if ((parent.Frame.Width - offsetX) > sizeRequest.Request.Width)
-            {
-                formsView.Layout(new Forms.Rectangle(0, 0, parent.Frame.Width - offsetX, sizeRequest.Request.Height - offsetY));
-            }
-            //else
-            //{
-            //    formsView.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width - offsetX, sizeRequest.Request.Height - offsetY));
-            //}
+            // Get and Set required size for forms view
+            sizeRequest = formsView.Measure(rSPopupRenderer.Frame.Width - offsetX, rSPopupRenderer.Frame.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
+
+            // Layout forms view
+            formsView.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+
+            // Update FormsToNativeInPopup width and height constrains
+            widthConstraint.Constant = (nfloat)sizeRequest.Request.Width;
+            heightConstraint.Constant = (nfloat)sizeRequest.Request.Height;
+        }
+
+        public override bool PointInside(CGPoint point, UIEvent uievent)
+        {
+            var v = this.nativeView.Subviews[0];
+            var lll = v.Focused;
+            v.BecomeFirstResponder();
+            var lol = nativeView.PointInside(point, uievent);
+            return base.PointInside(point, uievent);
         }
     }
 }
