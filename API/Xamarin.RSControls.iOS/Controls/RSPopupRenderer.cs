@@ -67,7 +67,6 @@ namespace Xamarin.RSControls.iOS.Controls
         private NSLayoutConstraint thisBottomConstraint;
         private NSObject keyboardObserverOpen;
         private NSObject keyboardObserverClose;
-
         public CGRect CurrentDialogPosition = new CGRect();
 
 
@@ -323,11 +322,37 @@ namespace Xamarin.RSControls.iOS.Controls
             Platform.SetRenderer(contentPage, renderer);
 
             // Convert view
-            var convertView = new Extensions.FormsToNativeInPopup(contentPage.Content, renderer.NativeView, dialogStack, this);
+            var convertView = new Extensions.FormsToNativeInPopup(contentPage.Content, renderer.NativeView, dialogStack, mainView);
             contentStack.AddArrangedSubview(convertView);
 
             //set keyboard KeyboardObservers
             AddKeyboardObservers();
+
+            // Update layout needed for further calculations in layoutsubviews
+            convertView.LayoutIfNeeded();
+        }
+
+        // Set arrow true or false
+        private void shouldShowArrow()
+        {
+            // Width
+            if (this.Width == -1)//Match Parent
+            {
+                if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left || RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
+                    HasArrow = false;
+                else
+                    HasArrow = true;
+            }
+            // Height
+            else if (this.Height == -1)//Match Parent
+            {
+                if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top || RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
+                    HasArrow = false;
+                else
+                    HasArrow = true;
+            }
+            else
+                HasArrow = true;
         }
 
 
@@ -439,8 +464,12 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             keyboardObserverOpen = UIKeyboard.Notifications.ObserveDidShow((handler, args) =>
             {
-                thisBottomConstraint.Constant = -args.FrameEnd.Height + mainView.SafeAreaInsets.Bottom;
-                dialogStack.LayoutIfNeeded();
+                var posDialogBottomY = Math.Abs(dialogStack.ConvertRectFromView(dialogStack.Bounds, this.mainView).Y) + dialogStack.Frame.Height;
+                if (posDialogBottomY > args.FrameEnd.Y)
+                {
+                    thisBottomConstraint.Constant = -args.FrameEnd.Height + mainView.SafeAreaInsets.Bottom;
+                    dialogStack.LayoutIfNeeded();
+                }
             });
 
             keyboardObserverClose = UIKeyboard.Notifications.ObserveDidHide((handler, args) =>
@@ -507,8 +536,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 widthConstraint = dialogStack.WidthAnchor.ConstraintEqualTo(this.WidthAnchor, 1f, - (LeftMargin + RightMargin));
                 //widthConstraint.Priority = 1000f;
                 widthConstraint.Active = true;
-                if(RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left || RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
-                    this.HasArrow = false;
             }
             else if (this.Width == -2)//Wrap Content
             {
@@ -530,8 +557,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 heightConstraint = dialogStack.HeightAnchor.ConstraintEqualTo(this.HeightAnchor, 1f, - (TopMargin + BottomMargin));
                 //heightConstraint.Priority = 1000f;
                 heightConstraint.Active = true;
-                if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top || RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
-                    this.HasArrow = false;
             }
             else if (this.Height == -2)//Wrap Content
             {
@@ -702,7 +727,7 @@ namespace Xamarin.RSControls.iOS.Controls
                         {
                             DialogView.ArrowSide = RSPopupPositionSideEnum.Right;
                             dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 20, 0, 10);
-                            dialogStack.LayoutIfNeeded();
+                            //dialogStack.LayoutIfNeeded();
                         }
  
                         var constant = position.Width + dialogStack.Frame.Width;
@@ -736,7 +761,7 @@ namespace Xamarin.RSControls.iOS.Controls
                         {
                             DialogView.ArrowSide = RSPopupPositionSideEnum.Left;
                             dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 20);
-                            dialogStack.LayoutIfNeeded();
+                            //dialogStack.LayoutIfNeeded();
                         }
 
 
@@ -804,7 +829,7 @@ namespace Xamarin.RSControls.iOS.Controls
                         {
                             DialogView.ArrowSide = RSPopupPositionSideEnum.Top;
                             dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 10, 10);
-                            dialogStack.LayoutIfNeeded();
+                            //dialogStack.LayoutIfNeeded();
                         }
 
                         var constant = -position.Height - dialogStack.Frame.Height;
@@ -837,7 +862,7 @@ namespace Xamarin.RSControls.iOS.Controls
                         {
                             DialogView.ArrowSide = RSPopupPositionSideEnum.Bottom;
                             dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(20, 10, 0, 10);
-                            dialogStack.LayoutIfNeeded();
+                            //dialogStack.LayoutIfNeeded();
                         }
 
                         var constant = position.Height + dialogStack.Frame.Height;
@@ -846,6 +871,13 @@ namespace Xamarin.RSControls.iOS.Controls
                     // Just move it to the bottom so it ends within screen bounds if height not bigger than that
                     else
                     {
+                        // Hide arrow since there is no enough space on screen
+                        if (HasArrow)
+                        {
+                            HasArrow = false;
+                            dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 10);
+                        }
+
                         var constant = dialogStack.Frame.Height + maxYPositionAllowed - projectedPositionBottom;
                         dialogPositionYConstraint.Constant = (nfloat)constant;
                     }
@@ -928,17 +960,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 DialogView.yConstrainConstant = dialogPositionYConstraint.Constant;
                 DialogView.Draw(DialogView.Bounds);
             }
-
-
-            //if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Center)
-            //{
-            //    //dialogStack.LayoutIfNeeded();
-
-            //    if (keyboardShown)
-            //        dialogPositionYConstraint.Constant = -dialogStack.Frame.Y;
-            //    else
-            //        dialogPositionYConstraint.Constant = 0;
-            //}
         }
 
         public void ShowPopup()
@@ -993,15 +1014,14 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 var position = relativeViewAsNativeView.ConvertRectFromView(relativeViewAsNativeView.Bounds, this.mainView);
 
+                // layout pending layout updates
+                dialogStack.LayoutIfNeeded();
 
-                if (dialogStack.Frame.Width == 0 || dialogStack.Frame.Height == 0)
-                    dialogStack.LayoutIfNeeded();
 
-
+                shouldShowArrow();
                 setMargins();
                 setConstraintPosition(position);
                 updatePosition(position);
-                //Console.WriteLine("test " + CurrentDialogPosition);
             }
         }
 

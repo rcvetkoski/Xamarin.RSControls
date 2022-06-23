@@ -247,30 +247,31 @@ namespace Xamarin.RSControls.iOS.Extensions
     {
         Forms.View formsView;
         UIStackView dialogStack;
-        UIView rSPopupRenderer;
+        UIView mainView;
         Forms.SizeRequest sizeRequest;
         nfloat offsetX;
         nfloat offsetY;
         NSLayoutConstraint widthConstraint;
         NSLayoutConstraint heightConstraint;
-        UIView nativeView;
+        CGSize maxSize;
 
-        public FormsToNativeInPopup(Forms.View formsView, UIView nativeView, UIStackView dialogStack, UIView rSPopupRenderer)
+        public FormsToNativeInPopup(Forms.View formsView, UIView nativeView, UIStackView dialogStack, UIView mainView)
         {
-            this.nativeView = nativeView;
             this.formsView = formsView;
             this.dialogStack = dialogStack;
-            this.rSPopupRenderer = rSPopupRenderer;
-            var lol = nativeView.Superview;
+            this.mainView = mainView;
             this.AddSubview(nativeView);
-            
+
+            // Set max size
+            maxSize = new CGSize(mainView.Frame.Width - mainView.SafeAreaInsets.Left - mainView.SafeAreaInsets.Right,
+                                 mainView.Frame.Height - mainView.SafeAreaInsets.Top - mainView.SafeAreaInsets.Bottom);
 
             // Take into account dialogStack's DirectionalLayoutMargins when calculating custom view sizeRequest
-            offsetX = rSPopupRenderer.DirectionalLayoutMargins.Leading + rSPopupRenderer.DirectionalLayoutMargins.Bottom;
+            offsetX = dialogStack.DirectionalLayoutMargins.Leading + dialogStack.DirectionalLayoutMargins.Bottom;
             offsetY = dialogStack.DirectionalLayoutMargins.Top + dialogStack.DirectionalLayoutMargins.Bottom;
 
             // Get required size for forms view
-            sizeRequest = formsView.Measure(rSPopupRenderer.Frame.Width - offsetX, rSPopupRenderer.Frame.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
+            sizeRequest = formsView.Measure(maxSize.Width - offsetX, maxSize.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
 
 
             // Set nativeView constraints
@@ -307,8 +308,12 @@ namespace Xamarin.RSControls.iOS.Extensions
             offsetX = dialogStack.DirectionalLayoutMargins.Leading + dialogStack.DirectionalLayoutMargins.Trailing;
             offsetY = dialogStack.DirectionalLayoutMargins.Top + dialogStack.DirectionalLayoutMargins.Bottom;
 
+            // Set max size
+            maxSize = new CGSize(mainView.Frame.Width - mainView.SafeAreaInsets.Left - mainView.SafeAreaInsets.Right,
+                                 mainView.Frame.Height - mainView.SafeAreaInsets.Top - mainView.SafeAreaInsets.Bottom);
+
             // Get and Set required size for forms view
-            sizeRequest = formsView.Measure(rSPopupRenderer.Frame.Width - offsetX, rSPopupRenderer.Frame.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
+            sizeRequest = formsView.Measure(maxSize.Width - offsetX, maxSize.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
 
             // Layout forms view
             (formsView.Parent as Forms.ContentPage).Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
@@ -317,15 +322,6 @@ namespace Xamarin.RSControls.iOS.Extensions
             // Update FormsToNativeInPopup width and height constrains
             widthConstraint.Constant = (nfloat)sizeRequest.Request.Width;
             heightConstraint.Constant = (nfloat)sizeRequest.Request.Height;
-        }
-
-        public override bool PointInside(CGPoint point, UIEvent uievent)
-        {
-            var v = this.nativeView.Subviews[0];
-            var lll = v.Focused;
-            v.BecomeFirstResponder();
-            var lol = nativeView.PointInside(point, uievent);
-            return base.PointInside(point, uievent);
         }
     }
 }
