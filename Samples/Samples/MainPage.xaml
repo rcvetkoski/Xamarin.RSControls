@@ -16,9 +16,9 @@
         <local:MainPageViewModel></local:MainPageViewModel>
     </ContentPage.BindingContext>
 
-
-
     <ScrollView Orientation="Vertical">
+
+
         <StackLayout x:Name="stack" Margin="0">
 
             <!--<rs:RSSvgImage x:Name="svg" Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg" HorizontalOptions="Center"/>
@@ -52,6 +52,8 @@
 
 
            <Button BackgroundColor="Blue" Text="popup" Clicked="Button_Clicked_3" VerticalOptions="EndAndExpand" HorizontalOptions="Center"/>
+
+            <Entry Placeholder="lol"/>
 
             <!--<Button HorizontalOptions="Center">
             <Button.ImageSource>
@@ -146,6 +148,8 @@
         <rs:RSEnumPicker x:TypeArguments="enums:DateSelectionModeEnum" Placeholder="Enum picker" RSPopupStyleEnum="RsPopopStyle"/>
         <rs:RSPicker Placeholder="Picker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" RSPopupStyleEnum="Native"/>
         <Picker ItemsSource="{Binding ListPicker}"/>-->
+
+                        <Entry Placeholder="lol"/>
 
         </StackLayout>
 

@@ -295,6 +295,7 @@ namespace Xamarin.RSControls.iOS.Extensions
 
 
             // Layout forms view
+            (formsView.Parent as Forms.ContentPage).Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
             formsView.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
         }
 
@@ -310,6 +311,7 @@ namespace Xamarin.RSControls.iOS.Extensions
             sizeRequest = formsView.Measure(rSPopupRenderer.Frame.Width - offsetX, rSPopupRenderer.Frame.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
 
             // Layout forms view
+            (formsView.Parent as Forms.ContentPage).Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
             formsView.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
 
             // Update FormsToNativeInPopup width and height constrains

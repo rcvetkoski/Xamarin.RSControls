@@ -20,7 +20,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public UIView BackgroundView { get; set; }
         public RSDialogView DialogView { get; set; }
         private UIStackView dialogStack { get; set; }
-        private RSUIStackView2 contentStack { get; set; }
+        private UIStackView contentStack { get; set; }
         private RSUIScrollView contentScrollView { get; set; }
         private UIStackView buttonsStack { get; set; }
         private UIView topBorderButtonsStack;
@@ -64,7 +64,9 @@ namespace Xamarin.RSControls.iOS.Controls
         private NSLayoutConstraint heightConstraint; 
         private NSLayoutConstraint dialogPositionXConstraint;
         private NSLayoutConstraint dialogPositionYConstraint;
-
+        private NSLayoutConstraint thisBottomConstraint;
+        private NSObject keyboardObserverOpen;
+        private NSObject keyboardObserverClose;
 
         public CGRect CurrentDialogPosition = new CGRect();
 
@@ -98,7 +100,9 @@ namespace Xamarin.RSControls.iOS.Controls
             this.LeadingAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.LeadingAnchor).Active = true;
             this.TrailingAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.TrailingAnchor).Active = true;
             this.TopAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.TopAnchor).Active = true;
-            this.BottomAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.BottomAnchor).Active = true;
+            thisBottomConstraint = this.BottomAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.BottomAnchor);
+            thisBottomConstraint.Priority = 999;
+            thisBottomConstraint.Active = true;
 
 
             //BackgroundView
@@ -122,7 +126,7 @@ namespace Xamarin.RSControls.iOS.Controls
             dialogStack.AddArrangedSubview(contentScrollView);
 
             // ContentStack
-            contentStack = new RSUIStackView2();
+            contentStack = new UIStackView();
             contentScrollView.AddSubview(contentStack);
 
             //Message
@@ -238,24 +242,31 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             buttonsStack.Axis = UILayoutConstraintAxis.Horizontal;
             buttonsStack.Distribution = UIStackViewDistribution.FillEqually;
+
+            // Separator
             topBorderButtonsStack = new UIView() { BackgroundColor = UIColor.LightGray, TranslatesAutoresizingMaskIntoConstraints = false, Hidden = true };
             buttonsStack.AddSubview(topBorderButtonsStack);
             topBorderButtonsStack.LeadingAnchor.ConstraintEqualTo(buttonsStack.LeadingAnchor, -10).Active = true;
             topBorderButtonsStack.TrailingAnchor.ConstraintEqualTo(buttonsStack.TrailingAnchor, + 10).Active = true;
             topBorderButtonsStack.HeightAnchor.ConstraintEqualTo(0.5f).Active = true;
 
-
+            // Buttons
             positiveButton = new RSButtonNative(RSPopupButtonTypeEnum.Positive, UIColor.SystemBlue) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(8, 10, 8, 10) };
             neutralButton = new RSButtonNative(RSPopupButtonTypeEnum.Neutral, UIColor.SystemBlue) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(8, 10, 8, 10) };
             destructiveButton = new RSButtonNative(RSPopupButtonTypeEnum.Destructive, UIColor.SystemBlue) { Hidden = true, ContentEdgeInsets = new UIEdgeInsets(8, 10, 8, 10) };
+
+            positiveButton.SetContentCompressionResistancePriority(1000, UILayoutConstraintAxis.Horizontal);
+            neutralButton.SetContentCompressionResistancePriority(1000, UILayoutConstraintAxis.Horizontal);
+            destructiveButton.SetContentCompressionResistancePriority(1000, UILayoutConstraintAxis.Horizontal);
+
 
             // Set minimum button height
             positiveButton.TranslatesAutoresizingMaskIntoConstraints = false;
             neutralButton.TranslatesAutoresizingMaskIntoConstraints = false;
             destructiveButton.TranslatesAutoresizingMaskIntoConstraints = false;
-            positiveButton.HeightAnchor.ConstraintGreaterThanOrEqualTo(40).Active = true;
-            neutralButton.HeightAnchor.ConstraintGreaterThanOrEqualTo(40).Active = true;
-            destructiveButton.HeightAnchor.ConstraintGreaterThanOrEqualTo(40).Active = true;
+            positiveButton.HeightAnchor.ConstraintGreaterThanOrEqualTo(42).Active = true;
+            neutralButton.HeightAnchor.ConstraintGreaterThanOrEqualTo(42).Active = true;
+            destructiveButton.HeightAnchor.ConstraintGreaterThanOrEqualTo(42).Active = true;
 
 
             buttonsStack.AddArrangedSubview(destructiveButton);
@@ -305,17 +316,143 @@ namespace Xamarin.RSControls.iOS.Controls
         //Set and add custom view 
         private void SetCustomView()
         {
-            var renderer = Platform.CreateRenderer(CustomView);
-            Platform.SetRenderer(CustomView, renderer);
-            Page currentPage = TypeExtensions.GetParentPage(CustomView);
-            CustomView.Parent = currentPage; //Assign parent page otherwise it doesnt belong to a page
-            CustomView.BindingContext = CustomView.BindingContext;
-
-            //var convertView = new Extensions.FormsToiosCustomDialogView(CustomView, renderer, this.DialogView);
+            // Set page to custom view
+            ContentPage contentPage = new ContentPage();
+            contentPage.Content = CustomView;
+            var renderer = Platform.CreateRenderer(contentPage);
+            Platform.SetRenderer(contentPage, renderer);
 
             // Convert view
-            var convertView = new Extensions.FormsToNativeInPopup(CustomView, renderer.NativeView, dialogStack, this);
+            var convertView = new Extensions.FormsToNativeInPopup(contentPage.Content, renderer.NativeView, dialogStack, this);
             contentStack.AddArrangedSubview(convertView);
+
+            //set keyboard KeyboardObservers
+            AddKeyboardObservers();
+        }
+
+
+        /*UIView getCurrentFirstResponder(UIView view)
+        //{
+        //    if (view == null)
+        //        return null;
+
+        //    if (view.IsFirstResponder)
+        //        return view;
+
+        //    UIView res = null;
+
+        //    foreach (UIView item in view.Subviews)
+        //    {
+        //        var v = getCurrentFirstResponder(item);
+
+        //        if (v != null && v.IsFirstResponder)
+        //            res = v;
+        //    }
+
+        //    return res;
+        //}
+        //void AddListener(VisualElement element)
+        //{
+        //    if (!(element is Layout<View>) || (element as Layout<View>).Children.Count <= 0)
+        //    {
+        //        element.Focused += Element_Focused;
+        //    }
+        //    else
+        //    {
+        //        foreach (var item in (element as Layout<View>).Children)
+        //        {
+        //            AddListener(item);
+        //        }
+        //    }
+        //}
+        //void RemoveListener(VisualElement element)
+        //{
+        //    if (!(element is Layout<View>) || (element as Layout<View>).Children.Count <= 0)
+        //    {
+        //        element.Focused -= Element_Focused;
+        //    }
+        //    else
+        //    {
+        //        foreach (var item in (element as Layout<View>).Children)
+        //        {
+        //            RemoveListener(item);
+        //        }
+        //    }
+        //}
+        //private void translateDialogBack()
+        //{
+        //    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+        //    {
+        //        this.DialogView.Transform = CGAffineTransform.MakeTranslation(0, 0);
+        //    }, null);
+        //}
+        //private void translateDialog()
+        //{
+        //    var focusedElement = getCurrentFirstResponder(contentStack);
+        //    if (focusedElement == null)
+        //        return;
+
+
+        //    var minYPositionAllowed = this.Frame.Top + TopMargin;
+        //    var position = focusedElement.ConvertRectFromView(focusedElement.Bounds, mainView);
+        //    var posYTop = inverseNumber(position.Y);
+        //    var posYBottom = Math.Abs(position.Y) + position.Height;
+
+
+        //    if (posYBottom > mainView.Frame.Height)
+        //        posYBottom -= posYBottom - mainView.Frame.Height;
+
+
+        //    nfloat pos = this.DialogView.Transform.Ty;
+
+        //    if(keyboardHeight > 0 && posYBottom > keyboardHeight)
+        //        pos = keyboardHeight - (nfloat)posYBottom;
+        //    else if (posYTop < minYPositionAllowed)
+        //    {
+        //        pos = minYPositionAllowed - (nfloat)posYTop;
+        //    }
+
+
+        //    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+        //    {
+        //        this.DialogView.Transform = CGAffineTransform.MakeTranslation(0, pos);
+        //    }, null);
+        //}
+        //private void Element_Focused(object sender, FocusEventArgs e)
+        //{
+        //    //translateDialog();
+        //}
+        //private nfloat inverseNumber(nfloat number)
+        //{
+        //    if (number > 0)
+        //        number = -number;
+        //    else
+        //        number = (nfloat)Math.Abs(number);
+
+        //    return number;
+        //}
+        //private nfloat keyboardHeight = 0;
+        */
+
+        // Keyboard show and hide Observers
+        private void AddKeyboardObservers()
+        {
+            keyboardObserverOpen = UIKeyboard.Notifications.ObserveDidShow((handler, args) =>
+            {
+                thisBottomConstraint.Constant = -args.FrameEnd.Height + mainView.SafeAreaInsets.Bottom;
+                dialogStack.LayoutIfNeeded();
+            });
+
+            keyboardObserverClose = UIKeyboard.Notifications.ObserveDidHide((handler, args) =>
+            {
+                thisBottomConstraint.Constant = 0;
+                dialogStack.LayoutIfNeeded();
+            });
+        }
+        private void RemoveKeyboardObservers()
+        {
+            NSNotificationCenter.DefaultCenter.RemoveObserver(keyboardObserverOpen);
+            NSNotificationCenter.DefaultCenter.RemoveObserver(keyboardObserverClose);
         }
 
         //Set native view 
@@ -791,6 +928,17 @@ namespace Xamarin.RSControls.iOS.Controls
                 DialogView.yConstrainConstant = dialogPositionYConstraint.Constant;
                 DialogView.Draw(DialogView.Bounds);
             }
+
+
+            //if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Center)
+            //{
+            //    //dialogStack.LayoutIfNeeded();
+
+            //    if (keyboardShown)
+            //        dialogPositionYConstraint.Constant = -dialogStack.Frame.Y;
+            //    else
+            //        dialogPositionYConstraint.Constant = 0;
+            //}
         }
 
         public void ShowPopup()
@@ -845,6 +993,7 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 var position = relativeViewAsNativeView.ConvertRectFromView(relativeViewAsNativeView.Bounds, this.mainView);
 
+
                 if (dialogStack.Frame.Width == 0 || dialogStack.Frame.Height == 0)
                     dialogStack.LayoutIfNeeded();
 
@@ -892,6 +1041,11 @@ namespace Xamarin.RSControls.iOS.Controls
         // Dismiss Animation part
         public void Dismiss(bool animated)
         {
+            if (CustomView != null)
+            {
+                RemoveKeyboardObservers();
+            }
+
             if (animated)
             {
                 IsAnimating = true;
@@ -1114,16 +1268,6 @@ namespace Xamarin.RSControls.iOS.Controls
             base.LayoutSubviews();
 
             InvalidateIntrinsicContentSize();
-        }
-    }
-
-
-    public class RSUIStackView2 : UIStackView
-    {
-        public override bool PointInside(CGPoint point, UIEvent uievent)
-        {
-            var lol = base.PointInside(point, uievent);
-            return base.PointInside(point, uievent);
         }
     }
 }
