@@ -17,9 +17,9 @@ namespace Xamarin.RSControls.iOS.Controls
     public class RSPopupRenderer : UIView, IDialogPopup
     {
         private UIView mainView { get; set; }
-        public UIView BackgroundView { get; set; }
-        public RSDialogView DialogView { get; set; }
-        private UIStackView dialogStack { get; set; }
+        private UIView BackgroundView { get; set; }
+        private RSDialogView DialogView { get; set; }
+        private TestClass dialogStack { get; set; }
         private UIStackView contentStack { get; set; }
         private RSUIScrollView contentScrollView { get; set; }
         private UIStackView buttonsStack { get; set; }
@@ -68,7 +68,11 @@ namespace Xamarin.RSControls.iOS.Controls
         private NSObject keyboardObserverOpen;
         private NSObject keyboardObserverClose;
         public CGRect CurrentDialogPosition = new CGRect();
-
+        private UIView convertView;
+        private NSLayoutConstraint customViewWidthConstraint;
+        private NSLayoutConstraint customViewHeightConstraint;
+        private ContentPage customViewContentPage;
+        private nfloat KeyboardPosition;
 
         //Constructor
         public RSPopupRenderer() : base()
@@ -113,7 +117,7 @@ namespace Xamarin.RSControls.iOS.Controls
             AddSubview(DialogView);
 
             //DialogStack
-            dialogStack = new UIStackView();
+            dialogStack = new TestClass();
             DialogView.AddSubview(dialogStack);
 
             //Title
@@ -316,20 +320,73 @@ namespace Xamarin.RSControls.iOS.Controls
         private void SetCustomView()
         {
             // Set page to custom view
-            ContentPage contentPage = new ContentPage();
-            contentPage.Content = CustomView;
-            var renderer = Platform.CreateRenderer(contentPage);
-            Platform.SetRenderer(contentPage, renderer);
+            customViewContentPage = new ContentPage();
+            customViewContentPage.Content = CustomView;
+            var renderer = Platform.CreateRenderer(customViewContentPage);
+            Platform.SetRenderer(customViewContentPage, renderer);
 
             // Convert view
-            var convertView = new Extensions.FormsToNativeInPopup(contentPage.Content, renderer.NativeView, dialogStack, mainView);
+            convertView = new Extensions.FormsToNativeInPopup(customViewContentPage.Content, renderer.NativeView, dialogStack, mainView);
             contentStack.AddArrangedSubview(convertView);
+
+
+
+            //// Give size to convertedView so it can be layed out correctly in the uistackview
+            //// The prioity here is lower so if parent which is a uistackview is smaller in width, he can fullfill his constraints
+            //// Widht
+            //renderer.NativeView.TranslatesAutoresizingMaskIntoConstraints = false;
+            //customViewWidthConstraint = renderer.NativeView.WidthAnchor.ConstraintEqualTo(0);
+            //customViewWidthConstraint.Priority = 999;
+            //customViewWidthConstraint.Active = true;
+            //// Height
+            //customViewHeightConstraint = renderer.NativeView.HeightAnchor.ConstraintEqualTo(0);
+            //customViewHeightConstraint.Priority = 999;
+            //customViewHeightConstraint.Active = true;
+
+
+            //// Take into account dialogStack's DirectionalLayoutMargins when calculating custom view sizeRequest
+            //var offsetX = dialogStack.DirectionalLayoutMargins.Leading + dialogStack.DirectionalLayoutMargins.Bottom;
+            //var offsetY = dialogStack.DirectionalLayoutMargins.Top + dialogStack.DirectionalLayoutMargins.Bottom;
+
+
+            //// Set max size
+            //var maxSize = new CGSize(mainView.Frame.Width - mainView.SafeAreaInsets.Left - mainView.SafeAreaInsets.Right,
+            //                     mainView.Frame.Height - mainView.SafeAreaInsets.Top - mainView.SafeAreaInsets.Bottom);
+
+            //// Get required size for forms view
+            //var sizeRequest = customViewContentPage.Content.Measure(maxSize.Width - offsetX, maxSize.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
+
+            //// Layout forms view
+            //customViewContentPage.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+            //customViewContentPage.Content.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+
+            //contentStack.AddArrangedSubview(renderer.NativeView);
+
 
             //set keyboard KeyboardObservers
             AddKeyboardObservers();
+        }
 
-            // Update layout needed for further calculations in layoutsubviews
-            convertView.LayoutIfNeeded();
+        private void layoutCustomView()
+        {
+            // Take into account dialogStack's DirectionalLayoutMargins when calculating custom view sizeRequest
+            var offsetX = dialogStack.DirectionalLayoutMargins.Leading + dialogStack.DirectionalLayoutMargins.Trailing;
+            var offsetY = dialogStack.DirectionalLayoutMargins.Top + dialogStack.DirectionalLayoutMargins.Bottom;
+
+            // Set max size
+            var maxSize = new CGSize(mainView.Frame.Width - mainView.SafeAreaInsets.Left - mainView.SafeAreaInsets.Right,
+                                 mainView.Frame.Height - mainView.SafeAreaInsets.Top - mainView.SafeAreaInsets.Bottom);
+
+            // Get and Set required size for forms view
+            var sizeRequest = customViewContentPage.Content.Measure(maxSize.Width - offsetX, maxSize.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
+
+            // Layout forms view
+            customViewContentPage.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+            customViewContentPage.Content.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+
+            // Update FormsToNativeInPopup width and height constrains
+            customViewWidthConstraint.Constant = (nfloat)sizeRequest.Request.Width;
+            customViewHeightConstraint.Constant = (nfloat)sizeRequest.Request.Height;
         }
 
         // Set arrow true or false
@@ -467,6 +524,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 var posDialogBottomY = Math.Abs(dialogStack.ConvertRectFromView(dialogStack.Bounds, this.mainView).Y) + dialogStack.Frame.Height;
                 if (posDialogBottomY > args.FrameEnd.Y)
                 {
+                    KeyboardPosition = args.FrameEnd.Y;
                     thisBottomConstraint.Constant = -args.FrameEnd.Height + mainView.SafeAreaInsets.Bottom;
                     dialogStack.LayoutIfNeeded();
                 }
@@ -474,6 +532,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             keyboardObserverClose = UIKeyboard.Notifications.ObserveDidHide((handler, args) =>
             {
+                KeyboardPosition = mainView.Frame.Bottom;
                 thisBottomConstraint.Constant = 0;
                 dialogStack.LayoutIfNeeded();
             });
@@ -736,6 +795,15 @@ namespace Xamarin.RSControls.iOS.Controls
                     // Just move it to the right so it ends within screen bounds if widht not bigger than that
                     else
                     {
+                        // Hide arrow since there is no enough space on screen
+                        if (HasArrow)
+                        {
+                            HasArrow = false;
+                            dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 10);
+                            //dialogStack.SetNeedsDisplay();
+                            //dialogStack.LayoutIfNeeded();
+                        }
+
                         var constant = minXPositionAllowed - projectedPositionLeft;
                         dialogPositionXConstraint.Constant = (nfloat)constant;
                     }
@@ -771,6 +839,15 @@ namespace Xamarin.RSControls.iOS.Controls
                     // Just move it to the left so it ends within screen bounds if widht not bigger than that
                     else
                     {
+                        // Hide arrow since there is no enough space on screen
+                        if (HasArrow)
+                        {
+                            HasArrow = false;
+                            dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 10);
+                            //dialogStack.SetNeedsDisplay();
+                            //dialogStack.LayoutIfNeeded();
+                        }
+
                         var constant = maxXPositionAllowed - projectedPositionRight;
                         dialogPositionXConstraint.Constant = (nfloat)constant;
                     }
@@ -815,14 +892,14 @@ namespace Xamarin.RSControls.iOS.Controls
             // Y Position for Bottom
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
             {
-                projectedPositionTop = CurrentDialogPosition.Y - dialogStack.Frame.Height;
+                projectedPositionTop = CurrentDialogPosition.Y - position.Height - dialogStack.Frame.Height;
                 projectedPositionBottom = CurrentDialogPosition.Y + dialogStack.Frame.Height;
 
                 // If bottom space not available check if top is ok if not just move it to the top
                 if (projectedPositionBottom > maxYPositionAllowed)
                 {
                     // Check if top space enough, if ok than place it at top side
-                    if (projectedPositionTop >= minYPositionAllowed)
+                    if (projectedPositionTop >= minYPositionAllowed && (projectedPositionTop + dialogStack.Frame.Height) < KeyboardPosition)
                     {
                         // Switch side
                         if(HasArrow)
@@ -838,6 +915,13 @@ namespace Xamarin.RSControls.iOS.Controls
                     // Just move it to the top so it ends within screen bounds if height not bigger than that
                     else
                     {
+                        // Hide arrow since there is no enough space on screen
+                        if (HasArrow)
+                        {
+                            HasArrow = false;
+                            dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 10);
+                        }
+
                         var constant = maxYPositionAllowed - projectedPositionBottom;
                         dialogPositionYConstraint.Constant = (nfloat)constant;
                     }
@@ -849,7 +933,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
             {
                 projectedPositionTop = CurrentDialogPosition.Y - dialogStack.Frame.Height;
-                projectedPositionBottom = CurrentDialogPosition.Y + dialogStack.Frame.Height;
+                projectedPositionBottom = CurrentDialogPosition.Y + position.Height + dialogStack.Frame.Height;
 
                 // If top space not available check if bottom is ok if not just move it to the bottom
                 if (projectedPositionTop < minYPositionAllowed)
@@ -862,6 +946,7 @@ namespace Xamarin.RSControls.iOS.Controls
                         {
                             DialogView.ArrowSide = RSPopupPositionSideEnum.Bottom;
                             dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(20, 10, 0, 10);
+                            //dialogStack.SetNeedsDisplay();
                             //dialogStack.LayoutIfNeeded();
                         }
 
@@ -876,11 +961,27 @@ namespace Xamarin.RSControls.iOS.Controls
                         {
                             HasArrow = false;
                             dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 10);
+                            //dialogStack.SetNeedsDisplay();
+                            //dialogStack.LayoutIfNeeded();
                         }
 
-                        var constant = dialogStack.Frame.Height + maxYPositionAllowed - projectedPositionBottom;
+                        var constant = dialogStack.Frame.Height + maxYPositionAllowed - (projectedPositionBottom - position.Height);
                         dialogPositionYConstraint.Constant = (nfloat)constant;
                     }
+                }
+                else if(CurrentDialogPosition.Y > KeyboardPosition)
+                {
+                    // Hide arrow since there is no enough space on screen
+                    if (HasArrow)
+                    {
+                        HasArrow = false;
+                        dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 10);
+                        //dialogStack.SetNeedsDisplay();
+                        //dialogStack.LayoutIfNeeded();
+                    }
+
+                    var constant = KeyboardPosition - CurrentDialogPosition.Y;
+                    dialogPositionYConstraint.Constant = (nfloat)constant;
                 }
                 else
                     dialogPositionYConstraint.Constant = 0;
@@ -914,6 +1015,11 @@ namespace Xamarin.RSControls.iOS.Controls
                         var constant = minYPositionAllowed - projectedPositionTop;
                         dialogPositionYConstraint.Constant = (nfloat)constant;
                     }
+                    else if ((CurrentDialogPosition.Y + dialogStack.Frame.Height / 2) > KeyboardPosition)
+                    {
+                        var constant = KeyboardPosition - (CurrentDialogPosition.Y + dialogStack.Frame.Height / 2);
+                        dialogPositionYConstraint.Constant = (nfloat)constant;
+                    }
                     else
                         dialogPositionYConstraint.Constant = 0;
                 }
@@ -922,32 +1028,15 @@ namespace Xamarin.RSControls.iOS.Controls
             // Y Position for Over
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
             {
-                // If on bottom side move to top if needed else keep position
-                if ((Math.Abs(position.Y) + position.Height / 2) >= mainView.Frame.Height / 2)
-                {
-                    projectedPositionBottom = CurrentDialogPosition.Y + dialogStack.Frame.Height;
+                projectedPositionBottom = CurrentDialogPosition.Y + dialogStack.Frame.Height;
 
-                    if (projectedPositionBottom > maxYPositionAllowed)
-                    {
-                        var constant = projectedPositionBottom - maxYPositionAllowed;
-                        dialogPositionYConstraint.Constant = -(nfloat)constant;
-                    }
-                    else
-                        dialogPositionYConstraint.Constant = 0;
-                }
-                // If on top side move to bottom if needed else keep position
-                else if ((Math.Abs(position.Y) + position.Height / 2) < mainView.Frame.Height / 2)
+                if (projectedPositionBottom > maxYPositionAllowed)
                 {
-                    projectedPositionTop = CurrentDialogPosition.Y - dialogStack.Frame.Height;
-
-                    if (projectedPositionTop < minYPositionAllowed)
-                    {
-                        var constant = minYPositionAllowed - projectedPositionTop;
-                        dialogPositionYConstraint.Constant = (nfloat)constant;
-                    }
-                    else
-                        dialogPositionYConstraint.Constant = 0;
+                    var constant = projectedPositionBottom - maxYPositionAllowed;
+                    dialogPositionYConstraint.Constant = -(nfloat)constant;
                 }
+                else
+                    dialogPositionYConstraint.Constant = 0;
             }
 
 
@@ -973,6 +1062,8 @@ namespace Xamarin.RSControls.iOS.Controls
             setContentScrollView();
             if (CustomView != null)
                 SetCustomView();
+
+            KeyboardPosition = mainView.Frame.Bottom;
 
 
             UITapGestureRecognizer didTappedOnBackgroundView = new UITapGestureRecognizer((obj) =>
@@ -1010,9 +1101,14 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             base.LayoutSubviews();
 
+
             if (RelativeView != null)
             {
                 var position = relativeViewAsNativeView.ConvertRectFromView(relativeViewAsNativeView.Bounds, this.mainView);
+
+                //if(CustomView != null)
+                //    layoutCustomView();
+
 
                 // layout pending layout updates
                 dialogStack.LayoutIfNeeded();
@@ -1025,6 +1121,7 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
+         
         private void AddBorder(UIButton button)
         {
             //var topBorder = new UIView() { BackgroundColor = UIColor.LightGray, TranslatesAutoresizingMaskIntoConstraints = false };
@@ -1258,9 +1355,6 @@ namespace Xamarin.RSControls.iOS.Controls
             // Set the path
             shape.Path = bezierPath.CGPath;
 
-
-
-
             ////Draw the pointer bootom
             //bezierPath.MoveTo(new CGPoint(x: Frame.Width / 2 + 10, y: Frame.Height - (nfloat)10.0));
             //bezierPath.AddLineTo(new CGPoint(x: Frame.Width / 2, y: Frame.Height));
@@ -1288,6 +1382,19 @@ namespace Xamarin.RSControls.iOS.Controls
             base.LayoutSubviews();
 
             InvalidateIntrinsicContentSize();
+        }
+    }
+
+
+
+
+    public class TestClass : UIStackView
+    {
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            this.Frame.ToString();
         }
     }
 }

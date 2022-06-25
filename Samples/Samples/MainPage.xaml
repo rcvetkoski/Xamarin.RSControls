@@ -46,14 +46,11 @@
 
             <Button BackgroundColor="Green" Text="popup" Clicked="Button_Clicked_2" VerticalOptions="Start" HorizontalOptions="End" Margin="0 ,0 , 10,0"/>
 
-            <Button BackgroundColor="Green" Text="popup" Clicked="Button_Clicked_2" VerticalOptions="Start" HorizontalOptions="Center" Margin="0 ,0 , 90,0"/>
-
-            <Button BackgroundColor="Pink" Text="popup" Clicked="Button_Clicked_2" VerticalOptions="Start" HorizontalOptions="Center" Margin="10, 10, 150, 10"/>
-
-
            <Button BackgroundColor="Blue" Text="popup" Clicked="Button_Clicked_3" VerticalOptions="EndAndExpand" HorizontalOptions="Center"/>
 
-            <Entry Placeholder="lol"/>
+           <Button BackgroundColor="Red" Text="popup" Clicked="Button_Clicked_1" VerticalOptions="Start" HorizontalOptions="Start" Margin="20,0,0,120"/>
+
+
 
             <!--<Button HorizontalOptions="Center">
             <Button.ImageSource>
@@ -114,8 +111,8 @@
             </ListView.ItemTemplate>
         </ListView>-->
 
-            <Button Text="Add" Clicked="AddItem"/>
-            <Button Text="Remove" Clicked="RemoveItem"/>
+            <!--<Button Text="Add" Clicked="AddItem"/>
+            <Button Text="Remove" Clicked="RemoveItem"/>-->
 
 
             <!--<rs:RSEntry Placeholder="No left icon" ShadowEnabled="True" RSEntryStyle="FilledBorder" HasRighIconSeparator="True" HasLeftIconSeparator="False" Helper="Helper message!" IsPassword="False">
@@ -148,8 +145,6 @@
         <rs:RSEnumPicker x:TypeArguments="enums:DateSelectionModeEnum" Placeholder="Enum picker" RSPopupStyleEnum="RsPopopStyle"/>
         <rs:RSPicker Placeholder="Picker" ItemsSource="{Binding ListPicker}" DisplayMemberPath="Name" RSPopupStyleEnum="Native"/>
         <Picker ItemsSource="{Binding ListPicker}"/>-->
-
-                        <Entry Placeholder="lol"/>
 
         </StackLayout>
 

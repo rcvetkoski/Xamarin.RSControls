@@ -273,7 +273,7 @@ namespace Samples
             //label.Margin = new Thickness(10, 10, 10, 10);
 
             //rsPopup.SetMargin(10, 10, 10, 10);
-            rsPopup.SetCustomView(label);
+            //rsPopup.SetCustomView(label);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0.5f);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Top);
@@ -292,7 +292,10 @@ namespace Samples
             rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0.5f);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Left);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
+
+            RSEntry rSEntry = new RSEntry() { Placeholder = "MEHE bidi"};
+            //rsPopup.SetCustomView(rSEntry);
             //rsPopup.SetBorderRadius(10);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
@@ -312,11 +315,11 @@ namespace Samples
             rsPopup.SetDimAmount(1f);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Center);
             //rsPopup.SetBorderRadius(10);
-            rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive, new Command(() =>
-            {
+            //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive, new Command(() =>
+            //{
                 
-            }));
-            rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
+            //}));
+            //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
 
             StackLayout stack = new StackLayout() { BackgroundColor = Color.Pink, Margin = new Thickness(10, 10, 10, 10)};
             StackLayout stack2 = new StackLayout() { BackgroundColor = Color.Red, Margin = new Thickness(10, 10, 10, 30), VerticalOptions = LayoutOptions.EndAndExpand };
