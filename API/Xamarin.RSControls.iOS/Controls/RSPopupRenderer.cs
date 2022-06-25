@@ -569,7 +569,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 neutralButton.Command = command;
                 neutralButton.Hidden = false;
                 neutralButton.SetTitle(title, UIControlState.Normal);
-                neutralButton.SetTitleColor(UIColor.SystemBlueColor, UIControlState.Normal);
+                neutralButton.SetTitleColor(UIColor.SystemBlue, UIControlState.Normal);
                 AddBorder(neutralButton);
             }
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Destructive)
