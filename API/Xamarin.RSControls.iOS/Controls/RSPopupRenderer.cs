@@ -524,7 +524,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 var posDialogBottomY = Math.Abs(dialogStack.ConvertRectFromView(dialogStack.Bounds, this.mainView).Y) + dialogStack.Frame.Height;
                 if (posDialogBottomY > args.FrameEnd.Y)
                 {
-                    KeyboardPosition = args.FrameEnd.Y;
+                    KeyboardPosition = args.FrameEnd.Height;
                     thisBottomConstraint.Constant = -args.FrameEnd.Height + mainView.SafeAreaInsets.Bottom;
                     dialogStack.LayoutIfNeeded();
                 }
@@ -532,7 +532,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             keyboardObserverClose = UIKeyboard.Notifications.ObserveDidHide((handler, args) =>
             {
-                KeyboardPosition = mainView.Frame.Bottom;
+                KeyboardPosition = 0;
                 thisBottomConstraint.Constant = 0;
                 dialogStack.LayoutIfNeeded();
             });
@@ -899,7 +899,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (projectedPositionBottom > maxYPositionAllowed)
                 {
                     // Check if top space enough, if ok than place it at top side
-                    if (projectedPositionTop >= minYPositionAllowed && (projectedPositionTop + dialogStack.Frame.Height) < KeyboardPosition)
+                    if (projectedPositionTop >= minYPositionAllowed && (projectedPositionTop + dialogStack.Frame.Height) < (this.Frame.Bottom - KeyboardPosition))
                     {
                         // Switch side
                         if(HasArrow)
@@ -969,7 +969,7 @@ namespace Xamarin.RSControls.iOS.Controls
                         dialogPositionYConstraint.Constant = (nfloat)constant;
                     }
                 }
-                else if(CurrentDialogPosition.Y > KeyboardPosition)
+                else if(CurrentDialogPosition.Y > (this.Frame.Bottom - KeyboardPosition))
                 {
                     // Hide arrow since there is no enough space on screen
                     if (HasArrow)
@@ -1063,7 +1063,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if (CustomView != null)
                 SetCustomView();
 
-            KeyboardPosition = mainView.Frame.Bottom;
+            KeyboardPosition = 0;
 
 
             UITapGestureRecognizer didTappedOnBackgroundView = new UITapGestureRecognizer((obj) =>
