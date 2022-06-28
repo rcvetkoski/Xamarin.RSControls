@@ -6,7 +6,7 @@ using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Controls
 {
-    public class RSPopup : View
+    public class RSPopup
     {
         public IDialogPopup service;
         public string Title { get; set; }

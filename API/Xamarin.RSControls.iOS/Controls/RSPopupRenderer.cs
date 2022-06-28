@@ -1075,6 +1075,7 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
+        // Create and open popup
         public void ShowPopup()
         {
             SetupBackgroundView();
@@ -1102,21 +1103,14 @@ namespace Xamarin.RSControls.iOS.Controls
             BackgroundView.AddGestureRecognizer(didTappedOnBackgroundView);
 
             bool animated = true;
-            this.BackgroundView.Alpha = 0;
-            this.DialogView.Alpha = 0;
-            this.DialogView.Transform = CGAffineTransform.MakeScale(1.1f, 1.1f);
 
 
+
+            // Animation
             if (animated)
             {
-                UIView.Animate(0.33, () => { this.BackgroundView.Alpha = 0.66f; });
 
-                UIView.Animate(0.33, () => { this.DialogView.Alpha = 1f; });
-
-
-                UIView.Animate(0.33, 0,
-                               UIViewAnimationOptions.CurveEaseInOut,
-                               () => { this.DialogView.Transform = CGAffineTransform.MakeScale(1.0f, 1.0f); }, null);
+                //RSPopupAnimation(DialogView, RSPopupAnimationEnum.Expanding, true);
             }
             else
             {
@@ -1124,6 +1118,116 @@ namespace Xamarin.RSControls.iOS.Controls
                 this.DialogView.Center = new CGPoint(this.Center.X, this.Frame.Height - this.DialogView.Frame.Height / 2);
             }
         }
+
+        // Call animation block here, this method is called once all layout has finished and is ready to draw
+        public override void Draw(CGRect rect)
+        {
+            base.Draw(rect);
+
+            // Animate 
+            RSPopupAnimation(DialogView, RSPopupAnimationEnum.BottomToTop, true);
+        }
+
+
+        public void RSPopupAnimation(UIView view, RSPopupAnimationEnum animationType, bool isShowing)
+        {
+            if(animationType == RSPopupAnimationEnum.CurveEaseInOut)
+            {
+                if (isShowing)
+                {
+                    this.BackgroundView.Alpha = 0;
+                    this.DialogView.Alpha = 0;
+                    this.DialogView.Transform = CGAffineTransform.MakeScale(1.1f, 1.1f);
+
+                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+                    {
+                        this.BackgroundView.Alpha = 0.66f;
+                        this.DialogView.Alpha = 1f;
+                        this.DialogView.Transform = CGAffineTransform.MakeScale(1.0f, 1.0f);
+                    }, null);
+                }
+                else
+                {
+                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut,
+                                   () =>
+                                   {
+                                       this.BackgroundView.Alpha = 0f;
+                                       this.DialogView.Alpha = 0f;
+                                       this.DialogView.Transform = CGAffineTransform.MakeScale(1f, 1.1f);
+
+                                   },
+                                   () => { this.RemoveFromSuperview(); IsAnimating = false; });
+                }
+            }
+
+            if (animationType == RSPopupAnimationEnum.Expanding)
+            {
+                if (isShowing)
+                {
+                    this.BackgroundView.Alpha = 0;
+                    this.DialogView.Alpha = 0;
+                    this.DialogView.Transform = CGAffineTransform.MakeScale(0.2f, 0.2f);
+
+                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+                    {
+                        this.BackgroundView.Alpha = 0.66f;
+                        this.DialogView.Alpha = 1f;
+                        this.DialogView.Transform = CGAffineTransform.MakeScale(1.0f, 1.0f);
+                    }, null
+                    );
+                }
+                else
+                {
+                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut,
+                                   () =>
+                                   {
+                                       this.BackgroundView.Alpha = 0f;
+                                       this.DialogView.Alpha = 0f;
+                                       this.DialogView.Transform = CGAffineTransform.MakeScale(0.2f, 0.2f);
+
+                                   },
+                                   () => { this.RemoveFromSuperview(); IsAnimating = false; });
+                }
+            }
+
+            if (animationType == RSPopupAnimationEnum.BottomToTop)
+            {
+                if (isShowing)
+                {
+                    this.BackgroundView.Alpha = 0;
+                    this.DialogView.Alpha = 0;
+                    this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, dialogStack.Frame.Height);
+
+                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+                    {
+                        this.BackgroundView.Alpha = 0.66f;
+                        this.DialogView.Alpha = 1f;
+                        this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, 0);
+                    }, null
+                    );
+                }
+                else
+                {
+                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut,
+                                   () =>
+                                   {
+                                       this.BackgroundView.Alpha = 0f;
+                                       this.DialogView.Alpha = 0f;
+                                       this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, dialogStack.Frame.Height);
+                                   },
+                                   () => { this.RemoveFromSuperview(); IsAnimating = false; });
+                }
+            }
+
+        }
+        public enum RSPopupAnimationEnum
+        {
+            BottomToTop = 1,
+            TopToBottom = 2,
+            Expanding = 3,
+            CurveEaseInOut = 0
+        }
+
 
         public override void LayoutSubviews()
         {
@@ -1194,14 +1298,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if (animated)
             {
                 IsAnimating = true;
-                UIView.Animate(0.33, () => { this.BackgroundView.Alpha = 0f; }, () => { });
-                UIView.Animate(0.33, 0,
-                               UIViewAnimationOptions.CurveEaseInOut,
-                               () => { this.DialogView.Transform = CGAffineTransform.MakeScale(1f, 1.1f); }, null);
-                UIView.Animate(0.33,
-                               () => { this.DialogView.Alpha = 0f; },
-                               () => { this.RemoveFromSuperview(); IsAnimating = false; });
-
+                RSPopupAnimation(DialogView, RSPopupAnimationEnum.BottomToTop, false);
             }
             else
             {

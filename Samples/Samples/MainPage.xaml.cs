@@ -296,7 +296,7 @@ namespace Samples
             //rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0.5f);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Over);
 
             Entry rSEntry = new Entry() { Text = "MEHE wf", Margin = new Thickness(0, 0, 0, 0)};
             rsPopup.SetCustomView(rSEntry);
