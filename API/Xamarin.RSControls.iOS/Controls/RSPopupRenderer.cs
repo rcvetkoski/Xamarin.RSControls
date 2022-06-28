@@ -16,10 +16,10 @@ namespace Xamarin.RSControls.iOS.Controls
 {
     public class RSPopupRenderer : UIView, IDialogPopup
     {
-        public UIView mainView { get; set; }
+        private UIView mainView { get; set; }
         private UIView BackgroundView { get; set; }
         private RSDialogView DialogView { get; set; }
-        public TestClass dialogStack { get; set; }
+        private TestClass dialogStack { get; set; }
         private UIStackView contentStack { get; set; }
         private RSUIScrollView contentScrollView { get; set; }
         private UIStackView buttonsStack { get; set; }
@@ -58,7 +58,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public int BottomMargin { get; set; }
         public float RSPopupOffsetX { get; set; }
         public float RSPopupOffsetY { get; set; }
-        public UIView relativeViewAsNativeView;
+        private UIView relativeViewAsNativeView;
         private int buttonsCount;
         private NSLayoutConstraint widthConstraint;
         private NSLayoutConstraint heightConstraint; 
@@ -72,13 +72,11 @@ namespace Xamarin.RSControls.iOS.Controls
         private NSLayoutConstraint customViewHeightConstraint;
         private ContentPage customViewContentPage;
         private nfloat KeyboardPosition;
-        public nfloat heightTemp;
-
-        NSLayoutConstraint dialogViewBottomConstraint;
-        NSLayoutConstraint dialogViewTopConstraint;
-        NSLayoutConstraint dialogViewLeadingConstraint;
-        NSLayoutConstraint dialogViewTrailingConstraint;
-        nfloat arrowSize;
+        private NSLayoutConstraint dialogViewBottomConstraint;
+        private NSLayoutConstraint dialogViewTopConstraint;
+        private NSLayoutConstraint dialogViewLeadingConstraint;
+        private NSLayoutConstraint dialogViewTrailingConstraint;
+        private nfloat arrowSize;
 
 
         //Constructor
@@ -126,7 +124,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
             //DialogStack
             dialogStack = new TestClass();
-            dialogStack.parent = this;
             DialogView.AddSubview(dialogStack);
 
             //Title
@@ -382,7 +379,6 @@ namespace Xamarin.RSControls.iOS.Controls
             //customViewContentPage.Content.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
 
             contentStack.AddArrangedSubview(renderer.NativeView);
-
 
             //set keyboard KeyboardObservers
             AddKeyboardObservers();
@@ -711,7 +707,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(relativeViewAsNativeView.TopAnchor);
                 dialogPositionYConstraint.Active = true;
             }
-            else
+            else if(RSPopupPositionSideEnum == RSPopupPositionSideEnum.Center)
             {
                 dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor);
                 dialogPositionXConstraint.Active = true;
@@ -1133,28 +1129,21 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             base.LayoutSubviews();
 
-
             if (RelativeView != null)
             {
                 // layout pending layout updates
                 dialogStack.LayoutIfNeeded();
-
 
                 var position = relativeViewAsNativeView.ConvertRectFromView(relativeViewAsNativeView.Bounds, this.mainView);
 
                 if (CustomView != null)
                     layoutCustomView();
 
-
-                heightTemp = dialogStack.Frame.Height;
-
-                shouldShowArrow();
-
                 dialogViewBottomConstraint.Constant = 0;
                 dialogViewTopConstraint.Constant = 0;
                 dialogViewLeadingConstraint.Constant = 0;
                 dialogViewTrailingConstraint.Constant = 0;
-
+                shouldShowArrow();
                 setConstraintPosition(position);
                 updatePosition(position);
             }
@@ -1429,21 +1418,9 @@ namespace Xamarin.RSControls.iOS.Controls
 
     public class TestClass : UIStackView
     {
-        public RSPopupRenderer parent;
-
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
-
-            this.Frame.ToString();
-
-            //Console.WriteLine("dialog " + parent.heightTemp + "   this   " + this.Frame.Height);
-            
-
-            var position = parent.relativeViewAsNativeView.ConvertRectFromView(parent.relativeViewAsNativeView.Bounds, parent.mainView);
-
-            //parent.setConstraintPosition(position);
-            //parent.updatePosition(position);
         }
     }
 }

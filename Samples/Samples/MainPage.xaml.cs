@@ -268,15 +268,17 @@ namespace Samples
                 "nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis eni",
               };
 
-            Entry entry = new Entry() { Placeholder = "Entry ger" };
+            Entry entry = new Entry() { Placeholder = "Entry ger wefe" };
+            entry.Margin = new Thickness(60, 60, 10, 10);
+
             label.BackgroundColor = Color.Yellow;
-            label.Margin = new Thickness(10, 10, 10, 10);
+            //label.Margin = new Thickness(10, 10, 10, 10);
 
             //rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetCustomView(label);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0.5f);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
             rsPopup.SetBorderRadius(10);
             rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
@@ -294,7 +296,7 @@ namespace Samples
             //rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0.5f);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
 
             Entry rSEntry = new Entry() { Text = "MEHE wf", Margin = new Thickness(0, 0, 0, 0)};
             rsPopup.SetCustomView(rSEntry);
@@ -315,7 +317,7 @@ namespace Samples
             //rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(1f);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Top);
             //rsPopup.SetBorderRadius(10);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive, new Command(() =>
             //{
@@ -324,9 +326,9 @@ namespace Samples
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
 
             StackLayout stack = new StackLayout() { BackgroundColor = Color.Pink, Margin = new Thickness(10, 10, 10, 10)};
-            StackLayout stack2 = new StackLayout() { BackgroundColor = Color.Red, Margin = new Thickness(10, 10, 10, 30), VerticalOptions = LayoutOptions.EndAndExpand };
+            StackLayout stack2 = new StackLayout() { BackgroundColor = Color.Red, Margin = new Thickness(10, 10, 10, 10), VerticalOptions = LayoutOptions.EndAndExpand };
             RSNumericUpDown weight = new RSNumericUpDown() { Placeholder = "Weight", Margin = new Thickness(10, 10, 10, 10)};
-            RSNumericUpDown reps = new RSNumericUpDown() { Placeholder = "Reps", Margin = new Thickness(10, 0, 10, 10) };
+            RSNumericUpDown reps = new RSNumericUpDown() { Placeholder = "Reps", Margin = new Thickness(10, 10, 10, 10) };
             Entry entry = new Entry() { Text = "lol" };
             stack2.Children.Add(weight);
             stack.Children.Add(stack2);
