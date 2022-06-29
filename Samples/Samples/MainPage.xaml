@@ -19,7 +19,7 @@
     <ScrollView Orientation="Vertical">
 
 
-        <StackLayout x:Name="stack" Margin="0">
+        <StackLayout x:Name="stack" Margin="0, 500, 0, 0">
 
             <!--<rs:RSSvgImage x:Name="svg" Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg" HorizontalOptions="Center"/>
             <ImageButton BackgroundColor="White" Padding="2" BorderColor="WhiteSmoke" BorderWidth="2" x:Name="testButton" HorizontalOptions="Center" WidthRequest="40" HeightRequest="40">

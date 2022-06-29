@@ -436,110 +436,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 HasArrow = true;
         }
 
-
-        /*UIView getCurrentFirstResponder(UIView view)
-        //{
-        //    if (view == null)
-        //        return null;
-
-        //    if (view.IsFirstResponder)
-        //        return view;
-
-        //    UIView res = null;
-
-        //    foreach (UIView item in view.Subviews)
-        //    {
-        //        var v = getCurrentFirstResponder(item);
-
-        //        if (v != null && v.IsFirstResponder)
-        //            res = v;
-        //    }
-
-        //    return res;
-        //}
-        //void AddListener(VisualElement element)
-        //{
-        //    if (!(element is Layout<View>) || (element as Layout<View>).Children.Count <= 0)
-        //    {
-        //        element.Focused += Element_Focused;
-        //    }
-        //    else
-        //    {
-        //        foreach (var item in (element as Layout<View>).Children)
-        //        {
-        //            AddListener(item);
-        //        }
-        //    }
-        //}
-        //void RemoveListener(VisualElement element)
-        //{
-        //    if (!(element is Layout<View>) || (element as Layout<View>).Children.Count <= 0)
-        //    {
-        //        element.Focused -= Element_Focused;
-        //    }
-        //    else
-        //    {
-        //        foreach (var item in (element as Layout<View>).Children)
-        //        {
-        //            RemoveListener(item);
-        //        }
-        //    }
-        //}
-        //private void translateDialogBack()
-        //{
-        //    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
-        //    {
-        //        this.DialogView.Transform = CGAffineTransform.MakeTranslation(0, 0);
-        //    }, null);
-        //}
-        //private void translateDialog()
-        //{
-        //    var focusedElement = getCurrentFirstResponder(contentStack);
-        //    if (focusedElement == null)
-        //        return;
-
-
-        //    var minYPositionAllowed = this.Frame.Top + TopMargin;
-        //    var position = focusedElement.ConvertRectFromView(focusedElement.Bounds, mainView);
-        //    var posYTop = inverseNumber(position.Y);
-        //    var posYBottom = Math.Abs(position.Y) + position.Height;
-
-
-        //    if (posYBottom > mainView.Frame.Height)
-        //        posYBottom -= posYBottom - mainView.Frame.Height;
-
-
-        //    nfloat pos = this.DialogView.Transform.Ty;
-
-        //    if(keyboardHeight > 0 && posYBottom > keyboardHeight)
-        //        pos = keyboardHeight - (nfloat)posYBottom;
-        //    else if (posYTop < minYPositionAllowed)
-        //    {
-        //        pos = minYPositionAllowed - (nfloat)posYTop;
-        //    }
-
-
-        //    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
-        //    {
-        //        this.DialogView.Transform = CGAffineTransform.MakeTranslation(0, pos);
-        //    }, null);
-        //}
-        //private void Element_Focused(object sender, FocusEventArgs e)
-        //{
-        //    //translateDialog();
-        //}
-        //private nfloat inverseNumber(nfloat number)
-        //{
-        //    if (number > 0)
-        //        number = -number;
-        //    else
-        //        number = (nfloat)Math.Abs(number);
-
-        //    return number;
-        //}
-        //private nfloat keyboardHeight = 0;
-        */
-
         // Keyboard show and hide Observers
         private void AddKeyboardObservers()
         {
@@ -1319,14 +1215,14 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-
-
+        // Used to position popup at the right place
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
 
             // layout pending layout updates
             dialogStack.LayoutIfNeeded();
+
 
             if (CustomView != null)
                 layoutCustomView();
@@ -1346,7 +1242,7 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
-         
+        // Button graphics
         private void AddBorder(UIButton button)
         {
             //var topBorder = new UIView() { BackgroundColor = UIColor.LightGray, TranslatesAutoresizingMaskIntoConstraints = false };
@@ -1402,6 +1298,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.Dispose();
         }
 
+        // Dispose
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
