@@ -53,6 +53,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private LinearLayout buttonsLayout;
         public global::Android.Views.View arrow;
         public global::Android.Graphics.Point arrowSize;
+        public RSPopupPositionEnum RSPopupPositionEnum { get; set; }
         public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
         public RSPopupStyleEnum RSPopupStyleEnum { get; set; }
         public bool ShadowEnabled { get; set; }

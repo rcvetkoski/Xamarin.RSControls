@@ -47,6 +47,8 @@ namespace Xamarin.RSControls.iOS.Controls
         public int Height { get; set; }
         public bool UserSetPosition { get; set; }
         public bool UserSetSize { get; set; }
+        public RSPopupAnimationEnum RSPopupAnimationEnum { get; set; }
+        public RSPopupPositionEnum RSPopupPositionEnum { get; set; }
         public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
         public RSPopupStyleEnum RSPopupStyleEnum { get; set; }
         public bool IsModal { get; set; }
@@ -58,6 +60,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public int BottomMargin { get; set; }
         public float RSPopupOffsetX { get; set; }
         public float RSPopupOffsetY { get; set; }
+
         private UIView relativeViewAsNativeView;
         private int buttonsCount;
         private NSLayoutConstraint widthConstraint;
@@ -77,7 +80,6 @@ namespace Xamarin.RSControls.iOS.Controls
         private NSLayoutConstraint dialogViewLeadingConstraint;
         private NSLayoutConstraint dialogViewTrailingConstraint;
         private nfloat arrowSize;
-
 
         //Constructor
         public RSPopupRenderer() : base()
@@ -151,10 +153,10 @@ namespace Xamarin.RSControls.iOS.Controls
         private void SetupBackgroundView()
         {
             BackgroundView.TranslatesAutoresizingMaskIntoConstraints = false;
-            BackgroundView.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor).Active = true;
-            BackgroundView.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor).Active = true;
-            BackgroundView.TopAnchor.ConstraintEqualTo(this.TopAnchor).Active = true;
-            BackgroundView.BottomAnchor.ConstraintEqualTo(this.BottomAnchor).Active = true;
+            BackgroundView.LeadingAnchor.ConstraintEqualTo(mainView.LeadingAnchor).Active = true;
+            BackgroundView.TrailingAnchor.ConstraintEqualTo(mainView.TrailingAnchor).Active = true;
+            BackgroundView.TopAnchor.ConstraintEqualTo(mainView.TopAnchor).Active = true;
+            BackgroundView.BottomAnchor.ConstraintEqualTo(mainView.BottomAnchor).Active = true;
              
             BackgroundView.BackgroundColor = UIColor.Black.ColorWithAlpha(DimAmount);
         }
@@ -236,7 +238,7 @@ namespace Xamarin.RSControls.iOS.Controls
             //else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom && HasArrow)
             //    dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(20, 10, 0, 10);
             //else
-                dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(10, 10, 0, 10);
+                dialogStack.DirectionalLayoutMargins = new NSDirectionalEdgeInsets(15, 10, 0, 10);
         }
 
         // Set ContentStack
@@ -293,8 +295,6 @@ namespace Xamarin.RSControls.iOS.Controls
             buttonsStack.AddArrangedSubview(destructiveButton);
             buttonsStack.AddArrangedSubview(neutralButton);
             buttonsStack.AddArrangedSubview(positiveButton);
-
-            buttonsCount = 3;
         }
 
         //Set title
@@ -577,6 +577,7 @@ namespace Xamarin.RSControls.iOS.Controls
         //Buttons
         public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter = null)
         {
+            buttonsCount++;
             topBorderButtonsStack.Hidden = false;
 
             if (rSPopupButtonType == RSPopupButtonTypeEnum.Positive)
@@ -665,54 +666,78 @@ namespace Xamarin.RSControls.iOS.Controls
         // Dialog initial Position / create constraints and update them later
         private void setDialogPosition()
         {
-            if (RelativeView == null)
+            if (RelativeView != null)
             {
-                dialogStack.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
-                dialogStack.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor).Active = true;
+                if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
+                {
+                    dialogPositionXConstraint = dialogStack.TrailingAnchor.ConstraintEqualTo(relativeViewAsNativeView.LeadingAnchor);
+                    dialogPositionXConstraint.Active = true;
+                    dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterYAnchor);
+                    dialogPositionYConstraint.Active = true;
+                }
+                else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
+                {
+                    dialogPositionXConstraint = dialogStack.LeadingAnchor.ConstraintEqualTo(relativeViewAsNativeView.TrailingAnchor);
+                    dialogPositionXConstraint.Active = true;
+                    dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterYAnchor);
+                    dialogPositionYConstraint.Active = true;
+                }
+                else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
+                {
+                    dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
+                    dialogPositionXConstraint.Active = true;
+                    dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(relativeViewAsNativeView.BottomAnchor);
+                    dialogPositionYConstraint.Active = true;
+                }
+                else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
+                {
+                    dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
+                    dialogPositionXConstraint.Active = true;
+                    dialogPositionYConstraint = dialogStack.BottomAnchor.ConstraintEqualTo(relativeViewAsNativeView.TopAnchor);
+                    dialogPositionYConstraint.Active = true;
+                }
+                else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
+                {
+                    dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
+                    dialogPositionXConstraint.Active = true;
+                    dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(relativeViewAsNativeView.TopAnchor);
+                    dialogPositionYConstraint.Active = true;
+                }
+                else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Center)
+                {
+                    dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor);
+                    dialogPositionXConstraint.Active = true;
+                    dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor);
+                    dialogPositionYConstraint.Active = true;
+                }
             }
-
-
-            if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
+            else
             {
-                dialogPositionXConstraint = dialogStack.TrailingAnchor.ConstraintEqualTo(relativeViewAsNativeView.LeadingAnchor);
-                dialogPositionXConstraint.Active = true;
-                dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterYAnchor);
-                dialogPositionYConstraint.Active = true;
-            }
-            else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
-            {
-                dialogPositionXConstraint = dialogStack.LeadingAnchor.ConstraintEqualTo(relativeViewAsNativeView.TrailingAnchor);
-                dialogPositionXConstraint.Active = true;
-                dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterYAnchor);
-                dialogPositionYConstraint.Active = true;
-            }
-            else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
-            {
-                dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
-                dialogPositionXConstraint.Active = true;
-                dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(relativeViewAsNativeView.BottomAnchor);
-                dialogPositionYConstraint.Active = true;
-            }
-            else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
-            {
-                dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
-                dialogPositionXConstraint.Active = true;
-                dialogPositionYConstraint = dialogStack.BottomAnchor.ConstraintEqualTo(relativeViewAsNativeView.TopAnchor);
-                dialogPositionYConstraint.Active = true;
-            }
-            else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
-            {
-                dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
-                dialogPositionXConstraint.Active = true;
-                dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(relativeViewAsNativeView.TopAnchor);
-                dialogPositionYConstraint.Active = true;
-            }
-            else if(RSPopupPositionSideEnum == RSPopupPositionSideEnum.Center)
-            {
-                dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor);
-                dialogPositionXConstraint.Active = true;
-                dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor);
-                dialogPositionYConstraint.Active = true;
+                if (RSPopupPositionEnum == RSPopupPositionEnum.Center)
+                {
+                    dialogStack.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
+                    dialogStack.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor).Active = true;
+                }
+                else if (RSPopupPositionEnum == RSPopupPositionEnum.Bottom)
+                {
+                    dialogStack.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
+                    dialogStack.BottomAnchor.ConstraintEqualTo(this.BottomAnchor).Active = true;
+                }
+                else if (RSPopupPositionEnum == RSPopupPositionEnum.Top)
+                {
+                    dialogStack.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
+                    dialogStack.TopAnchor.ConstraintEqualTo(this.TopAnchor).Active = true;
+                }
+                else if (RSPopupPositionEnum == RSPopupPositionEnum.Left)
+                {
+                    dialogStack.LeadingAnchor.ConstraintEqualTo(this.LeadingAnchor).Active = true;
+                    dialogStack.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor).Active = true;
+                }
+                else if (RSPopupPositionEnum == RSPopupPositionEnum.Right)
+                {
+                    dialogStack.TrailingAnchor.ConstraintEqualTo(this.TrailingAnchor).Active = true;
+                    dialogStack.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor).Active = true;
+                }
             }
         }
 
@@ -1105,7 +1130,6 @@ namespace Xamarin.RSControls.iOS.Controls
             bool animated = true;
 
 
-
             // Animation
             if (animated)
             {
@@ -1114,7 +1138,7 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             else
             {
-                this.BackgroundView.Alpha = 0.66f;
+                this.BackgroundView.Alpha = 1f;
                 this.DialogView.Center = new CGPoint(this.Center.X, this.Frame.Height - this.DialogView.Frame.Height / 2);
             }
         }
@@ -1125,12 +1149,12 @@ namespace Xamarin.RSControls.iOS.Controls
             base.Draw(rect);
 
             // Animate 
-            RSPopupAnimation(DialogView, RSPopupAnimationEnum.BottomToTop, true);
+            RSPopupAnimation(DialogView, RSPopupAnimationEnum, true);
         }
-
-
         public void RSPopupAnimation(UIView view, RSPopupAnimationEnum animationType, bool isShowing)
         {
+            nfloat duration = 0.33f;
+
             if(animationType == RSPopupAnimationEnum.CurveEaseInOut)
             {
                 if (isShowing)
@@ -1139,16 +1163,16 @@ namespace Xamarin.RSControls.iOS.Controls
                     this.DialogView.Alpha = 0;
                     this.DialogView.Transform = CGAffineTransform.MakeScale(1.1f, 1.1f);
 
-                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
                     {
-                        this.BackgroundView.Alpha = 0.66f;
+                        this.BackgroundView.Alpha = 1f;
                         this.DialogView.Alpha = 1f;
                         this.DialogView.Transform = CGAffineTransform.MakeScale(1.0f, 1.0f);
                     }, null);
                 }
                 else
                 {
-                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut,
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut,
                                    () =>
                                    {
                                        this.BackgroundView.Alpha = 0f;
@@ -1168,9 +1192,9 @@ namespace Xamarin.RSControls.iOS.Controls
                     this.DialogView.Alpha = 0;
                     this.DialogView.Transform = CGAffineTransform.MakeScale(0.2f, 0.2f);
 
-                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
                     {
-                        this.BackgroundView.Alpha = 0.66f;
+                        this.BackgroundView.Alpha = 1f;
                         this.DialogView.Alpha = 1f;
                         this.DialogView.Transform = CGAffineTransform.MakeScale(1.0f, 1.0f);
                     }, null
@@ -1178,7 +1202,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 }
                 else
                 {
-                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut,
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut,
                                    () =>
                                    {
                                        this.BackgroundView.Alpha = 0f;
@@ -1195,53 +1219,122 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (isShowing)
                 {
                     this.BackgroundView.Alpha = 0;
-                    this.DialogView.Alpha = 0;
-                    this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, dialogStack.Frame.Height);
+                    this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, dialogStack.Frame.Height + (mainView.Frame.Height - DialogView.Frame.Bottom));
 
-                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
                     {
-                        this.BackgroundView.Alpha = 0.66f;
-                        this.DialogView.Alpha = 1f;
+                        this.BackgroundView.Alpha = 1f;
                         this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, 0);
                     }, null
                     );
                 }
                 else
                 {
-                    UIView.Animate(0.33, 0, UIViewAnimationOptions.CurveEaseInOut,
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut,
                                    () =>
                                    {
                                        this.BackgroundView.Alpha = 0f;
-                                       this.DialogView.Alpha = 0f;
-                                       this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, dialogStack.Frame.Height);
+                                       this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, dialogStack.Frame.Height + (mainView.Frame.Height - DialogView.Frame.Bottom));
                                    },
                                    () => { this.RemoveFromSuperview(); IsAnimating = false; });
                 }
             }
 
+            if (animationType == RSPopupAnimationEnum.TopToBottom)
+            {
+                if (isShowing)
+                {
+                    this.BackgroundView.Alpha = 0;
+                    this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, -dialogStack.Frame.Height - DialogView.Frame.Top);
+
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+                    {
+                        this.BackgroundView.Alpha = 1f;
+                        this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, 0);
+                    }, null
+                    );
+                }
+                else
+                {
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut,
+                                   () =>
+                                   {
+                                       this.BackgroundView.Alpha = 0f;
+                                       this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, -dialogStack.Frame.Height - DialogView.Frame.Top);
+                                   },
+                                   () => { this.RemoveFromSuperview(); IsAnimating = false; });
+                }
+            }
+
+            if (animationType == RSPopupAnimationEnum.LeftToRight)
+            {
+                if (isShowing)
+                {
+                    this.BackgroundView.Alpha = 0;
+                    this.DialogView.Transform = CGAffineTransform.MakeTranslation(-dialogStack.Frame.Width - DialogView.Frame.Left, 0);
+
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+                    {
+                        this.BackgroundView.Alpha = 1f;
+                        this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, 0f);
+                    }, null
+                    );
+                }
+                else
+                {
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut,
+                                   () =>
+                                   {
+                                       this.BackgroundView.Alpha = 0f;
+                                       this.DialogView.Transform = CGAffineTransform.MakeTranslation(-dialogStack.Frame.Width - DialogView.Frame.Left, 0f);
+                                   },
+                                   () => { this.RemoveFromSuperview(); IsAnimating = false; });
+                }
+            }
+
+            if (animationType == RSPopupAnimationEnum.RightToLeft)
+            {
+                if (isShowing)
+                {
+                    this.BackgroundView.Alpha = 0;
+                    this.DialogView.Transform = CGAffineTransform.MakeTranslation(dialogStack.Frame.Width + (mainView.Frame.Width - DialogView.Frame.Right), 0);
+
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+                    {
+                        this.BackgroundView.Alpha = 1f;
+                        this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, 0f);
+                    }, null
+                    );
+                }
+                else
+                {
+                    UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut,
+                                   () =>
+                                   {
+                                       this.BackgroundView.Alpha = 0f;
+                                       this.DialogView.Transform = CGAffineTransform.MakeTranslation(dialogStack.Frame.Width + (mainView.Frame.Width - DialogView.Frame.Right), 0f);
+                                   },
+                                   () => { this.RemoveFromSuperview(); IsAnimating = false; });
+                }
+            }
         }
-        public enum RSPopupAnimationEnum
-        {
-            BottomToTop = 1,
-            TopToBottom = 2,
-            Expanding = 3,
-            CurveEaseInOut = 0
-        }
+
 
 
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
 
+            // layout pending layout updates
+            dialogStack.LayoutIfNeeded();
+
+            if (CustomView != null)
+                layoutCustomView();
+
+
             if (RelativeView != null)
             {
-                // layout pending layout updates
-                dialogStack.LayoutIfNeeded();
-
                 var position = relativeViewAsNativeView.ConvertRectFromView(relativeViewAsNativeView.Bounds, this.mainView);
-
-                if (CustomView != null)
-                    layoutCustomView();
 
                 dialogViewBottomConstraint.Constant = 0;
                 dialogViewTopConstraint.Constant = 0;
@@ -1298,7 +1391,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if (animated)
             {
                 IsAnimating = true;
-                RSPopupAnimation(DialogView, RSPopupAnimationEnum.BottomToTop, false);
+                RSPopupAnimation(DialogView, RSPopupAnimationEnum, false);
             }
             else
             {

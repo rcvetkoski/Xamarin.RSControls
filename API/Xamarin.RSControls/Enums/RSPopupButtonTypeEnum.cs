@@ -10,9 +10,11 @@ namespace Xamarin.RSControls.Enums
 
     public enum RSPopupAnimationEnum
     {
-        Default,
-        Fade_in_Fade_out,
-        Scale_in_Scale_out,
-        FadeScale_in_FadeScale_out,
+        BottomToTop = 1,
+        TopToBottom = 2,
+        Expanding = 3,
+        LeftToRight = 4,
+        RightToLeft = 5,
+        CurveEaseInOut = 0
     }
 }

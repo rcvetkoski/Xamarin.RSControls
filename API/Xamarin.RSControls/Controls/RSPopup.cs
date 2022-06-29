@@ -27,17 +27,17 @@ namespace Xamarin.RSControls.Controls
         }
 
 
-
-        public RSPopup()
+        public RSPopup(RSPopupPositionEnum rSPopupPosition = RSPopupPositionEnum.Center)
         {
             service = DependencyService.Get<IDialogPopup>(DependencyFetchTarget.NewInstance);
             SetBackgroundColor(Color.White);
             SetBorderRadius(16);
             SetDimAmount(0.7f);
             SetShadowEnabled(true);
+            SetRSPopupPosition(rSPopupPosition);
         }
 
-        public RSPopup(string title, string message)
+        public RSPopup(string title, string message, RSPopupPositionEnum rSPopupPosition = RSPopupPositionEnum.Center)
         {
             service = DependencyService.Get<IDialogPopup>(DependencyFetchTarget.NewInstance);
             SetTitle(title);
@@ -46,6 +46,7 @@ namespace Xamarin.RSControls.Controls
             SetBorderRadius(16);
             SetDimAmount(0.7f);
             SetShadowEnabled(true);
+            SetRSPopupPosition(rSPopupPosition);
         }
 
         public void Show()
@@ -159,16 +160,23 @@ namespace Xamarin.RSControls.Controls
             service.IsModal = isModal;
         }
 
+        private void SetRSPopupPosition(RSPopupPositionEnum rSPopupPosition)
+        {
+            service.RSPopupPositionEnum = rSPopupPosition;
+        }
 
         public void SetDimAmount(float amount)
         {
+            if (amount > 0.7)
+                amount = 0.7f;
+
             DimAmount = amount;
             service.DimAmount = DimAmount;
         }
 
-        public void SetPopupAnimation(RSPopupAnimationEnum rSPopupAnimationEnum = RSPopupAnimationEnum.Default)
+        public void SetPopupAnimation(RSPopupAnimationEnum rSPopupAnimationEnum)
         {
-            //TODO
+            service.RSPopupAnimationEnum = rSPopupAnimationEnum;
         }
 
         public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command = null, object commandParameter = null)
