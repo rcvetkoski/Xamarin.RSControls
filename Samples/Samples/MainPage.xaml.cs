@@ -279,7 +279,7 @@ namespace Samples
             //rsPopup.SetMargin(10, 10, 10, 10);
             //rsPopup.SetCustomView(entry);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, 300);
-            rsPopup.SetDimAmount(0.5f);
+            rsPopup.SetDimAmount(0.0f);
             //rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
             rsPopup.SetBorderRadius(10);
             rsPopup.AddAction(Title = "Cancel Translation", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
@@ -296,7 +296,7 @@ namespace Samples
 
             //rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
-            rsPopup.SetDimAmount(1f);
+            rsPopup.SetDimAmount(0f);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Over);
 
             Entry rSEntry = new Entry() { Text = "MEHE wf", Margin = new Thickness(0, 0, 0, 0)};
@@ -317,8 +317,8 @@ namespace Samples
 
             //rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
-            rsPopup.SetDimAmount(1f);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Top);
+            rsPopup.SetDimAmount(0f);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
             //rsPopup.SetBorderRadius(10);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive, new Command(() =>
             //{
@@ -326,7 +326,7 @@ namespace Samples
             //}));
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
 
-            StackLayout stack = new StackLayout() { BackgroundColor = Color.Pink, Margin = new Thickness(10, 10, 10, 10)};
+            StackLayout stack = new StackLayout() { BackgroundColor = Color.Transparent, Margin = new Thickness(10, 10, 10, 10)};
             StackLayout stack2 = new StackLayout() { BackgroundColor = Color.Red, Margin = new Thickness(10, 10, 10, 10), VerticalOptions = LayoutOptions.EndAndExpand };
             RSNumericUpDown weight = new RSNumericUpDown() { Placeholder = "Weight", Margin = new Thickness(10, 10, 10, 10)};
             RSNumericUpDown reps = new RSNumericUpDown() { Placeholder = "Reps", Margin = new Thickness(10, 10, 10, 10) };

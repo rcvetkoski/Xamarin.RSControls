@@ -53,6 +53,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private LinearLayout buttonsLayout;
         public global::Android.Views.View arrow;
         public global::Android.Graphics.Point arrowSize;
+        public RSPopupAnimationEnum RSPopupAnimationEnum { get; set; }
         public RSPopupPositionEnum RSPopupPositionEnum { get; set; }
         public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
         public RSPopupStyleEnum RSPopupStyleEnum { get; set; }
@@ -67,6 +68,7 @@ namespace Xamarin.RSControls.Droid.Controls
         public int TopMargin { get; set; }
         public int BottomMargin { get; set; }
         public bool HasCloseButton { get; set; }
+
         public bool canRequestLayout = false;
         private int linearLayoutMinWidth = 0;
         public int screenUsableWidth;
@@ -613,7 +615,6 @@ namespace Xamarin.RSControls.Droid.Controls
             gradientDrawable.SetStroke(1, BorderFillColor.ToAndroid());
             linearLayout.SetBackground(gradientDrawable);
 
-
             GradientDrawable transparentDrawable = new GradientDrawable();
             transparentDrawable.SetColor(global::Android.Graphics.Color.Transparent);
             Dialog.Window.SetBackgroundDrawable(transparentDrawable);
@@ -1106,6 +1107,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.RequestLayout();
                 rSPopupRenderer.canRequestLayout = false;
             }
+
+
+
+
         }
 
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
@@ -1204,6 +1209,52 @@ namespace Xamarin.RSControls.Droid.Controls
 
             if (rSPopupRenderer.HasCloseButton)
                 rSPopupRenderer.setCloseButon();
+        }
+    }
+
+
+    public class RSGradientDrawable : GradientDrawable
+    {
+        public Paint filledPaint { get; set; }
+
+        public override void Draw(Canvas canvas)
+        {
+            base.Draw(canvas);
+
+
+
+            // Bezier path
+            //Filled
+            filledPaint = new Paint();
+
+            filledPaint.StrokeJoin = Paint.Join.Round;
+            filledPaint.StrokeCap = Paint.Cap.Round;
+            filledPaint.SetPathEffect(new CornerPathEffect(12));
+            filledPaint.StrokeWidth = 4;
+            filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
+            filledPaint.Color = global::Android.Graphics.Color.White;
+            filledPaint.AntiAlias = true;
+            //filledPaint.SetShadowLayer(10f, 0f, 0f, global::Android.Graphics.Color.Black);
+
+            //filledPaint.SetShader(new RadialGradient(canvas.ClipBounds.CenterX(), canvas.ClipBounds.CenterY(), canvas.ClipBounds.Height(),
+            //    global::Android.Graphics.Color.Gray, global::Android.Graphics.Color.White, Shader.TileMode.Clamp));
+
+            filledPaint.SetShader(new LinearGradient(0, 200, 2, canvas.ClipBounds.Height(),
+                                  global::Android.Graphics.Color.LightGray, global::Android.Graphics.Color.White, Shader.TileMode.Clamp));
+
+            float val = 6;
+            canvas.DrawRoundRect(new RectF(0, 0, canvas.ClipBounds.Width(), canvas.ClipBounds.Height()), 20, 20, filledPaint);
+
+
+
+            var filledPaint2 = new Paint();
+            filledPaint2.SetStyle(global::Android.Graphics.Paint.Style.Fill);
+            filledPaint2.Color = global::Android.Graphics.Color.White;
+            filledPaint2.AntiAlias = true;
+            //filledPaint.SetShadowLayer(10f, 0f, 0f, global::Android.Graphics.Color.Black);
+
+            canvas.DrawRoundRect(new RectF(0 + val, 0 + val, canvas.ClipBounds.Width() - val, canvas.ClipBounds.Height() - val), 20, 20, filledPaint2);
+
         }
     }
 }
