@@ -260,8 +260,9 @@ namespace Samples
         {
             //var rsPopup = new RSPopup("Title trololo", "Bidi mehe Pulitzer!", RSPopupPositionEnum.Bottom);
             var rsPopup = new RSPopup("Title trololo", "Quisque rutrum, hendrerit id, lorem. , mollis sed, nonummy id, metus. Sed consequat, Vestibulum ante posuere cubilia Curae; In ac dui quis mi coicidunt non, euismod vitae, posuere imperdiet, leo. Maecenas malesuada. Praesent congue erat at massa. Sed cursus turpis vitae tortor. Donec posuere vulputate arcu. Phasellus accumsan cursus velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Phasellus consectetuer vestibulum elit. Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc. Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Donec elit libero, sodales nec, volutpat a, suscipit non, turpis. Nullam sagittis. Suspendisse pulvinar, augue ac venenatis condimentum, sem libero volutpat nibh, nec pellentesque velit pede quis nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Ut varius tincidunt libero. Phasellus dolor. Maecenas vestibulum mollis",
-                RSPopupPositionEnum.Left);
+                RSPopupPositionEnum.Bottom);
 
+            rsPopup.SetPopupAnimation(RSPopupAnimationEnum.BottomToTop);
 
             Editor label = new Editor() { Text = "Title trololo Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
                 "Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, " +
@@ -276,8 +277,8 @@ namespace Samples
             //label.Margin = new Thickness(10, 10, 10, 10);
 
             //rsPopup.SetMargin(10, 10, 10, 10);
-            rsPopup.SetCustomView(entry);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            //rsPopup.SetCustomView(entry);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, 300);
             rsPopup.SetDimAmount(0.5f);
             //rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
             rsPopup.SetBorderRadius(10);

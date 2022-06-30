@@ -192,6 +192,25 @@ namespace Xamarin.RSControls.iOS.Controls
             //////Position dialog
             //DialogView.CenterXAnchor.ConstraintEqualTo(dialogStack.CenterXAnchor).Active = true;
             //DialogView.CenterYAnchor.ConstraintEqualTo(dialogStack.CenterYAnchor).Active = true;
+
+
+            UIPanGestureRecognizer uISwipeGestureRecognizer = new UIPanGestureRecognizer((UIPanGestureRecognizer gesture) =>
+            {
+                var pos = gesture.TranslationInView(mainView);
+
+                if (pos.Y > 0)
+                    DialogView.Transform = CGAffineTransform.MakeTranslation(DialogView.Transform.Tx, pos.Y);
+
+                if (gesture.State == UIGestureRecognizerState.Ended)
+                {
+                    if(pos.Y > DialogView.Frame.Height * 0.3)
+                        this.Dismiss(true);
+                    else
+                        UIView.Animate(0.10, 0, UIViewAnimationOptions.CurveEaseInOut, () =>{ DialogView.Transform = CGAffineTransform.MakeTranslation(DialogView.Transform.Tx, 0); }, null);
+                }
+            });
+            DialogView.AddGestureRecognizer(uISwipeGestureRecognizer);
+
         }
 
         //Setup stackDialog
@@ -255,6 +274,7 @@ namespace Xamarin.RSControls.iOS.Controls
         // Set Content scrollView
         private void setContentScrollView()
         {
+            contentScrollView.Bounces = false;
             contentScrollView.ShowsVerticalScrollIndicator = false;
             contentScrollView.TranslatesAutoresizingMaskIntoConstraints = false;
             contentScrollView.SetContentCompressionResistancePriority(1, UILayoutConstraintAxis.Vertical);
@@ -612,7 +632,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (RSPopupPositionEnum == RSPopupPositionEnum.Center)
                 {
                     dialogStack.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
-                    dialogStack.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor).Active = true;
+                    dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor);
+                    dialogPositionYConstraint.Active = true;
                 }
                 else if (RSPopupPositionEnum == RSPopupPositionEnum.Bottom)
                 {
@@ -1130,7 +1151,7 @@ namespace Xamarin.RSControls.iOS.Controls
                                    () =>
                                    {
                                        this.BackgroundView.Alpha = 0f;
-                                       this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, dialogStack.Frame.Height + (mainView.Frame.Height - DialogView.Frame.Bottom));
+                                       this.DialogView.Transform = CGAffineTransform.MakeTranslation(0f, dialogStack.Frame.Height + (mainView.Frame.Height - DialogView.Frame.Bottom) + DialogView.Transform.Ty);
                                    },
                                    () => { this.RemoveFromSuperview(); IsAnimating = false; });
                 }
@@ -1227,7 +1248,6 @@ namespace Xamarin.RSControls.iOS.Controls
             if (CustomView != null)
                 layoutCustomView();
 
-
             if (RelativeView != null)
             {
                 var position = relativeViewAsNativeView.ConvertRectFromView(relativeViewAsNativeView.Bounds, this.mainView);
@@ -1236,6 +1256,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 dialogViewTopConstraint.Constant = 0;
                 dialogViewLeadingConstraint.Constant = 0;
                 dialogViewTrailingConstraint.Constant = 0;
+
                 shouldShowArrow();
                 setConstraintPosition(position);
                 updatePosition(position);
@@ -1498,6 +1519,21 @@ namespace Xamarin.RSControls.iOS.Controls
 
             InvalidateIntrinsicContentSize();
         }
+
+        //public override CGPoint ContentOffset
+        //{
+        //    get => base.ContentOffset;
+        //    set
+        //    {
+        //        base.ContentOffset = value;
+        //        //Console.WriteLine(value.Y);
+        //        if (PanGestureRecognizer != null)
+        //        {
+        //            if (ContentOffset.Y <= 0)
+        //                Console.WriteLine(this.PanGestureRecognizer.LocationInView(this).Y);
+        //        }
+        //    }
+        //}
     }
 
 
