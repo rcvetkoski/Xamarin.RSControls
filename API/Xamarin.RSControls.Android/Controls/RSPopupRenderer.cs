@@ -145,16 +145,26 @@ namespace Xamarin.RSControls.Droid.Controls
             Dialog.Window.ClearFlags(WindowManagerFlags.NotFocusable | WindowManagerFlags.AltFocusableIm);
             //Dialog.Window.SetSoftInputMode(SoftInput.StateAlwaysVisible);
 
-            if(!backFromSleep) //Dont want to reset layoutparameters when back from sleep
+            if (!backFromSleep) //Dont want to reset layoutparameters when back from sleep
                 SetDialog();
         }
 
         //Set PopupSize
-        private void SetPopupSize(DisplayMetrics metrics)
+        private void SetSize(DisplayMetrics metrics)
         {
             if (UserSetSize)
             {
-                if (Width != -2 && Width != -1)
+                // Width
+                if (this.Width == -1)//Match Parent
+                {
+                    Width = ViewGroup.LayoutParams.MatchParent;
+                }
+                else if (this.Width == -2)//Wrap Content
+                {
+                    Width = ViewGroup.LayoutParams.WrapContent;
+
+                }
+                else if (this.Width != -1 && this.Width != -2)//Raw value user input
                 {
                     Width = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, Width, Context.Resources.DisplayMetrics);
 
@@ -163,7 +173,19 @@ namespace Xamarin.RSControls.Droid.Controls
                         Width = metrics.WidthPixels;
                 }
 
-                if (Height != -2 && Height != -1)
+
+                // Height
+                if (this.Height == -1)//Match Parent
+                {
+                    Height = ViewGroup.LayoutParams.MatchParent;
+
+                }
+                else if (this.Height == -2)//Wrap Content
+                {
+                    Height = ViewGroup.LayoutParams.WrapContent;
+
+                }
+                else if (this.Height != -1 && this.Height != -2)//Raw value user input
                 {
                     Height = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, Height, Context.Resources.DisplayMetrics);
 
@@ -172,11 +194,9 @@ namespace Xamarin.RSControls.Droid.Controls
                         Height = metrics.HeightPixels;
                 }
             }
-            else
-            {
-                Width = ViewGroup.LayoutParams.WrapContent;
-                Height = ViewGroup.LayoutParams.WrapContent;
-            }
+
+            (linearLayout.LayoutParameters as global::Android.Widget.RelativeLayout.LayoutParams).Width = Width;
+            (linearLayout.LayoutParameters as global::Android.Widget.RelativeLayout.LayoutParams).Height = Height;
         }
 
         //Set Popup position relative to view
@@ -282,6 +302,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             Orientation = Resources.Configuration.Orientation;
             linearLayout.rSPopupRenderer = this;
+            linearLayout.BorderRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics);
 
 
             LeftMargin = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, LeftMargin, Context.Resources.DisplayMetrics));
@@ -297,14 +318,11 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
             //Popup size
-            SetPopupSize(metrics);
+            SetSize(metrics);
 
             //Apply size
             attrs.Width = ViewGroup.LayoutParams.MatchParent;
             attrs.Height = ViewGroup.LayoutParams.MatchParent;
-
-            (linearLayout.LayoutParameters as global::Android.Widget.RelativeLayout.LayoutParams).Width = Width;
-            (linearLayout.LayoutParameters as global::Android.Widget.RelativeLayout.LayoutParams).Height = Height;
 
 
             arrowSize = new global::Android.Graphics.Point(0, 0);
@@ -457,7 +475,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     RSPopupPositionSideEnum = RSPopupPositionSideEnum.Bottom;
                 else if (pos < 0 + TopMargin)
                     linearLayout.SetY((int)(arrow.GetY() - linearLayout.MeasuredHeight + 1 + System.Math.Abs(pos) + TopMargin));
-                else if(arrow.GetY() > (screenUsableHeight - BottomMargin))
+                else if (arrow.GetY() > (screenUsableHeight - BottomMargin))
                     linearLayout.SetY((screenUsableHeight - BottomMargin) - linearLayout.MeasuredHeight + 1);
                 else
                     linearLayout.SetY(arrow.GetY() - linearLayout.MeasuredHeight + 1);
@@ -608,17 +626,64 @@ namespace Xamarin.RSControls.Droid.Controls
         //Custom background so we can set border radius shadow ...
         private void SetBackground()
         {
-            //Manipulate color and roundness of border
-            GradientDrawable gradientDrawable = new GradientDrawable();
-            gradientDrawable.SetColor(BorderFillColor.ToAndroid());
-            gradientDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics));
-            gradientDrawable.SetStroke(1, BorderFillColor.ToAndroid());
-            linearLayout.SetBackground(gradientDrawable);
+            ////Manipulate color and roundness of border
+            //GradientDrawable gradientDrawable = new GradientDrawable();
+            //gradientDrawable.SetColor(global::Android.Graphics.Color.Transparent);
+            //gradientDrawable.SetCornerRadius(TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics));
+            //gradientDrawable.SetStroke(1, BorderFillColor.ToAndroid());
+            //linearLayout.SetBackground(gradientDrawable);
+            //linearLayout.SetBackground(Context.GetDrawable(Resource.Drawable.chatBuble));
 
+            linearLayout.OutlineProvider = new RSViewOutlineProvider(TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics));
+
+            // Background
             GradientDrawable transparentDrawable = new GradientDrawable();
             transparentDrawable.SetColor(global::Android.Graphics.Color.Transparent);
             Dialog.Window.SetBackgroundDrawable(transparentDrawable);
         }
+
+        // Needed so we can create custom path shape which tnah will be used for shadow casting
+        public class RSViewOutlineProvider : ViewOutlineProvider
+        {
+            private float borderRadius;
+            public RSViewOutlineProvider(float borderRadius)
+            {
+                this.borderRadius = borderRadius;
+            }
+
+            public override void GetOutline(global::Android.Views.View view, Outline outline)
+            {
+                float arrowSize = 30;
+
+                Path path;
+
+                if (global::Android.OS.Build.VERSION.SdkInt < BuildVersionCodes.R)
+                    path = new ForcedConvexPath();
+                else
+                    path = new Path();
+                
+
+                path.MoveTo(0, 0);
+                path.AddRoundRect(new RectF(0, 0, view.Width, view.Height - arrowSize), borderRadius, borderRadius, Path.Direction.Cw);
+                path.MoveTo(view.Width / 2 + arrowSize, view.Height - arrowSize);
+                path.LineTo(view.Width / 2, view.Height);
+                path.LineTo(view.Width / 2 - arrowSize, view.Height - arrowSize);
+                path.Close();
+
+
+                if (global::Android.OS.Build.VERSION.SdkInt < BuildVersionCodes.R)
+                    outline.SetConvexPath(path);
+                else
+                    outline.SetPath(path);
+            }
+        }
+
+        // Hack so non convex path will still be accepted in outline.SetConvexPath(path). for api < 30
+        public class ForcedConvexPath : Path
+        {
+            public override bool IsConvex => true;
+        }
+
 
         //Custom layout for dialog
         private void SetCustomLayout()
@@ -1076,6 +1141,8 @@ namespace Xamarin.RSControls.Droid.Controls
         public RSPopupRenderer rSPopupRenderer { get; set; }
         public MeasureSpecMode SpecMode { get; set; }
 
+        public float BorderRadius { get; set; }
+
 
         public CustomLinearLayout(Context context) : base(context)
         {
@@ -1109,8 +1176,24 @@ namespace Xamarin.RSControls.Droid.Controls
             }
 
 
+            var filledPaint = new Paint();
+            filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
+            filledPaint.Color = global::Android.Graphics.Color.White;
+            filledPaint.AntiAlias = true;
+
+            float arrowSize = 30;
 
 
+            Path path = new Path();
+            path.SetFillType(Path.FillType.EvenOdd);
+            path.MoveTo(0, 0);
+            path.AddRoundRect(new RectF(0, 0, canvas.ClipBounds.Width(), canvas.ClipBounds.Height() - arrowSize), BorderRadius, BorderRadius, Path.Direction.Cw);
+
+            path.MoveTo(canvas.ClipBounds.Width() / 2 + arrowSize, canvas.ClipBounds.Height() - arrowSize);
+            path.LineTo(canvas.ClipBounds.Width() / 2, canvas.ClipBounds.Height());
+            path.LineTo(canvas.ClipBounds.Width() / 2 - arrowSize, canvas.ClipBounds.Height() - arrowSize);
+            path.Close();
+            canvas.DrawPath(path, filledPaint);
         }
 
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)

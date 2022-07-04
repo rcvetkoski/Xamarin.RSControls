@@ -298,14 +298,12 @@ namespace Samples
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0f);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Over);
-
             Entry rSEntry = new Entry() { Text = "MEHE wf", Margin = new Thickness(0, 0, 0, 0)};
-            rsPopup.SetCustomView(rSEntry);
-            //rsPopup.SetBorderRadius(10);
+            //rsPopup.SetCustomView(rSEntry);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
             //{
-                
+
             //}));
             rsPopup.Show();
         }

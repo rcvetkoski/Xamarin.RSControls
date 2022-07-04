@@ -29,7 +29,8 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:elevation="6dp" android:gravity="center_horizontal"
+        android:elevation="6dp" 
+        android:gravity="center_horizontal"
         android:divider="?android:dividerVertical"
         android:showDividers="middle">
 
