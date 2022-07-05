@@ -46,7 +46,6 @@ namespace Xamarin.RSControls.iOS.Controls
         public int Width { get; set; }
         public int Height { get; set; }
         public bool UserSetPosition { get; set; }
-        public bool UserSetSize { get; set; }
         public RSPopupAnimationEnum RSPopupAnimationEnum { get; set; }
         public RSPopupPositionEnum RSPopupPositionEnum { get; set; }
         public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }

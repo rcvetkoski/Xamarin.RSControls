@@ -35,6 +35,10 @@ namespace Xamarin.RSControls.Controls
             SetDimAmount(0.7f);
             SetShadowEnabled(true);
             SetRSPopupPosition(rSPopupPosition);
+
+            // Set default size to wrap parent if not set by user
+            service.Width = -2;
+            service.Height = -2;
         }
 
         public RSPopup(string title, string message, RSPopupPositionEnum rSPopupPosition = RSPopupPositionEnum.Center)
@@ -47,6 +51,10 @@ namespace Xamarin.RSControls.Controls
             SetDimAmount(0.7f);
             SetShadowEnabled(true);
             SetRSPopupPosition(rSPopupPosition);
+
+            // Set default size to wrap parent if not set by user
+            service.Width = -2;
+            service.Height = -2;
         }
 
         public void Show()
@@ -77,7 +85,6 @@ namespace Xamarin.RSControls.Controls
 
             service.Width = width;
             service.Height = height;
-            service.UserSetSize = true;
         }
 
         public void SetPopupSize(int width, RSPopupSizeEnum height)
@@ -87,7 +94,6 @@ namespace Xamarin.RSControls.Controls
 
             service.Width = Width;
             service.Height = Height;
-            service.UserSetSize = true;
         }
 
         public void SetPopupSize(RSPopupSizeEnum width, int height)
@@ -97,7 +103,6 @@ namespace Xamarin.RSControls.Controls
 
             service.Width = Width;
             service.Height = Height;
-            service.UserSetSize = true;
         }
 
         public void SetPopupSize(RSPopupSizeEnum width, RSPopupSizeEnum height)
@@ -107,7 +112,6 @@ namespace Xamarin.RSControls.Controls
 
             service.Width = Width;
             service.Height = Height;
-            service.UserSetSize = true;
         }
 
         public void SetMargin(int left, int top, int right, int bottom)

@@ -17,7 +17,6 @@ namespace Xamarin.RSControls.Interfaces
         RSPopupPositionEnum RSPopupPositionEnum { get; set; }
         RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
         RSPopupStyleEnum RSPopupStyleEnum { get; set; }
-        bool UserSetSize { get; set; }
         bool UserSetMargin { get; set; }
         bool HasCloseButton { get; set; }
         int RightMargin { get; set; }

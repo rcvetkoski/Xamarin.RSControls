@@ -249,7 +249,6 @@ namespace Xamarin.RSControls.Droid.Controls
             sPopupRenderer.BorderFillColor = (this.Element as RSPickerBase).RSPopupBackgroundColor;
             sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.WrapContent;
             sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.WrapContent;
-            sPopupRenderer.UserSetSize = true;
             sPopupRenderer.DismissEvent += SPopupRenderer_DismissEvent;
 
 
