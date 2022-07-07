@@ -170,7 +170,10 @@ namespace Xamarin.RSControls.Droid.Controls
             rSDrawable.linearLayout = this.linearLayout;
             rSDrawable.BorderRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics);
             linearLayout.SetBackground(rSDrawable);
-            linearLayout.OutlineProvider = new RSViewOutlineProvider(this, TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics), arrowSize);
+            //linearLayout.OutlineProvider = new RSViewOutlineProvider(this, TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics), arrowSize) 
+            //{ 
+            //    ArrowSide = this.RSPopupPositionSideEnum
+            //};
 
             // Background
             GradientDrawable transparentDrawable = new GradientDrawable();
@@ -186,6 +189,7 @@ namespace Xamarin.RSControls.Droid.Controls
             public float xConstrainConstant;
             public float yConstrainConstant;
             private float arrowSize;
+            public RSPopupPositionSideEnum ArrowSide;
 
             public RSViewOutlineProvider(RSPopupRenderer rSPopupRenderer, float borderRadius, float arrowSize)
             {
@@ -205,18 +209,9 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 path.SetFillType(Path.FillType.EvenOdd);
 
-
-                //path.MoveTo(0, 0);
-                //path.AddRoundRect(new RectF(0, 0, view.Width, view.Height - arrowSize), borderRadius, borderRadius, Path.Direction.Cw);
-                //path.MoveTo(view.Width / 2 + arrowSize, view.Height - arrowSize);
-                //path.LineTo(view.Width / 2, view.Height);
-                //path.LineTo(view.Width / 2 - arrowSize, view.Height - arrowSize);
-                //path.Close();
-
-
                 path.MoveTo(0, 0);
 
-                if (rSPopupRenderer.RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right && rSPopupRenderer.HasArrow)
+                if (ArrowSide == RSPopupPositionSideEnum.Right && rSPopupRenderer.HasArrow)
                 {
                     var posY = (view.Height / 2) - yConstrainConstant;
                     path.AddRoundRect(new RectF(arrowSize, 0, view.Width, view.Height), borderRadius, borderRadius, Path.Direction.Cw);
@@ -225,7 +220,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     path.LineTo(0, posY);
                     path.LineTo(arrowSize, posY + arrowSize);
                 }
-                else if (rSPopupRenderer.RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left && rSPopupRenderer.HasArrow)
+                else if (ArrowSide == RSPopupPositionSideEnum.Left && rSPopupRenderer.HasArrow)
                 {
                     var posY = (view.Height / 2) - yConstrainConstant;
                     path.AddRoundRect(new RectF(0, 0, view.Width - arrowSize, view.Height), borderRadius, borderRadius, Path.Direction.Cw);
@@ -234,7 +229,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     path.LineTo(view.Width, posY);
                     path.LineTo(view.Width - arrowSize, posY + arrowSize);
                 }
-                else if (rSPopupRenderer.RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom && rSPopupRenderer.HasArrow)
+                else if (ArrowSide == RSPopupPositionSideEnum.Bottom && rSPopupRenderer.HasArrow)
                 {
                     path.AddRoundRect(new RectF(0, arrowSize, view.Width, view.Height), borderRadius, borderRadius, Path.Direction.Cw);
 
@@ -242,7 +237,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     path.LineTo(view.Width / 2, 0);
                     path.LineTo(view.Width / 2 - arrowSize, arrowSize);
                 }
-                else if (rSPopupRenderer.RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top && rSPopupRenderer.HasArrow)
+                else if (ArrowSide == RSPopupPositionSideEnum.Top && rSPopupRenderer.HasArrow)
                 {
                     path.AddRoundRect(new RectF(0, 0, view.Width, view.Height - arrowSize), borderRadius, borderRadius, Path.Direction.Cw);
                     var posX = (view.Width / 2) - xConstrainConstant;
@@ -269,7 +264,7 @@ namespace Xamarin.RSControls.Droid.Controls
             public override bool IsConvex => true;
         }
 
-        private void setPadding()
+        public void setPadding()
         {
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right && HasArrow)
                 linearLayout.SetPadding((int)arrowSize, linearLayout.PaddingTop, linearLayout.PaddingRight, linearLayout.PaddingBottom);
@@ -307,14 +302,15 @@ namespace Xamarin.RSControls.Droid.Controls
 
             setPadding();
 
-            //Default value can be changed by user
-            if (!UserSetMargin && RelativeView == null)
-            {
-                LeftMargin = 20;
-                TopMargin = 30;
-                RightMargin = 20;
-                BottomMargin = 30;
-            }
+            ////Default value can be changed by user
+            //if (!UserSetMargin && RelativeView == null)
+            //{
+            //    LeftMargin = 20;
+            //    TopMargin = 30;
+            //    RightMargin = 20;
+            //    BottomMargin = 30;
+            //}
+
 
             Orientation = Resources.Configuration.Orientation;
             linearLayout.rSPopupRenderer = this;
@@ -325,6 +321,8 @@ namespace Xamarin.RSControls.Droid.Controls
             TopMargin = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, TopMargin, Context.Resources.DisplayMetrics));
             RightMargin = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, RightMargin, Context.Resources.DisplayMetrics));
             BottomMargin = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, BottomMargin, Context.Resources.DisplayMetrics));
+            customLayout.SetPadding(LeftMargin, TopMargin, RightMargin, BottomMargin);
+
 
             var attrs = this.Dialog.Window.Attributes;
             var metrics = Resources.DisplayMetrics;
@@ -363,7 +361,28 @@ namespace Xamarin.RSControls.Droid.Controls
             customLayout.LayoutChange += CustomLayout_LayoutChange;
         }
 
-
+        // Set arrow true or false
+        private void shouldShowArrow()
+        {
+            // Width
+            if (this.Width == -1)//Match Parent
+            {
+                if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left || RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
+                    HasArrow = false;
+                else
+                    HasArrow = true;
+            }
+            // Height
+            else if (this.Height == -1)//Match Parent
+            {
+                if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top || RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
+                    HasArrow = false;
+                else
+                    HasArrow = true;
+            }
+            else
+                HasArrow = true;
+        }
 
         //Set and add custom view 
         private void SetCustomView()
@@ -576,7 +595,7 @@ namespace Xamarin.RSControls.Droid.Controls
             double projectedPositionBottom;
 
 
-            // Over centerAnchor
+            // Over left top corner
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
             {
                 // If on right side move left
@@ -605,6 +624,82 @@ namespace Xamarin.RSControls.Droid.Controls
                     }
                 }
             }
+
+            // Left Trailing to Leading anchor
+            if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
+            {
+                projectedPositionLeft = linearLayout.GetX();
+                projectedPositionRight = PositionX + relativeViewWidth + linearLayout.Width;
+
+                // If left space not available check if right is ok if not just move it to the right
+                if (projectedPositionLeft < minXPositionAllowed)
+                {
+                    // Check if right space enough, if ok than place it at right side
+                    if (projectedPositionRight <= maxXPositionAllowed)
+                    {
+                        // Switch side
+                        if (HasArrow)
+                        {
+                            //(linearLayout.OutlineProvider as RSViewOutlineProvider).ArrowSide = RSPopupPositionSideEnum.Right;
+                            (linearLayout.Background as RSDrawable).ArrowSide = RSPopupPositionSideEnum.Right;
+                            (linearLayout.Background as RSDrawable).shouldUpdatePadding = true;
+                        }
+
+                        var constant = relativeViewWidth + linearLayout.Width;
+                        linearLayout.SetX(linearLayout.GetX() + constant);
+                    }
+                    // Just move it to the right so it ends within screen bounds if widht not bigger than that
+                    else
+                    {
+                        // Hide arrow since there is no enough space on screen
+                        if (HasArrow)
+                        {
+                            HasArrow = false;
+                        }
+
+                        var constant = minXPositionAllowed - projectedPositionLeft;
+                        linearLayout.SetX(linearLayout.GetX() + (int)constant);
+                    }
+                }
+            }
+
+            // Right Leading to Trailing anchor
+            if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
+            {
+                projectedPositionLeft = linearLayout.GetX() - relativeViewWidth - linearLayout.Width;
+                projectedPositionRight = linearLayout.GetX() + linearLayout.Width;
+
+                // If right space not available check if left is ok if not just move it to the left
+                if (projectedPositionRight > maxXPositionAllowed)
+                {
+                    // Check if left space enough, if ok than place it at left side
+                    if (projectedPositionLeft >= minXPositionAllowed)
+                    {
+                        // Switch side
+                        if (HasArrow)
+                        {
+                            //(linearLayout.OutlineProvider as RSViewOutlineProvider).ArrowSide = RSPopupPositionSideEnum.Left;
+                            (linearLayout.Background as RSDrawable).ArrowSide = RSPopupPositionSideEnum.Left;
+                            (linearLayout.Background as RSDrawable).shouldUpdatePadding = true;
+                        }
+
+                        var constant = -relativeViewWidth - linearLayout.Width;
+                        linearLayout.SetX(linearLayout.GetX() + constant);
+                    }
+                    // Just move it to the left so it ends within screen bounds if widht not bigger than that
+                    else
+                    {
+                        // Hide arrow since there is no enough space on screen
+                        if (HasArrow)
+                        {
+                            HasArrow = false;
+                        }
+
+                        var constant = maxXPositionAllowed - projectedPositionRight;
+                        linearLayout.SetX(linearLayout.GetX() + (int)constant);
+                    }
+                }
+            }
         }
 
         private void CustomLayout_LayoutChange(object sender, global::Android.Views.View.LayoutChangeEventArgs e)
@@ -612,6 +707,10 @@ namespace Xamarin.RSControls.Droid.Controls
             System.Diagnostics.Debug.WriteLine("measured h " + linearLayout.MeasuredHeight + "  height " + linearLayout.Height);
             if (RelativeView != null)
             {
+                shouldShowArrow();
+                //(linearLayout.OutlineProvider as RSViewOutlineProvider).ArrowSide = this.RSPopupPositionSideEnum;
+                (linearLayout.Background as RSDrawable).ArrowSide = this.RSPopupPositionSideEnum;
+
                 // Set positionX and positionY 
                 SetPopupPositionRelativeTo(RelativeView, Resources.DisplayMetrics);
             }
@@ -977,7 +1076,8 @@ namespace Xamarin.RSControls.Droid.Controls
         public CustomLinearLayout linearLayout;
         public float xConstrainConstant;
         public float yConstrainConstant;
-        public float ArrowSize { get; set; }   
+        public float ArrowSize { get; set; }
+        public bool shouldUpdatePadding { get; set; } = false;
 
         public override int Opacity => 1;
 
@@ -985,7 +1085,7 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             var filledPaint = new Paint();
             filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
-            filledPaint.Color = global::Android.Graphics.Color.White;
+            filledPaint.Color = global::Android.Graphics.Color.Red;
             filledPaint.AntiAlias = true;
              
 
@@ -1001,6 +1101,12 @@ namespace Xamarin.RSControls.Droid.Controls
                 path.MoveTo(ArrowSize, posY - ArrowSize);
                 path.LineTo(0, posY);
                 path.LineTo(ArrowSize, posY + ArrowSize);
+
+                if (shouldUpdatePadding)
+                {
+                    //linearLayout.SetPadding((int)ArrowSize, linearLayout.PaddingTop, 0, linearLayout.PaddingBottom);
+                    shouldUpdatePadding = false;
+                }
             }
             else if (ArrowSide == RSPopupPositionSideEnum.Left && rSPopupRenderer.HasArrow)
             {
@@ -1010,6 +1116,12 @@ namespace Xamarin.RSControls.Droid.Controls
                 path.MoveTo(canvas.ClipBounds.Width() - ArrowSize, posY - ArrowSize);
                 path.LineTo(canvas.ClipBounds.Width(),posY);
                 path.LineTo(canvas.ClipBounds.Width() - ArrowSize, posY + ArrowSize);
+
+                if(shouldUpdatePadding)
+                {
+                    //linearLayout.SetPadding(linearLayout.PaddingLeft, linearLayout.PaddingTop, (int)ArrowSize, linearLayout.PaddingBottom);
+                    shouldUpdatePadding = false;
+                }
             }
             else if (ArrowSide == RSPopupPositionSideEnum.Bottom && rSPopupRenderer.HasArrow)
             {
