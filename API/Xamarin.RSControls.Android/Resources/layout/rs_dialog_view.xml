@@ -1,7 +1,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relativeLayout" 
+    android:id="@+id/relativeLayout"
     android:clipToPadding="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,109 +18,119 @@
         android:background="@drawable/rsovalshapedrawable"
         android:src="@android:drawable/ic_menu_close_clear_cancel"/>
 
+
     <Xamarin.RSControls.Droid.Controls.CustomLinearLayout
         android:id="@+id/linearLayout"
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:orientation="vertical" 
         android:elevation="6dp"
-        android:gravity="center_horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <!-- Title -->
-        <TextView
-            android:layout_width="match_parent"
+        <Xamarin.RSControls.Droid.Controls.CustomLinearLayout
+            android:id="@+id/linearLayout2"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:id="@+id/dialog_title"/>
+            android:gravity="center_horizontal">
 
-        <!-- Content -->
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="5dp"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:id="@+id/contentView"
+            <!-- Title -->
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:layout_margin="0dp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:text="Title"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:id="@+id/dialog_title"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
+            <!-- Content -->
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="5dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/contentView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="Message"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:gravity="center"
+                        android:id="@+id/dialog_message"/>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+            <!-- Buttons -->
+            <LinearLayout
+                android:id="@+id/buttons"
+                android:layout_width="match_parent" 
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                style="?android:buttonBarStyle"
+                android:divider="?android:dividerHorizontal"
+                android:showDividers="middle">
+
+                <Xamarin.RSControls.Droid.Controls.RSAndroidButton
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="Message"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:gravity="center"
-                    android:id="@+id/dialog_message"/>
+                    android:id="@+id/action_destructive"
+                    android:layout_weight="1"
+                    android:maxLines="1"
+                    android:text="Remove"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    style="?android:buttonBarButtonStyle"/>
+
+                <Xamarin.RSControls.Droid.Controls.RSAndroidButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/action_neutral"
+                    android:layout_weight="1"
+                    android:maxLines="1"
+                    android:text="Done"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    style="?android:buttonBarButtonStyle"/>
+
+                <Xamarin.RSControls.Droid.Controls.RSAndroidButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/action_positive"
+                    android:layout_weight="1"
+                    android:maxLines="1"
+                    android:text="Cancel"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    style="?android:buttonBarButtonStyle"/>
+
 
             </LinearLayout>
 
-        </ScrollView>
-
-        <!-- Buttons -->
-        <LinearLayout
-            android:id="@+id/buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            style="?android:buttonBarStyle"
-            android:divider="?android:dividerHorizontal"
-            android:showDividers="middle">
-
-            <Xamarin.RSControls.Droid.Controls.RSAndroidButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/action_destructive"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:text="Remove"
-                android:textAllCaps="false"
-                android:visibility="gone"
-                style="?android:buttonBarButtonStyle"/>
-
-            <Xamarin.RSControls.Droid.Controls.RSAndroidButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/action_neutral"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:text="Done"
-                android:textAllCaps="false"
-                android:visibility="gone"
-                style="?android:buttonBarButtonStyle"/>
-
-            <Xamarin.RSControls.Droid.Controls.RSAndroidButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/action_positive"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:text="Cancel"
-                android:textAllCaps="false"
-                android:visibility="gone"
-                style="?android:buttonBarButtonStyle"/>
-
-
-        </LinearLayout>
+        </Xamarin.RSControls.Droid.Controls.CustomLinearLayout>
 
     </Xamarin.RSControls.Droid.Controls.CustomLinearLayout>
 

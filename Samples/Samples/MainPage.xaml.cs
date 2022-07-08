@@ -283,7 +283,7 @@ namespace Samples
             //rsPopup.SetCustomView(entry);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(1.0f);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Left);
             rsPopup.SetBorderRadius(10);
             rsPopup.AddAction(Title = "Cancel Translation", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
@@ -303,11 +303,11 @@ namespace Samples
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Left);
             Entry rSEntry = new Entry() { Text = "MEHE wf", Margin = new Thickness(0, 0, 0, 0)};
             //rsPopup.SetCustomView(rSEntry);
-            //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
-            //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
-            //{
+            rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
+            rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
+            {
 
-            //}));
+            }));
             rsPopup.Show();
         }
 
@@ -319,13 +319,15 @@ namespace Samples
             //rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0f);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Left);
             //rsPopup.SetBorderRadius(10);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive, new Command(() =>
             //{
                 
             //}));
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
+
+
 
             StackLayout stack = new StackLayout() { BackgroundColor = Color.Transparent, Margin = new Thickness(10, 10, 10, 10)};
             StackLayout stack2 = new StackLayout() { BackgroundColor = Color.Red, Margin = new Thickness(10, 10, 10, 10), VerticalOptions = LayoutOptions.EndAndExpand };
