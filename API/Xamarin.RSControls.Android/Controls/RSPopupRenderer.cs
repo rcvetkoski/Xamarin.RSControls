@@ -735,7 +735,7 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 //// X position
                 // If on right side move left if needed else keep position
-                if ( (PositionX + relativeViewWidth / 2) >= customLayout.Width / 2)
+                if ( (PositionX) >= customLayout.Width / 2)
                 {
                     projectedPositionRight = PositionX + linearLayout.Width / 2;
 
@@ -746,7 +746,7 @@ namespace Xamarin.RSControls.Droid.Controls
                     }
                 }
                 // If on left side move right if needed else keep position
-                else if ((PositionX + relativeViewWidth / 2) < customLayout.Width / 2)
+                else if ((PositionX) < customLayout.Width / 2)
                 {
                     projectedPositionLeft = PositionX - linearLayout.Width / 2;
 
@@ -763,11 +763,12 @@ namespace Xamarin.RSControls.Droid.Controls
             // Y Position for Bottom
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
             {
-                projectedPositionTop = PositionY - relativeViewHeight - linearLayout.Height - arrowSize;
-                projectedPositionBottom = PositionY + linearLayout.Height + arrowSize;
+                projectedPositionTop = PositionY - relativeViewHeight - linearLayout.Height;
+                projectedPositionBottom = PositionY + linearLayout.Height;
+                
 
                 // If bottom space not available check if top is ok if not just move it to the top
-                if (projectedPositionBottom > maxYPositionAllowed)
+                if (projectedPositionBottom > maxYPositionAllowed && (projectedPositionTop + linearLayout.Height) < customLayout.Height)
                 {
                     // Check if top space enough, if ok than place it at top side
                     if (projectedPositionTop >= minYPositionAllowed)
@@ -777,6 +778,7 @@ namespace Xamarin.RSControls.Droid.Controls
                         {
                             (linearLayout.OutlineProvider as RSViewOutlineProvider).ArrowSide = RSPopupPositionSideEnum.Top;
                             (linearLayout.Background as RSDrawable).ArrowSide = RSPopupPositionSideEnum.Top;
+                            linearLayout2.SetY(linearLayout2.GetY() - arrowSize);
                         }
 
                         constantY = -relativeViewHeight - linearLayout.Height;
@@ -789,11 +791,115 @@ namespace Xamarin.RSControls.Droid.Controls
                         if (HasArrow)
                         {
                             HasArrow = false;
+                            linearLayout2.SetY(linearLayout2.GetY() - arrowSize / 2);
                         }
 
                         constantY = maxYPositionAllowed - projectedPositionBottom;
                         linearLayout.SetY(linearLayout.GetY() + (int)constantY);
                     }
+                }
+                else if ((linearLayout.GetY() + linearLayout.Height) > maxYPositionAllowed) // when keyboard pops
+                {
+                    // Hide arrow since there is no enough space on screen
+                    if (HasArrow)
+                    {
+                        HasArrow = false;
+                        linearLayout2.SetY(linearLayout2.GetY() - arrowSize / 2);
+                    }
+
+                    var offsetY = (float)(projectedPositionTop + linearLayout.Height) - (float)customLayout.Height;
+                    linearLayout.SetY(linearLayout.GetY() - linearLayout.Height - relativeViewHeight - offsetY);
+                }
+            }
+
+            // Y Position for Top
+            if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
+            {
+                projectedPositionTop = PositionY - linearLayout.Height;
+                projectedPositionBottom = PositionY + relativeViewHeight + linearLayout.Height;
+
+                // If top space not available check if bottom is ok if not just move it to the bottom
+                if (projectedPositionTop < minYPositionAllowed)
+                {
+                    // Check if bottom space enough, if ok than place it at bottom side
+                    if (projectedPositionBottom <= maxYPositionAllowed)
+                    {
+                        // Switch side
+                        if (HasArrow)
+                        {
+                            (linearLayout.OutlineProvider as RSViewOutlineProvider).ArrowSide = RSPopupPositionSideEnum.Bottom;
+                            (linearLayout.Background as RSDrawable).ArrowSide = RSPopupPositionSideEnum.Bottom;
+                            linearLayout2.SetY(linearLayout2.GetY() + arrowSize);
+                        }
+
+                        constantY = relativeViewHeight + linearLayout.Height;
+                        linearLayout.SetY(linearLayout.GetY() + (int)constantY);
+                    }
+                    // Just move it to the bottom so it ends within screen bounds if height not bigger than that
+                    else
+                    {
+                        // Hide arrow since there is no enough space on screen
+                        if (HasArrow)
+                        {
+                            HasArrow = false;
+                            linearLayout2.SetY(linearLayout2.GetY() + arrowSize / 2);
+                        }
+
+                        constantY = linearLayout.Height + maxYPositionAllowed - (projectedPositionBottom - relativeViewHeight);
+                        linearLayout.SetY(linearLayout.GetY() + (int)constantY);
+                    }
+                }
+                else if ((linearLayout.GetY() + linearLayout.Height) > maxYPositionAllowed) // when keyboard pops
+                {
+                    // Hide arrow since there is no enough space on screen
+                    if (HasArrow)
+                    {
+                        HasArrow = false;
+                        linearLayout2.SetY(linearLayout2.GetY() + arrowSize / 2);
+                    }
+
+                    constantY = maxYPositionAllowed - (linearLayout.GetY() + linearLayout.Height);
+                    linearLayout.SetY(linearLayout.GetY() + (int)constantY);
+                }
+            }
+
+            // Y Position for Left Right
+            if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left ||
+            RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
+            {
+                // If on bottom side move to top if needed else keep position
+                if (PositionY >= customLayout.Height / 2)
+                {
+                    projectedPositionBottom = PositionY + linearLayout.Height / 2;
+
+                    if (projectedPositionBottom > maxYPositionAllowed)
+                    {
+                        constantY =  maxYPositionAllowed - projectedPositionBottom;
+                        linearLayout.SetY(linearLayout.GetY() + (int)constantY);
+                    }
+                }
+                // If on top side move to bottom if needed else keep position
+                else if (PositionY < linearLayout.Height / 2)
+                {
+                    projectedPositionTop = PositionY - linearLayout.Height / 2;
+
+                    if (projectedPositionTop < minYPositionAllowed)
+                    {
+                        constantY = minYPositionAllowed -projectedPositionTop;
+                        linearLayout.SetY(linearLayout.GetY() + (int)constantY);
+                    }
+                }
+            }
+
+            // Y Position for Over
+            if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
+            {
+                projectedPositionBottom = PositionY + linearLayout.Height;
+
+                if (projectedPositionBottom > maxYPositionAllowed)
+                {
+                    constantY = projectedPositionBottom - maxYPositionAllowed;
+                    linearLayout.SetY(linearLayout.GetY() - (int)constantY);
                 }
             }
 
@@ -801,16 +907,18 @@ namespace Xamarin.RSControls.Droid.Controls
 
             (linearLayout.Background as RSDrawable).xConstrainConstant = (float)constantX;
             (linearLayout.OutlineProvider as RSViewOutlineProvider).xConstrainConstant = (float)constantX;
+            (linearLayout.Background as RSDrawable).yConstrainConstant = (float)constantY;
+            (linearLayout.OutlineProvider as RSViewOutlineProvider).yConstrainConstant = (float)constantY;
         }
 
         private void CustomLayout_LayoutChange(object sender, global::Android.Views.View.LayoutChangeEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("measured w " + linearLayout.MeasuredWidth + "  width " + linearLayout.Width);
+            //System.Diagnostics.Debug.WriteLine("measured w " + linearLayout.MeasuredWidth + "  width " + linearLayout.Width);
             if (RelativeView != null)
             {
                 shouldShowArrow();
-               (linearLayout.OutlineProvider as RSViewOutlineProvider).ArrowSide = this.RSPopupPositionSideEnum;
-               (linearLayout.Background as RSDrawable).ArrowSide = this.RSPopupPositionSideEnum;
+                (linearLayout.OutlineProvider as RSViewOutlineProvider).ArrowSide = this.RSPopupPositionSideEnum;
+                (linearLayout.Background as RSDrawable).ArrowSide = this.RSPopupPositionSideEnum;
 
                 // Set positionX and positionY 
                 SetPopupPositionRelativeTo(RelativeView, Resources.DisplayMetrics);
@@ -823,14 +931,23 @@ namespace Xamarin.RSControls.Droid.Controls
 
             // Update outline 
             linearLayout.InvalidateOutline();
+
+
+            Console.WriteLine(linearLayout.GetY());
         }
 
+        // Moves linearlayout2 on x or y axis so it compensates for the padding
         private void resetContentPosition()
         {
             if(RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
                 linearLayout2.SetX(0);
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
                 linearLayout2.SetX(linearLayout.PaddingLeft);
+
+            if(RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
+                linearLayout2.SetY(0);
+            else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
+                linearLayout2.SetY(linearLayout.PaddingTop);
         }
 
         //Orientation change

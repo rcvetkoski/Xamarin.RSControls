@@ -858,6 +858,7 @@ namespace Xamarin.RSControls.iOS.Controls
             }
 
 
+
             // Y Position for Bottom
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
             {
@@ -900,6 +901,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 }
             }
 
+            // Y Position for Top
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
             {
                 projectedPositionTop = CurrentDialogPosition.Y - dialogStack.Frame.Height - arrowSize;
@@ -951,7 +953,6 @@ namespace Xamarin.RSControls.iOS.Controls
                     dialogViewBottomConstraint.Constant = arrowSize;
                 }
             }
-
 
             // Y Position for Left Right
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left ||
