@@ -44,6 +44,10 @@
                 android:text="Title"
                 android:textStyle="bold"
                 android:textSize="18sp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:gravity="center"
                 android:id="@+id/dialog_title"/>
 
@@ -52,6 +56,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
                 android:scrollbars="none">
 
                 <LinearLayout
@@ -60,7 +67,6 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:layout_margin="0dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -78,7 +84,7 @@
             </ScrollView>
 
             <!-- Buttons -->
-            <LinearLayout
+            <Xamarin.RSControls.Droid.Controls.RSDialogButtonHolder
                 android:id="@+id/buttons"
                 android:layout_width="match_parent" 
                 android:layout_height="wrap_content"
@@ -122,7 +128,7 @@
                     style="?android:buttonBarButtonStyle"/>
 
 
-            </LinearLayout>
+            </Xamarin.RSControls.Droid.Controls.RSDialogButtonHolder>
 
         </Xamarin.RSControls.Droid.Controls.CustomLinearLayout>
 

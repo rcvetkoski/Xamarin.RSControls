@@ -50,7 +50,7 @@ namespace Xamarin.RSControls.Droid.Controls
         private LinearLayout contentView;
         private CustomLinearLayout linearLayout;
         private CustomLinearLayout linearLayout2;
-        private LinearLayout buttonsLayout;
+        private RSDialogButtonHolder buttonsLayout;
         public RSPopupAnimationEnum RSPopupAnimationEnum { get; set; }
         public RSPopupPositionEnum RSPopupPositionEnum { get; set; }
         public RSPopupPositionSideEnum RSPopupPositionSideEnum { get; set; }
@@ -83,7 +83,7 @@ namespace Xamarin.RSControls.Droid.Controls
             this.contentView = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
             linearLayout = customLayout.FindViewById<CustomLinearLayout>(Resource.Id.linearLayout);
             linearLayout2 = customLayout.FindViewById<CustomLinearLayout>(Resource.Id.linearLayout2);
-            buttonsLayout = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.buttons);
+            buttonsLayout = customLayout.FindViewById<RSDialogButtonHolder>(Resource.Id.buttons);
             closeButton = customLayout.FindViewById<global::Android.Widget.ImageButton>(Resource.Id.closeButton);
 
             customLayout.SetOnClickListener(this);
@@ -100,7 +100,7 @@ namespace Xamarin.RSControls.Droid.Controls
             this.customLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as global::Android.Widget.RelativeLayout;
             this.contentView = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
             linearLayout = customLayout.FindViewById<CustomLinearLayout>(Resource.Id.linearLayout);
-            buttonsLayout = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.buttons);
+            buttonsLayout = customLayout.FindViewById<RSDialogButtonHolder>(Resource.Id.buttons);
             closeButton = customLayout.FindViewById<global::Android.Widget.ImageButton>(Resource.Id.closeButton);
 
             customLayout.SetOnClickListener(this);
@@ -113,7 +113,7 @@ namespace Xamarin.RSControls.Droid.Controls
             this.customLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as global::Android.Widget.RelativeLayout;
             this.contentView = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
             linearLayout = customLayout.FindViewById<CustomLinearLayout>(Resource.Id.linearLayout);
-            buttonsLayout = customLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.buttons);
+            buttonsLayout = customLayout.FindViewById<RSDialogButtonHolder>(Resource.Id.buttons);
             closeButton = customLayout.FindViewById<global::Android.Widget.ImageButton>(Resource.Id.closeButton);
 
             customLayout.SetOnClickListener(this);
@@ -145,14 +145,14 @@ namespace Xamarin.RSControls.Droid.Controls
             if (!backFromSleep) //Dont want to reset layoutparameters when back from sleep
                 SetDialog();
 
-            //linearLayout.Post(() =>
-            //{
-            //    TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, customLayout.Height - PositionY, 0);
-            //    translateAnimation.Duration = 330;
-            //    translateAnimation.FillAfter = true;
-            //    linearLayout.StartAnimation(translateAnimation);
-            //}
-            //);
+            linearLayout.Post(() =>
+            {
+                TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, customLayout.Height - PositionY, 0);
+                translateAnimation.Duration = 330;
+                translateAnimation.FillAfter = true;
+                linearLayout.StartAnimation(translateAnimation);
+            }
+            );
         }
 
         //Custom background so we can set border radius shadow ...
@@ -529,8 +529,8 @@ namespace Xamarin.RSControls.Droid.Controls
                 screenUsableHeight = Resources.DisplayMetrics.HeightPixels - (Resources.DisplayMetrics.HeightPixels - (rectf.Bottom - rectf.Top));
 
                 //Set position
-                PositionX = x + (int)RSPopupOffsetX;
-                PositionY = y + (int)RSPopupOffsetY;
+                PositionX = x;
+                PositionY = y;
             }
         }
 
@@ -1135,6 +1135,38 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
 
+    public class RSDialogButtonHolder : LinearLayout
+    {
+        public RSDialogButtonHolder(Context context) : base(context)
+        {
+
+        }
+
+        public RSDialogButtonHolder(Context context, IAttributeSet attrs) : base(context, attrs)
+        {
+
+        }
+
+        public RSDialogButtonHolder(Context context, IAttributeSet attrs, int defStyleAttr) : base(context, attrs, defStyleAttr)
+        {
+
+        }
+
+        public RSDialogButtonHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        {
+
+        }
+
+
+        protected override void OnDraw(Canvas canvas)
+        {
+            base.OnDraw(canvas);
+
+            Paint paint = new Paint();
+            paint.Color = global::Android.Graphics.Color.LightGray;
+            canvas.DrawRect(0, 0, canvas.ClipBounds.Width(), TypedValue.ApplyDimension(ComplexUnitType.Dip, 0.5f, Context.Resources.DisplayMetrics), paint);
+        }
+    }
 
 
     public class RSAndroidButton : global::Android.Widget.Button, global::Android.Views.View.IOnClickListener
