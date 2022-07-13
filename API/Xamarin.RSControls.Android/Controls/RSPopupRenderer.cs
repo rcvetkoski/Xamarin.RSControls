@@ -123,11 +123,6 @@ namespace Xamarin.RSControls.Droid.Controls
 
         public override global::Android.App.Dialog OnCreateDialog(Bundle savedInstanceState)
         {
-            if (CustomView != null)
-            {
-                SetCustomView();
-            }
-
             global::Android.App.AlertDialog.Builder builder = new global::Android.App.AlertDialog.Builder(Context);
             //global::Android.App.AlertDialog.Builder builder = new global::Android.App.AlertDialog.Builder(Context, Resource.Style.RSDialogAnimationTheme);
             return builder.Create();
@@ -334,13 +329,6 @@ namespace Xamarin.RSControls.Droid.Controls
             var attrs = this.Dialog.Window.Attributes;
             var metrics = Resources.DisplayMetrics;
 
-            SetBackground();
-            SetCustomLayout();
-
-
-            //Popup size
-            SetSize(metrics);
-
             //Apply size
             attrs.Width = ViewGroup.LayoutParams.MatchParent;
             attrs.Height = ViewGroup.LayoutParams.MatchParent;
@@ -353,9 +341,18 @@ namespace Xamarin.RSControls.Droid.Controls
             //Set dim amount
             attrs.DimAmount = this.DimAmount;
 
-
             //Set new attributes
             this.Dialog.Window.Attributes = attrs;
+
+
+            SetBackground();
+            SetCustomLayout();
+            if (CustomView != null)
+                SetCustomView(metrics);
+
+
+            //Popup size
+            SetSize(metrics);
 
 
             if (HasCloseButton)
@@ -432,7 +429,7 @@ namespace Xamarin.RSControls.Droid.Controls
         }
 
         //Set and add custom view 
-        private void SetCustomView()
+        private void SetCustomView(DisplayMetrics metrics)
         {
             //ContentPage customViewContentPage = new ContentPage();
             //customViewContentPage.BackgroundColor = Forms.Color.Green;
@@ -440,7 +437,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             renderer = Platform.CreateRendererWithContext(CustomView, Context);
             Platform.SetRenderer(CustomView, renderer);
-            var sizeRequest = CustomView.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+            var sizeRequest = CustomView.Measure(metrics.WidthPixels - this.RightMargin - this.LeftMargin, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
             var sizeW = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Width, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics);
             var sizeH = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Height, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics);
 
@@ -448,8 +445,9 @@ namespace Xamarin.RSControls.Droid.Controls
             renderer.Element.Layout(new Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
             this.contentView.AddView(renderer.View);
 
+            customLayout.Width.ToString();
 
-
+            var lol = Dialog.Window.Attributes.Width.ToString();
             //convertView = new Extensions.ViewCellContainer(Context, CustomView, null, 0, this.contentView);
             //var convertView = Extensions.ViewExtensions.ConvertFormsToNative(Context, CustomView, 0, 0, 0, 0);
             //this.contentView.AddView(convertView);
@@ -969,7 +967,7 @@ namespace Xamarin.RSControls.Droid.Controls
             linearLayout.InvalidateOutline();
 
 
-            //Console.WriteLine("Customlayout");
+            Console.WriteLine("Customlayout");
 
             //var sizeRequest = CustomView.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
             //var sizeW = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Width, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics);

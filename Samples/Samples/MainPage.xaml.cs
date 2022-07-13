@@ -318,7 +318,7 @@ namespace Samples
 
             //rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupAnimation(RSPopupAnimationEnum.CurveEaseInOut);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0f);
             //rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Center);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive, new Command(() =>
