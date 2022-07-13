@@ -27,7 +27,7 @@ using Xamarin.RSControls.Interfaces;
 [assembly: Dependency(typeof(RSPopupRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
 {
-    public class RSPopupRenderer : global::AndroidX.Fragment.App.DialogFragment, IDialogPopup, IDisposable, global::Android.Views.View.IOnClickListener
+    public class RSPopupRenderer : global::AndroidX.Fragment.App.DialogFragment, IDialogPopup, IDisposable, global::Android.Views.View.IOnClickListener, global::Android.Views.View.IOnTouchListener
     {
         public int PositionX { get; set; }
         public int PositionY { get; set; }
@@ -75,6 +75,7 @@ namespace Xamarin.RSControls.Droid.Controls
         public int screenUsableHeight;
         private bool backFromSleep;
         private Extensions.ViewCellContainer convertView;
+        private IVisualElementRenderer renderer;
 
         public RSPopupRenderer()
         {
@@ -127,8 +128,8 @@ namespace Xamarin.RSControls.Droid.Controls
                 SetCustomView();
             }
 
-            //global::Android.App.AlertDialog.Builder builder = new global::Android.App.AlertDialog.Builder(Context);
-            global::Android.App.AlertDialog.Builder builder = new global::Android.App.AlertDialog.Builder(Context, Resource.Style.RSDialogAnimationTheme);
+            global::Android.App.AlertDialog.Builder builder = new global::Android.App.AlertDialog.Builder(Context);
+            //global::Android.App.AlertDialog.Builder builder = new global::Android.App.AlertDialog.Builder(Context, Resource.Style.RSDialogAnimationTheme);
             return builder.Create();
         }
 
@@ -146,12 +147,9 @@ namespace Xamarin.RSControls.Droid.Controls
                 SetDialog();
 
             linearLayout.Post(() =>
-            {
-                TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, customLayout.Height - PositionY, 0);
-                translateAnimation.Duration = 330;
-                translateAnimation.FillAfter = true;
-                linearLayout.StartAnimation(translateAnimation);
-            }
+                {
+                    RSPopupAnimation(linearLayout, RSPopupAnimationEnum, true);
+                }
             );
         }
 
@@ -308,7 +306,7 @@ namespace Xamarin.RSControls.Droid.Controls
             if (RelativeView != null)
                 shouldShowArrow();
 
-            if(HasArrow)
+            if (HasArrow)
                 setPadding();
 
             ////Default value can be changed by user
@@ -324,7 +322,7 @@ namespace Xamarin.RSControls.Droid.Controls
             Orientation = Resources.Configuration.Orientation;
             linearLayout.rSPopupRenderer = this;
             linearLayout.BorderRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics);
-
+            linearLayout.Alpha = 0.0f; // hide dialog in order to sthealty position dialog at right position before any animation is applied 
 
             LeftMargin = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, LeftMargin, Context.Resources.DisplayMetrics));
             TopMargin = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, TopMargin, Context.Resources.DisplayMetrics));
@@ -366,9 +364,49 @@ namespace Xamarin.RSControls.Droid.Controls
             if (HasCloseButton)
                 closeButton.SetOnClickListener(this);
 
-
+            linearLayout.SetOnTouchListener(this);
             customLayout.LayoutChange += CustomLayout_LayoutChange;
         }
+
+
+        float y1 = 0;
+        float initPosY = 0;
+        public bool OnTouch(global::Android.Views.View v, MotionEvent e)
+        {
+
+            if (e.Action == MotionEventActions.Down)
+            {
+                initPosY = linearLayout.GetY();
+                y1 = e.RawY;
+                y1 = linearLayout.GetY() - e.RawY;
+
+            }
+            else if (e.Action == MotionEventActions.Up)
+            {
+                if (linearLayout.GetY() > initPosY * 1.20)
+                {
+                    linearLayout.Animate().TranslationY(customLayout.Height).SetDuration(230).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                }
+                else
+                {
+                    linearLayout.Animate().TranslationY(initPosY).SetDuration(230).Start();  
+                    initPosY = 0;
+                }
+            }
+            else if (e.Action == MotionEventActions.Move)
+            {
+                System.Diagnostics.Debug.WriteLine((e.RawY + y1) + "   " + initPosY);
+
+                if ((e.RawY + y1) >= initPosY)
+                    linearLayout.SetY(e.RawY + y1);
+                else if((e.RawY + y1) < initPosY)
+                    linearLayout.SetY(initPosY);
+            }
+
+
+            return true;
+        }
+
 
         // Set arrow true or false
         private void shouldShowArrow()
@@ -400,22 +438,20 @@ namespace Xamarin.RSControls.Droid.Controls
             //customViewContentPage.BackgroundColor = Forms.Color.Green;
             //customViewContentPage.Content = CustomView;
 
-            var renderer = Platform.CreateRendererWithContext(CustomView, Context);
+            renderer = Platform.CreateRendererWithContext(CustomView, Context);
             Platform.SetRenderer(CustomView, renderer);
             var sizeRequest = CustomView.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
             var sizeW = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Width, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics);
             var sizeH = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Height, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics);
+
             renderer.View.LayoutParameters = new LinearLayout.LayoutParams((int)sizeW, (int)sizeH);
             renderer.Element.Layout(new Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
             this.contentView.AddView(renderer.View);
-            renderer.View.Enabled = true;
 
 
 
             //convertView = new Extensions.ViewCellContainer(Context, CustomView, null, 0, this.contentView);
-
             //var convertView = Extensions.ViewExtensions.ConvertFormsToNative(Context, CustomView, 0, 0, 0, 0);
-
             //this.contentView.AddView(convertView);
             //convertView.SetBackgroundColor(global::Android.Graphics.Color.Pink);
             // convertView.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
@@ -933,7 +969,14 @@ namespace Xamarin.RSControls.Droid.Controls
             linearLayout.InvalidateOutline();
 
 
-            Console.WriteLine(linearLayout.GetY());
+            //Console.WriteLine("Customlayout");
+
+            //var sizeRequest = CustomView.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+            //var sizeW = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Width, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics);
+            //var sizeH = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Height, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics);
+
+            //renderer.View.LayoutParameters = new LinearLayout.LayoutParams((int)sizeW, (int)sizeH);
+            //renderer.Element.Layout(new Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
         }
 
         // Moves linearlayout2 on x or y axis so it compensates for the padding
@@ -1088,12 +1131,124 @@ namespace Xamarin.RSControls.Droid.Controls
             if (v.Id == customLayout.Id && !IsModal)
             {
                 this.Arguments = null;
-                this.Dismiss();
+                RSPopupAnimation(linearLayout, RSPopupAnimationEnum, false);
             }
             else if (v.Id == closeButton.Id)
             {
-                this.Dismiss();
+                RSPopupAnimation(linearLayout, RSPopupAnimationEnum, false);
             }
+        }
+
+        // Dialog closing and opening animation
+        private void RSPopupAnimation(global::Android.Views.View view, RSPopupAnimationEnum animationType, bool isShowing)
+        {
+            long duration = 300;
+
+            if (animationType == RSPopupAnimationEnum.CurveEaseInOut)
+            {
+                if (isShowing)
+                {
+                    linearLayout.ScaleX = 1.1f;
+                    linearLayout.ScaleY = 1.1f;
+                    linearLayout.Animate().ScaleX(1.0f).SetDuration(duration).Start();
+                    linearLayout.Animate().ScaleY(1.0f).SetDuration(duration).Start();
+                    linearLayout.Animate().Alpha(1.0f).SetDuration(duration).Start();
+                }
+                else
+                {
+                    linearLayout.Animate().ScaleX(1.1f).SetDuration(duration).Start();
+                    linearLayout.Animate().ScaleY(1.1f).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                    linearLayout.Animate().Alpha(0.0f).SetDuration(duration).Start();
+                }
+            }
+
+            if (animationType == RSPopupAnimationEnum.Expanding)
+            {
+                if (isShowing)
+                {
+                    linearLayout.ScaleX = 0.2f;
+                    linearLayout.ScaleY = 0.2f;
+                    linearLayout.Animate().Alpha(1.0f).SetDuration(duration).Start();
+                    linearLayout.Animate().ScaleX(1.0f).SetDuration(duration).Start();
+                    linearLayout.Animate().ScaleY(1.0f).SetDuration(duration).Start();
+                }
+                else
+                {
+                    linearLayout.Animate().ScaleX(0.2f).SetDuration(duration).Start();
+                    linearLayout.Animate().ScaleY(0.2f).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                    linearLayout.Animate().Alpha(0.0f).SetDuration(duration).Start();   
+                }
+            }
+
+            if (animationType == RSPopupAnimationEnum.BottomToTop)
+            {
+                if (isShowing)
+                {
+                    //TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, customLayout.Height - PositionY, 0);
+                    //translateAnimation.Duration = 230;
+                    //translateAnimation.FillAfter = true;
+                    //linearLayout.StartAnimation(translateAnimation);
+
+                    var pos = linearLayout.GetY();
+                    linearLayout.SetY(customLayout.Height);
+                    linearLayout.Alpha = 1.0f;
+                    linearLayout.Animate().TranslationY(pos).SetDuration(duration).Start();
+                }
+                else
+                {
+                    linearLayout.Animate().TranslationY(customLayout.Height).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                }
+            }
+
+            if (animationType == RSPopupAnimationEnum.TopToBottom)
+            {
+                if (isShowing)
+                {
+                    var pos = linearLayout.GetY();
+                    linearLayout.SetY(-linearLayout.Height);
+                    linearLayout.Alpha = 1.0f;
+                    linearLayout.Animate().TranslationY(pos).SetDuration(duration).Start();
+                }
+                else
+                {
+                    linearLayout.Animate().TranslationY(-linearLayout.Height).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                }
+            }
+
+            if (animationType == RSPopupAnimationEnum.LeftToRight)
+            {
+                if (isShowing)
+                {
+                    var pos = linearLayout.GetX();
+                    linearLayout.SetX(-linearLayout.Width);
+                    linearLayout.Alpha = 1.0f;
+                    linearLayout.Animate().TranslationX(pos).SetDuration(duration).Start();
+                }
+                else
+                {
+                    linearLayout.Animate().TranslationX(-linearLayout.Width).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                }
+            }
+
+            if (animationType == RSPopupAnimationEnum.RightToLeft)
+            {
+                if (isShowing)
+                {
+                    var pos = linearLayout.GetX();
+                    linearLayout.SetX(customLayout.Width);
+                    linearLayout.Alpha = 1.0f;
+                    linearLayout.Animate().TranslationX(pos).SetDuration(duration).Start();
+                }
+                else
+                {
+                    linearLayout.Animate().TranslationX(customLayout.Width).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                }
+            }
+        }
+
+        public void ClosePopup()
+        {
+            RSPopupAnimation(linearLayout, RSPopupAnimationEnum, false);
         }
 
         //Dismiss
@@ -1164,7 +1319,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
             Paint paint = new Paint();
             paint.Color = global::Android.Graphics.Color.LightGray;
-            canvas.DrawRect(0, 0, canvas.ClipBounds.Width(), TypedValue.ApplyDimension(ComplexUnitType.Dip, 0.5f, Context.Resources.DisplayMetrics), paint);
+            paint.StrokeWidth = 1;
+            canvas.DrawRect(0, 0, canvas.ClipBounds.Width(), DividerDrawable.IntrinsicWidth, paint);
         }
     }
 
@@ -1200,7 +1356,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 this.Enabled = false;
         }
 
-        public global::AndroidX.Fragment.App.DialogFragment dialog { get; set; }
+        public RSPopupRenderer dialog { get; set; }
         //public PopupWindow dialog { get; set; }
 
 
@@ -1232,7 +1388,7 @@ namespace Xamarin.RSControls.Droid.Controls
             var button = v as RSAndroidButton;
 
             if (button.Id.Equals(Resource.Id.action_positive))
-                this.dialog.Dismiss();
+                this.dialog.ClosePopup();
 
             if (button.Command != null)
                 button.Command.Execute(null);
