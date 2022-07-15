@@ -89,6 +89,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             relativeLayout.SetOnClickListener(this);
             linearLayout.SetOnClickListener(this);
+            contentView.SetOnClickListener(this);
         }
 
         //Picker usage
@@ -106,6 +107,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             relativeLayout.SetOnClickListener(this);
             linearLayout.SetOnClickListener(this);
+            contentView.SetOnClickListener(this);
         }
 
         public RSPopupRenderer(System.IntPtr intPtr, global::Android.Runtime.JniHandleOwnership jniHandleOwnership) : base(intPtr, jniHandleOwnership)
@@ -119,6 +121,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             relativeLayout.SetOnClickListener(this);
             linearLayout.SetOnClickListener(this);
+            contentView.SetOnClickListener(this);
         }
 
         public override global::Android.App.Dialog OnCreateDialog(Bundle savedInstanceState)
@@ -136,7 +139,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             //Fix for Control that call keyboard like entry (keyboard not showing up)
             Dialog.Window.ClearFlags(WindowManagerFlags.NotFocusable | WindowManagerFlags.AltFocusableIm);
-            //Dialog.Window.SetSoftInputMode(SoftInput.StateAlwaysVisible);
+            //Dialog.Window.SetSoftInputMode(SoftInput.StateAlwaysHidden);
 
             if (!backFromSleep) //Dont want to reset layoutparameters when back from sleep
                 SetDialog();
@@ -320,6 +323,7 @@ namespace Xamarin.RSControls.Droid.Controls
             linearLayout.Alpha = 0.0f; // hide dialog in order to sthealty position dialog at right position before any animation is applied 
             linearLayout2.rSPopupRenderer = this;
             linearLayout2.WidthMatchParent = this.Width == -1 ? true : false;
+            linearLayout2.IsLinearLayout2 = true;
 
             LeftMargin = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, LeftMargin, Context.Resources.DisplayMetrics));
             TopMargin = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, TopMargin, Context.Resources.DisplayMetrics));
@@ -436,9 +440,9 @@ namespace Xamarin.RSControls.Droid.Controls
 
             renderer = Platform.CreateRendererWithContext(customViewContentPage, Context);
             Platform.SetRenderer(customViewContentPage, renderer);
-            renderer.View.Focusable = true;
-            renderer.View.FocusableInTouchMode = true;
-            renderer.View.Clickable = true;
+            //renderer.View.Focusable = true;
+            //renderer.View.FocusableInTouchMode = true;
+            //renderer.View.Clickable = true;
             renderer.Tracker.UpdateLayout();
             renderer.UpdateLayout();
 
@@ -465,8 +469,8 @@ namespace Xamarin.RSControls.Droid.Controls
             }
 
             this.contentView.AddView(renderer.View);
+            renderer.View.SetOnClickListener(this);
         }
-
 
         //Set native view 
         public void SetNativeView(global::Android.Views.View nativeView)
@@ -1140,6 +1144,12 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 RSPopupAnimation(linearLayout, RSPopupAnimationEnum, false);
             }
+
+            // Hide keyboard
+            contentView.ClearFocus();
+            global::Android.Views.InputMethods.InputMethodManager manager = (global::Android.Views.InputMethods.InputMethodManager)Activity.GetSystemService(Context.InputMethodService);
+            if (manager != null)
+                manager.HideSoftInputFromWindow(this.Dialog.Window.DecorView.WindowToken, 0);
         }
 
         // Dialog closing and opening animation
@@ -1417,7 +1427,7 @@ namespace Xamarin.RSControls.Droid.Controls
         public MeasureSpecMode SpecMode { get; set; }
         public float BorderRadius { get; set; }
         public bool WidthMatchParent { get; set; }
-
+        public bool IsLinearLayout2 { get; set; } = false;
 
         public CustomLinearLayout(Context context) : base(context)
         {
@@ -1439,13 +1449,16 @@ namespace Xamarin.RSControls.Droid.Controls
 
         }
 
-
+        // Used only for linearlayout2 to give proper size to Xamarin customView
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
             base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
 
+            if (!IsLinearLayout2)
+                return;
+
             // Layout Custom xamarin forms view, it's when this = linearlayout2
-            if(rSPopupRenderer != null && rSPopupRenderer.renderer != null)
+            if (rSPopupRenderer != null && rSPopupRenderer.renderer != null)
             {
                 double pixelsWidth = MeasureSpec.GetSize(widthMeasureSpec);
                 double numWidth = ContextExtensions.FromPixels(this.Context, pixelsWidth);

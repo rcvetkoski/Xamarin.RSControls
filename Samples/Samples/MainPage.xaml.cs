@@ -279,7 +279,7 @@ namespace Samples
             //label.Margin = new Thickness(10, 10, 10, 10);
 
             //rsPopup.SetMargin(10, 10, 10, 10);
-            //rsPopup.SetCustomView(entry);
+            rsPopup.SetCustomView(entry);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0.0f);
             //rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Center);
@@ -318,7 +318,7 @@ namespace Samples
 
             //rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupAnimation(RSPopupAnimationEnum.CurveEaseInOut);
-            rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.WrapContent);
+            rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0f);
             //rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Center);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive, new Command(() =>
@@ -329,7 +329,7 @@ namespace Samples
 
 
 
-            StackLayout stack = new StackLayout() { BackgroundColor = Color.Green, HorizontalOptions = LayoutOptions.Center};
+            StackLayout stack = new StackLayout() { BackgroundColor = Color.Green, HorizontalOptions = LayoutOptions.End};
             StackLayout stack2 = new StackLayout() { BackgroundColor = Color.Red, Margin = new Thickness(10, 10, 10, 10), VerticalOptions = LayoutOptions.EndAndExpand };
             RSNumericUpDown weight = new RSNumericUpDown() { Placeholder = "Weight", Margin = new Thickness(10, 10, 10, 10)};
             RSNumericUpDown reps = new RSNumericUpDown() { Placeholder = "Reps", Margin = new Thickness(10, 10, 10, 10) };
