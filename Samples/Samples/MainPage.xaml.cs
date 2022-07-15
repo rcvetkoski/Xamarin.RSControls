@@ -279,7 +279,7 @@ namespace Samples
             //label.Margin = new Thickness(10, 10, 10, 10);
 
             //rsPopup.SetMargin(10, 10, 10, 10);
-            rsPopup.SetCustomView(entry);
+            //rsPopup.SetCustomView(entry);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0.0f);
             //rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Center);

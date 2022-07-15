@@ -435,8 +435,8 @@ namespace Xamarin.RSControls.Droid.Controls
         private void SetCustomView(DisplayMetrics metrics)
         {
             ContentPage customViewContentPage = new ContentPage();
-            customViewContentPage.BackgroundColor = Forms.Color.Pink;
             customViewContentPage.Content = CustomView;
+            customViewContentPage.BindingContext = CustomView.BindingContext;
 
             renderer = Platform.CreateRendererWithContext(customViewContentPage, Context);
             Platform.SetRenderer(customViewContentPage, renderer);
@@ -982,7 +982,7 @@ namespace Xamarin.RSControls.Droid.Controls
             // Update outline 
             linearLayout.InvalidateOutline();
 
-            //Console.WriteLine("RelativeLayout_LayoutChange");
+            Console.WriteLine("RelativeLayout_LayoutChange");
         }
 
 
@@ -1204,8 +1204,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
                     var pos = linearLayout.GetY();
                     linearLayout.SetY(relativeLayout.Height);
-                    linearLayout.Alpha = 1.0f;
                     linearLayout.Animate().TranslationY(pos).SetDuration(duration).Start();
+                    linearLayout.Alpha = 1.0f;
                 }
                 else
                 {
