@@ -329,14 +329,14 @@ namespace Samples
 
 
 
-            StackLayout stack = new StackLayout() { BackgroundColor = Color.Green};
+            StackLayout stack = new StackLayout() { BackgroundColor = Color.Green, HorizontalOptions = LayoutOptions.Center};
             StackLayout stack2 = new StackLayout() { BackgroundColor = Color.Red, Margin = new Thickness(10, 10, 10, 10), VerticalOptions = LayoutOptions.EndAndExpand };
             RSNumericUpDown weight = new RSNumericUpDown() { Placeholder = "Weight", Margin = new Thickness(10, 10, 10, 10)};
             RSNumericUpDown reps = new RSNumericUpDown() { Placeholder = "Reps", Margin = new Thickness(10, 10, 10, 10) };
             Entry entry = new Entry() { Text = "lol" };
-            stack2.Children.Add(weight);
+            stack2.Children.Add(reps);
             stack.Children.Add(stack2);
-            stack.Children.Add(reps);
+            stack.Children.Add(weight);
 
 
             //rsPopup.SetMargin(10, 10, 10, 10);
