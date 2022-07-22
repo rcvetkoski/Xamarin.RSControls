@@ -3,6 +3,7 @@ using System.Windows.Input;
 using CoreAnimation;
 using CoreGraphics;
 using Foundation;
+using SpriteKit;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -370,6 +371,7 @@ namespace Xamarin.RSControls.iOS.Controls
             customViewWidthConstraint = renderer.NativeView.WidthAnchor.ConstraintEqualTo(0);
             customViewWidthConstraint.Priority = 750;
             customViewWidthConstraint.Active = true;
+
             // Height
             customViewHeightConstraint = renderer.NativeView.HeightAnchor.ConstraintEqualTo(0);
             customViewHeightConstraint.Priority = 999;
@@ -382,26 +384,28 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
             // Set max size
-            var maxSize = new CGSize(mainView.Frame.Width - mainView.SafeAreaInsets.Left - mainView.SafeAreaInsets.Right,
-                                 mainView.Frame.Height - mainView.SafeAreaInsets.Top - mainView.SafeAreaInsets.Bottom);
+            var maxSize = new CGSize(mainView.Frame.Width - mainView.SafeAreaInsets.Left - mainView.SafeAreaInsets.Right -offsetX - (nfloat)LeftMargin - (nfloat)RightMargin,
+                                 mainView.Frame.Height - mainView.SafeAreaInsets.Top - mainView.SafeAreaInsets.Bottom - offsetY - (nfloat)TopMargin - (nfloat)BottomMargin);
 
             // Get required size for forms view
-            var sizeRequest = customViewContentPage.Content.Measure(maxSize.Width - offsetX, maxSize.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
+            var sizeRequest = customViewContentPage.Content.Measure(maxSize.Width, maxSize.Height, Forms.MeasureFlags.IncludeMargins);
 
-            // Layout forms view
+            // Layout forms view -- need to give some size here or else it won't render -- the correct size is done later in layoutCustomView()
             customViewContentPage.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
 
             contentStack.AddArrangedSubview(renderer.NativeView);
             contentStack.CustomViewContentPage = customViewContentPage;
 
-            //set keyboard KeyboardObservers
+            // set keyboard KeyboardObservers
             AddKeyboardObservers();
 
+            // Listen to CustomView changes and update
             customViewContentPage.MeasureInvalidated += CustomViewContentPage_MeasureInvalidated;
         }
 
         private void CustomViewContentPage_MeasureInvalidated(object sender, EventArgs e)
         {
+            //this.LayoutSubviews();
             layoutCustomView();
         }
 
@@ -412,25 +416,30 @@ namespace Xamarin.RSControls.iOS.Controls
             var offsetY = dialogStack.DirectionalLayoutMargins.Top + dialogStack.DirectionalLayoutMargins.Bottom;
 
             // Set max size
-            var maxSize = new CGSize(mainView.Frame.Width - mainView.SafeAreaInsets.Left - mainView.SafeAreaInsets.Right,
-                                 mainView.Frame.Height - mainView.SafeAreaInsets.Top - mainView.SafeAreaInsets.Bottom);
+            var maxSize = new CGSize(mainView.Frame.Width - mainView.SafeAreaInsets.Left - mainView.SafeAreaInsets.Right -offsetX - (nfloat)LeftMargin - (nfloat)RightMargin,
+                                 mainView.Frame.Height - mainView.SafeAreaInsets.Top - mainView.SafeAreaInsets.Bottom - offsetY - (nfloat)TopMargin - (nfloat)BottomMargin);
 
             // Get and Set required size for forms view
-            var sizeRequest = customViewContentPage.Content.Measure(maxSize.Width - offsetX, maxSize.Height - offsetY, Forms.MeasureFlags.IncludeMargins);
+            var sizeRequest = customViewContentPage.Content.Measure(maxSize.Width, maxSize.Height, Forms.MeasureFlags.IncludeMargins);
+
 
             // Calculate final width
-            double w = (dialogStack.Frame.Width - (mainView.SafeAreaInsets.Left - mainView.SafeAreaInsets.Right) - offsetX) < maxSize.Width ?
-                       (dialogStack.Frame.Width - (mainView.SafeAreaInsets.Left - mainView.SafeAreaInsets.Right) - offsetX) :
-                       maxSize.Width;
-            var finalWidth = w > sizeRequest.Request.Width ? w : sizeRequest.Request.Width;
+            if (this.Width == -1)
+            {
+                customViewWidthConstraint.Constant = maxSize.Width;
+                customViewContentPage.Layout(new Rectangle(0, 0, maxSize.Width, sizeRequest.Request.Height));
+            }
+            else if (this.Width == -2)
+            {
+                customViewWidthConstraint.Constant = (nfloat)sizeRequest.Request.Width;
+                customViewContentPage.Layout(new Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+            }
+            else
+            {
+                customViewWidthConstraint.Constant = (nfloat)this.Width - offsetX;
+                customViewContentPage.Layout(new Rectangle(0, 0, this.Width - offsetX, sizeRequest.Request.Height));
+            }
 
-
-            // Layout forms view
-            customViewContentPage.Layout(new Forms.Rectangle(0, 0, finalWidth, sizeRequest.Request.Height));
-
-
-            // Update FormsToNativeInPopup width and height constrains
-            customViewWidthConstraint.Constant = (nfloat)finalWidth;
             customViewHeightConstraint.Constant = (nfloat)sizeRequest.Request.Height;
         }
 
@@ -1268,7 +1277,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 updatePosition(position);
             }
 
-            Console.WriteLine("layout subviews");
         }
 
         // Button graphics

@@ -467,7 +467,7 @@ namespace Xamarin.RSControls.Droid.Controls
             else
             {
                 renderer.View.LayoutParameters = new LinearLayout.LayoutParams((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)this.Width, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics), (int)sizeH);
-                customViewContentPage.Layout(new Rectangle(0, 0, ContextExtensions.FromPixels(this.Context, sizeRequest.Request.Width), sizeRequest.Request.Height));
+                customViewContentPage.Layout(new Rectangle(0, 0, this.Width, sizeRequest.Request.Height));
             }
 
             this.contentView.AddView(renderer.View);
