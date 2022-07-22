@@ -639,9 +639,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             var height = this.Frame.Height - topPadding - bottomPadding;
             mask.Frame = new CGRect(0, topPadding + this.ContentOffset.Y, Frame.Width, height);
-            Console.WriteLine(this.TextInputView.Frame.Height);
             var lol = this.GetCaretRectForPosition(this.EndOfDocument);
-            Console.WriteLine(lol + "  " + ContentOffset.Y);
             CGRect cGRect = new CGRect(0, ContentOffset.Y + this.Frame.Height - bottomPadding - 10, this.Frame.Width, 30);
             this.ScrollRectToVisible(border.Bounds, true);
 

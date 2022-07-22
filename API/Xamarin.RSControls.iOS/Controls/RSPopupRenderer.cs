@@ -19,8 +19,8 @@ namespace Xamarin.RSControls.iOS.Controls
         private UIView mainView { get; set; }
         private UIView BackgroundView { get; set; }
         private RSDialogView DialogView { get; set; }
-        private TestClass dialogStack { get; set; }
-        private UIStackView contentStack { get; set; }
+        private UIStackView dialogStack { get; set; }
+        private RScontentStack contentStack { get; set; }
         private RSUIScrollView contentScrollView { get; set; }
         private UIStackView buttonsStack { get; set; }
         private UIView topBorderButtonsStack;
@@ -124,7 +124,7 @@ namespace Xamarin.RSControls.iOS.Controls
             AddSubview(DialogView);
 
             //DialogStack
-            dialogStack = new TestClass();
+            dialogStack = new UIStackView();
             DialogView.AddSubview(dialogStack);
 
             //Title
@@ -136,7 +136,7 @@ namespace Xamarin.RSControls.iOS.Controls
             dialogStack.AddArrangedSubview(contentScrollView);
 
             // ContentStack
-            contentStack = new UIStackView();
+            contentStack = new RScontentStack();
             contentScrollView.AddSubview(contentStack);
 
             //Message
@@ -362,11 +362,6 @@ namespace Xamarin.RSControls.iOS.Controls
             var renderer = Platform.CreateRenderer(customViewContentPage);
             Platform.SetRenderer(customViewContentPage, renderer);
 
-            //// Convert view
-            //convertView = new Extensions.FormsToNativeInPopup(customViewContentPage.Content, renderer.NativeView, dialogStack, mainView);
-            //contentStack.AddArrangedSubview(convertView);
-
-
 
             // Give size to convertedView so it can be layed out correctly in the uistackview
             // The prioity here is lower so if parent which is a uistackview is smaller in width, he can fullfill his constraints
@@ -395,12 +390,19 @@ namespace Xamarin.RSControls.iOS.Controls
 
             // Layout forms view
             customViewContentPage.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
-            //customViewContentPage.Content.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
 
             contentStack.AddArrangedSubview(renderer.NativeView);
+            contentStack.CustomViewContentPage = customViewContentPage;
 
             //set keyboard KeyboardObservers
             AddKeyboardObservers();
+
+            customViewContentPage.MeasureInvalidated += CustomViewContentPage_MeasureInvalidated;
+        }
+
+        private void CustomViewContentPage_MeasureInvalidated(object sender, EventArgs e)
+        {
+            layoutCustomView();
         }
 
         private void layoutCustomView()
@@ -425,7 +427,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             // Layout forms view
             customViewContentPage.Layout(new Forms.Rectangle(0, 0, finalWidth, sizeRequest.Request.Height));
-            //customViewContentPage.Content.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+
 
             // Update FormsToNativeInPopup width and height constrains
             customViewWidthConstraint.Constant = (nfloat)finalWidth;
@@ -1246,7 +1248,11 @@ namespace Xamarin.RSControls.iOS.Controls
 
 
             if (CustomView != null)
+            {
                 layoutCustomView();
+                if ((customViewContentPage as ContentPage).Content is Layout)
+                    ((customViewContentPage as ContentPage).Content as Layout).ForceLayout();
+            }
 
             if (RelativeView != null)
             {
@@ -1261,6 +1267,8 @@ namespace Xamarin.RSControls.iOS.Controls
                 setConstraintPosition(position);
                 updatePosition(position);
             }
+
+            Console.WriteLine("layout subviews");
         }
 
         // Button graphics
@@ -1303,6 +1311,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if (CustomView != null)
             {
                 RemoveKeyboardObservers();
+                customViewContentPage.MeasureInvalidated -= CustomViewContentPage_MeasureInvalidated;
             }
 
             if (animated)
@@ -1537,13 +1546,20 @@ namespace Xamarin.RSControls.iOS.Controls
     }
 
 
-
-
-    public class TestClass : UIStackView
+    // Used to ForceLayout on Xamarin custom view if present
+    public class RScontentStack : UIStackView
     {
+        public ContentPage CustomViewContentPage { get; set; }
+
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
+
+            if(CustomViewContentPage != null)
+            {
+                if ((CustomViewContentPage as ContentPage).Content is Layout)
+                    ((CustomViewContentPage as ContentPage).Content as Layout).ForceLayout();
+            }
         }
     }
 }
