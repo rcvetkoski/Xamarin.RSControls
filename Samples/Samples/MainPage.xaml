@@ -38,7 +38,18 @@
 
             <!--<rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ObsCollectionPicker}" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>-->
 
+            <StackLayout x:Name="setsStack" BindableLayout.ItemsSource="{Binding ObsCollectionPicker}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding .}" VerticalOptions="Center"/>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+            
+            
 
+            <Button Text="Add" Clicked="AddItem"/>
+            <Button Text="Remove" Clicked="RemoveItem"/>
 
             <Button BackgroundColor="Red" Text="popup" Clicked="Button_Clicked_1" VerticalOptions="Start" HorizontalOptions="Start" Margin="0,0,0,0"/>
 

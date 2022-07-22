@@ -224,6 +224,8 @@ namespace Xamarin.RSControls.Droid.Extensions
             AddView(view);
         }
 
+
+
         protected override void OnLayout(bool changed, int l, int t, int r, int b)
         {
             renderer.UpdateLayout();
@@ -231,9 +233,6 @@ namespace Xamarin.RSControls.Droid.Extensions
 
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
-            base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
-
-
             var parentWidth = parent.MeasuredWidth;
             var parentHeight = parent.MeasuredHeight;
 
@@ -241,14 +240,13 @@ namespace Xamarin.RSControls.Droid.Extensions
             double pixelsWidth = MeasureSpec.GetSize(widthMeasureSpec);
             double numWidth = ContextExtensions.FromPixels(this.Context, pixelsWidth);
 
-            SizeRequest sizeRequest = (formsView as ContentPage).Content.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
+            SizeRequest sizeRequest = formsView.Measure(double.PositiveInfinity, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
 
             var childWidth = sizeRequest.Request.Width;
             var childHeight = sizeRequest.Request.Width;
 
 
             formsView.Layout(new Rectangle(0.0, 0.0, sizeRequest.Request.Width, sizeRequest.Request.Height));
-            (formsView as ContentPage).Content.Layout(new Rectangle(0.0, 0.0, sizeRequest.Request.Width, sizeRequest.Request.Height));
 
 
             double width = formsView.Width;
@@ -257,12 +255,15 @@ namespace Xamarin.RSControls.Droid.Extensions
             int measuredHeight = MeasureSpec.MakeMeasureSpec((int)ContextExtensions.ToPixels(this.Context, height), MeasureSpecMode.Exactly);
 
 
-            renderer.View.Measure(widthMeasureSpec, heightMeasureSpec);
-            renderer.View.LayoutParameters = new LinearLayout.LayoutParams(400, (int)height);
-            System.Console.WriteLine(measuredWidth);
+            renderer.View.LayoutParameters = new LinearLayout.LayoutParams(measuredWidth, measuredHeight);
 
-            this.SetMeasuredDimension(widthMeasureSpec * 2, measuredHeight);
+            var w = MeasureSpec.MakeMeasureSpec((int)measuredWidth, MeasureSpecMode.Exactly);
+            var h = MeasureSpec.MakeMeasureSpec((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Height, Context.Resources.DisplayMetrics), MeasureSpecMode.Exactly);
 
+
+            this.SetMeasuredDimension(w, h);
+
+            (renderer.Element as Layout).ForceLayout();
 
             System.Console.WriteLine("ViewExtension");
         }

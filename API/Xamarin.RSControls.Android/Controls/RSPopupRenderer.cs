@@ -322,8 +322,9 @@ namespace Xamarin.RSControls.Droid.Controls
             linearLayout.BorderRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, BorderRadius, Context.Resources.DisplayMetrics);
             linearLayout.Alpha = 0.0f; // hide dialog in order to sthealty position dialog at right position before any animation is applied 
             linearLayout2.rSPopupRenderer = this;
-            linearLayout2.WidthMatchParent = this.Width == -1 ? true : false;
+            linearLayout2.WidthConstraint = this.Width;
             linearLayout2.IsLinearLayout2 = true;
+
 
             LeftMargin = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, LeftMargin, Context.Resources.DisplayMetrics));
             TopMargin = (int)(TypedValue.ApplyDimension(ComplexUnitType.Dip, TopMargin, Context.Resources.DisplayMetrics));
@@ -434,12 +435,13 @@ namespace Xamarin.RSControls.Droid.Controls
         //Set and add custom view 
         private void SetCustomView(DisplayMetrics metrics)
         {
-            ContentPage customViewContentPage = new ContentPage();
+            ContentPage customViewContentPage = new ContentPage(); //customViewContentPage.BackgroundColor = Forms.Color.Yellow; CustomView.BackgroundColor = Forms.Color.Pink;
             customViewContentPage.Content = CustomView;
             customViewContentPage.BindingContext = CustomView.BindingContext;
 
             renderer = Platform.CreateRendererWithContext(customViewContentPage, Context);
             Platform.SetRenderer(customViewContentPage, renderer);
+            //renderer.View.SetBackgroundColor(global::Android.Graphics.Color.Red);
             //renderer.View.Focusable = true;
             //renderer.View.FocusableInTouchMode = true;
             //renderer.View.Clickable = true;
@@ -975,14 +977,13 @@ namespace Xamarin.RSControls.Droid.Controls
             }
 
             resetContentPosition();
-
             setDialogPosition();
             updateDialogPosition();
 
             // Update outline 
             linearLayout.InvalidateOutline();
 
-            Console.WriteLine("RelativeLayout_LayoutChange");
+            //Console.WriteLine("RelativeLayout_LayoutChange");
         }
 
 
@@ -1426,7 +1427,8 @@ namespace Xamarin.RSControls.Droid.Controls
         public RSPopupRenderer rSPopupRenderer { get; set; }
         public MeasureSpecMode SpecMode { get; set; }
         public float BorderRadius { get; set; }
-        public bool WidthMatchParent { get; set; }
+        public int WidthConstraint { get; set; }
+
         public bool IsLinearLayout2 { get; set; } = false;
 
         public CustomLinearLayout(Context context) : base(context)
@@ -1449,13 +1451,16 @@ namespace Xamarin.RSControls.Droid.Controls
 
         }
 
+
         // Used only for linearlayout2 to give proper size to Xamarin customView
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
-            base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
-
             if (!IsLinearLayout2)
+            {
+                base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
                 return;
+            }
+
 
             // Layout Custom xamarin forms view, it's when this = linearlayout2
             if (rSPopupRenderer != null && rSPopupRenderer.renderer != null)
@@ -1463,22 +1468,56 @@ namespace Xamarin.RSControls.Droid.Controls
                 double pixelsWidth = MeasureSpec.GetSize(widthMeasureSpec);
                 double numWidth = ContextExtensions.FromPixels(this.Context, pixelsWidth);
 
+                double pixelsHeight = MeasureSpec.GetSize(heightMeasureSpec);
+                double numHeight = ContextExtensions.FromPixels(this.Context, pixelsHeight);
+
                 // Get parent padding 
                 var leftPadding = (rSPopupRenderer.renderer.View.Parent.Parent as global::Android.Widget.ScrollView).PaddingLeft;
                 var rightPadding = (rSPopupRenderer.renderer.View.Parent.Parent as global::Android.Widget.ScrollView).PaddingRight;
+                double numWidthPadding = ContextExtensions.FromPixels(this.Context, pixelsWidth - leftPadding - rightPadding);
+                var sizeRequest = (rSPopupRenderer.renderer.Element as ContentPage).Content.Measure(numWidthPadding, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
 
 
-                if (WidthMatchParent)
+                int nativeWidth = 0;
+                double formsWidth = 0;
+
+
+                if (this.WidthConstraint == -1)
                 {
-                    rSPopupRenderer.renderer.Element.Layout(new Rectangle(0, 0, numWidth - ContextExtensions.FromPixels(this.Context, leftPadding) 
-                        - ContextExtensions.FromPixels(this.Context, rightPadding), rSPopupRenderer.renderer.Element.Height));
+                    nativeWidth = LinearLayout.LayoutParams.MatchParent;
+                    formsWidth = numWidthPadding;
                 }
-                else if(this.MeasuredWidth > 0 && ContextExtensions.FromPixels(this.Context, this.MeasuredWidth - leftPadding - rightPadding) > rSPopupRenderer.renderer.Element.Width)
+                else if (this.WidthConstraint == -2)
                 {
-                    var sizeW = ContextExtensions.FromPixels(this.Context, this.MeasuredWidth);
-                    rSPopupRenderer.renderer.Element.Layout(new Rectangle(0, 0, sizeW, rSPopupRenderer.renderer.Element.Height));
+                    nativeWidth = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Width, Context.Resources.DisplayMetrics);
+                    formsWidth = sizeRequest.Request.Width;
                 }
+                else
+                {
+                    var wPadding = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)this.WidthConstraint, Context.Resources.DisplayMetrics) - leftPadding - rightPadding;
+
+                    nativeWidth = wPadding;
+                    formsWidth = this.WidthConstraint - ContextExtensions.FromPixels(this.Context, leftPadding + rightPadding);
+                }
+
+
+                // Apply
+                rSPopupRenderer.renderer.View.LayoutParameters = new LinearLayout.LayoutParams(nativeWidth, (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Height, Context.Resources.DisplayMetrics));
+                rSPopupRenderer.renderer.Element.Layout(new Rectangle(0, 0, formsWidth, sizeRequest.Request.Height));
+
+
+                // Update forms layout
+                if((rSPopupRenderer.renderer.Element as ContentPage).Content is Layout)
+                    ((rSPopupRenderer.renderer.Element as ContentPage).Content as Layout).ForceLayout();
+
+
+
+                //var w = MeasureSpec.MakeMeasureSpec((int)nativeWidth, MeasureSpecMode.Exactly);
+                //var h = MeasureSpec.MakeMeasureSpec((int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)sizeRequest.Request.Height, ((AppCompatActivity)RSAppContext.RSContext).Resources.DisplayMetrics), MeasureSpecMode.Exactly);
+                //base.OnMeasure(w, h);
             }
+
+            base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 
