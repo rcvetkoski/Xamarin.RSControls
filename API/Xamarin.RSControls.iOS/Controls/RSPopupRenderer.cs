@@ -423,6 +423,13 @@ namespace Xamarin.RSControls.iOS.Controls
             var sizeRequest = customViewContentPage.Content.Measure(maxSize.Width, maxSize.Height, Forms.MeasureFlags.IncludeMargins);
 
 
+            //if (sizeRequest.Request.Width > maxSize.Width)
+            //    sizeRequest.Request = new Size(maxSize.Width, sizeRequest.Request.Height);
+
+            //if (sizeRequest.Request.Height > maxSize.Height)
+            //    sizeRequest.Request = new Size(sizeRequest.Request.Width, maxSize.Height);
+
+
             // Calculate final width
             if (this.Width == -1)
             {
@@ -1045,7 +1052,7 @@ namespace Xamarin.RSControls.iOS.Controls
 
             // Add bottom margin to last element if there are no buttons so it equals the other sides
             if(topBorderButtonsStack.Hidden)
-                dialogStack.SetCustomSpacing(10, dialogStack.ArrangedSubviews[1]);
+                dialogStack.SetCustomSpacing(15, dialogStack.ArrangedSubviews[1]);
 
 
             UITapGestureRecognizer didTappedOnBackgroundView = new UITapGestureRecognizer((obj) =>

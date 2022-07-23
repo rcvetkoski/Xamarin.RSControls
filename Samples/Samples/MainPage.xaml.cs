@@ -309,7 +309,7 @@ namespace Samples
             //rsPopup.SetPopupAnimation(RSPopupAnimationEnum.BottomToTop);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
             Editor rSEntry = new Editor() { Text = "MEHE wf", AutoSize = EditorAutoSizeOption.TextChanges};
-            rsPopup.SetCustomView(rSEntry);
+            rsPopup.SetCustomView(view);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
             //{
@@ -337,7 +337,6 @@ namespace Samples
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
 
 
-
             StackLayout stackL = new StackLayout() { BackgroundColor = Color.Transparent};
             ////StackLayout stack2 = new StackLayout() { BackgroundColor = Color.Red, Margin = new Thickness(10, 10, 10, 10), VerticalOptions = LayoutOptions.EndAndExpand };
             ////RSNumericUpDown weight = new RSNumericUpDown() { Placeholder = "Weight", Margin = new Thickness(10, 10, 10, 10)};
@@ -348,7 +347,8 @@ namespace Samples
             ////stack.Children.Add(weight);
 
 
-            stack.Children.Remove(stack);
+
+            stack.Children.Remove(setsStack);
             this.setsStack.Parent = null;
 
             RSEditor rSEntry = new RSEditor();

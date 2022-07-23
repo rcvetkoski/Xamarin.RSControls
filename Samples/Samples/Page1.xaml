@@ -11,7 +11,7 @@
              x:Class="Samples.Page1">
     <ContentPage.Content>
         <ScrollView Orientation="Vertical" BackgroundColor="Yellow">
-            <StackLayout Grid.Row="1" Margin="10" x:Name="stack">
+            <StackLayout Grid.Row="1" Margin="0" x:Name="stack">
 
 
 
