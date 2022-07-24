@@ -74,7 +74,6 @@ namespace Xamarin.RSControls.Droid.Controls
         public int screenUsableWidth;
         public int screenUsableHeight;
         private bool backFromSleep;
-        private Extensions.ViewCellContainer convertView;
         public IVisualElementRenderer renderer;
 
         public RSPopupRenderer()
@@ -102,6 +101,7 @@ namespace Xamarin.RSControls.Droid.Controls
             this.relativeLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as global::Android.Widget.RelativeLayout;
             this.contentView = relativeLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
             linearLayout = relativeLayout.FindViewById<CustomLinearLayout>(Resource.Id.linearLayout);
+            linearLayout2 = relativeLayout.FindViewById<CustomLinearLayout>(Resource.Id.linearLayout2);
             buttonsLayout = relativeLayout.FindViewById<RSDialogButtonHolder>(Resource.Id.buttons);
             closeButton = relativeLayout.FindViewById<global::Android.Widget.ImageButton>(Resource.Id.closeButton);
 
@@ -116,6 +116,7 @@ namespace Xamarin.RSControls.Droid.Controls
             this.relativeLayout = LayoutInflater.From(((AppCompatActivity)RSAppContext.RSContext)).Inflate(Resource.Layout.rs_dialog_view, null) as global::Android.Widget.RelativeLayout;
             this.contentView = relativeLayout.FindViewById<global::Android.Widget.LinearLayout>(Resource.Id.contentView);
             linearLayout = relativeLayout.FindViewById<CustomLinearLayout>(Resource.Id.linearLayout);
+            linearLayout2 = relativeLayout.FindViewById<CustomLinearLayout>(Resource.Id.linearLayout2);
             buttonsLayout = relativeLayout.FindViewById<RSDialogButtonHolder>(Resource.Id.buttons);
             closeButton = relativeLayout.FindViewById<global::Android.Widget.ImageButton>(Resource.Id.closeButton);
 
@@ -442,9 +443,9 @@ namespace Xamarin.RSControls.Droid.Controls
             renderer = Platform.CreateRendererWithContext(customViewContentPage, Context);
             Platform.SetRenderer(customViewContentPage, renderer);
             //renderer.View.SetBackgroundColor(global::Android.Graphics.Color.Red);
-            //renderer.View.Focusable = true;
-            //renderer.View.FocusableInTouchMode = true;
-            //renderer.View.Clickable = true;
+            renderer.View.Focusable = true;
+            renderer.View.FocusableInTouchMode = true;
+            renderer.View.Clickable = true;
             renderer.Tracker.UpdateLayout();
             renderer.UpdateLayout();
 
@@ -1205,8 +1206,8 @@ namespace Xamarin.RSControls.Droid.Controls
 
                     var pos = linearLayout.GetY();
                     linearLayout.SetY(relativeLayout.Height);
-                    linearLayout.Animate().TranslationY(pos).SetDuration(duration).Start();
                     linearLayout.Alpha = 1.0f;
+                    linearLayout.Animate().TranslationY(pos).SetDuration(duration).Start();
                 }
                 else
                 {

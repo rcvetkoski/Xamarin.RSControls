@@ -308,7 +308,7 @@ namespace Samples
             rsPopup.SetDimAmount(0f);
             //rsPopup.SetPopupAnimation(RSPopupAnimationEnum.BottomToTop);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
-            Editor rSEntry = new Editor() { Text = "MEHE wf", AutoSize = EditorAutoSizeOption.TextChanges};
+            Editor rSEntry = new Editor() { Text = "MEHE wf", AutoSize = EditorAutoSizeOption.TextChanges, BackgroundColor = Color.Yellow};
             rsPopup.SetCustomView(view);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
@@ -346,6 +346,9 @@ namespace Samples
             ////stack.Children.Add(stack2);
             ////stack.Children.Add(weight);
 
+
+            for (int i = 0; i < 30; i++)
+                stackL.Children.Add(new RSEntry() { Placeholder = i.ToString() });
 
 
             stack.Children.Remove(setsStack);
