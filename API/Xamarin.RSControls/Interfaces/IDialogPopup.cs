@@ -1,15 +1,16 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Enums;
 
 namespace Xamarin.RSControls.Interfaces
 {
     public interface IDialogPopup
     {
+        RSPopup rSPopup { get; set; }
         string Title { get; set; }
         string Message { get; set; }
-        int PositionX { get; set; }
-        int PositionY { get; set; }
         int Width { get; set; }
         int Height { get; set; }
         bool UserSetPosition { get; set; }

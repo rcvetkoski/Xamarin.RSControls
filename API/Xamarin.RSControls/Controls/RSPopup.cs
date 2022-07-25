@@ -11,8 +11,6 @@ namespace Xamarin.RSControls.Controls
         public IDialogPopup service;
         public string Title { get; set; }
         public string Message { get; set; }
-        public int PositionX { get; set; }
-        public int PositionY { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public float BorderRadius { get; set; }
@@ -25,11 +23,13 @@ namespace Xamarin.RSControls.Controls
             get { return service.HasCloseButton; }
             set { service.HasCloseButton = value; }
         }
+        public event EventHandler Dismissed;
 
 
         public RSPopup(RSPopupPositionEnum rSPopupPosition = RSPopupPositionEnum.Center)
         {
             service = DependencyService.Get<IDialogPopup>(DependencyFetchTarget.NewInstance);
+            service.rSPopup = this;
             SetBackgroundColor(Color.White);
             SetBorderRadius(16);
             SetDimAmount(0.7f);
@@ -44,6 +44,7 @@ namespace Xamarin.RSControls.Controls
         public RSPopup(string title, string message, RSPopupPositionEnum rSPopupPosition = RSPopupPositionEnum.Center)
         {
             service = DependencyService.Get<IDialogPopup>(DependencyFetchTarget.NewInstance);
+            service.rSPopup = this;
             SetTitle(title);
             SetMessage(message);
             SetBackgroundColor(Color.White);
@@ -186,6 +187,11 @@ namespace Xamarin.RSControls.Controls
         public void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command = null, object commandParameter = null)
         {
             service.AddAction(title, rSPopupButtonType, command, commandParameter);
+        }
+
+        public void OnDismissed()
+        {
+            Dismissed?.Invoke(this, EventArgs.Empty);
         }
     }
 }

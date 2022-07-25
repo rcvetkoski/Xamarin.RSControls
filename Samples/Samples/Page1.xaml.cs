@@ -42,5 +42,9 @@ namespace Samples
         {
             base.OnBindingContextChanged();
         }
+
+        ~Page1()
+        {
+        }
     }
 }

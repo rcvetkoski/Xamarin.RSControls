@@ -16,9 +16,33 @@ namespace Xamarin.RSControls.Controls
         public RSSvgImage()
         {
             //Default value for this inherited properties
-            this.WidthRequest = 22;
-            this.HeightRequest = 22;
+            this.WidthRequest = 26;
+            this.HeightRequest = 26;
+
+            // Add clicked event
+            TapGestureRecognizer tapGestureRecognizer = new TapGestureRecognizer();
+            TapCommand = new Command(OnTapped);
+            tapGestureRecognizer.Command = TapCommand;
+            this.GestureRecognizers.Add(tapGestureRecognizer);
         }
+
+        #region Clicked Event
+        public Command TapCommand { get; set; }
+        async void OnTapped(object s)
+        {
+            PropagateUpClicked();
+            this.Opacity = 0.5;
+            await this.ScaleTo(0.8, 100);
+            await this.ScaleTo(1, 100);
+            this.Opacity = 1;
+        }
+        public event EventHandler Clicked;
+        public void PropagateUpClicked()
+        {
+            this.Clicked?.Invoke(this, EventArgs.Empty);
+        }
+        #endregion
+
 
         public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(string), typeof(RSSvgImage), default(string), propertyChanged: OnSourcePropertyChanged);
         public string Source
@@ -60,30 +84,62 @@ namespace Xamarin.RSControls.Controls
                 svg.Load(stream);
                 SKImageInfo info = e.Info;
                 SKRect bounds = svg.ViewBox;
+                //float xRatio = info.Width / bounds.Width;
+                //float yRatio = info.Height / bounds.Height;
+                //float ratio = Math.Min(xRatio, yRatio);
+                var size = CalcSize(svg.Picture.CullRect.Size, Width, Height);
 
-                float xRatio = info.Width / bounds.Width;
-                float yRatio = info.Height / bounds.Height;
-                float ratio = Math.Min(xRatio, yRatio);
 
+                // Calculate matrix scale
+                float xRatio = (info.Width * (float)Scale) / svg.Picture.CullRect.Size.Width;
+                float yRatio = (info.Height * (float)Scale) / svg.Picture.CullRect.Size.Height;
+                var matrix = SKMatrix.CreateScale(xRatio, yRatio);
 
-                //// Calculate matrix scale
-                //float xRatio = (info.Width * (float)Scale) / svg.Picture.CullRect.Size.Width;
-                //float yRatio = (info.Height * (float)Scale) / svg.Picture.CullRect.Size.Height;
-                //var matrix = SKMatrix.CreateScale(xRatio, yRatio);
-
-                canvas.Scale(ratio);
+                //canvas.Scale(ratio);
                 if (Color != Color.Transparent)
                 {
                     SKPaint sKPaint = new SKPaint();
                     sKPaint.ColorFilter = SKColorFilter.CreateBlendMode(Color.ToSKColor(), SKBlendMode.SrcIn);
-                    canvas.DrawPicture(svg.Picture, 0, 0, sKPaint);
-                    //canvas.DrawPicture(svg.Picture, ref matrix, sKPaint);
+                    //canvas.DrawPicture(svg.Picture, 0, 0, sKPaint);
+                    canvas.DrawPicture(svg.Picture, ref matrix, sKPaint);
                 }
                 else
                     canvas.DrawPicture(svg.Picture, 0, 0);
             }
         }
+
+
+        public static SKSize CalcSize(SkiaSharp.SKSize size, double width, double height)
+        {
+            double w;
+            double h;
+
+            if (width <= 0 && height <= 0)
+            {
+                return size;
+            }
+            else if (width <= 0)
+            {
+                h = height;
+                w = height * (size.Width / size.Height);
+            }
+            else if (height <= 0)
+            {
+                w = width;
+                h = width * (size.Height / size.Width);
+            }
+            else
+            {
+                w = width;
+                h = height;
+            }
+
+            return new SkiaSharp.SKSize((float)w, (float)h);
+        }
     }
+
+
+
 
 
     public class DrawImageExtension : Forms.Xaml.IMarkupExtension
@@ -145,13 +201,6 @@ namespace Xamarin.RSControls.Controls
         //public float Height { get; set; }
         public Color Color { get; set; }
     }
-
-
-
-
-
-
-
 
 
     /// <summary>

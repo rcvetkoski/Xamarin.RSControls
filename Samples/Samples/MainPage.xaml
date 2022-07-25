@@ -45,11 +45,16 @@
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </StackLayout>
-            
-            
+
+            <rs:RSSvgImage HorizontalOptions="Start" Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg" Clicked="RSSvgImageClicked">
+                
+            </rs:RSSvgImage>
+
+            <rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ObsCollectionPicker}" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>
+
 
             <Button Text="Add" Clicked="AddItem"/>
-            <Button Text="Remove" Clicked="RemoveItem"/>
+            <Button Text="Remove" Clicked="Button_Clicked"/>
 
             <Button BackgroundColor="Red" Text="popup" Clicked="Button_Clicked_1" VerticalOptions="Start" HorizontalOptions="Start" Margin="0,0,0,0"/>
 

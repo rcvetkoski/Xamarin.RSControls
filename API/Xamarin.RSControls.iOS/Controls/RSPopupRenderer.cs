@@ -7,6 +7,7 @@ using SpriteKit;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
+using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.Helpers;
 using Xamarin.RSControls.Interfaces;
@@ -17,6 +18,8 @@ namespace Xamarin.RSControls.iOS.Controls
 {
     public class RSPopupRenderer : UIView, IDialogPopup
     {
+        RSPopup rSPopup { get; set; }
+
         private UIView mainView { get; set; }
         private UIView BackgroundView { get; set; }
         private RSDialogView DialogView { get; set; }
@@ -42,8 +45,6 @@ namespace Xamarin.RSControls.iOS.Controls
         public float PositionY { get; set; }
         public float BorderRadius { get; set; }
         public bool ShadowEnabled { get; set; }
-        int IDialogPopup.PositionX { get; set; }
-        int IDialogPopup.PositionY { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public bool UserSetPosition { get; set; }
@@ -1318,6 +1319,10 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             if (DismissEvent != null)
                 DismissEvent(this, EventArgs.Empty);
+
+            // Invoke dismiss event for xamarin rspopup object
+            if (rSPopup != null)
+                rSPopup.OnDismissed();
         }
 
         // Dismiss Animation part

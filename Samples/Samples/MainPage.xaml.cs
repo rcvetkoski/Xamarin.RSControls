@@ -306,10 +306,10 @@ namespace Samples
             //rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0f);
-            //rsPopup.SetPopupAnimation(RSPopupAnimationEnum.BottomToTop);
+            rsPopup.SetPopupAnimation(RSPopupAnimationEnum.Expanding);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Right);
             Editor rSEntry = new Editor() { Text = "MEHE wf", AutoSize = EditorAutoSizeOption.TextChanges, BackgroundColor = Color.Yellow};
-            rsPopup.SetCustomView(view);
+            rsPopup.SetCustomView(rSEntry);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
             //{
@@ -317,6 +317,7 @@ namespace Samples
             //}));
             rsPopup.Show();
         }
+
 
         void Button_Clicked_3(System.Object sender, System.EventArgs e)
         {
@@ -368,6 +369,11 @@ namespace Samples
             rsPopup.SetCustomView(stackL);
 
             rsPopup.Show();
+        }
+
+        private void RSSvgImageClicked(object sender, EventArgs e)
+        {
+            Button_Clicked_2(sender, null);
         }
     }
 }

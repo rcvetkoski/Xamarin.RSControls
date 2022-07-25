@@ -14,6 +14,7 @@
             <StackLayout Grid.Row="1" Margin="0" x:Name="stack">
 
 
+                <rs:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
 
                 <Button Text="Right" BackgroundColor="Green" HorizontalOptions="Center" Margin="0,0,80,0" CommandParameter="" Clicked="Button_Clicked"></Button>
 
