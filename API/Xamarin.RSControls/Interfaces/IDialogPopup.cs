@@ -32,7 +32,7 @@ namespace Xamarin.RSControls.Interfaces
         Forms.View RelativeView { get; set; }
         float RSPopupOffsetX { get; set; }
         float RSPopupOffsetY { get; set; }
-        Forms.View CustomView { get; set; }
+        Forms.VisualElement CustomView { get; set; }
         void AddAction(string title, RSPopupButtonTypeEnum rSPopupButtonType, Command command, object commandParameter);
         void ShowPopup();
     }

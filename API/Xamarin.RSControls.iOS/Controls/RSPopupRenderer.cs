@@ -18,7 +18,7 @@ namespace Xamarin.RSControls.iOS.Controls
 {
     public class RSPopupRenderer : UIView, IDialogPopup
     {
-        RSPopup rSPopup { get; set; }
+        public RSPopup rSPopup { get; set; }
 
         private UIView mainView { get; set; }
         private UIView BackgroundView { get; set; }
@@ -38,7 +38,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public string Title { get; set; }
         public string Message { get; set; }
         public Forms.View RelativeView { get; set; }
-        public Forms.View CustomView { get; set; }
+        public Forms.VisualElement CustomView { get; set; }
         public Forms.Color BorderFillColor { get; set; }
         public float DimAmount { get; set; }
         public float PositionX { get; set; }

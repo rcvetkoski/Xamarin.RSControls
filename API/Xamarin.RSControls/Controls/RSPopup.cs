@@ -136,7 +136,7 @@ namespace Xamarin.RSControls.Controls
             service.Message = this.Message;
         }
 
-        public void SetCustomView(Forms.View customView)
+        public void SetCustomView(Forms.VisualElement customView)
         {
             service.CustomView = customView;
         }
