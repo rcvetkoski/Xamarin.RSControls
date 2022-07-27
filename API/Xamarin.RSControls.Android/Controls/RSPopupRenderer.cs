@@ -406,7 +406,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
                 else
                 {
-                    linearLayout.Animate().TranslationY(initPosY - (TopMargin + BottomMargin)).SetDuration(230).Start();  
+                    linearLayout.Animate().TranslationY(initPosY - TopMargin).SetDuration(230).Start();  
                     initPosY = 0;
                 }
             }
@@ -991,7 +991,10 @@ namespace Xamarin.RSControls.Droid.Controls
             // Y Position for Over
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
             {
-                projectedPositionBottom = PositionY + linearLayout.Height;
+                if (linearLayoutPositionY < TopMargin)
+                    linearLayoutPositionY = TopMargin;
+
+                projectedPositionBottom = linearLayoutPositionY + linearLayout.Height;
 
                 if (projectedPositionBottom > maxYPositionAllowed)
                 {
