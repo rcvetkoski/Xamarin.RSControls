@@ -191,6 +191,7 @@ namespace Xamarin.RSControls.Droid.Controls
             public float xConstrainConstant;
             public float yConstrainConstant;
             private float arrowSize;
+            public bool HideArrow { get; set; }
             public RSPopupPositionSideEnum ArrowSide;
             public Outline Outline { get; set; }
 
@@ -213,44 +214,55 @@ namespace Xamarin.RSControls.Droid.Controls
 
                 path.SetFillType(Path.FillType.EvenOdd);
 
-                path.MoveTo(0, 0);
+                //path.MoveTo(0, 0);
 
                 if (ArrowSide == RSPopupPositionSideEnum.Right && rSPopupRenderer.HasArrow)
                 {
                     var posY = (view.Height / 2) - yConstrainConstant;
                     path.AddRoundRect(new RectF(arrowSize, 0, view.Width, view.Height), borderRadius, borderRadius, Path.Direction.Cw);
 
-                    path.MoveTo(arrowSize, posY - arrowSize);
-                    path.LineTo(0, posY);
-                    path.LineTo(arrowSize, posY + arrowSize);
+                    if(!HideArrow)
+                    {
+                        path.MoveTo(arrowSize, posY - arrowSize);
+                        path.LineTo(0, posY);
+                        path.LineTo(arrowSize, posY + arrowSize);
+                    }
                 }
                 else if (ArrowSide == RSPopupPositionSideEnum.Left && rSPopupRenderer.HasArrow)
                 {
                     var posY = (view.Height / 2) - yConstrainConstant;
                     path.AddRoundRect(new RectF(0, 0, view.Width - arrowSize, view.Height), borderRadius, borderRadius, Path.Direction.Cw);
 
-                    path.MoveTo(view.Width - arrowSize, posY - arrowSize);
-                    path.LineTo(view.Width, posY);
-                    path.LineTo(view.Width - arrowSize, posY + arrowSize);
+                    if (!HideArrow)
+                    {
+                        path.MoveTo(view.Width - arrowSize, posY - arrowSize);
+                        path.LineTo(view.Width, posY);
+                        path.LineTo(view.Width - arrowSize, posY + arrowSize);
+                    }
                 }
                 else if (ArrowSide == RSPopupPositionSideEnum.Bottom && rSPopupRenderer.HasArrow)
                 {
                     path.AddRoundRect(new RectF(0, arrowSize, view.Width, view.Height), borderRadius, borderRadius, Path.Direction.Cw);
                     var posX = (view.Width / 2) - xConstrainConstant;
 
-
-                    path.MoveTo(posX + arrowSize, arrowSize);
-                    path.LineTo(posX, 0);
-                    path.LineTo(posX - arrowSize, arrowSize);
+                    if (!HideArrow)
+                    {
+                        path.MoveTo(posX + arrowSize, arrowSize);
+                        path.LineTo(posX, 0);
+                        path.LineTo(posX - arrowSize, arrowSize);
+                    }
                 }
                 else if (ArrowSide == RSPopupPositionSideEnum.Top && rSPopupRenderer.HasArrow)
                 {
                     path.AddRoundRect(new RectF(0, 0, view.Width, view.Height - arrowSize), borderRadius, borderRadius, Path.Direction.Cw);
                     var posX = (view.Width / 2) - xConstrainConstant;
 
-                    path.MoveTo(posX + arrowSize, view.Height - arrowSize);
-                    path.LineTo(posX, view.Height);
-                    path.LineTo(posX - arrowSize, view.Height - arrowSize);
+                    if (!HideArrow)
+                    {
+                        path.MoveTo(posX + arrowSize, view.Height - arrowSize);
+                        path.LineTo(posX, view.Height);
+                        path.LineTo(posX - arrowSize, view.Height - arrowSize);
+                    }
                 }
                 else
                     path.AddRoundRect(new RectF(0, 0, view.Width, view.Height), borderRadius, borderRadius, Path.Direction.Cw);
@@ -693,6 +705,12 @@ namespace Xamarin.RSControls.Droid.Controls
                     projectedPositionLeft = linearLayoutPositionX + relativeViewWidth - linearLayout.Width;
                     linearLayoutPositionX = (int)projectedPositionLeft;
 
+
+                    if ((linearLayoutPositionX + linearLayout.Width) > relativeLayout.Width - RightMargin)
+                    {
+                        linearLayoutPositionX -= (linearLayoutPositionX + linearLayout.Width) - (relativeLayout.Width - RightMargin);
+                    }
+
                     // check if it fits
                     if (projectedPositionLeft < minXPositionAllowed)
                     {
@@ -703,6 +721,10 @@ namespace Xamarin.RSControls.Droid.Controls
                 // If on left side move right
                 else if ( (PositionX + relativeViewWidth / 2) < relativeLayout.Width / 2)
                 {
+                    if (linearLayoutPositionX < 0)
+                        linearLayoutPositionX = LeftMargin;
+
+
                     projectedPositionRight = linearLayoutPositionX + linearLayout.Width;
 
                     if (projectedPositionRight > maxXPositionAllowed)
@@ -816,6 +838,13 @@ namespace Xamarin.RSControls.Droid.Controls
                         constantX = minXPositionAllowed - projectedPositionLeft;
                         linearLayoutPositionX = linearLayoutPositionX + (int)constantX;
                     }
+                }
+
+                // Hide arrow if not withit linear layout bounds
+                if ((System.Math.Abs(constantX) + arrowSize) >= (linearLayout2.Width / 2))
+                {
+                    (linearLayout.Background as RSDrawable).HideArrow = true;
+                    (linearLayout.OutlineProvider as RSViewOutlineProvider).HideArrow = true;
                 }
             }
 
@@ -950,6 +979,13 @@ namespace Xamarin.RSControls.Droid.Controls
                         linearLayoutPositionY += (int)constantY;
                     }
                 }
+
+                // Hide arrow if not withit linear layout bounds
+                if ((System.Math.Abs(constantY) + arrowSize) >= (linearLayout2.Height / 2))
+                {
+                    (linearLayout.Background as RSDrawable).HideArrow = true;
+                    (linearLayout.OutlineProvider as RSViewOutlineProvider).HideArrow = true;
+                }
             }
 
             // Y Position for Over
@@ -1011,6 +1047,8 @@ namespace Xamarin.RSControls.Droid.Controls
                 shouldShowArrow();
                 (linearLayout.OutlineProvider as RSViewOutlineProvider).ArrowSide = this.RSPopupPositionSideEnum;
                 (linearLayout.Background as RSDrawable).ArrowSide = this.RSPopupPositionSideEnum;
+                (linearLayout.Background as RSDrawable).HideArrow = false;
+                (linearLayout.OutlineProvider as RSViewOutlineProvider).HideArrow = false;
 
                 // Set positionX and positionY 
                 SetPopupPositionRelativeTo(RelativeView, Resources.DisplayMetrics);
@@ -1232,7 +1270,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
                 else
                 {
-                    linearLayout.Animate().TranslationY(relativeLayout.Height).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                    linearLayout.Animate().TranslationY(relativeLayout.Height - TopMargin).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
                 }
             }
 
@@ -1244,7 +1282,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
                 else
                 {
-                    linearLayout.Animate().TranslationY(-linearLayout.Height).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                    linearLayout.Animate().TranslationY(-linearLayout.Height - TopMargin).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
                 }
             }
 
@@ -1252,11 +1290,12 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 if (isShowing)
                 {
+                    Console.WriteLine("left " + relativeLayout.GetX());
                     linearLayout.Animate().TranslationX(linearLayoutPositionX - LeftMargin).SetDuration(duration).WithEndAction(new Runnable(() => { dialogAnimationEnded = true; })).Start();
                 }
                 else
                 {
-                    linearLayout.Animate().TranslationX(-linearLayout.Width).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                    linearLayout.Animate().TranslationX(-linearLayout.Width - LeftMargin).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
                 }
             }
 
@@ -1268,7 +1307,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
                 else
                 {
-                    linearLayout.Animate().TranslationX(relativeLayout.Width).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
+                    linearLayout.Animate().TranslationX(relativeLayout.Width - LeftMargin).SetDuration(duration).WithEndAction(new Runnable(() => { this.Dismiss(); })).Start();
                 }
             }
         }
@@ -1576,6 +1615,7 @@ namespace Xamarin.RSControls.Droid.Controls
     public class RSDrawable : Drawable
     {
         public float BorderRadius { get; set; }
+        public bool HideArrow { get; set; }
         public RSPopupPositionSideEnum ArrowSide;
         public RSPopupRenderer rSPopupRenderer;
         public CustomLinearLayout linearLayout;
@@ -1595,43 +1635,55 @@ namespace Xamarin.RSControls.Droid.Controls
 
             Path path = new Path();
             path.SetFillType(Path.FillType.EvenOdd);
-            path.MoveTo(0, 0);
+            //path.MoveTo(0, 0);
 
             if (ArrowSide == RSPopupPositionSideEnum.Right && rSPopupRenderer.HasArrow)
             {
                 var posY = (canvas.ClipBounds.Height() / 2) - yConstrainConstant;
                 path.AddRoundRect(new RectF(ArrowSize, 0, canvas.ClipBounds.Width(), canvas.ClipBounds.Height()), BorderRadius, BorderRadius, Path.Direction.Cw);
 
-                path.MoveTo(ArrowSize, posY - ArrowSize);
-                path.LineTo(0, posY);
-                path.LineTo(ArrowSize, posY + ArrowSize);
+                if(!HideArrow)
+                {
+                    path.MoveTo(ArrowSize, posY - ArrowSize);
+                    path.LineTo(0, posY);
+                    path.LineTo(ArrowSize, posY + ArrowSize);
+                }
             }
             else if (ArrowSide == RSPopupPositionSideEnum.Left && rSPopupRenderer.HasArrow)
             {
                 var posY = (canvas.ClipBounds.Height() / 2) - yConstrainConstant;
                 path.AddRoundRect(new RectF(0, 0, canvas.ClipBounds.Width() - ArrowSize, canvas.ClipBounds.Height()), BorderRadius, BorderRadius, Path.Direction.Cw);
 
-                path.MoveTo(canvas.ClipBounds.Width() - ArrowSize, posY - ArrowSize);
-                path.LineTo(canvas.ClipBounds.Width(),posY);
-                path.LineTo(canvas.ClipBounds.Width() - ArrowSize, posY + ArrowSize);
+                if (!HideArrow)
+                {
+                    path.MoveTo(canvas.ClipBounds.Width() - ArrowSize, posY - ArrowSize);
+                    path.LineTo(canvas.ClipBounds.Width(), posY);
+                    path.LineTo(canvas.ClipBounds.Width() - ArrowSize, posY + ArrowSize);
+                }
             }
             else if (ArrowSide == RSPopupPositionSideEnum.Bottom && rSPopupRenderer.HasArrow)
             {
                 path.AddRoundRect(new RectF(0, ArrowSize, canvas.ClipBounds.Width(), canvas.ClipBounds.Height()), BorderRadius, BorderRadius, Path.Direction.Cw);
                 var posX = (canvas.ClipBounds.Width() / 2) - xConstrainConstant;
 
-                path.MoveTo(posX + ArrowSize, ArrowSize);
-                path.LineTo(posX, 0);
-                path.LineTo(posX - ArrowSize, ArrowSize);
+                if (!HideArrow)
+                {
+                    path.MoveTo(posX + ArrowSize, ArrowSize);
+                    path.LineTo(posX, 0);
+                    path.LineTo(posX - ArrowSize, ArrowSize);
+                }
             }
             else if (ArrowSide == RSPopupPositionSideEnum.Top && rSPopupRenderer.HasArrow)
             {
                 path.AddRoundRect(new RectF(0, 0, canvas.ClipBounds.Width(), canvas.ClipBounds.Height() - ArrowSize), BorderRadius, BorderRadius, Path.Direction.Cw);
                 var posX = (canvas.ClipBounds.Width() / 2) - xConstrainConstant;
 
-                path.MoveTo(posX + ArrowSize, canvas.ClipBounds.Height() - ArrowSize);
-                path.LineTo(posX, canvas.ClipBounds.Height());
-                path.LineTo(posX - ArrowSize, canvas.ClipBounds.Height() - ArrowSize);
+                if (!HideArrow)
+                {
+                    path.MoveTo(posX + ArrowSize, canvas.ClipBounds.Height() - ArrowSize);
+                    path.LineTo(posX, canvas.ClipBounds.Height());
+                    path.LineTo(posX - ArrowSize, canvas.ClipBounds.Height() - ArrowSize);
+                }
             }
             else
                 path.AddRoundRect(new RectF(0, 0, canvas.ClipBounds.Width(), canvas.ClipBounds.Height()), BorderRadius, BorderRadius, Path.Direction.Cw);

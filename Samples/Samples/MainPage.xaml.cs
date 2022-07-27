@@ -301,10 +301,10 @@ namespace Samples
 
 
 
-            rsPopup.SetMargin(15, 0, 0, 0);
+            rsPopup.SetMargin(0, 0, 0, 0);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0f);
-            rsPopup.SetPopupAnimation(RSPopupAnimationEnum.LeftToRight);
+            rsPopup.SetPopupAnimation(RSPopupAnimationEnum.RightToLeft);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Over);
             Editor rSEntry = new Editor() { Text = "MEHE wf", AutoSize = EditorAutoSizeOption.TextChanges, BackgroundColor = Color.Yellow};
             rsPopup.SetCustomView(rSEntry);
