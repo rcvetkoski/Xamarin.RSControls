@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Contexts;
 using System.Windows.Input;
 using CoreAnimation;
 using CoreGraphics;
@@ -39,6 +40,7 @@ namespace Xamarin.RSControls.iOS.Controls
         public string Message { get; set; }
         public Forms.View RelativeView { get; set; }
         public Forms.VisualElement CustomView { get; set; }
+        private IVisualElementRenderer renderer;
         public Forms.Color BorderFillColor { get; set; }
         public float DimAmount { get; set; }
         public float PositionX { get; set; }
@@ -359,10 +361,22 @@ namespace Xamarin.RSControls.iOS.Controls
         private void SetCustomView()
         {
             // Set page to custom view
-            customViewContentPage = new ContentPage();
-            customViewContentPage.Content = CustomView;
-            var renderer = Platform.CreateRenderer(customViewContentPage);
-            Platform.SetRenderer(customViewContentPage, renderer);
+
+
+            if (CustomView is Page)
+            {
+                renderer = Platform.CreateRenderer(CustomView);
+                Platform.SetRenderer(CustomView, renderer);
+            }
+            else
+            {
+                customViewContentPage = new ContentPage();
+                customViewContentPage.Content = CustomView as Forms.View;
+                renderer = Platform.CreateRenderer(customViewContentPage);
+                Platform.SetRenderer(customViewContentPage, renderer);
+            }
+
+
 
 
             // Give size to convertedView so it can be layed out correctly in the uistackview
@@ -389,19 +403,19 @@ namespace Xamarin.RSControls.iOS.Controls
                                  mainView.Frame.Height - mainView.SafeAreaInsets.Top - mainView.SafeAreaInsets.Bottom - offsetY - (nfloat)TopMargin - (nfloat)BottomMargin);
 
             // Get required size for forms view
-            var sizeRequest = customViewContentPage.Content.Measure(maxSize.Width, maxSize.Height, Forms.MeasureFlags.IncludeMargins);
+            var sizeRequest = (renderer.Element as ContentPage).Content.Measure(maxSize.Width, maxSize.Height, Forms.MeasureFlags.IncludeMargins);
 
             // Layout forms view -- need to give some size here or else it won't render -- the correct size is done later in layoutCustomView()
-            customViewContentPage.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+            renderer.Element.Layout(new Forms.Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
 
             contentStack.AddArrangedSubview(renderer.NativeView);
-            contentStack.CustomViewContentPage = customViewContentPage;
+            contentStack.CustomViewContentPage = renderer.Element as ContentPage;
 
             // set keyboard KeyboardObservers
             AddKeyboardObservers();
 
             // Listen to CustomView changes and update
-            customViewContentPage.MeasureInvalidated += CustomViewContentPage_MeasureInvalidated;
+            renderer.Element.MeasureInvalidated += CustomViewContentPage_MeasureInvalidated;
         }
 
         private void CustomViewContentPage_MeasureInvalidated(object sender, EventArgs e)
@@ -421,7 +435,7 @@ namespace Xamarin.RSControls.iOS.Controls
                                  mainView.Frame.Height - mainView.SafeAreaInsets.Top - mainView.SafeAreaInsets.Bottom - offsetY - (nfloat)TopMargin - (nfloat)BottomMargin);
 
             // Get and Set required size for forms view
-            var sizeRequest = customViewContentPage.Content.Measure(maxSize.Width, maxSize.Height, Forms.MeasureFlags.IncludeMargins);
+            var sizeRequest = (renderer.Element as ContentPage).Content.Measure(maxSize.Width, maxSize.Height, Forms.MeasureFlags.IncludeMargins);
 
 
             //if (sizeRequest.Request.Width > maxSize.Width)
@@ -435,17 +449,17 @@ namespace Xamarin.RSControls.iOS.Controls
             if (this.Width == -1)
             {
                 customViewWidthConstraint.Constant = maxSize.Width;
-                customViewContentPage.Layout(new Rectangle(0, 0, maxSize.Width, sizeRequest.Request.Height));
+                renderer.Element.Layout(new Rectangle(0, 0, maxSize.Width, sizeRequest.Request.Height));
             }
             else if (this.Width == -2)
             {
                 customViewWidthConstraint.Constant = (nfloat)sizeRequest.Request.Width;
-                customViewContentPage.Layout(new Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
+                renderer.Element.Layout(new Rectangle(0, 0, sizeRequest.Request.Width, sizeRequest.Request.Height));
             }
             else
             {
                 customViewWidthConstraint.Constant = (nfloat)this.Width - offsetX;
-                customViewContentPage.Layout(new Rectangle(0, 0, this.Width - offsetX, sizeRequest.Request.Height));
+                renderer.Element.Layout(new Rectangle(0, 0, this.Width - offsetX, sizeRequest.Request.Height));
             }
 
             customViewHeightConstraint.Constant = (nfloat)sizeRequest.Request.Height;
@@ -755,7 +769,7 @@ namespace Xamarin.RSControls.iOS.Controls
                     }
                     else
                     {
-                        dialogPositionXConstraint.Constant = (- position.Width / 2 + dialogStack.Frame.Width / 2);
+                        dialogPositionXConstraint.Constant = (-position.Width / 2 + dialogStack.Frame.Width / 2);
                     }
                 }
             }
@@ -1267,8 +1281,8 @@ namespace Xamarin.RSControls.iOS.Controls
             if (CustomView != null)
             {
                 layoutCustomView();
-                if ((customViewContentPage as ContentPage).Content is Layout)
-                    ((customViewContentPage as ContentPage).Content as Layout).ForceLayout();
+                if ((renderer.Element as ContentPage).Content is Layout)
+                    ((renderer.Element as ContentPage).Content as Layout).ForceLayout();
             }
 
             if (RelativeView != null)
@@ -1331,7 +1345,7 @@ namespace Xamarin.RSControls.iOS.Controls
             if (CustomView != null)
             {
                 RemoveKeyboardObservers();
-                customViewContentPage.MeasureInvalidated -= CustomViewContentPage_MeasureInvalidated;
+                renderer.Element.MeasureInvalidated -= CustomViewContentPage_MeasureInvalidated;
             }
 
             if (animated)
