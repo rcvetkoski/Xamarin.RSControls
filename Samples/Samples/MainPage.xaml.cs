@@ -276,7 +276,7 @@ namespace Samples
 
             label.BackgroundColor = Color.Yellow;
 
-            rsPopup.SetMargin(190, 0, 0, 0);
+            rsPopup.SetMargin(0, 0, 0, 0);
             //rsPopup.SetCustomView(entry);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.MatchParent);
             rsPopup.SetDimAmount(0.0f);
@@ -301,11 +301,11 @@ namespace Samples
 
 
 
-            rsPopup.SetMargin(10, 10, 10, 10);
+            rsPopup.SetMargin(0, 0, 0, 0);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetDimAmount(0f);
             rsPopup.SetPopupAnimation(RSPopupAnimationEnum.RightToLeft);
-            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Over);
+            rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Top);
             Editor rSEntry = new Editor() { Text = "MEHE wf", AutoSize = EditorAutoSizeOption.TextChanges, BackgroundColor = Color.Yellow};
             rsPopup.SetCustomView(rSEntry);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);

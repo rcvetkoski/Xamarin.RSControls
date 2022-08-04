@@ -721,7 +721,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 // If on left side move right
                 else if ( (PositionX + relativeViewWidth / 2) < relativeLayout.Width / 2)
                 {
-                    if (linearLayoutPositionX < 0)
+                    if (linearLayoutPositionX < LeftMargin)
                         linearLayoutPositionX = LeftMargin;
 
 
@@ -772,6 +772,18 @@ namespace Xamarin.RSControls.Droid.Controls
                         linearLayoutPositionX += (int)constantX;
                     }
                 }
+                else if ((projectedPositionLeft + linearLayout.Width) > maxXPositionAllowed)
+                {
+                    // Hide arrow since there is no enough space on screen
+                    if (HasArrow)
+                    {
+                        HasArrow = false;
+                        linearLayout2.SetX(linearLayout.PaddingRight / 2);
+                    }
+
+                    constantX = maxXPositionAllowed - linearLayout.Width;
+                    linearLayoutPositionX = (int)constantX;
+                }
             }
 
             // Right Leading to Trailing anchor
@@ -784,7 +796,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 if (projectedPositionRight > maxXPositionAllowed)
                 {
                     // Check if left space enough, if ok than place it at left side
-                    if (projectedPositionLeft >= minXPositionAllowed)
+                    if (projectedPositionLeft >= minXPositionAllowed && ((projectedPositionLeft + linearLayout.Width) <= maxXPositionAllowed))
                     {
                         // Switch side
                         if (HasArrow)

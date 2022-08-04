@@ -1259,6 +1259,7 @@ namespace Xamarin.RSControls.iOS.Controls
             this.Started -= RSUITextView_Started;
             this.Ended -= RSUITextView_Ended;
             this.Changed -= RSUITextView_EditingChanged;
+            NSNotificationCenter.DefaultCenter.RemoveObserver(deviceRotationObserver);
             if ((rSControl as RSEditor).AutoSize == EditorAutoSizeOption.Disabled || (rSControl as RSEditor).HeightRequest != -1)
                 this.Scrolled -= RSUITextView_Scrolled;
 

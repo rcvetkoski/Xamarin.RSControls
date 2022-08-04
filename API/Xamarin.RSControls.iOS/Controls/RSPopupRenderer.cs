@@ -4,6 +4,7 @@ using System.Windows.Input;
 using CoreAnimation;
 using CoreGraphics;
 using Foundation;
+using SkiaSharp;
 using SpriteKit;
 using UIKit;
 using Xamarin.Forms;
@@ -24,7 +25,7 @@ namespace Xamarin.RSControls.iOS.Controls
         private UIView mainView { get; set; }
         private UIView BackgroundView { get; set; }
         private RSDialogView DialogView { get; set; }
-        private UIStackView dialogStack { get; set; }
+        private TestClass dialogStack { get; set; }
         private RScontentStack contentStack { get; set; }
         private RSUIScrollView contentScrollView { get; set; }
         private UIStackView buttonsStack { get; set; }
@@ -84,6 +85,7 @@ namespace Xamarin.RSControls.iOS.Controls
         private NSLayoutConstraint dialogViewTrailingConstraint;
         private nfloat arrowSize;
 
+
         //Constructor
         public RSPopupRenderer() : base()
         {
@@ -119,6 +121,8 @@ namespace Xamarin.RSControls.iOS.Controls
             thisBottomConstraint.Active = true;
 
 
+            this.BackgroundColor = UIColor.Gray.ColorWithAlpha(0.5f);
+
             //BackgroundView
             BackgroundView = new UIView();
             AddSubview(BackgroundView);
@@ -128,7 +132,7 @@ namespace Xamarin.RSControls.iOS.Controls
             AddSubview(DialogView);
 
             //DialogStack
-            dialogStack = new UIStackView();
+            dialogStack = new TestClass();
             DialogView.AddSubview(dialogStack);
 
             //Title
@@ -224,6 +228,7 @@ namespace Xamarin.RSControls.iOS.Controls
             dialogStack.Spacing = 10;
             dialogStack.LayoutMarginsRelativeArrangement = true;
             dialogStack.InsetsLayoutMarginsFromSafeArea = false;
+            (dialogStack as TestClass).rSPopupRenderer = this;
 
             // Get Relative view position including eventual margins
             CGRect position = new CGRect();
@@ -420,8 +425,8 @@ namespace Xamarin.RSControls.iOS.Controls
 
         private void CustomViewContentPage_MeasureInvalidated(object sender, EventArgs e)
         {
-            //this.LayoutSubviews();
-            layoutCustomView();
+            this.LayoutSubviews();
+            //layoutCustomView();
         }
 
         private void layoutCustomView()
@@ -611,51 +616,80 @@ namespace Xamarin.RSControls.iOS.Controls
             }
         }
 
+        /// <summary>
+        /// Converts coordinates to correct ones
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        private nfloat convertCoordinates(nfloat position)
+        {
+            if (position >= 0)
+                return -position;
+            else
+                return (nfloat)Math.Abs(position);
+        }
+
         // Dialog initial Position / create constraints and update them later
         private void setDialogPosition()
         {
             if (RelativeView != null)
             {
-                if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
-                {
-                    dialogPositionXConstraint = dialogStack.TrailingAnchor.ConstraintEqualTo(relativeViewAsNativeView.LeadingAnchor);
-                    dialogPositionXConstraint.Active = true;
-                    dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterYAnchor);
-                    dialogPositionYConstraint.Active = true;
-                }
-                else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
-                {
-                    dialogPositionXConstraint = dialogStack.LeadingAnchor.ConstraintEqualTo(relativeViewAsNativeView.TrailingAnchor);
-                    dialogPositionXConstraint.Active = true;
-                    dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterYAnchor);
-                    dialogPositionYConstraint.Active = true;
-                }
-                else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
-                {
-                    dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
-                    dialogPositionXConstraint.Active = true;
-                    dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(relativeViewAsNativeView.BottomAnchor);
-                    dialogPositionYConstraint.Active = true;
-                }
-                else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
-                {
-                    dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
-                    dialogPositionXConstraint.Active = true;
-                    dialogPositionYConstraint = dialogStack.BottomAnchor.ConstraintEqualTo(relativeViewAsNativeView.TopAnchor);
-                    dialogPositionYConstraint.Active = true;
-                }
-                else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
-                {
-                    dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
-                    dialogPositionXConstraint.Active = true;
-                    dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(relativeViewAsNativeView.TopAnchor);
-                    dialogPositionYConstraint.Active = true;
-                }
-                else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Center)
+                //if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
+                //{
+                //    dialogPositionXConstraint = dialogStack.TrailingAnchor.ConstraintEqualTo(relativeViewAsNativeView.LeadingAnchor);
+                //    dialogPositionXConstraint.Active = true;
+                //    dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterYAnchor);
+                //    dialogPositionYConstraint.Active = true;
+                //}
+                //else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
+                //{
+                //    dialogPositionXConstraint = dialogStack.LeadingAnchor.ConstraintEqualTo(relativeViewAsNativeView.TrailingAnchor);
+                //    dialogPositionXConstraint.Active = true;
+                //    dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterYAnchor);
+                //    dialogPositionYConstraint.Active = true;
+                //}
+                //else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
+                //{
+                //    dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
+                //    dialogPositionXConstraint.Active = true;
+                //    dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(relativeViewAsNativeView.BottomAnchor);
+                //    dialogPositionYConstraint.Active = true;
+                //}
+                //else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
+                //{
+                //    dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(relativeViewAsNativeView.CenterXAnchor);
+                //    dialogPositionXConstraint.Active = true;
+                //    dialogPositionYConstraint = dialogStack.BottomAnchor.ConstraintEqualTo(relativeViewAsNativeView.TopAnchor);
+                //    dialogPositionYConstraint.Active = true;
+                //}
+                //else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
+                //{
+                //    dialogPositionXConstraint = dialogStack.LeadingAnchor.ConstraintEqualTo(mainView.LeadingAnchor);
+                //    dialogPositionXConstraint.Active = true;
+                //    dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(mainView.TopAnchor);
+                //    dialogPositionYConstraint.Active = true;
+                //}
+                //else
+                //{
+                //    dialogPositionXConstraint = dialogStack.LeadingAnchor.ConstraintEqualTo(mainView.LeadingAnchor);
+                //    dialogPositionXConstraint.Active = true;
+                //    dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(mainView.TopAnchor);
+                //    dialogPositionYConstraint.Active = true;
+                //}
+
+
+                if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Center)
                 {
                     dialogPositionXConstraint = dialogStack.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor);
                     dialogPositionXConstraint.Active = true;
                     dialogPositionYConstraint = dialogStack.CenterYAnchor.ConstraintEqualTo(this.CenterYAnchor);
+                    dialogPositionYConstraint.Active = true;
+                }
+                else
+                {
+                    dialogPositionXConstraint = dialogStack.LeadingAnchor.ConstraintEqualTo(mainView.LeadingAnchor);
+                    dialogPositionXConstraint.Active = true;
+                    dialogPositionYConstraint = dialogStack.TopAnchor.ConstraintEqualTo(mainView.TopAnchor);
                     dialogPositionYConstraint.Active = true;
                 }
             }
@@ -698,28 +732,42 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
             {
-                CurrentDialogPosition.X = (nfloat)Math.Abs(position.X);
-                CurrentDialogPosition.Y = (nfloat)Math.Abs(position.Y) + position.Height / 2;
+                CurrentDialogPosition.X = convertCoordinates(position.X) - dialogStack.Frame.Width - arrowSize;
+                CurrentDialogPosition.Y = convertCoordinates(position.Y) + position.Height / 2 - dialogStack.Frame.Height / 2;
+                dialogPositionXConstraint.Constant = CurrentDialogPosition.X;
+                dialogPositionYConstraint.Constant = CurrentDialogPosition.Y;
+                dialogViewTrailingConstraint.Constant = arrowSize;
             }
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
             {
-                CurrentDialogPosition.X = (nfloat)Math.Abs(position.X) + position.Width;
-                CurrentDialogPosition.Y = (nfloat)Math.Abs(position.Y) + position.Height / 2;
+                CurrentDialogPosition.X = convertCoordinates(position.X) + position.Width + arrowSize;
+                CurrentDialogPosition.Y = convertCoordinates(position.Y) + position.Height / 2 - dialogStack.Frame.Height / 2;
+                dialogPositionXConstraint.Constant = CurrentDialogPosition.X;
+                dialogPositionYConstraint.Constant = CurrentDialogPosition.Y;
+                dialogViewLeadingConstraint.Constant = -arrowSize;
             }
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Bottom)
             {
-                CurrentDialogPosition.X = (nfloat)Math.Abs(position.X) + (position.Width / 2);
-                CurrentDialogPosition.Y = (nfloat)Math.Abs(position.Y) + position.Height;
+                CurrentDialogPosition.X = convertCoordinates(position.X) + (position.Width / 2) - dialogStack.Frame.Width / 2;
+                CurrentDialogPosition.Y = convertCoordinates(position.Y) + arrowSize + position.Height;
+                dialogPositionXConstraint.Constant = CurrentDialogPosition.X;
+                dialogPositionYConstraint.Constant = CurrentDialogPosition.Y;
+                dialogViewTopConstraint.Constant = -arrowSize;
             }
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
             {
-                CurrentDialogPosition.X = (nfloat)Math.Abs(position.X) + (position.Width / 2);
-                CurrentDialogPosition.Y = (nfloat)Math.Abs(position.Y);
+                CurrentDialogPosition.X = convertCoordinates(position.X) + (position.Width / 2) - dialogStack.Frame.Width / 2;
+                CurrentDialogPosition.Y = convertCoordinates(position.Y) - arrowSize - dialogStack.Frame.Height;
+                dialogPositionXConstraint.Constant = CurrentDialogPosition.X;
+                dialogPositionYConstraint.Constant = CurrentDialogPosition.Y;
+                dialogViewBottomConstraint.Constant = arrowSize;
             }
             else if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
             {
-                CurrentDialogPosition.X = (nfloat)Math.Abs(position.X) + position.Width / 2;
-                CurrentDialogPosition.Y = (nfloat)Math.Abs(position.Y);
+                CurrentDialogPosition.X = convertCoordinates(position.X);
+                CurrentDialogPosition.Y = convertCoordinates(position.Y);
+                dialogPositionXConstraint.Constant = CurrentDialogPosition.X;
+                dialogPositionYConstraint.Constant = CurrentDialogPosition.Y;
             }
         }
 
@@ -731,45 +779,53 @@ namespace Xamarin.RSControls.iOS.Controls
             var minYPositionAllowed = this.Frame.Top + TopMargin;
             var maxYPositionAllowed = this.Frame.Bottom - BottomMargin;
 
-            double projectedPositionLeft;
-            double projectedPositionRight;
-            double projectedPositionTop;
-            double projectedPositionBottom;
+            nfloat projectedPositionLeft;
+            nfloat projectedPositionRight;
+            nfloat projectedPositionTop;
+            nfloat projectedPositionBottom;
+
+            nfloat constantX = 0;
+            nfloat constantY = 0;
 
             DialogView.ArrowSide = RSPopupPositionSideEnum;
 
 
-            // Over centerAnchor
+            // Over left top corner
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
             {
                 // If on right side move left
-                if((Math.Abs(position.X) + position.Width / 2) >= mainView.Frame.Width / 2)
+                if((convertCoordinates(position.X) + position.Width / 2) >= mainView.Frame.Width / 2)
                 {
-                    projectedPositionLeft = CurrentDialogPosition.X + position.Width / 2 - dialogStack.Frame.Width;
+                    // first set to correct x position
+                    projectedPositionLeft = CurrentDialogPosition.X + position.Width - dialogStack.Frame.Width;
+                    CurrentDialogPosition.X = (nfloat)projectedPositionLeft;
+
+                    // Fix margin
+                    if ((CurrentDialogPosition.X + dialogStack.Frame.Width) > mainView.Frame.Width - RightMargin)
+                    {
+                        CurrentDialogPosition.X -= (CurrentDialogPosition.X + dialogStack.Frame.Width) - (mainView.Frame.Width - RightMargin);
+                    }
 
                     if(projectedPositionLeft < minXPositionAllowed)
                     {
-                        var constant = CurrentDialogPosition.X - minXPositionAllowed - dialogStack.Frame.Width / 2;
-                        dialogPositionXConstraint.Constant = -(nfloat)constant;
-                    }
-                    else
-                    {
-                        dialogPositionXConstraint.Constant = (position.Width / 2 - dialogStack.Frame.Width / 2);
+                        constantX = minXPositionAllowed - projectedPositionLeft;
+                        CurrentDialogPosition.X += constantX;
                     }
                 }
                 // If on left side move right
-                else if ((Math.Abs(position.X) + position.Width / 2) < mainView.Frame.Width / 2)
+                else if ((convertCoordinates(position.X) + position.Width / 2) < mainView.Frame.Width / 2)
                 {
-                    projectedPositionRight = CurrentDialogPosition.X - position.Width / 2 + dialogStack.Frame.Width;
+                    if (CurrentDialogPosition.X < LeftMargin)
+                    {
+                        CurrentDialogPosition.X = LeftMargin;
+                    }
+
+                    projectedPositionRight = CurrentDialogPosition.X + dialogStack.Frame.Width;
 
                     if (projectedPositionRight > maxXPositionAllowed)
                     {
-                        var constant = maxXPositionAllowed - projectedPositionRight + dialogStack.Frame.Width / 2 - position.Width / 2;
-                        dialogPositionXConstraint.Constant = (nfloat)constant;
-                    }
-                    else
-                    {
-                        dialogPositionXConstraint.Constant = (-position.Width / 2 + dialogStack.Frame.Width / 2);
+                        constantX = maxXPositionAllowed - projectedPositionRight;
+                        CurrentDialogPosition.X += constantX;
                     }
                 }
             }
@@ -777,8 +833,8 @@ namespace Xamarin.RSControls.iOS.Controls
             // Left Trailing to Leading anchor
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Left)
             {
-                projectedPositionLeft = CurrentDialogPosition.X - dialogStack.Frame.Width - arrowSize;
-                projectedPositionRight = CurrentDialogPosition.X + position.Width + dialogStack.Frame.Width + arrowSize;
+                projectedPositionLeft = convertCoordinates(position.X) - dialogStack.Frame.Width - arrowSize;
+                projectedPositionRight = convertCoordinates(position.X) + position.Width + dialogStack.Frame.Width + arrowSize;
 
                 // If left space not available check if right is ok if not just move it to the right
                 if(projectedPositionLeft < minXPositionAllowed)
@@ -792,11 +848,12 @@ namespace Xamarin.RSControls.iOS.Controls
                             DialogView.ArrowSide = RSPopupPositionSideEnum.Right;
                         }
  
-                        var constant = position.Width + dialogStack.Frame.Width;
-                        dialogPositionXConstraint.Constant = constant + arrowSize;
+                        constantX = convertCoordinates(position.X) + position.Width + arrowSize;
+                        CurrentDialogPosition.X = constantX;
                         dialogViewLeadingConstraint.Constant = -arrowSize;
+                        dialogViewTrailingConstraint.Constant = 0;
                     }
-                    // Just move it to the right so it ends within screen bounds if widht not bigger than that
+                    // Just move it so it ends within screen bounds if widht not bigger than that
                     else
                     {
                         // Hide arrow since there is no enough space on screen
@@ -805,28 +862,36 @@ namespace Xamarin.RSControls.iOS.Controls
                             HasArrow = false;
                         }
 
-                        var constant = minXPositionAllowed - projectedPositionLeft;
-                        dialogPositionXConstraint.Constant = (nfloat)constant - arrowSize;
+                        constantX = minXPositionAllowed - projectedPositionLeft;
+                        CurrentDialogPosition.X += constantX;
+                        dialogViewTrailingConstraint.Constant = 0;
                     }
                 }
-                else
+                else if((projectedPositionLeft + dialogStack.Frame.Width + arrowSize) > maxXPositionAllowed)
                 {
-                    dialogViewTrailingConstraint.Constant = arrowSize;
-                    dialogPositionXConstraint.Constant = - arrowSize;
+                    // Hide arrow since there is no enough space on screen
+                    if (HasArrow)
+                    {
+                        HasArrow = false;
+                    }
+
+                    constantX = maxXPositionAllowed - dialogStack.Frame.Width;
+                    CurrentDialogPosition.X = constantX;
+                    dialogViewTrailingConstraint.Constant = 0;
                 }
             }
 
             // Right Leading to Trailing anchor
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Right)
             {
-                projectedPositionLeft = CurrentDialogPosition.X - position.Width - dialogStack.Frame.Width - arrowSize;
+                projectedPositionLeft = convertCoordinates(position.X) - dialogStack.Frame.Width - arrowSize;
                 projectedPositionRight = CurrentDialogPosition.X + dialogStack.Frame.Width + arrowSize;
 
                 // If right space not available check if left is ok if not just move it to the left
                 if (projectedPositionRight > maxXPositionAllowed)
                 {
                     // Check if left space enough, if ok than place it at left side
-                    if (projectedPositionLeft >= minXPositionAllowed)
+                    if (projectedPositionLeft >= minXPositionAllowed && ((projectedPositionLeft + dialogStack.Frame.Width + arrowSize) <= maxXPositionAllowed))
                     {
                         // Switch side
                         if(HasArrow)
@@ -834,11 +899,12 @@ namespace Xamarin.RSControls.iOS.Controls
                             DialogView.ArrowSide = RSPopupPositionSideEnum.Left;
                         }
 
-                        var constant = - position.Width - dialogStack.Frame.Width;
+                        constantX = convertCoordinates(position.X) - dialogStack.Frame.Width - arrowSize;
+                        CurrentDialogPosition.X = constantX;
                         dialogViewTrailingConstraint.Constant = arrowSize;
-                        dialogPositionXConstraint.Constant = constant - arrowSize;
+                        dialogViewLeadingConstraint.Constant = 0;
                     }
-                    // Just move it to the left so it ends within screen bounds if widht not bigger than that
+                    // Just move it so it ends within screen bounds if widht not bigger than that
                     else
                     {
                         // Hide arrow since there is no enough space on screen
@@ -847,14 +913,10 @@ namespace Xamarin.RSControls.iOS.Controls
                             HasArrow = false;
                         }
 
-                        var constant = maxXPositionAllowed - projectedPositionRight;
-                        dialogPositionXConstraint.Constant = (nfloat)constant + arrowSize;
+                        constantX = maxXPositionAllowed - projectedPositionRight + arrowSize;
+                        CurrentDialogPosition.X += constantX;
+                        dialogViewLeadingConstraint.Constant = 0;
                     }
-                }
-                else
-                {
-                    dialogViewLeadingConstraint.Constant = -arrowSize;
-                    dialogPositionXConstraint.Constant = +arrowSize;
                 }
             }
 
@@ -863,30 +925,33 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 //// X position
                 // If on right side move left if needed else keep position
-                if ((Math.Abs(position.X) + position.Width / 2) >= mainView.Frame.Width / 2)
+                if ((convertCoordinates(position.X) + position.Width / 2) >= mainView.Frame.Width / 2)
                 {
-                    projectedPositionRight = CurrentDialogPosition.X + dialogStack.Frame.Width / 2;
+                    projectedPositionRight = convertCoordinates(position.X) + position.Width / 2 + dialogStack.Frame.Width / 2;
 
                     if (projectedPositionRight > maxXPositionAllowed)
                     {
-                        var constant = projectedPositionRight - maxXPositionAllowed;
-                        dialogPositionXConstraint.Constant = -(nfloat)constant;
+                        constantX = maxXPositionAllowed - projectedPositionRight;
+                        CurrentDialogPosition.X = CurrentDialogPosition.X + constantX;
                     }
-                    else
-                        dialogPositionXConstraint.Constant = 0;
                 }
                 // If on left side move right if needed else keep position
-                else if ((Math.Abs(position.X) + position.Width / 2) < mainView.Frame.Width / 2)
+                else if ((convertCoordinates(position.X) + position.Width / 2) < mainView.Frame.Width / 2)
                 {
-                    projectedPositionLeft = CurrentDialogPosition.X - dialogStack.Frame.Width / 2;
+                    projectedPositionLeft = convertCoordinates(position.X) + position.Width / 2 - dialogStack.Frame.Width / 2;
 
                     if (projectedPositionLeft < minXPositionAllowed)
                     {
-                        var constant = minXPositionAllowed - projectedPositionLeft;
-                        dialogPositionXConstraint.Constant = (nfloat)constant;
+                        constantX = minXPositionAllowed - projectedPositionLeft;
+                        CurrentDialogPosition.X = CurrentDialogPosition.X + constantX;
                     }
-                    else
-                        dialogPositionXConstraint.Constant = 0;
+                }
+
+
+                // Hide arrow if not withit dialogstack bounds
+                if ((System.Math.Abs(constantX) + arrowSize) >= (dialogStack.Frame.Width / 2))
+                {
+                    (DialogView as RSDialogView).HideArrow = true;
                 }
             }
 
@@ -902,7 +967,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (projectedPositionBottom > maxYPositionAllowed)
                 {
                     // Check if top space enough, if ok than place it at top side
-                    if (projectedPositionTop >= minYPositionAllowed && (projectedPositionTop + dialogStack.Frame.Height) < (mainView.Frame.Bottom - KeyboardPosition))
+                    if (projectedPositionTop >= minYPositionAllowed && (projectedPositionTop + dialogStack.Frame.Height) < (this.Frame.Bottom))
                     {
                         // Switch side
                         if(HasArrow)
@@ -910,9 +975,11 @@ namespace Xamarin.RSControls.iOS.Controls
                             DialogView.ArrowSide = RSPopupPositionSideEnum.Top;
                         }
 
-                        var constant = -position.Height - dialogStack.Frame.Height;
-                        dialogPositionYConstraint.Constant = constant - arrowSize;
+
+                        constantY = convertCoordinates(position.Y) - dialogStack.Frame.Height - arrowSize;
+                        CurrentDialogPosition.Y = constantY;
                         dialogViewBottomConstraint.Constant = arrowSize;
+                        dialogViewTopConstraint.Constant = 0;
                     }
                     // Just move it to the top so it ends within screen bounds if height not bigger than that
                     else
@@ -923,22 +990,19 @@ namespace Xamarin.RSControls.iOS.Controls
                             HasArrow = false;
                         }
 
-                        var constant = maxYPositionAllowed - projectedPositionBottom + arrowSize;
-                        dialogPositionYConstraint.Constant = (nfloat)constant;
+                        //constantY = maxYPositionAllowed - projectedPositionBottom + arrowSize;
+                        constantY = projectedPositionBottom - maxYPositionAllowed - arrowSize;
+                        CurrentDialogPosition.Y -= constantY;
+                        dialogViewTopConstraint.Constant = 0;
                     }
-                }
-                else
-                {
-                    dialogPositionYConstraint.Constant = arrowSize;
-                    dialogViewTopConstraint.Constant = -arrowSize;
                 }
             }
 
             // Y Position for Top
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Top)
             {
-                projectedPositionTop = CurrentDialogPosition.Y - dialogStack.Frame.Height - arrowSize;
-                projectedPositionBottom = CurrentDialogPosition.Y + position.Height + dialogStack.Frame.Height + arrowSize;
+                projectedPositionTop = convertCoordinates(position.Y) - dialogStack.Frame.Height - arrowSize;
+                projectedPositionBottom = convertCoordinates(position.Y) + position.Height + dialogStack.Frame.Height + arrowSize;
 
                 // If top space not available check if bottom is ok if not just move it to the bottom
                 if (projectedPositionTop < minYPositionAllowed)
@@ -952,9 +1016,10 @@ namespace Xamarin.RSControls.iOS.Controls
                             DialogView.ArrowSide = RSPopupPositionSideEnum.Bottom;
                         }
 
-                        var constant = position.Height + dialogStack.Frame.Height;
-                        dialogPositionYConstraint.Constant = constant + arrowSize;
+                        constantY = convertCoordinates(position.Y) + position.Height + arrowSize;
+                        CurrentDialogPosition.Y = constantY;
                         dialogViewTopConstraint.Constant = -arrowSize;
+                        dialogViewBottomConstraint.Constant = 0;
                     }
                     // Just move it to the bottom so it ends within screen bounds if height not bigger than that
                     else
@@ -965,11 +1030,13 @@ namespace Xamarin.RSControls.iOS.Controls
                             HasArrow = false;
                         }
 
-                        var constant = dialogStack.Frame.Height + maxYPositionAllowed - (projectedPositionBottom - position.Height) + arrowSize;
-                        dialogPositionYConstraint.Constant = (nfloat)constant;
+                        //constantY = dialogStack.Frame.Height + maxYPositionAllowed - (projectedPositionBottom - position.Height) + arrowSize;
+                        constantY = minYPositionAllowed - projectedPositionTop;
+                        CurrentDialogPosition.Y += constantY;
+                        dialogViewBottomConstraint.Constant = 0;
                     }
                 }
-                else if(CurrentDialogPosition.Y > (mainView.Frame.Bottom - KeyboardPosition))
+                else if((CurrentDialogPosition.Y + dialogStack.Frame.Height) > (this.Frame.Bottom ))
                 {
                     // Hide arrow since there is no enough space on screen
                     if (HasArrow)
@@ -977,13 +1044,9 @@ namespace Xamarin.RSControls.iOS.Controls
                         HasArrow = false;
                     }
 
-                    var constant = CurrentDialogPosition.Y - (mainView.Frame.Height - KeyboardPosition);
-                    dialogPositionYConstraint.Constant = -(nfloat)constant;
-                }
-                else
-                {
-                    dialogPositionYConstraint.Constant = - arrowSize;
-                    dialogViewBottomConstraint.Constant = arrowSize;
+                    constantY = (CurrentDialogPosition.Y + dialogStack.Frame.Height) - (this.Frame.Bottom);
+                    CurrentDialogPosition.Y = CurrentDialogPosition.Y - constantY;
+                    dialogViewBottomConstraint.Constant = 0;
                 }
             }
 
@@ -994,49 +1057,58 @@ namespace Xamarin.RSControls.iOS.Controls
                 // If on bottom side move to top if needed else keep position
                 if ((Math.Abs(position.Y) + position.Height / 2) >= mainView.Frame.Height / 2)
                 {
-                    projectedPositionBottom = CurrentDialogPosition.Y + dialogStack.Frame.Height / 2;
+                    projectedPositionBottom = CurrentDialogPosition.Y + dialogStack.Frame.Height;
 
                     if (projectedPositionBottom > maxYPositionAllowed)
                     {
-                        var constant = projectedPositionBottom - maxYPositionAllowed;
-                        dialogPositionYConstraint.Constant = -(nfloat)constant;
+                        constantY = maxYPositionAllowed - projectedPositionBottom;
+                        CurrentDialogPosition.Y += constantY;
                     }
-                    else
-                        dialogPositionYConstraint.Constant = 0;
                 }
                 // If on top side move to bottom if needed else keep position
                 else if ((Math.Abs(position.Y) + position.Height / 2) < mainView.Frame.Height / 2)
                 {
-                    projectedPositionTop = CurrentDialogPosition.Y - dialogStack.Frame.Height / 2;
+                    projectedPositionTop = CurrentDialogPosition.Y;
 
                     if (projectedPositionTop < minYPositionAllowed)
                     {
-                        var constant = minYPositionAllowed - projectedPositionTop;
-                        dialogPositionYConstraint.Constant = (nfloat)constant;
+                        constantY = minYPositionAllowed - projectedPositionTop;
+                        CurrentDialogPosition.Y += constantY;
                     }
-                    else if ((CurrentDialogPosition.Y + dialogStack.Frame.Height / 2) > (mainView.Frame.Bottom - KeyboardPosition))
+                    else if ((CurrentDialogPosition.Y + dialogStack.Frame.Height / 2) > (this.Frame.Bottom))
                     {
-                        var constant = (mainView.Frame.Bottom - KeyboardPosition) - (CurrentDialogPosition.Y + dialogStack.Frame.Height / 2);
-                        dialogPositionYConstraint.Constant = (nfloat)constant;
+                        constantY = (this.Frame.Bottom) - (CurrentDialogPosition.Y + dialogStack.Frame.Height / 2);
+                        CurrentDialogPosition.Y += constantY;
                     }
-                    else
-                        dialogPositionYConstraint.Constant = 0;
+                }
+
+                // Hide arrow if not withit dialogstack bounds
+                if ((System.Math.Abs(constantY) + arrowSize) >= (dialogStack.Frame.Height / 2))
+                {
+                    (DialogView as RSDialogView).HideArrow = true;
                 }
             }
 
             // Y Position for Over
             if (RSPopupPositionSideEnum == RSPopupPositionSideEnum.Over)
             {
+                if (CurrentDialogPosition.Y < TopMargin)
+                    CurrentDialogPosition.Y = TopMargin;
+
                 projectedPositionBottom = CurrentDialogPosition.Y + dialogStack.Frame.Height;
 
                 if (projectedPositionBottom > maxYPositionAllowed)
                 {
                     var constant = projectedPositionBottom - maxYPositionAllowed;
-                    dialogPositionYConstraint.Constant = -(nfloat)constant;
+                    CurrentDialogPosition.Y -= (nfloat)constant;
                 }
-                else
-                    dialogPositionYConstraint.Constant = 0;
             }
+
+
+            //Console.WriteLine("y " + constantY + "  h " + dialogStack.Frame.Height);
+
+            dialogPositionXConstraint.Constant = CurrentDialogPosition.X;
+            dialogPositionYConstraint.Constant = CurrentDialogPosition.Y;
 
 
             // Set xConstrainConstant and yConstrainConstant, it's used to position the arrow at the correct place in draw method
@@ -1044,8 +1116,8 @@ namespace Xamarin.RSControls.iOS.Controls
             // The condition here is so that it not calls draw unnecesarely
             if (DialogView.xConstrainConstant != dialogPositionXConstraint.Constant || DialogView.yConstrainConstant != dialogPositionYConstraint.Constant)
             {
-                DialogView.xConstrainConstant = dialogPositionXConstraint.Constant;
-                DialogView.yConstrainConstant = dialogPositionYConstraint.Constant;
+                DialogView.xConstrainConstant = constantX;
+                DialogView.yConstrainConstant = constantY;
                 DialogView.Draw(DialogView.Bounds);
             }
         }
@@ -1275,9 +1347,18 @@ namespace Xamarin.RSControls.iOS.Controls
             base.LayoutSubviews();
 
             // layout pending layout updates
-            dialogStack.LayoutIfNeeded();
+            //dialogStack.LayoutIfNeeded();
 
+            UpdateDialogPosition();
 
+            (dialogStack as TestClass).dh = dialogStack.Frame.Height;
+            (dialogStack as TestClass).dw = dialogStack.Frame.Width;
+
+            Console.WriteLine(this.Frame.Height);
+        }
+
+        public void UpdateDialogPosition()
+        {
             if (CustomView != null)
             {
                 layoutCustomView();
@@ -1293,12 +1374,12 @@ namespace Xamarin.RSControls.iOS.Controls
                 dialogViewTopConstraint.Constant = 0;
                 dialogViewLeadingConstraint.Constant = 0;
                 dialogViewTrailingConstraint.Constant = 0;
+                (DialogView as RSDialogView).HideArrow = false;
 
                 shouldShowArrow();
                 setConstraintPosition(position);
                 updatePosition(position);
             }
-
         }
 
         // Button graphics
@@ -1443,6 +1524,7 @@ namespace Xamarin.RSControls.iOS.Controls
         nfloat BorderRadius;
         CAShapeLayer shape;
         RSPopupRenderer rSPopupRenderer;
+        public bool HideArrow { get; set; }
         nfloat arrowSpace;
         public RSPopupPositionSideEnum ArrowSide;
         public nfloat xConstrainConstant;
@@ -1498,35 +1580,48 @@ namespace Xamarin.RSControls.iOS.Controls
                 bezierPath = UIBezierPath.FromRoundedRect(new CGRect(arrowSpace, 0, Frame.Width - arrowSpace, Frame.Height), UIRectCorner.AllCorners, new CGSize(BorderRadius, BorderRadius));
                 var posY = (Frame.Height / 2) - yConstrainConstant;
 
-                bezierPath.MoveTo(new CGPoint(x: arrowSpace, y: posY - arrowSpace));
-                bezierPath.AddLineTo(new CGPoint(x: 0, y: posY));
-                bezierPath.AddLineTo(new CGPoint(x: arrowSpace, y: posY + arrowSpace));
+                if (!HideArrow)
+                {
+                    bezierPath.MoveTo(new CGPoint(x: arrowSpace, y: posY - arrowSpace));
+                    bezierPath.AddLineTo(new CGPoint(x: 0, y: posY));
+                    bezierPath.AddLineTo(new CGPoint(x: arrowSpace, y: posY + arrowSpace));
+                }
             }
             else if (ArrowSide == RSPopupPositionSideEnum.Left && rSPopupRenderer.HasArrow)
             {
                 bezierPath = UIBezierPath.FromRoundedRect(new CGRect(0, 0, Frame.Width - arrowSpace, Frame.Height), UIRectCorner.AllCorners, new CGSize(BorderRadius, BorderRadius));
                 var posY = (Frame.Height / 2) - yConstrainConstant;
 
-                bezierPath.MoveTo(new CGPoint(x: Frame.Width - arrowSpace, y: posY - arrowSpace));
-                bezierPath.AddLineTo(new CGPoint(x: Frame.Width, y: posY));
-                bezierPath.AddLineTo(new CGPoint(x: Frame.Width - arrowSpace, y: posY + arrowSpace));
+                if (!HideArrow)
+                {
+                    bezierPath.MoveTo(new CGPoint(x: Frame.Width - arrowSpace, y: posY - arrowSpace));
+                    bezierPath.AddLineTo(new CGPoint(x: Frame.Width, y: posY));
+                    bezierPath.AddLineTo(new CGPoint(x: Frame.Width - arrowSpace, y: posY + arrowSpace));
+                }
             }
             else if (ArrowSide == RSPopupPositionSideEnum.Bottom && rSPopupRenderer.HasArrow)
             {
                 bezierPath = UIBezierPath.FromRoundedRect(new CGRect(0, arrowSpace, Frame.Width, Frame.Height - arrowSpace), UIRectCorner.AllCorners, new CGSize(BorderRadius, BorderRadius));
                 var posX = (Frame.Width / 2) - xConstrainConstant;
-                bezierPath.MoveTo(new CGPoint(x: posX + arrowSpace, y: arrowSpace));
-                bezierPath.AddLineTo(new CGPoint(x: posX, y: 0));
-                bezierPath.AddLineTo(new CGPoint(x: posX - arrowSpace, y: arrowSpace));
+
+                if (!HideArrow)
+                {
+                    bezierPath.MoveTo(new CGPoint(x: posX + arrowSpace, y: arrowSpace));
+                    bezierPath.AddLineTo(new CGPoint(x: posX, y: 0));
+                    bezierPath.AddLineTo(new CGPoint(x: posX - arrowSpace, y: arrowSpace));
+                }
             }
             else if (ArrowSide == RSPopupPositionSideEnum.Top && rSPopupRenderer.HasArrow)
             {
                 bezierPath = UIBezierPath.FromRoundedRect(new CGRect(0, 0, Frame.Width, Frame.Height - arrowSpace), UIRectCorner.AllCorners, new CGSize(BorderRadius, BorderRadius));
                 var posX = (Frame.Width / 2) - xConstrainConstant;
 
-                bezierPath.MoveTo(new CGPoint(x: posX + arrowSpace, y: Frame.Height - arrowSpace));
-                bezierPath.AddLineTo(new CGPoint(x: posX, y: Frame.Height));
-                bezierPath.AddLineTo(new CGPoint(x: posX - arrowSpace, y: Frame.Height - arrowSpace));
+                if (!HideArrow)
+                {
+                    bezierPath.MoveTo(new CGPoint(x: posX + arrowSpace, y: Frame.Height - arrowSpace));
+                    bezierPath.AddLineTo(new CGPoint(x: posX, y: Frame.Height));
+                    bezierPath.AddLineTo(new CGPoint(x: posX - arrowSpace, y: Frame.Height - arrowSpace));
+                }
             }
             else
                 bezierPath = UIBezierPath.FromRoundedRect(new CGRect(0, 0, Frame.Width, Frame.Height), UIRectCorner.AllCorners, new CGSize(BorderRadius, BorderRadius));
@@ -1594,6 +1689,27 @@ namespace Xamarin.RSControls.iOS.Controls
                 if ((CustomViewContentPage as ContentPage).Content is Layout)
                     ((CustomViewContentPage as ContentPage).Content as Layout).ForceLayout();
             }
+        }
+    }
+
+
+    public class TestClass : UIStackView
+    {
+        public nfloat dh;
+        public nfloat dw;
+        public RSPopupRenderer rSPopupRenderer;
+
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            //Console.WriteLine("base    " + dh);
+            //Console.WriteLine("subclass " + Frame);
+
+
+            if (dh != Frame.Height || dw != Frame.Width)
+                rSPopupRenderer.UpdateDialogPosition();
         }
     }
 }
