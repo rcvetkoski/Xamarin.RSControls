@@ -23,6 +23,7 @@ using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Droid.Controls;
 using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.Interfaces;
+using static Android.Text.BoringLayout;
 
 [assembly: Dependency(typeof(RSPopupRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
@@ -745,7 +746,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 if (projectedPositionLeft < minXPositionAllowed)
                 {
                     // Check if right space enough, if ok than place it at right side
-                    if (projectedPositionRight <= maxXPositionAllowed)
+                    if (projectedPositionRight <= maxXPositionAllowed && (projectedPositionRight - linearLayout.Width) >= minXPositionAllowed)
                     {
                         // Switch side
                         if (HasArrow)
@@ -822,6 +823,18 @@ namespace Xamarin.RSControls.Droid.Controls
                         constantX = maxXPositionAllowed - projectedPositionRight;
                         linearLayoutPositionX += (int)constantX;
                     }
+                }
+                else if ((projectedPositionRight - linearLayout.Width) < minXPositionAllowed)
+                {
+                    // Hide arrow since there is no enough space on screen
+                    if (HasArrow)
+                    {
+                        HasArrow = false;
+                        linearLayout2.SetX(linearLayout.PaddingLeft / 2);
+                    }
+
+                    constantX = minXPositionAllowed - (projectedPositionRight - linearLayout.Width);
+                    linearLayoutPositionX += (int)constantX;
                 }
             }
 
@@ -912,6 +925,18 @@ namespace Xamarin.RSControls.Droid.Controls
                     var offsetY = (float)(projectedPositionTop + linearLayout.Height) - (float)relativeLayout.Height;
                     linearLayoutPositionY = (linearLayoutPositionY - linearLayout.Height - relativeViewHeight - offsetY);
                 }
+                else if ((projectedPositionBottom - linearLayout.Height - arrowSize) < minYPositionAllowed)
+                {
+                    // Hide arrow since there is no enough space on screen
+                    if (HasArrow)
+                    {
+                        HasArrow = false;
+                        linearLayout2.SetY(linearLayout2.GetY() - arrowSize / 2);
+                    }
+
+                    constantY = minYPositionAllowed - (projectedPositionBottom - linearLayout.Height);
+                    linearLayoutPositionY += (int)constantY;
+                }
             }
 
             // Y Position for Top
@@ -924,7 +949,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 if (projectedPositionTop < minYPositionAllowed)
                 {
                     // Check if bottom space enough, if ok than place it at bottom side
-                    if (projectedPositionBottom <= maxYPositionAllowed)
+                    if (projectedPositionBottom <= maxYPositionAllowed && (projectedPositionBottom - linearLayout.Height - arrowSize) >= minYPositionAllowed)
                     {
                         // Switch side
                         if (HasArrow)
@@ -947,7 +972,9 @@ namespace Xamarin.RSControls.Droid.Controls
                             linearLayout2.SetY(linearLayout2.GetY() + arrowSize / 2);
                         }
 
-                        constantY = linearLayout.Height + maxYPositionAllowed - (projectedPositionBottom - relativeViewHeight);
+                        //constantY = linearLayout.Height + maxYPositionAllowed - (projectedPositionBottom - relativeViewHeight);
+                        constantY = minYPositionAllowed - projectedPositionTop;
+
                         linearLayoutPositionY += (int)constantY;
                     }
                 }
@@ -1600,10 +1627,18 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
                 else
                 {
+
+                    var maxWidth = Resources.DisplayMetrics.WidthPixels - (rSPopupRenderer.LeftMargin + rSPopupRenderer.RightMargin + leftPadding + rightPadding);
                     var wPadding = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)this.WidthConstraint, Context.Resources.DisplayMetrics) - leftPadding - rightPadding;
 
+                    if (wPadding > maxWidth)
+                    {
+                        wPadding = maxWidth;
+                    }
+
                     nativeWidth = wPadding;
-                    formsWidth = this.WidthConstraint - ContextExtensions.FromPixels(this.Context, leftPadding + rightPadding);
+                    formsWidth = ContextExtensions.FromPixels(this.Context, wPadding);
+                    //formsWidth = this.WidthConstraint - ContextExtensions.FromPixels(this.Context, leftPadding + rightPadding);
                 }
 
 

@@ -464,8 +464,14 @@ namespace Xamarin.RSControls.iOS.Controls
             }
             else
             {
-                customViewWidthConstraint.Constant = (nfloat)this.Width - offsetX;
-                renderer.Element.Layout(new Rectangle(0, 0, this.Width - offsetX, sizeRequest.Request.Height));
+                nfloat maxWidth = mainView.Frame.Width - LeftMargin - RightMargin - offsetX;
+                nfloat projectedWidth = (nfloat)this.Width - offsetX;
+
+                if (projectedWidth > maxWidth)
+                    projectedWidth = maxWidth;
+
+                customViewWidthConstraint.Constant = projectedWidth;
+                renderer.Element.Layout(new Rectangle(0, 0, projectedWidth, sizeRequest.Request.Height));
             }
 
             customViewHeightConstraint.Constant = (nfloat)sizeRequest.Request.Height;
@@ -590,7 +596,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 var w = dialogStack.WidthAnchor.ConstraintLessThanOrEqualTo(this.WidthAnchor, 1f, -(LeftMargin + RightMargin));
                 w.Active = true;
 
-                widthConstraint = dialogStack.WidthAnchor.ConstraintEqualTo(this.Width - (LeftMargin + RightMargin));
+                widthConstraint = dialogStack.WidthAnchor.ConstraintEqualTo(this.Width);
                 widthConstraint.Priority = 999f;
                 widthConstraint.Active = true;
             }
@@ -844,7 +850,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if(projectedPositionLeft < minXPositionAllowed)
                 {
                     // Check if right space enough, if ok than place it at right side
-                    if(projectedPositionRight <= maxXPositionAllowed)
+                    if(projectedPositionRight <= maxXPositionAllowed && (projectedPositionRight - dialogStack.Frame.Width - arrowSize) >= minXPositionAllowed)
                     {
                         // Switch side
                         if(HasArrow)
@@ -922,6 +928,18 @@ namespace Xamarin.RSControls.iOS.Controls
                         dialogViewLeadingConstraint.Constant = 0;
                     }
                 }
+                else if((projectedPositionRight - dialogStack.Frame.Width - arrowSize) < minXPositionAllowed)
+                {
+                    // Hide arrow since there is no enough space on screen
+                    if (HasArrow)
+                    {
+                        HasArrow = false;
+                    }
+
+                    constantX = minXPositionAllowed - (projectedPositionRight - dialogStack.Frame.Width);
+                    CurrentDialogPosition.X += constantX;
+                    dialogViewLeadingConstraint.Constant = 0;
+                }
             }
 
             // Bottom and Top CenterAnchor
@@ -971,7 +989,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (projectedPositionBottom > maxYPositionAllowed)
                 {
                     // Check if top space enough, if ok than place it at top side
-                    if (projectedPositionTop >= minYPositionAllowed && (projectedPositionTop + dialogStack.Frame.Height) < (this.Frame.Bottom))
+                    if (projectedPositionTop >= minYPositionAllowed && (projectedPositionTop + dialogStack.Frame.Height + arrowSize) <= (this.Frame.Bottom))
                     {
                         // Switch side
                         if(HasArrow)
@@ -1000,6 +1018,18 @@ namespace Xamarin.RSControls.iOS.Controls
                         dialogViewTopConstraint.Constant = 0;
                     }
                 }
+                else if((projectedPositionBottom - dialogStack.Frame.Height - arrowSize) < minYPositionAllowed)
+                {
+                    // Hide arrow since there is no enough space on screen
+                    if (HasArrow)
+                    {
+                        HasArrow = false;
+                    }
+
+                    constantY = minYPositionAllowed - (projectedPositionBottom - dialogStack.Frame.Height - arrowSize);
+                    CurrentDialogPosition.Y += constantY;
+                    dialogViewTopConstraint.Constant = 0;
+                }
             }
 
             // Y Position for Top
@@ -1012,7 +1042,7 @@ namespace Xamarin.RSControls.iOS.Controls
                 if (projectedPositionTop < minYPositionAllowed)
                 {
                     // Check if bottom space enough, if ok than place it at bottom side
-                    if (projectedPositionBottom <= maxYPositionAllowed)
+                    if (projectedPositionBottom <= maxYPositionAllowed && (projectedPositionBottom - dialogStack.Frame.Height - arrowSize) >= minYPositionAllowed)
                     {
                         // Switch side
                         if(HasArrow)
