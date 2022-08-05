@@ -441,13 +441,14 @@ namespace Xamarin.RSControls.iOS.Controls
 
             // Get and Set required size for forms view
             var sizeRequest = (renderer.Element as ContentPage).Content.Measure(maxSize.Width, maxSize.Height, Forms.MeasureFlags.IncludeMargins);
+            //var sizeRequest = (renderer.Element as ContentPage).Content.Measure(mainView.Frame.Width + 30, double.PositiveInfinity, Forms.MeasureFlags.IncludeMargins);
 
 
             //if (sizeRequest.Request.Width > maxSize.Width)
             //    sizeRequest.Request = new Size(maxSize.Width, sizeRequest.Request.Height);
 
             //if (sizeRequest.Request.Height > maxSize.Height)
-            //    sizeRequest.Request = new Size(sizeRequest.Request.Width, maxSize.Height);
+            //    sizeRequest.Request = new Size(sizeRequest.Request.Width, sizeRequest.Request.Height);
 
 
             // Calculate final width
@@ -498,19 +499,22 @@ namespace Xamarin.RSControls.iOS.Controls
         {
             keyboardObserverOpen = UIKeyboard.Notifications.ObserveDidShow((handler, args) =>
             {
-                var posDialogBottomY = Math.Abs(dialogStack.ConvertRectFromView(dialogStack.Bounds, this.mainView).Y) + dialogStack.Frame.Height;
-                if (posDialogBottomY > args.FrameEnd.Y)
-                {
-                    KeyboardPosition = args.FrameEnd.Height;
-                    thisBottomConstraint.Constant = -args.FrameEnd.Height + mainView.SafeAreaInsets.Bottom;
+                thisBottomConstraint.Constant = -args.FrameEnd.Height + mainView.SafeAreaInsets.Bottom;
+                dialogStack.LayoutIfNeeded();
 
-                    dialogStack.LayoutIfNeeded();
-                }
+                //var posDialogBottomY = Math.Abs(dialogStack.ConvertRectFromView(dialogStack.Bounds, this.mainView).Y) + dialogStack.Frame.Height;
+                //if (posDialogBottomY > args.FrameEnd.Y)
+                //{
+                //    KeyboardPosition = args.FrameEnd.Height;
+                //    thisBottomConstraint.Constant = -args.FrameEnd.Height + mainView.SafeAreaInsets.Bottom;
+                //    dialogStack.LayoutIfNeeded();
+                //}
             });
 
             keyboardObserverClose = UIKeyboard.Notifications.ObserveDidHide((handler, args) =>
             {
-                KeyboardPosition = 0;
+                //KeyboardPosition = 0;
+
                 thisBottomConstraint.Constant = 0;
                 dialogStack.LayoutIfNeeded();
             });
@@ -801,9 +805,9 @@ namespace Xamarin.RSControls.iOS.Controls
                     CurrentDialogPosition.X = (nfloat)projectedPositionLeft;
 
                     // Fix margin
-                    if ((CurrentDialogPosition.X + dialogStack.Frame.Width) > mainView.Frame.Width - RightMargin)
+                    if ((CurrentDialogPosition.X + dialogStack.Frame.Width) > this.Frame.Right - RightMargin)
                     {
-                        CurrentDialogPosition.X -= (CurrentDialogPosition.X + dialogStack.Frame.Width) - (mainView.Frame.Width - RightMargin);
+                        CurrentDialogPosition.X -= (CurrentDialogPosition.X + dialogStack.Frame.Width) - (this.Frame.Right - RightMargin);
                     }
 
                     if(projectedPositionLeft < minXPositionAllowed)
@@ -815,9 +819,9 @@ namespace Xamarin.RSControls.iOS.Controls
                 // If on left side move right
                 else if ((convertCoordinates(position.X) + position.Width / 2) < mainView.Frame.Width / 2)
                 {
-                    if (CurrentDialogPosition.X < LeftMargin)
+                    if (CurrentDialogPosition.X < (this.Frame.Left + LeftMargin))
                     {
-                        CurrentDialogPosition.X = LeftMargin;
+                        CurrentDialogPosition.X = (this.Frame.Left + LeftMargin);
                     }
 
                     projectedPositionRight = CurrentDialogPosition.X + dialogStack.Frame.Width;
@@ -1105,8 +1109,6 @@ namespace Xamarin.RSControls.iOS.Controls
             }
 
 
-            //Console.WriteLine("y " + constantY + "  h " + dialogStack.Frame.Height);
-
             dialogPositionXConstraint.Constant = CurrentDialogPosition.X;
             dialogPositionYConstraint.Constant = CurrentDialogPosition.Y;
 
@@ -1353,8 +1355,6 @@ namespace Xamarin.RSControls.iOS.Controls
 
             (dialogStack as TestClass).dh = dialogStack.Frame.Height;
             (dialogStack as TestClass).dw = dialogStack.Frame.Width;
-
-            Console.WriteLine(this.Frame.Height);
         }
 
         public void UpdateDialogPosition()
@@ -1582,8 +1582,8 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 if (!HideArrow)
                 {
-                    bezierPath.MoveTo(new CGPoint(x: arrowSpace, y: posY - arrowSpace));
-                    bezierPath.AddLineTo(new CGPoint(x: 0, y: posY));
+                    bezierPath.MoveTo(new CGPoint(x: 0, y: posY));
+                    bezierPath.AddLineTo(new CGPoint(x: arrowSpace, y: posY - arrowSpace));
                     bezierPath.AddLineTo(new CGPoint(x: arrowSpace, y: posY + arrowSpace));
                 }
             }
@@ -1606,9 +1606,9 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 if (!HideArrow)
                 {
-                    bezierPath.MoveTo(new CGPoint(x: posX + arrowSpace, y: arrowSpace));
+                    bezierPath.MoveTo(new CGPoint(x: posX - arrowSpace, y: arrowSpace));
                     bezierPath.AddLineTo(new CGPoint(x: posX, y: 0));
-                    bezierPath.AddLineTo(new CGPoint(x: posX - arrowSpace, y: arrowSpace));
+                    bezierPath.AddLineTo(new CGPoint(x: posX + arrowSpace, y: arrowSpace));
                 }
             }
             else if (ArrowSide == RSPopupPositionSideEnum.Top && rSPopupRenderer.HasArrow)
@@ -1618,22 +1618,19 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 if (!HideArrow)
                 {
-                    bezierPath.MoveTo(new CGPoint(x: posX + arrowSpace, y: Frame.Height - arrowSpace));
+                    bezierPath.MoveTo(new CGPoint(x: posX - arrowSpace, y: Frame.Height - arrowSpace));
                     bezierPath.AddLineTo(new CGPoint(x: posX, y: Frame.Height));
-                    bezierPath.AddLineTo(new CGPoint(x: posX - arrowSpace, y: Frame.Height - arrowSpace));
+                    bezierPath.AddLineTo(new CGPoint(x: posX + arrowSpace, y: Frame.Height - arrowSpace));
                 }
             }
             else
                 bezierPath = UIBezierPath.FromRoundedRect(new CGRect(0, 0, Frame.Width, Frame.Height), UIRectCorner.AllCorners, new CGSize(BorderRadius, BorderRadius));
 
+            // Close path
+            bezierPath.ClosePath();
+
             // Set the path
             shape.Path = bezierPath.CGPath;
-
-            ////Draw the pointer bootom
-            //bezierPath.MoveTo(new CGPoint(x: Frame.Width / 2 + 10, y: Frame.Height - (nfloat)10.0));
-            //bezierPath.AddLineTo(new CGPoint(x: Frame.Width / 2, y: Frame.Height));
-            //bezierPath.AddLineTo(new CGPoint(x: Frame.Width / 2 - (nfloat)10.0, y: Frame.Height - (nfloat)10.0));
-            //shape.Path = bezierPath.CGPath;
         }
     }
 
