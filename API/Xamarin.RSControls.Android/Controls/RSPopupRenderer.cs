@@ -14,6 +14,7 @@ using Android.Util;
 using Android.Views;
 using Android.Views.Animations;
 using Android.Widget;
+using AndroidX.Annotations;
 using AndroidX.AppCompat.App;
 using Java.Lang;
 using Xamarin.Forms;
@@ -1402,6 +1403,13 @@ namespace Xamarin.RSControls.Droid.Controls
         public override void OnDismiss(IDialogInterface dialog)
         {
             base.OnDismiss(dialog);
+
+            if(CustomView != null)
+            {
+                renderer.View.RemoveFromParent();
+                CustomView.Parent = null;   
+            }
+
             OnDismissed();
             this.Dispose();
         }

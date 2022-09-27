@@ -307,7 +307,7 @@ namespace Samples
             rsPopup.SetPopupAnimation(RSPopupAnimationEnum.CurveEaseInOut);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
             Editor rSEntry = new Editor() { Text = "MEHE wf", AutoSize = EditorAutoSizeOption.TextChanges, BackgroundColor = Color.Yellow};
-            rsPopup.SetCustomView(rSEntry);
+            rsPopup.SetCustomView(this.RSPopupCustomView);
             //rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
             //{

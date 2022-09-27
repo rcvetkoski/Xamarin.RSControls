@@ -1457,6 +1457,8 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 RemoveKeyboardObservers();
                 renderer.Element.MeasureInvalidated -= CustomViewContentPage_MeasureInvalidated;
+                renderer.NativeView.RemoveFromSuperview();
+                CustomView.Parent = null;
             }
 
             if (animated)

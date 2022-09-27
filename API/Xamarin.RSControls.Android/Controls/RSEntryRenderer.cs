@@ -41,7 +41,8 @@ namespace Xamarin.RSControls.Droid.Controls
             if (e.OldElement != null)
                 return;
 
-            Element.Placeholder = "";
+            //Element.Placeholder = "";
+            Element.PlaceholderColor = Xamarin.Forms.Color.Transparent;
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -484,6 +485,7 @@ namespace Xamarin.RSControls.Droid.Controls
             floatingHintPaint.Color = rSControl.PlaceholderStyle.FontColor.ToAndroid();
             floatingHintPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
             floatingHintPaint.AntiAlias = true;
+
 
             //Set width and height of floating hint paint when floating
             floatingHintPaint.TextSize = labelsTextSize;
