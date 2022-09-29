@@ -1399,6 +1399,11 @@ namespace Xamarin.RSControls.Droid.Controls
             RSPopupAnimation(linearLayout, RSPopupAnimationEnum, false);
         }
 
+        public void Close()
+        {
+            ClosePopup();
+        }
+
         //Dismiss
         public override void OnDismiss(IDialogInterface dialog)
         {

@@ -1437,6 +1437,11 @@ namespace Xamarin.RSControls.iOS.Controls
             Top, Bottom, Left, Right
         }
 
+        public void Close()
+        {
+           Dismiss(true);
+        }
+
         //Dismiss event
         public delegate void DismissEventHandler(object source, EventArgs args);
         public event EventHandler DismissEvent;

@@ -189,6 +189,11 @@ namespace Xamarin.RSControls.Controls
             service.AddAction(title, rSPopupButtonType, command, commandParameter);
         }
 
+        public void Close()
+        {
+            service.Close();
+        }
+
         public void OnDismissed()
         {
             Dismissed?.Invoke(this, EventArgs.Empty);
