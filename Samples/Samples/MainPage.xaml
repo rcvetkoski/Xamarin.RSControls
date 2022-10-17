@@ -82,6 +82,7 @@
 
 
         <StackLayout x:Name="stack" Margin="0, 0, 0, 0">
+            
 
             <!--<rs:RSSvgImage x:Name="svg" Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg" HorizontalOptions="Center"/>
             <ImageButton BackgroundColor="White" Padding="2" BorderColor="WhiteSmoke" BorderWidth="2" x:Name="testButton" HorizontalOptions="Center" WidthRequest="40" HeightRequest="40">
@@ -112,18 +113,26 @@
                 
             </rs:RSSvgImage>
 
-            <!--<rs:RSPicker Placeholder="lol" IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding ObsCollectionPicker}" BorderFillColor="White" BorderColor="Transparent" ShadowEnabled="True" ShadowColor="Gray" Margin="10"/>-->
+            <rs:RSEntry Text="ol" TextColor="{AppThemeBinding Dark=Black, Light=Red}"/>
 
+
+            <rs:RSPicker Placeholder="lol" TextColor="{AppThemeBinding Dark=Black, Light=Red}"
+                         IsSearchEnabled="True" RSPopupStyleEnum="RsPopopStyle" ItemsSource="{Binding SelectedPersons}" SelectedItem="{Binding SelectedPerson}" DisplayMemberPath="Name" Margin="10"/>
+            
+            
+            <Picker  TextColor="Gray" ItemsSource="{Binding ObsCollectionPicker}"/>
+
+            <rs:RSDatePicker NullableDate="{Binding SomeDate}" TextColor="Green" Margin="10"/>
 
             <Button Text="Add" Clicked="AddItem"/>
             <Button Text="Remove" Clicked="Button_Clicked"/>
 
             <Button BackgroundColor="Red" Text="popup" Clicked="Button_Clicked_1" VerticalOptions="Start" HorizontalOptions="Start" Margin="20,0,0,0"/>
 
-            <Button BackgroundColor="Red" Text="popup" Clicked="Button_Clicked_2" VerticalOptions="Start" HorizontalOptions="Start" Margin="30,0,0,0"/>
+            <Button BackgroundColor="Red" Text="popup" Clicked="Button_Clicked" VerticalOptions="Start" HorizontalOptions="Start" Margin="30,0,0,0"/>
 
-            <Button BackgroundColor="Green" Text="popup" Clicked="Button_Clicked_2" VerticalOptions="Start" HorizontalOptions="End" Margin="1000,0,40,0"/>
-                        <Button BackgroundColor="Purple" Text="popup" Clicked="Button_Clicked_2" VerticalOptions="Start" HorizontalOptions="End" Margin="2000,0,40,0"/>
+            <Button BackgroundColor="Green" Text="popup" Clicked="Button_Clicked_2" VerticalOptions="Start" HorizontalOptions="End" Margin="0,0,40,0"/>
+                        <Button BackgroundColor="Purple" Text="popup" Clicked="Button_Clicked_2" VerticalOptions="Start" HorizontalOptions="End" Margin="0,0,40,0"/>
             <Button BackgroundColor="Green" Text="popup" Clicked="Button_Clicked_2" VerticalOptions="Start" HorizontalOptions="Start" Margin="0,0,0,0"/>
 
 

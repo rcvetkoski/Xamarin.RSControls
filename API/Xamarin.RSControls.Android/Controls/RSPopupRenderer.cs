@@ -1412,7 +1412,8 @@ namespace Xamarin.RSControls.Droid.Controls
             if(CustomView != null)
             {
                 renderer.View.RemoveFromParent();
-                CustomView.Parent = null;   
+                CustomView.Parent = null;
+                renderer.View.Dispose();
             }
 
             OnDismissed();

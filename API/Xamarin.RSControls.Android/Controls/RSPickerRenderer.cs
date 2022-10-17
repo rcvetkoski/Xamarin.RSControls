@@ -73,6 +73,8 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnElementPropertyChanged(sender, e);
 
+            Console.WriteLine(e.PropertyName);  
+
             if (e.PropertyName == "SelectedItem" || e.PropertyName == "SelectedItems")
             {
                 SetText();
@@ -80,6 +82,11 @@ namespace Xamarin.RSControls.Droid.Controls
 
             if (e.PropertyName == "Error" && this.Control is CustomEditText && !isTextInputLayout)
                 (this.Control as CustomEditText).ErrorMessage = (this.Element as RSPickerBase).Error;
+
+            //if(e.PropertyName == "TextColor")
+            //{
+            //    (this.Control as CustomEditText).SetTextColor((this.Element as RSPickerBase).TextColor.ToAndroid());
+            //}
         }
 
         internal void SetIsTextInputLayout(bool value)

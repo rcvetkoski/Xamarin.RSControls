@@ -14,12 +14,6 @@ namespace Xamarin.RSControls.Controls
 {
     public class RSPickerBase : Picker, IHaveError, IRSControl, IHaveDialogPopup
     {
-        public RSPickerBase()
-        {
-            this.TextColor = Color.Black;
-        }
-
-
         //Popup////////////////////////////////////////////////
         public string RSPopupTitle { get; set; }
         public string RSPopupMessage { get; set; }
