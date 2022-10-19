@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Android.AccessibilityServices;
 using Android.App;
@@ -16,7 +17,10 @@ using Android.Views.Animations;
 using Android.Widget;
 using AndroidX.Annotations;
 using AndroidX.AppCompat.App;
+using AndroidX.Core.Content;
+using AndroidX.Core.View;
 using Java.Lang;
+using Org.Apache.Commons.Logging;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms.Xaml;
@@ -24,7 +28,6 @@ using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Droid.Controls;
 using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.Interfaces;
-using static Android.Text.BoringLayout;
 
 [assembly: Dependency(typeof(RSPopupRenderer))]
 namespace Xamarin.RSControls.Droid.Controls
@@ -147,6 +150,19 @@ namespace Xamarin.RSControls.Droid.Controls
             //Fix for Control that call keyboard like entry (keyboard not showing up)
             Dialog.Window.ClearFlags(WindowManagerFlags.NotFocusable | WindowManagerFlags.AltFocusableIm);
             //Dialog.Window.SetSoftInputMode(SoftInput.StateAlwaysHidden);
+
+            // Fix status bar color overide
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+            {
+                Dialog.Window.ClearFlags(WindowManagerFlags.TranslucentStatus);
+                Dialog.Window.AddFlags(WindowManagerFlags.DrawsSystemBarBackgrounds);
+
+
+                //Dialog.Window.SetStatusBarColor(global::Android.Graphics.Color.Red);
+                Dialog.Window.DecorView.SystemUiVisibility = (StatusBarVisibility)SystemUiFlags.LightStatusBar;
+                Dialog.Window.DecorView.WindowInsetsController.SystemBarsBehavior = (int)WindowInsetsControllerAppearance.LightStatusBars;
+                Dialog.Window.DecorView.WindowInsetsController.SetSystemBarsAppearance((int)WindowInsetsControllerAppearance.LightStatusBars, (int)WindowInsetsControllerAppearance.LightStatusBars);
+            }
 
             if (!backFromSleep) //Dont want to reset layoutparameters when back from sleep
                 SetDialog();
@@ -357,7 +373,7 @@ namespace Xamarin.RSControls.Droid.Controls
             //Apply size
             attrs.Width = ViewGroup.LayoutParams.MatchParent;
             attrs.Height = ViewGroup.LayoutParams.MatchParent;
-
+            
 
             //Position
             //Set the gravity top and left so it starts at real 0 coordinates than aply position
