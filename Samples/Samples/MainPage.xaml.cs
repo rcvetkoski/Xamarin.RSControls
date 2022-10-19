@@ -287,7 +287,7 @@ namespace Samples
             view.BindingContext = page1.BindingContext;
             page1.Content = null;
 
-            rsPopup.SetAppThemeColor(RSPopup.BackgroundColorProperty, Color.White, Color.FromHex("#1C1C1E"));
+            //rsPopup.Style = Application.Current.Resources["RSPopup"] as Style;
             rsPopup.SetMargin(0, 0, 0, 0);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetPopupAnimation(RSPopupAnimationEnum.CurveEaseInOut);

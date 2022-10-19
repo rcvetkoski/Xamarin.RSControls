@@ -7,7 +7,7 @@ using Xamarin.RSControls.Interfaces;
 
 namespace Xamarin.RSControls.Controls
 {
-    public class RSPopup : BindableObject
+    public class RSPopup : VisualElement
     {
         public IDialogPopup service;
 
@@ -30,8 +30,8 @@ namespace Xamarin.RSControls.Controls
         }
 
         // BackgroundColor
-        public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create("BackgroundColor", typeof(Color), typeof(RSPopup), Color.White);
-        public Color BackgroundColor
+        public static readonly new BindableProperty BackgroundColorProperty = BindableProperty.Create("BackgroundColor", typeof(Color), typeof(RSPopup), Color.White);
+        public new Color BackgroundColor
         {
             get { return (Color)GetValue(BackgroundColorProperty); }
             set { SetValue(BackgroundColorProperty, value); }

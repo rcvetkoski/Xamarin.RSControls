@@ -1712,7 +1712,7 @@ namespace Xamarin.RSControls.Droid.Controls
             filledPaint.Color = rSPopupRenderer.BorderFillColor.ToAndroid();
             filledPaint.AntiAlias = true;
 
-
+            
             Path path = new Path();
             path.SetFillType(Path.FillType.EvenOdd);
             //path.MoveTo(0, 0);
@@ -1780,7 +1780,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
         public override void SetColorFilter(ColorFilter colorFilter)
         {
-            
+
         }
     }
 }
