@@ -159,9 +159,9 @@ namespace Xamarin.RSControls.Droid.Controls
 
 
                 //Dialog.Window.SetStatusBarColor(global::Android.Graphics.Color.Red);
-                Dialog.Window.DecorView.SystemUiVisibility = (StatusBarVisibility)SystemUiFlags.LightStatusBar;
-                Dialog.Window.DecorView.WindowInsetsController.SystemBarsBehavior = (int)WindowInsetsControllerAppearance.LightStatusBars;
-                Dialog.Window.DecorView.WindowInsetsController.SetSystemBarsAppearance((int)WindowInsetsControllerAppearance.LightStatusBars, (int)WindowInsetsControllerAppearance.LightStatusBars);
+                //Dialog.Window.DecorView.SystemUiVisibility = (StatusBarVisibility)SystemUiFlags.LightStatusBar;
+                //Dialog.Window.DecorView.WindowInsetsController.SystemBarsBehavior = (int)WindowInsetsControllerAppearance.LightStatusBars;
+                //Dialog.Window.DecorView.WindowInsetsController.SetSystemBarsAppearance((int)WindowInsetsControllerAppearance.LightStatusBars, (int)WindowInsetsControllerAppearance.LightStatusBars);
             }
 
             if (!backFromSleep) //Dont want to reset layoutparameters when back from sleep
@@ -1709,7 +1709,7 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             var filledPaint = new Paint();
             filledPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
-            filledPaint.Color = global::Android.Graphics.Color.White;
+            filledPaint.Color = rSPopupRenderer.BorderFillColor.ToAndroid();
             filledPaint.AntiAlias = true;
 
 

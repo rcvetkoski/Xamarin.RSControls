@@ -52,9 +52,7 @@ namespace Samples
 
             RSPopup rsPopup = new RSPopup("RSPopup !", "Message Trolewoflwefeowl j2f2fk 2n2jfn \r\n j2k qwdwqdqwwqd");
             //rsPopup.SetCustomView(entry);
-            rsPopup.SetDimAmount(0.6f);
-            rsPopup.SetIsModal(false);
-            rsPopup.HasCloseButton = true;
+            rsPopup.DimAmount = 0.4f;
             rsPopup.SetMargin(0, 0, 0, 0);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Left);
@@ -96,8 +94,6 @@ namespace Samples
 
             RSPopup rsPopup = new RSPopup("RSPopup !", "Message");
             //rsPopup.SetCustomView(entry);
-            rsPopup.SetDimAmount(0.0f);
-            rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 10, 10, 10);
             //rsPopup.HasCloseButton = true;
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
@@ -123,7 +119,6 @@ namespace Samples
 
             RSPopup rsPopup = new RSPopup("", "Message Tewowl ewolo werew we weg ewweg egw weg ewg wegwe gew g gwe gewg  weg");
             //rsPopup.SetCustomView(entry); 
-            rsPopup.SetDimAmount(0.0f);
             rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Left);
@@ -145,8 +140,6 @@ namespace Samples
 
             RSPopup rsPopup = new RSPopup("RSPopup Test wefwef w Test !", "Message");
             //rsPopup.SetCustomView(rSEditor);
-            rsPopup.SetDimAmount(0.0f);
-            rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, 150);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Over);
@@ -184,8 +177,6 @@ namespace Samples
 
             RSPopup rsPopup = new RSPopup("RSPopup !", "Message");
             rsPopup.SetCustomView(label);
-            rsPopup.SetDimAmount(0.0f);
-            rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.WrapContent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
@@ -212,8 +203,6 @@ namespace Samples
 
             RSPopup rsPopup = new RSPopup("", "");
             rsPopup.SetCustomView(listView);
-            rsPopup.SetDimAmount(0.0f);
-            rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.MatchParent);
             //rsPopup.SetPopupPositionRelativeTo(sender as View);
@@ -279,7 +268,6 @@ namespace Samples
             rsPopup.SetMargin(0, 0, 0, 0);
             //rsPopup.SetCustomView(entry);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.MatchParent);
-            rsPopup.SetDimAmount(0.0f);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Top);
             rsPopup.AddAction(Title = "Close", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction(Title = "Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
@@ -299,11 +287,9 @@ namespace Samples
             view.BindingContext = page1.BindingContext;
             page1.Content = null;
 
-
-
+            rsPopup.SetAppThemeColor(RSPopup.BackgroundColorProperty, Color.White, Color.FromHex("#1C1C1E"));
             rsPopup.SetMargin(0, 0, 0, 0);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
-            rsPopup.SetDimAmount(0f);
             rsPopup.SetPopupAnimation(RSPopupAnimationEnum.CurveEaseInOut);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
             Editor rSEntry = new Editor() { Text = "MEHE wf", AutoSize = EditorAutoSizeOption.TextChanges, BackgroundColor = Color.Yellow};
@@ -313,6 +299,7 @@ namespace Samples
             //{
 
             //}));
+
             rsPopup.Show();
         }
 
@@ -326,7 +313,6 @@ namespace Samples
             rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupAnimation(RSPopupAnimationEnum.TopToBottom);
             rsPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
-            rsPopup.SetDimAmount(0f);
             //rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Center);
             rsPopup.AddAction(Title = "Ok", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral, new Command(() =>
             {

@@ -250,7 +250,6 @@ namespace Samples
             RSPopup rSPopup = new RSPopup("Title", "Message");
             rSPopup.SetPopupSize(Xamarin.RSControls.Enums.RSPopupSizeEnum.WrapContent, Xamarin.RSControls.Enums.RSPopupSizeEnum.WrapContent);
             rSPopup.SetPopupPositionRelativeTo(obj2 as Xamarin.Forms.View, Xamarin.RSControls.Enums.RSPopupPositionSideEnum.Top);
-            rSPopup.SetDimAmount(0f);
             rSPopup.SetMargin(40, 0, 40, 0);
             rSPopup.Show();
         }

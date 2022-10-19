@@ -24,8 +24,6 @@ namespace Samples
 
             RSPopup rsPopup = new RSPopup("RSPopup Test wefwef w Test !", "Message");
             //rsPopup.SetCustomView(rSEditor);
-            rsPopup.SetDimAmount(0.0f);
-            rsPopup.SetIsModal(false);
             rsPopup.SetMargin(10, 10, 10, 10);
             rsPopup.SetPopupSize(RSPopupSizeEnum.MatchParent, RSPopupSizeEnum.WrapContent);
             rsPopup.SetPopupPositionRelativeTo(sender as View, RSPopupPositionSideEnum.Bottom);
