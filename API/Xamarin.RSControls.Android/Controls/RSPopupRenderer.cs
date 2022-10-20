@@ -1349,7 +1349,7 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 if (isShowing)
                 {
-                    Console.WriteLine("left " + relativeLayout.GetX());
+                    //Console.WriteLine("left " + relativeLayout.GetX());
                     linearLayout.Animate().TranslationX(linearLayoutPositionX - LeftMargin).SetDuration(duration).WithEndAction(new Runnable(() => { dialogAnimationEnded = true; })).Start();
                 }
                 else

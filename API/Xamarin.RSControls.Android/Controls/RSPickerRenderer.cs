@@ -73,8 +73,6 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             base.OnElementPropertyChanged(sender, e);
 
-            Console.WriteLine(e.PropertyName);  
-
             if (e.PropertyName == "SelectedItem" || e.PropertyName == "SelectedItems")
             {
                 SetText();
