@@ -107,18 +107,20 @@ namespace Xamarin.RSControls.iOS.Controls
             mainView.AddSubview(this);
 
             this.TranslatesAutoresizingMaskIntoConstraints = false;
-            //this.LeadingAnchor.ConstraintEqualTo(mainView.LeadingAnchor).Active = true;
-            //this.TrailingAnchor.ConstraintEqualTo(mainView.TrailingAnchor).Active = true;
-            //this.TopAnchor.ConstraintEqualTo(mainView.TopAnchor).Active = true;
-            //this.BottomAnchor.ConstraintEqualTo(mainView.BottomAnchor).Active = true;
-
-
-            this.LeadingAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.LeadingAnchor).Active = true;
-            this.TrailingAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.TrailingAnchor).Active = true;
-            this.TopAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.TopAnchor).Active = true;
-            thisBottomConstraint = this.BottomAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.BottomAnchor);
+            this.LeadingAnchor.ConstraintEqualTo(mainView.LeadingAnchor).Active = true;
+            this.TrailingAnchor.ConstraintEqualTo(mainView.TrailingAnchor).Active = true;
+            this.TopAnchor.ConstraintEqualTo(mainView.TopAnchor).Active = true;
+            this.BottomAnchor.ConstraintEqualTo(mainView.BottomAnchor).Active = true;
+            thisBottomConstraint = this.BottomAnchor.ConstraintEqualTo(mainView.BottomAnchor);
             thisBottomConstraint.Priority = 999;
             thisBottomConstraint.Active = true;
+
+            //this.LeadingAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.LeadingAnchor).Active = true;
+            //this.TrailingAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.TrailingAnchor).Active = true;
+            //this.TopAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.TopAnchor).Active = true;
+            //thisBottomConstraint = this.BottomAnchor.ConstraintEqualTo(mainView.SafeAreaLayoutGuide.BottomAnchor);
+            //thisBottomConstraint.Priority = 999;
+            //thisBottomConstraint.Active = true;
 
 
             this.BackgroundColor = UIColor.Gray.ColorWithAlpha(0.5f);
@@ -128,7 +130,7 @@ namespace Xamarin.RSControls.iOS.Controls
             AddSubview(BackgroundView);
 
             //DialogVIew
-            DialogView = new RSDialogView(BorderRadius, Color.White);
+            DialogView = new RSDialogView(BorderRadius, this.BorderFillColor);
             AddSubview(DialogView);
 
             //DialogStack
@@ -164,7 +166,7 @@ namespace Xamarin.RSControls.iOS.Controls
             BackgroundView.TrailingAnchor.ConstraintEqualTo(mainView.TrailingAnchor).Active = true;
             BackgroundView.TopAnchor.ConstraintEqualTo(mainView.TopAnchor).Active = true;
             BackgroundView.BottomAnchor.ConstraintEqualTo(mainView.BottomAnchor).Active = true;
-             
+
             BackgroundView.BackgroundColor = UIColor.Black.ColorWithAlpha(DimAmount);
         }
 
@@ -370,18 +372,18 @@ namespace Xamarin.RSControls.iOS.Controls
 
             if (CustomView is Page)
             {
+                CustomView.BackgroundColor = Color.Transparent;
                 renderer = Platform.CreateRenderer(CustomView);
                 Platform.SetRenderer(CustomView, renderer);
             }
             else
             {
                 customViewContentPage = new ContentPage();
+                customViewContentPage.BackgroundColor = Color.Transparent;
                 customViewContentPage.Content = CustomView as Forms.View;
                 renderer = Platform.CreateRenderer(customViewContentPage);
                 Platform.SetRenderer(customViewContentPage, renderer);
             }
-
-
 
 
             // Give size to convertedView so it can be layed out correctly in the uistackview
@@ -550,7 +552,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 positiveButton.Hidden = false;
                 positiveButton.SetTitle(title, UIControlState.Normal);
                 positiveButton.SetTitleColor(UIColor.SystemBlue, UIControlState.Normal);
-                AddBorder(positiveButton);
             }
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Neutral)
             {
@@ -559,7 +560,6 @@ namespace Xamarin.RSControls.iOS.Controls
                 neutralButton.Hidden = false;
                 neutralButton.SetTitle(title, UIControlState.Normal);
                 neutralButton.SetTitleColor(UIColor.SystemBlue, UIControlState.Normal);
-                AddBorder(neutralButton);
             }
             else if (rSPopupButtonType == RSPopupButtonTypeEnum.Destructive)
             {
@@ -567,11 +567,23 @@ namespace Xamarin.RSControls.iOS.Controls
                 destructiveButton.Command = command;
                 destructiveButton.Hidden = false;
                 destructiveButton.SetTitle(title, UIControlState.Normal);
-                AddBorder(destructiveButton);
             }
-            else
-            {
+        }
 
+        private void AddButtonDivider()
+        {
+            if (buttonsCount <= 1)
+                return;
+
+            for(int i = 0; i < buttonsStack.ArrangedSubviews.Length - 1; i++)
+            {
+                if(i == (buttonsStack.ArrangedSubviews.Length - 2))
+                {
+                    if ((buttonsStack.ArrangedSubviews[i + 1] as UIButton).Hidden)
+                        return;
+                }
+
+                AddBorder(buttonsStack.ArrangedSubviews[i] as UIButton);
             }
         }
 
@@ -1167,6 +1179,8 @@ namespace Xamarin.RSControls.iOS.Controls
             if (CustomView != null)
                 SetCustomView();
 
+            AddButtonDivider();
+
             KeyboardPosition = 0;
 
             // Add bottom margin to last element if there are no buttons so it equals the other sides
@@ -1415,22 +1429,11 @@ namespace Xamarin.RSControls.iOS.Controls
         // Button graphics
         private void AddBorder(UIButton button)
         {
-            //var topBorder = new UIView() { BackgroundColor = UIColor.LightGray, TranslatesAutoresizingMaskIntoConstraints = false };
-            //button.AddSubview(topBorder);
-            //topBorder.LeadingAnchor.ConstraintEqualTo(button.LeadingAnchor).Active = true;
-            //topBorder.TrailingAnchor.ConstraintEqualTo(button.TrailingAnchor).Active = true;
-            //topBorder.HeightAnchor.ConstraintEqualTo(0.5f).Active = true;
-
-            if (buttonsCount > 1)
-            {
-                UIView border = new UIView() { BackgroundColor = UIColor.LightGray, TranslatesAutoresizingMaskIntoConstraints = false };
-                button.AddSubview(border);
-                border.HeightAnchor.ConstraintEqualTo(button.HeightAnchor).Active = true;
-                border.WidthAnchor.ConstraintEqualTo(0.5f).Active = true;
-
-                if (buttonsStack.ArrangedSubviews[buttonsCount - 1] != button)
-                    border.LeadingAnchor.ConstraintEqualTo(button.TrailingAnchor).Active = true;
-            }
+            UIView border = new UIView() { BackgroundColor = UIColor.LightGray, TranslatesAutoresizingMaskIntoConstraints = false };
+            button.AddSubview(border);
+            border.HeightAnchor.ConstraintEqualTo(button.HeightAnchor).Active = true;
+            border.WidthAnchor.ConstraintEqualTo(0.5f).Active = true;
+            border.LeadingAnchor.ConstraintEqualTo(button.TrailingAnchor).Active = true;
         }
         public enum UIButtonBorderSide
         {
@@ -1462,8 +1465,8 @@ namespace Xamarin.RSControls.iOS.Controls
             {
                 RemoveKeyboardObservers();
                 renderer.Element.MeasureInvalidated -= CustomViewContentPage_MeasureInvalidated;
-                renderer.NativeView.RemoveFromSuperview();
-                CustomView.Parent = null;
+                //renderer.NativeView.RemoveFromSuperview();
+                //CustomView.Parent = null;
             }
 
             if (animated)

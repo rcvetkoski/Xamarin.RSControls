@@ -21,5 +21,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Images\" />
+    <Folder Include="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Views\" />
   </ItemGroup>
 </Project>

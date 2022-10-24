@@ -1,4 +1,5 @@
 ﻿using Samples.Helpers;
+using Samples.Views;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -19,20 +20,20 @@ namespace Samples
             //MainPage = new MainPage();
 
 
-            SetTheme();
+            //SetTheme();
 
-            // Respond to the theme change
-            Application.Current.RequestedThemeChanged += (s, a) =>
-            {
-                if (a.RequestedTheme == OSAppTheme.Light)
-                {
-                    StatusBarColor.SetStatusBarColor(Color.White, true);
-                }
-                else if (a.RequestedTheme == OSAppTheme.Dark)
-                {
-                    StatusBarColor.SetStatusBarColor(Color.FromHex("#1C1C1E"), false);
-                }
-            };
+            //// Respond to the theme change
+            //Application.Current.RequestedThemeChanged += (s, a) =>
+            //{
+            //    if (a.RequestedTheme == OSAppTheme.Light)
+            //    {
+            //        StatusBarColor.SetStatusBarColor(Color.White, true);
+            //    }
+            //    else if (a.RequestedTheme == OSAppTheme.Dark)
+            //    {
+            //        StatusBarColor.SetStatusBarColor(Color.FromHex("#1C1C1E"), false);
+            //    }
+            //};
         }
 
         private void SetTheme()
