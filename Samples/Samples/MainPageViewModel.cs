@@ -49,8 +49,10 @@ namespace Samples
             MinDate = new DateTime(2009, 7, 1);
 
             Lolo = "lolo";
+            SomeNumber = 6.4;
+             
 
-            SelectedPerson = listPicker.FirstOrDefault();
+        SelectedPerson = listPicker.FirstOrDefault();
 
             RSCommand = new Command(RSCommandMethod, CanExec);
         }
@@ -227,7 +229,8 @@ namespace Samples
             }
         }
 
-
+        private double someNumber;
+        public double SomeNumber { get { return someNumber; } set { someNumber = value; OnPropertyChanged("SomeNumber"); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)

@@ -10,7 +10,7 @@
              xmlns:helpers="clr-namespace:Xamarin.RSControls.Helpers;assembly=Xamarin.RSControls"
              Title="MainPage"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             ios:Page.UseSafeArea="true" BackgroundColor="Black"
+             ios:Page.UseSafeArea="true"
              x:Class="Samples.MainPage">
 
     <ContentPage.BindingContext>
@@ -36,6 +36,7 @@
                     <validators:ValidationBehaviour PropertyName="Text">
                         <validators:ValidationBehaviour.Validators>
                             <validators:RequiredValidation/>
+                            <validators:DifferentThanValidation x:TypeArguments="x:Double" Value="{Binding BindingContext.SomeNumber, Source={x:Reference mainPage}}"/>
                         </validators:ValidationBehaviour.Validators>
                     </validators:ValidationBehaviour>
                 </rs:RSEntry.Behaviors>

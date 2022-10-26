@@ -41,6 +41,7 @@ namespace Xamarin.RSControls.Validators
                     }
                     else
                     {
+                        rsControl.Error = "";
                         rsControl.InValid = false;
                     }
                 }
