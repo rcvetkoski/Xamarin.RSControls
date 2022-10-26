@@ -17,16 +17,38 @@
         <local:MainPageViewModel></local:MainPageViewModel>
     </ContentPage.BindingContext>
 
+    <ContentPage.Content>
 
-        <rs:RSTabbedViews BarColor="White" RSTabPlacement="Top" >
-            <rs:RSTabbedViews.Views>
-                <views:RSPopupPage rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
-                <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
-                <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
-                <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
-                <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
-            </rs:RSTabbedViews.Views>
-        </rs:RSTabbedViews>
+        <StackLayout>
+
+            <rs:RSTabbedViews BarColor="White" RSTabPlacement="Top" >
+                <rs:RSTabbedViews.Views>
+                    <views:RSPopupPage rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                    <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                    <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                    <local:Page1 rs:RSTabbedViews.Title="SCHEDULE" rs:RSTabbedViews.Icon="tab_feed.png"/>
+                    <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS" rs:RSTabbedViews.Icon="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                </rs:RSTabbedViews.Views>
+            </rs:RSTabbedViews>
+
+            <rs:RSEntry x:Name="entry" Placeholder="No left icon" ShadowColor="Gray" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!">
+                <rs:RSEntry.Behaviors>
+                    <validators:ValidationBehaviour PropertyName="Text">
+                        <validators:ValidationBehaviour.Validators>
+                            <validators:RequiredValidation/>
+                        </validators:ValidationBehaviour.Validators>
+                    </validators:ValidationBehaviour>
+                </rs:RSEntry.Behaviors>
+            </rs:RSEntry>
+
+            <Button Text="update entry" Clicked="updateEntry"/>
+
+        </StackLayout>
+
+
+        
+    </ContentPage.Content>
+
             
 
 

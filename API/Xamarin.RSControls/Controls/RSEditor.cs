@@ -331,6 +331,14 @@ namespace Xamarin.RSControls.Controls
                 RightHelpingIcon.BindingContext = this.BindingContext;
         }
 
+        public bool InValid { get; set; }
+
+        public bool CheckIsValid()
+        {
+            OnPropertyChanged("Text");
+            return InValid;
+        }
+
         public void Dispose()
         {
 

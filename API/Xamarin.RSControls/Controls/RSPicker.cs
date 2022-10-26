@@ -344,6 +344,14 @@ namespace Xamarin.RSControls.Controls
                     break;
             }
         }
+
+        public bool InValid { get; set; }
+
+        public bool CheckIsValid()
+        {
+            OnPropertyChanged("SelectedItem");
+            return InValid;
+        }
     }
 
     public class RSPicker : RSPickerBase, IDisposable
