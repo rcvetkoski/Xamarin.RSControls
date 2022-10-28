@@ -336,7 +336,7 @@ namespace Xamarin.RSControls.Controls
         public bool CheckIsValid()
         {
             OnPropertyChanged("Text");
-            return InValid;
+            return InValid == true ? false : true;
         }
 
         public void Dispose()

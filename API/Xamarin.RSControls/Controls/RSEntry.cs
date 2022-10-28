@@ -272,10 +272,10 @@ namespace Xamarin.RSControls.Controls
 
         public bool InValid { get; set; }
 
-        public bool CheckIsValid()
+        public virtual bool CheckIsValid()
         {
             OnPropertyChanged("Text");
-            return InValid;
+            return InValid == true ? false : true;
         }
     }
 }

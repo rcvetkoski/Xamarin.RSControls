@@ -185,5 +185,11 @@ namespace Xamarin.RSControls.Controls
                 this.Text = str;
             }
         }
+
+        public override bool CheckIsValid()
+        {
+            OnPropertyChanged("Value");
+            return InValid == true ? false : true;
+        }
     }
 }

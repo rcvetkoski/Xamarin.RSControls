@@ -335,7 +335,7 @@ namespace Xamarin.RSControls.Controls
         public bool CheckIsValid()
         {
             OnPropertyChanged("NullableDate");
-            return InValid;
+            return InValid == true ? false : true;
         }
     }
 }

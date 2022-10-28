@@ -31,16 +31,16 @@
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>
 
-            <rs:RSEntry x:Name="entry" Placeholder="No left icon" ShadowColor="Gray" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!">
+            <rs:RSNumericEntry x:Name="entry" Placeholder="No left icon" ShadowColor="Gray" Value="0" RSEntryStyle="OutlinedBorder" HasRighIconSeparator="True" HasLeftIconSeparator="True" Helper="Helper message!">
                 <rs:RSEntry.Behaviors>
-                    <validators:ValidationBehaviour PropertyName="Text">
+                    <validators:ValidationBehaviour PropertyName="Value">
                         <validators:ValidationBehaviour.Validators>
                             <validators:RequiredValidation/>
-                            <validators:DifferentThanValidation x:TypeArguments="x:Double" Value="{Binding BindingContext.SomeNumber, Source={x:Reference mainPage}}"/>
+                            <validators:DifferentThanValidation x:TypeArguments="x:Double" Value="0"/>
                         </validators:ValidationBehaviour.Validators>
                     </validators:ValidationBehaviour>
                 </rs:RSEntry.Behaviors>
-            </rs:RSEntry>
+            </rs:RSNumericEntry>
 
             <Button Text="update entry" Clicked="updateEntry"/>
 

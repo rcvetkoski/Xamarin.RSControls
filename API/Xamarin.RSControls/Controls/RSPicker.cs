@@ -350,7 +350,7 @@ namespace Xamarin.RSControls.Controls
         public bool CheckIsValid()
         {
             OnPropertyChanged("SelectedItem");
-            return InValid;
+            return InValid == true ? false : true;
         }
     }
 
