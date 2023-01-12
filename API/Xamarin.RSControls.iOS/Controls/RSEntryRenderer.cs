@@ -1138,8 +1138,11 @@ namespace Xamarin.RSControls.iOS.Controls
         //Used in RSControl property changed so it update when per example text changes from external code or view
         public void UpdateView()
         {
+            CATransaction.Begin();
+            CATransaction.DisableActions = true;
             ForceFloatingHintFloatOrNot();
             UpdateBorder();
+            CATransaction.Commit();
         }
 
 

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls" xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls" xmlns:samples="clr-namespace:Samples"
+    x:Class="Samples.Views.TestPage">
+
+    <ContentPage.BindingContext>
+        <samples:MainPageViewModel/>
+    </ContentPage.BindingContext>
+
+
+    <ContentPage.Content>
+        <StackLayout>
+            <Frame Padding="10">
+                <StackLayout>
+
+                   <controls:RSNumericUpDown Placeholder="Number of meals" Text="{Binding NumericEntryValue}" IsPlaceholderAlwaysFloating="True"/>
+
+
+                   <controls:RSNumericEntry
+                    Placeholder="Troll"
+                    IsPlaceholderAlwaysFloating="True"
+                    NumberDecimalDigits="2"
+                    Helper="ewfw"
+                    Value="365">
+
+                            <controls:RSNumericEntry.Behaviors>
+                                <validators:ValidationBehaviour PropertyName="Value">
+                                    <validators:ValidationBehaviour.Validators>
+                                        <validators:RequiredValidation/>
+                                        <validators:RequiredValidation/>
+                                    </validators:ValidationBehaviour.Validators>
+                                </validators:ValidationBehaviour>
+                            </controls:RSNumericEntry.Behaviors>
+
+                    </controls:RSNumericEntry>
+
+                                       <controls:RSNumericEntry
+                    Placeholder="Troll"
+                    IsPlaceholderAlwaysFloating="True"
+                    Value="365"/>
+
+                                       <controls:RSNumericEntry
+                    Placeholder="Troll"
+                    IsPlaceholderAlwaysFloating="True"
+                    Value="365"/>
+
+                                       <controls:RSNumericEntry
+                    Placeholder="Troll"
+                    IsPlaceholderAlwaysFloating="True"
+                    Value="365"/>
+
+                                       <controls:RSNumericEntry
+                    Placeholder="Troll"
+                    IsPlaceholderAlwaysFloating="True"
+                    Value="365"/>
+
+                                       <controls:RSNumericEntry
+                    Placeholder="Troll"
+                    IsPlaceholderAlwaysFloating="True"
+                    Value="365"/>
+
+                                       <controls:RSNumericEntry
+                    Placeholder="Troll"
+                    IsPlaceholderAlwaysFloating="True"
+                    Value="365"/>
+
+                                       <controls:RSNumericEntry
+                    Placeholder="Troll"
+                    IsPlaceholderAlwaysFloating="True"
+                    Value="365"/>
+
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
+

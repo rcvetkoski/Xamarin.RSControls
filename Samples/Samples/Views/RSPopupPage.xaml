@@ -70,6 +70,8 @@
         <StackLayout>
             <Label Text="RSPopupPge"/>
             <Button Text="Popup" Clicked="Button_Clicked"/>
+
+            <Button Text="Go to test page" Clicked="GOTOTestPage"/>
         </StackLayout>
     </ContentPage.Content>
 

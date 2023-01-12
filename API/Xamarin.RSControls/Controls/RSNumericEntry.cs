@@ -177,6 +177,7 @@ namespace Xamarin.RSControls.Controls
                 {
                     str = str.TrimEnd('0');
                     str = str.TrimEnd('.');
+                    str = str.TrimEnd(',');
                 }
 
                 if (!string.IsNullOrEmpty(this.CustomUnit))

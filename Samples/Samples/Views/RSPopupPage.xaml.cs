@@ -42,6 +42,11 @@ namespace Samples.Views
 
             rsPopup.Show();
         }
+
+        public async void GOTOTestPage(System.Object sender, System.EventArgs e)
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(new TestPage());
+        }
     }
 }
 
