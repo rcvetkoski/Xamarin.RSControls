@@ -720,12 +720,18 @@ namespace Xamarin.RSControls.iOS.Controls
         //Update border
         private void UpdateBorder()
         {
+            CATransaction.Begin();
+            CATransaction.DisableActions = true;
+
+
             if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.OutlinedBorder)
                 UpdateOutlinedBorder();
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.FilledBorder)
                 UpdateFilledBorder();
             else if (this.rSControl.RSEntryStyle == RSEntryStyleSelectionEnum.Underline)
                 UpdateUnderlineBorder();
+
+            CATransaction.Commit();
         }
         private void UpdateOutlinedBorder()
         {
@@ -1138,11 +1144,8 @@ namespace Xamarin.RSControls.iOS.Controls
         //Used in RSControl property changed so it update when per example text changes from external code or view
         public void UpdateView()
         {
-            CATransaction.Begin();
-            CATransaction.DisableActions = true;
             ForceFloatingHintFloatOrNot();
             UpdateBorder();
-            CATransaction.Commit();
         }
 
 
@@ -1152,6 +1155,9 @@ namespace Xamarin.RSControls.iOS.Controls
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
+
+            CATransaction.Begin();
+            CATransaction.DisableActions = true;
 
             if (tempSize != this.Frame)
             {
@@ -1206,6 +1212,8 @@ namespace Xamarin.RSControls.iOS.Controls
 
                 tempSize = this.Frame;
             }
+
+            CATransaction.Commit();
         }
 
         /// <summary>
