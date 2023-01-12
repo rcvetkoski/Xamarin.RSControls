@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using Xamarin.RSControls.Enums;
 using Xamarin.RSControls.Helpers;
 using Xamarin.RSControls.Interfaces;
+using Xamarin.RSControls.Validators;
 
 namespace Xamarin.RSControls.Controls
 {
@@ -267,6 +268,14 @@ namespace Xamarin.RSControls.Controls
         public void DoInvalidate()
         {
             this.InvalidateMeasure();
+        }
+
+        public bool InValid { get; set; }
+
+        public virtual bool CheckIsValid()
+        {
+            OnPropertyChanged("Text");
+            return InValid == true ? false : true;
         }
     }
 }

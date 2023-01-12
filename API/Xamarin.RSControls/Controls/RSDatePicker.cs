@@ -330,6 +330,13 @@ namespace Xamarin.RSControls.Controls
         {
             this.InvalidateMeasure();
         }
+
+        public bool InValid { get; set; }
+        public bool CheckIsValid()
+        {
+            OnPropertyChanged("NullableDate");
+            return InValid == true ? false : true;
+        }
     }
 }
 

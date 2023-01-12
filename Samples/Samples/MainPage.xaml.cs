@@ -21,6 +21,7 @@ namespace Samples
             InitializeComponent();
             this.BindingContext = new MainPageViewModel();
 
+            //entry.IsValid();
 
             //for (int i = 0; i < 200; i++)
             //{
@@ -305,6 +306,11 @@ namespace Samples
         private void RSSvgImageClicked(object sender, EventArgs e)
         {
             Button_Clicked_2(sender, null);
+        }
+
+        private void updateEntry(object sender, EventArgs e)
+        {
+           var lol = this.entry.CheckIsValid();
         }
     }
 }
