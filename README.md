@@ -7,3 +7,5 @@ RSEntry
 ![RSEntryScreenshots](https://user-images.githubusercontent.com/50323773/214616459-c4b361b4-04a9-415a-b0b4-72e6d0689b95.jpg)
 
 RSPicker 
+
+![RSPIckerVideo](https://user-images.githubusercontent.com/50323773/214634619-b408c8ab-d999-468d-abee-52e685f89bc0.gif)
