@@ -8,15 +8,15 @@ using Xamarin.Forms;
 using Xamarin.RSControls.Controls;
 using Xamarin.RSControls.Enums;
 
-namespace Samples
+namespace Samples.ViewModels
 {
-    public class MainPageViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
 
         public Command RSCommand { get; set; }
 
 
-        public MainPageViewModel()
+        public MainViewModel()
         {
             NumericEntryValue = 2657.239;
 
@@ -50,9 +50,9 @@ namespace Samples
 
             Lolo = "lolo";
             SomeNumber = 6.4;
-             
 
-        SelectedPerson = listPicker.FirstOrDefault();
+
+            SelectedPerson = listPicker.FirstOrDefault();
 
             RSCommand = new Command(RSCommandMethod, CanExec);
         }
@@ -251,8 +251,8 @@ namespace Samples
         public void TestMethod2(object obj, object obj2)
         {
             RSPopup rSPopup = new RSPopup("Title", "Message");
-            rSPopup.SetPopupSize(Xamarin.RSControls.Enums.RSPopupSizeEnum.WrapContent, Xamarin.RSControls.Enums.RSPopupSizeEnum.WrapContent);
-            rSPopup.SetPopupPositionRelativeTo(obj2 as Xamarin.Forms.View, Xamarin.RSControls.Enums.RSPopupPositionSideEnum.Top);
+            rSPopup.SetPopupSize(RSPopupSizeEnum.WrapContent, RSPopupSizeEnum.WrapContent);
+            rSPopup.SetPopupPositionRelativeTo(obj2 as View, RSPopupPositionSideEnum.Top);
             rSPopup.SetMargin(40, 0, 40, 0);
             rSPopup.Show();
         }

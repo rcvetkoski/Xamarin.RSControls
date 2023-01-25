@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Samples"
+             xmlns:views="clr-namespace:Samples.Views"
+             x:Name="mainPage"
+             xmlns:rs="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls"
+             xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls"
+             Title="RSTabbedViews"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" 
+             xmlns:viewmodels="clr-namespace:Samples.ViewModels"
+             ios:Page.UseSafeArea="true"
+             x:Class="Samples.MainPage">
+
+    <ContentPage.BindingContext>
+        <viewmodels:MainViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout>
+
+            <rs:RSTabbedViews BarColor="{StaticResource SystemGray}" RSTabPlacement="Top" BarTextColor="White">
+                <rs:RSTabbedViews.Views>
+                    <views:RSEntryPage rs:RSTabbedViews.Title="RSEntry"/>
+                    <views:RSPickerPage rs:RSTabbedViews.Title="RSPicker"/>
+                    <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY"/>
+                    <local:Page1 rs:RSTabbedViews.Title="SCHEDULE"/>
+                    <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS"/>
+                </rs:RSTabbedViews.Views>
+            </rs:RSTabbedViews>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

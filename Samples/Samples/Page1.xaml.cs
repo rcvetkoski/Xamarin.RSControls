@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Samples.ViewModels;
+using System;
 using System.Collections.Generic;
 
 using Xamarin.Forms;
@@ -12,7 +13,6 @@ namespace Samples
         public Page1()
         {
             InitializeComponent();
-            this.BindingContext = new MainPageViewModel();
         }
 
         private void Button_Clicked(object sender, EventArgs e)
@@ -30,7 +30,7 @@ namespace Samples
             //rsPopup.AddAction("Done", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Positive);
             //rsPopup.AddAction("Cancel", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Neutral);
             //rsPopup.AddAction(" Remove ", Xamarin.RSControls.Enums.RSPopupButtonTypeEnum.Destructive,
-            //                            (this.BindingContext as MainPageViewModel).RSCommand, (this.BindingContext as MainPageViewModel).Lolo);
+            //                            (this.BindingContext as MainViewModel).RSCommand, (this.BindingContext as MainViewModel).Lolo);
 
 
             rsPopup.Show();

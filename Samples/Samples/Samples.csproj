@@ -21,9 +21,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Images\" />
-    <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Views\RSEntryPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\RSPickerPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

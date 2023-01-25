@@ -10,7 +10,6 @@ namespace Samples
         public TabbedPage1()
         {
             InitializeComponent();
-            this.BindingContext = new MainPageViewModel();
         }
 
         private void Button_Clicked(object sender, EventArgs e)

@@ -16,32 +16,8 @@ namespace Samples
 
             StatusBarColor = DependencyService.Get<IStatusBarColor>();
 
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new NavigationPage(new RSEntryPage());
             //MainPage = new MainPage();
-
-
-            //SetTheme();
-
-            //// Respond to the theme change
-            //Application.Current.RequestedThemeChanged += (s, a) =>
-            //{
-            //    if (a.RequestedTheme == OSAppTheme.Light)
-            //    {
-            //        StatusBarColor.SetStatusBarColor(Color.White, true);
-            //    }
-            //    else if (a.RequestedTheme == OSAppTheme.Dark)
-            //    {
-            //        StatusBarColor.SetStatusBarColor(Color.FromHex("#1C1C1E"), false);
-            //    }
-            //};
-        }
-
-        private void SetTheme()
-        {
-            if (Current.RequestedTheme == OSAppTheme.Unspecified || Current.RequestedTheme == OSAppTheme.Light)
-                StatusBarColor.SetStatusBarColor(Color.White, true);
-            else
-                StatusBarColor.SetStatusBarColor(Color.FromHex("#1C1C1E"), false);
         }
 
         protected override void OnStart()

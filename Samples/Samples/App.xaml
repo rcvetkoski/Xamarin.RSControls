@@ -50,10 +50,14 @@
             <Color x:Key="SystemGray5Dark">#2C2C2E</Color>
             <Color x:Key="SystemGray6Dark">#1C1C1E</Color>
 
-            <Style x:Key="RSPopup" TargetType="rsControls:RSPopup">
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource CardBackgroundDark}, Light={StaticResource WindowBackgroundColor}}" />
+            <Style x:Key="FrameStyle" TargetType="Frame">
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="Margin" Value="0, 10, 0, 10" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BackgroundColor" Value="{StaticResource CardBackground}" />
             </Style>
-            
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

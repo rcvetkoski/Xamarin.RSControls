@@ -53,6 +53,17 @@ namespace Xamarin.RSControls.Droid.Controls
 
             if (e.PropertyName == "Error" && this.Control is CustomEditText && !isTextInputLayout)
                 control.ErrorMessage = (this.Element as RSEntry).Error;
+            else if (this.Control is CustomEditText && (e.PropertyName == "RSEntryStyle" ||
+                e.PropertyName == "Helper" ||
+                e.PropertyName == "Placeholder" ||
+                e.PropertyName == "ActiveColor" ||
+                e.PropertyName == "BorderColor" ||
+                e.PropertyName == "BorderFillColor" ||
+                e.PropertyName == "BorderRadius" ||
+                e.PropertyName == "BorderWidth"))
+            {
+                control.RefreshControl();
+            }
         }
 
         internal void SetIsTextInputLayout(bool value)
@@ -93,8 +104,6 @@ namespace Xamarin.RSControls.Droid.Controls
         private global::Android.Graphics.Rect counterMessageBounds;
         public Paint borderPaint;
         private Paint filledPaint;
-        private global::Android.Graphics.Color borderColor;
-        private global::Android.Graphics.Color activeColor;
         private global::Android.Graphics.Color errorColor;
         private bool isFloatingHintAnimating = false;
         private float floatingHintXPostion;
@@ -172,6 +181,71 @@ namespace Xamarin.RSControls.Droid.Controls
             }
         }
 
+        public void RefreshControl()
+        {
+            //Set Padding
+            padding = new Thickness(TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics), TypedValue.ApplyDimension(ComplexUnitType.Dip, 17, Context.Resources.DisplayMetrics));
+            SetPaddingValues();
+
+            this.SetPadding(this.PaddingLeft + leadingDrawableWidth + leftDrawableWidth + leftHelpingIconPadding + leftHelpingDrawableWidth,
+                this.PaddingTop,
+                this.PaddingRight + trailingDrawableWidth + rightDrawableWidth + rightHelpingIconPadding + rightHelpingDrawableWidth,
+                this.PaddingBottom);
+
+            borderWidth = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.BorderWidth, Context.Resources.DisplayMetrics);
+            borderRadius = TypedValue.ApplyDimension(ComplexUnitType.Dip, rSControl.BorderRadius, Context.Resources.DisplayMetrics);
+
+
+            //Floating Hint
+            if (rSControl.PlaceholderStyle.FontFamily != null && rSControl.PlaceholderStyle.FontFamily.Contains("#"))
+            {
+                var index = rSControl.PlaceholderStyle.FontFamily.IndexOf("#");
+                var fontFamily = rSControl.PlaceholderStyle.FontFamily.Substring(0, index);
+                floatingHintPaint.SetTypeface(Typeface.CreateFromAsset(Context.Assets, fontFamily));
+            }
+            else
+                floatingHintPaint.SetTypeface(Typeface.Create(rSControl.PlaceholderStyle.FontFamily, TypefaceStyle.Normal));
+
+            floatingHintText = this.rSControl.Placeholder != null ? rSControl.Placeholder : "";
+            //global::Android.Graphics.Color color = new global::Android.Graphics.Color(this.CurrentHintTextColor);
+            floatingHintPaint.Color = rSControl.PlaceholderStyle.FontColor.ToAndroid();
+            floatingHintPaint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
+            floatingHintPaint.AntiAlias = true;
+
+
+            //Set width and height of floating hint paint when floating
+            floatingHintPaint.TextSize = labelsTextSize;
+            floatingHintPaint.GetTextBounds(floatingHintText, 0, floatingHintText.Length, floatingHintBoundsFloating);
+
+            //Set width and height of floating hint paint when not floating
+            floatingHintPaint.TextSize = TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)this.rSControl.FontSize, Context.Resources.DisplayMetrics);
+
+            if (!string.IsNullOrEmpty(floatingHintText))
+                floatingHintPaint.GetTextBounds(floatingHintText, 0, floatingHintText.Length, floatingHintBoundsNotFloating);
+            else
+                floatingHintPaint.GetTextBounds("Hint", 0, 4, floatingHintBoundsNotFloating); //Just to get the floatingHintBoundsNotFloating Height, hint won't be apear
+
+            if(IsFloating)
+                floatingHintPaint.TextSize = labelsTextSize;
+
+
+            //Error Message
+            CreateErrorMessage();
+
+            //Helper Message
+            CreateHelperMessage();
+
+            //Create Counter Message
+            CreateCounterMessage();
+
+            // Create border
+            CreateBorder();
+
+            if (this.rSControl.CounterMaxLength != -1)
+                this.AfterTextChanged += CustomEditText_AfterTextChanged;
+
+            Invalidate();
+        }
 
         //Constructor
         public CustomEditText(Context context, IRSControl rSControl) : base(context)
@@ -188,8 +262,6 @@ namespace Xamarin.RSControls.Droid.Controls
             leftRightSpacingLabels = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 14, Context.Resources.DisplayMetrics);
             iconPadding = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics);
             errorMessage = string.Empty;
-            borderColor = rSControl.BorderColor.ToAndroid();
-            activeColor = rSControl.ActiveColor.ToAndroid();
             errorColor = rSControl.ErrorColor.ToAndroid();
             textSpacingFromBorderTop = TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, Context.Resources.DisplayMetrics);
             textSpacingFromBorderBottom = TypedValue.ApplyDimension(ComplexUnitType.Dip, 14, Context.Resources.DisplayMetrics);
@@ -351,8 +423,8 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
                 else
                 {
-                    borderPaint.Color = activeColor;
-                    floatingHintPaint.Color = activeColor;
+                    borderPaint.Color = rSControl.ActiveColor.ToAndroid(); 
+                    floatingHintPaint.Color = rSControl.ActiveColor.ToAndroid(); 
 
                     //if (rightDrawable != null)
                     //    rightDrawable.drawable.SetTint(activeColor);
@@ -383,7 +455,7 @@ namespace Xamarin.RSControls.Droid.Controls
                 }
                 else
                 {
-                    borderPaint.Color = borderColor;
+                    borderPaint.Color = rSControl.BorderColor.ToAndroid();
                     //floatingHintPaint.Color = rSControl.PlaceholderColor.ToAndroid();
                     floatingHintPaint.Color = Forms.Color.DimGray.ToAndroid();
 
@@ -598,7 +670,7 @@ namespace Xamarin.RSControls.Droid.Controls
         {
             borderPaint = new Paint();
             borderPaint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
-            borderPaint.Color = borderColor;
+            borderPaint.Color = rSControl.BorderColor.ToAndroid();
             borderPaint.StrokeWidth = borderWidth;
             borderPaint.AntiAlias = true;
 
@@ -638,7 +710,7 @@ namespace Xamarin.RSControls.Droid.Controls
             {
                 iconsSearator = new Paint();
                 iconsSearator.AntiAlias = true;
-                iconsSearator.Color = borderColor;
+                iconsSearator.Color = rSControl.BorderColor.ToAndroid();
                 iconsSearator.StrokeWidth = 2;
             }
 

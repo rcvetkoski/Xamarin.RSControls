@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:controls="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls" 
+             xmlns:viewmodels="clr-namespace:Samples.ViewModels"
+             xmlns:helpers="clr-namespace:Xamarin.RSControls.Helpers;assembly=Xamarin.RSControls" 
+             xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls"
+             BackgroundColor="{StaticResource WindowBackgroundColor}"
+             x:Class="Samples.Views.RSEntryPage">
+
+    <ContentPage.BindingContext>
+        <viewmodels:RSEntryViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <ScrollView Orientation="Vertical">
+            <StackLayout Margin="10">
+
+                <Label Text="Styles" FontSize="Large" FontAttributes="Bold" TextColor="Black" Margin="0, 15, 0, 0"/>
+                <Frame Style="{StaticResource FrameStyle}">
+                    <StackLayout>
+
+                        <controls:RSEntry/>
+                        <controls:RSEntry Text="{Binding Name}" Placeholder="Password" IsPassword="True"/>
+                        <controls:RSEntry Text="{Binding Name}" Placeholder="No binding"/>
+                        <controls:RSEntry Text="{Binding Name}" Placeholder="With binding" BorderRadius="0"/>
+                        <controls:RSEntry Text="{Binding Name}" Placeholder="With binding" BorderRadius="30"/>
+                        <controls:RSEntry Placeholder="With validation and helper message" Helper="Field is mandatory">
+                            <controls:RSEntry.Behaviors>
+                                <validators:ValidationBehaviour PropertyName="Text">
+                                    <validators:ValidationBehaviour.Validators>
+                                        <validators:RequiredValidation/>
+                                    </validators:ValidationBehaviour.Validators>
+                                </validators:ValidationBehaviour>
+                            </controls:RSEntry.Behaviors>
+                        </controls:RSEntry>
+                        <controls:RSEntry Placeholder="With Left icon and pink border" Helper="Helper message!" BorderColor="Pink">
+                            <controls:RSEntry.LeftIcon>
+                                <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.LeftIcon>
+                        </controls:RSEntry>
+
+                    </StackLayout>
+                </Frame>
+
+
+                <Label Text="Styles" FontSize="Large" FontAttributes="Bold" TextColor="Black" Margin="0, 15, 0, 0"/>
+                <Frame Style="{StaticResource FrameStyle}">
+                    <StackLayout>
+
+                        <Label Text="OutlinedBorder" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
+                        <controls:RSEntry Placeholder="OutlinedBorder" RSEntryStyle="OutlinedBorder"/>
+                        <controls:RSEntry Text="Some text" Placeholder="OutlinedBorder" RSEntryStyle="OutlinedBorder"/>
+                        <controls:RSEntry Placeholder="OutlinedBorder" RSEntryStyle="OutlinedBorder" IsPlaceholderAlwaysFloating="True"/>
+
+                        <Label Text="Underline" FontSize="Medium" FontAttributes="Bold" TextColor="Black" Margin="0, 15, 0, 0"/>
+                        <controls:RSEntry Placeholder="Underline" RSEntryStyle="Underline"/>
+                        <controls:RSEntry Text="Some text" Placeholder="Underline" RSEntryStyle="Underline"/>
+                        <controls:RSEntry Placeholder="Underline" RSEntryStyle="Underline" IsPlaceholderAlwaysFloating="True"/>
+
+                        <Label Text="FilledBorder" FontSize="Medium" FontAttributes="Bold" TextColor="Black" Margin="0, 15, 0, 0"/>
+                        <controls:RSEntry Placeholder="FilledBorder" RSEntryStyle="FilledBorder"/>
+                        <controls:RSEntry Text="Some text" Placeholder="FilledBorder" RSEntryStyle="FilledBorder"/>
+                        <controls:RSEntry Placeholder="FilledBorder" RSEntryStyle="FilledBorder" IsPlaceholderAlwaysFloating="True"/>
+
+                    </StackLayout>
+                </Frame>
+
+                <Label Text="Icons" FontSize="Large" FontAttributes="Bold" TextColor="Black" Margin="0, 15, 0, 0"/>
+                <Frame Style="{StaticResource FrameStyle}">
+                    <StackLayout>
+
+                        <controls:RSEntry Placeholder="With Left icon" Helper="Helper message!">
+                            <controls:RSEntry.LeftIcon>
+                                <helpers:RSEntryIcon>
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.LeftIcon>
+                        </controls:RSEntry>
+
+                        <controls:RSEntry Placeholder="With LeadingIcon icon" Helper="Helper message!">
+                            <controls:RSEntry.LeadingIcon>
+                                <helpers:RSEntryIcon>
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendar.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.LeadingIcon>
+                        </controls:RSEntry>
+
+                        <controls:RSEntry Placeholder="With right icon" Helper="Helper message!">
+                            <controls:RSEntry.RightIcon>
+                                <helpers:RSEntryIcon>
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendar.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.RightIcon>
+                        </controls:RSEntry>
+
+                        <controls:RSEntry Placeholder="With trailing icon" Helper="Helper message!">
+                            <controls:RSEntry.TrailingIcon>
+                                <helpers:RSEntryIcon>
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendar.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.TrailingIcon>
+                        </controls:RSEntry>
+
+                        <controls:RSEntry Placeholder="With all icons" Helper="Helper message!" HasLeftIconSeparator="True" HasRighIconSeparator="True">
+                            <controls:RSEntry.LeadingIcon>
+                                <helpers:RSEntryIcon>
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendar.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.LeadingIcon>
+                            <controls:RSEntry.LeftIcon>
+                                <helpers:RSEntryIcon>
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendar.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.LeftIcon>
+                            <controls:RSEntry.LeftHelpingIcon>
+                                <helpers:RSEntryIcon>
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendar.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.LeftHelpingIcon>
+                            <controls:RSEntry.RightHelpingIcon>
+                                <helpers:RSEntryIcon>
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendar.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.RightHelpingIcon>
+                            <controls:RSEntry.RightIcon>
+                                <helpers:RSEntryIcon>
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendar.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.RightIcon>
+                            <controls:RSEntry.TrailingIcon>
+                                <helpers:RSEntryIcon>
+                                    <helpers:RSEntryIcon.View>
+                                        <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendar.svg"/>
+                                    </helpers:RSEntryIcon.View>
+                                </helpers:RSEntryIcon>
+                            </controls:RSEntry.TrailingIcon>
+                        </controls:RSEntry>
+
+                    </StackLayout>
+                </Frame>
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

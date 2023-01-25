@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Xamarin.Forms;
 
@@ -14,7 +15,13 @@ namespace Xamarin.RSControls.Helpers
             
         }
 
-        public View View { get; set; }
+        // View
+        public static readonly BindableProperty ViewProperty = BindableProperty.Create("View", typeof(View), typeof(RSEntryIcon), null);
+        public View View
+        {
+            get { return (View)GetValue(ViewProperty); }
+            set { SetValue(ViewProperty, value); }
+        }
 
         public string Path { get; set; }
         public string Command { get; set; }

@@ -2,11 +2,14 @@
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls" xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls" xmlns:samples="clr-namespace:Samples"
+    xmlns:controls="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls" 
+    xmlns:validators="clr-namespace:Xamarin.RSControls.Validators;assembly=Xamarin.RSControls" 
+    xmlns:samples="clr-namespace:Samples" xmlns:viewmodels="clr-namespace:Samples.ViewModels"
+    xmlns:helpers="clr-namespace:Xamarin.RSControls.Helpers;assembly=Xamarin.RSControls"
     x:Class="Samples.Views.TestPage">
 
     <ContentPage.BindingContext>
-        <samples:MainPageViewModel/>
+        <viewmodels:MainViewModel/>
     </ContentPage.BindingContext>
 
 
@@ -15,10 +18,19 @@
             <Frame Padding="10">
                 <StackLayout>
 
-                   <controls:RSNumericUpDown Placeholder="Number of meals" Text="{Binding NumericEntryValue}" IsPlaceholderAlwaysFloating="True"/>
+                   <controls:RSNumericUpDown RSEntryStyle="OutlinedBorder" Helper="wgeikg" Placeholder="Number of meal" Counter="2" CounterMaxLength="10" Text="{Binding NumericEntryValue}"/>
 
+                    <controls:RSEntry Placeholder="With Left icon" ShadowEnabled="True" Helper="Helper message!">
+                        <controls:RSEntry.LeftIcon>
+                            <helpers:RSEntryIcon Command="TestMethod2" CommandParameter="{Binding SelectedPerson}">
+                                <helpers:RSEntryIcon.View>
+                                    <controls:RSSvgImage Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg"/>
+                                </helpers:RSEntryIcon.View>
+                            </helpers:RSEntryIcon>
+                        </controls:RSEntry.LeftIcon>
+                    </controls:RSEntry>
 
-                   <controls:RSNumericEntry
+                    <controls:RSNumericEntry
                     Placeholder="Troll"
                     IsPlaceholderAlwaysFloating="True"
                     NumberDecimalDigits="2"
