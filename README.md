@@ -33,6 +33,5 @@ RSPopup Popup dialog
 RSTabbedViews
 
 ![RSTabbedViews](https://user-images.githubusercontent.com/50323773/214864724-6b1dd628-a95a-4535-a843-7486d0e1de1e.gif)
-
-
+![Screen Recording 2023-01-26 at 16 10 58](https://user-images.githubusercontent.com/50323773/214873352-6c666758-505e-49d9-9dd5-2697a44f32b4.gif)
 
