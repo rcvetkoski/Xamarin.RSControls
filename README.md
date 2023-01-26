@@ -19,6 +19,8 @@ RSDatePicker
 ![RSDatePickerYearMonth](https://user-images.githubusercontent.com/50323773/214847357-ddf5a937-1f69-47c6-b75d-4da97bd8e9b8.gif)
 ![RSDatePickerMonth](https://user-images.githubusercontent.com/50323773/214847600-67f6f0aa-fbc3-4c7e-be3b-1804950d756a.gif)
 ![RSDatePickerYear](https://user-images.githubusercontent.com/50323773/214847795-3f28e249-7405-485a-b4fe-638423974057.gif)
+![Simulator Screen Shot - iPhone 14 Pro - 2023-01-26 at 16 06 25](https://user-images.githubusercontent.com/50323773/214873991-d1643c68-8b0f-4976-9829-bc2c05e49d26.png)
+![Simulator Screen Shot - iPhone 14 Pro - 2023-01-26 at 16 08 21](https://user-images.githubusercontent.com/50323773/214873993-2f70841d-a9a4-4911-ba68-288ef72078ea.png)
 
 
 
