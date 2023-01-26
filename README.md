@@ -24,3 +24,7 @@ RSDatePicker
 RSSvgImage Svg image and button with Bindable Command and click animation
 
 ![RSSvg](https://user-images.githubusercontent.com/50323773/214857819-7bfe7cd4-b986-4af3-ba69-350098c18d9b.gif)
+
+RSPopup Popup dialog 
+
+![RSPopup](https://user-images.githubusercontent.com/50323773/214862677-21ab5e35-c591-43af-8581-a1b2d46d8b50.gif)
