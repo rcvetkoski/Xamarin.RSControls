@@ -15,3 +15,4 @@ RSPicker
 RSDatePicker
 
 ![RSDatePickerYearMonth](https://user-images.githubusercontent.com/50323773/214847357-ddf5a937-1f69-47c6-b75d-4da97bd8e9b8.gif)
+![RSDatePickerMonth](https://user-images.githubusercontent.com/50323773/214847600-67f6f0aa-fbc3-4c7e-be3b-1804950d756a.gif)
