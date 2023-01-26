@@ -19,3 +19,7 @@ RSDatePicker
 ![RSDatePickerYearMonth](https://user-images.githubusercontent.com/50323773/214847357-ddf5a937-1f69-47c6-b75d-4da97bd8e9b8.gif)
 ![RSDatePickerMonth](https://user-images.githubusercontent.com/50323773/214847600-67f6f0aa-fbc3-4c7e-be3b-1804950d756a.gif)
 ![RSDatePickerYear](https://user-images.githubusercontent.com/50323773/214847795-3f28e249-7405-485a-b4fe-638423974057.gif)
+
+
+RSSvgImage Svg image and button with Bindable Command and click animation
+![RSSvg](https://user-images.githubusercontent.com/50323773/214857819-7bfe7cd4-b986-4af3-ba69-350098c18d9b.gif)
