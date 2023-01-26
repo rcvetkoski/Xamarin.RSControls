@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:viewmodels="clr-namespace:Samples.ViewModels" 
+             xmlns:controls="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls"
+             x:Class="Samples.Views.RSSVGImagePage">
+
+    <ContentPage.BindingContext>
+        <viewmodels:RSSVGImageViewModel/>
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Content>
+        <StackLayout Margin="10">
+            <controls:RSSvgImage HorizontalOptions="Center" VerticalOptions="Center" Source="Xamarin.RSControls/Data/SVG/calendarAndTime.svg" Command="{Binding TapCommand}"/>
+
+            <StackLayout IsVisible="{Binding AreVisible}">
+                <controls:RSSvgImage Color="Red" HorizontalOptions="Center" VerticalOptions="Center" Source="Xamarin.RSControls/Data/SVG/agenda.svg" Margin="0, 100,0,0"/>
+                <controls:RSSvgImage Color="Green" HorizontalOptions="Center" VerticalOptions="Center" Source="Xamarin.RSControls/Data/SVG/calendar.svg"/>
+                <controls:RSSvgImage Color="Pink" HorizontalOptions="Center" VerticalOptions="Center" Source="Xamarin.RSControls/Data/SVG/time.svg"/>
+                <controls:RSSvgImage Color="Blue" HorizontalOptions="Center" VerticalOptions="Center" Source="Xamarin.RSControls/Data/SVG/arrow.svg"/>
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

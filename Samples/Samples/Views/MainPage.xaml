@@ -19,13 +19,13 @@
     <ContentPage.Content>
         <StackLayout>
 
-            <rs:RSTabbedViews BarColor="{StaticResource SystemGray}" RSTabPlacement="Top" BarTextColor="White">
+            <rs:RSTabbedViews RSTabPlacement="Top">
                 <rs:RSTabbedViews.Views>
                     <views:RSEntryPage rs:RSTabbedViews.Title="RSEntry"/>
                     <views:RSPickerPage rs:RSTabbedViews.Title="RSPicker"/>
-                    <local:TabbedPage1 rs:RSTabbedViews.Title="TODAY"/>
-                    <local:Page1 rs:RSTabbedViews.Title="SCHEDULE"/>
-                    <local:TestContentVIew rs:RSTabbedViews.Title="SETTINGS"/>
+                    <views:RSDatePickerPage rs:RSTabbedViews.Title="RSDatePicker"/>
+                    <views:RSSVGImagePage rs:RSTabbedViews.Title="RSSVGImage"/>
+                    <views:RSPopupPage rs:RSTabbedViews.Title="RSPopupPage"/>
                 </rs:RSTabbedViews.Views>
             </rs:RSTabbedViews>
 

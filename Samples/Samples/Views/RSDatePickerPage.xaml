@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:viewmodels="clr-namespace:Samples.ViewModels" 
+             xmlns:controls="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls"
+             x:Class="Samples.Views.RSDatePickerPage">
+
+    <ContentPage.BindingContext>
+        <viewmodels:RSDatePickerViewModel/>
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Content>
+        <StackLayout Margin="10">
+            <controls:RSDatePicker DateSelectionMode="Year"></controls:RSDatePicker>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

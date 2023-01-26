@@ -1,11 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:controls="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls"
+             xmlns:controls="clr-namespace:Xamarin.RSControls.Controls;assembly=Xamarin.RSControls" 
+             xmlns:viewmodels="clr-namespace:Samples.ViewModels"
              x:Class="Samples.Views.RSPickerPage">
+
+    <ContentPage.BindingContext>
+        <viewmodels:RSPickerViewModel/>
+    </ContentPage.BindingContext>
+    
     <ContentPage.Content>
         <StackLayout Margin="10">
-            <controls:RSPicker Placeholder="RSPicker"/>
+            <controls:RSPicker Placeholder="RSPicker" DisplayMemberPath="Name" RSPopupStyleEnum="RsPopopStyle" IsSearchEnabled="True" SelectionMode="Single" SelectedItem="{Binding SelectedPerson}" ItemsSource="{Binding Persons}"/>
+
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Selected Person : "/>
+                <Label Text="{Binding SelectedPerson.Name}"/>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -192,7 +192,6 @@ namespace Xamarin.RSControls.Droid.Controls
             listViewAndroid.AddFooterView(new global::Android.Views.View(Context), null, true);
             listViewAndroid.OnItemClickListener = this;
 
-
             //Listview Adapter
             adapter = new CustomBaseAdapter<object>(Context, this.element as RSPickerBase, element.ItemsSource, listViewAndroid);
             listViewAndroid.Adapter = adapter;
@@ -243,6 +242,7 @@ namespace Xamarin.RSControls.Droid.Controls
 
             layout.AddView(listViewAndroid);
 
+
             return layout;
         }
 
@@ -251,15 +251,19 @@ namespace Xamarin.RSControls.Droid.Controls
             sPopupRenderer = new RSPopupRenderer((this.Element as RSPickerBase).RSPopupTitle, (this.Element as RSPickerBase).RSPopupMessage);
             sPopupRenderer.BorderRadius = 14;
             sPopupRenderer.DimAmount = 0.7f;
+            sPopupRenderer.LeftMargin = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics);
+            sPopupRenderer.RightMargin = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics);
+            sPopupRenderer.TopMargin = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics);
+            sPopupRenderer.BottomMargin = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 10, Context.Resources.DisplayMetrics);
             sPopupRenderer.BorderFillColor = (this.Element as RSPickerBase).RSPopupBackgroundColor;
             sPopupRenderer.Width = (int)Enums.RSPopupSizeEnum.WrapContent;
-            sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.WrapContent;
+            sPopupRenderer.Height = (int)Enums.RSPopupSizeEnum.MatchParent;
             sPopupRenderer.DismissEvent += SPopupRenderer_DismissEvent;
 
 
             //Create layout
             var layout = CreateDialogLayout();
-
+           
             //SetView to dialog
             sPopupRenderer.SetNativeView(layout);
             //layout.LayoutParameters 

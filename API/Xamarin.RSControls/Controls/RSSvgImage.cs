@@ -26,11 +26,18 @@ namespace Xamarin.RSControls.Controls
             this.GestureRecognizers.Add(tapGestureRecognizer);
         }
 
+        public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(Command), typeof(RSSvgImage), null);
+        public Command Command
+        {
+            get => (Command)GetValue(CommandProperty);
+            set => SetValue(CommandProperty, value);
+        }
         #region Clicked Event
         public Command TapCommand { get; set; }
         async void OnTapped(object s)
         {
             PropagateUpClicked();
+            Command?.Execute(s);
             this.Opacity = 0.5;
             await this.ScaleTo(0.8, 100);
             await this.ScaleTo(1, 100);

@@ -20,6 +20,16 @@
                 <Frame Style="{StaticResource FrameStyle}">
                     <StackLayout>
 
+                        <controls:RSEntry Placeholder="Enter some text" Helper="Field is mandatory" Counter="2" CounterMaxLength="10">
+                            <controls:RSEntry.Behaviors>
+                                <validators:ValidationBehaviour PropertyName="Text">
+                                    <validators:ValidationBehaviour.Validators>
+                                        <validators:RequiredValidation/>
+                                    </validators:ValidationBehaviour.Validators>
+                                </validators:ValidationBehaviour>
+                            </controls:RSEntry.Behaviors>
+                        </controls:RSEntry>
+                        
                         <controls:RSEntry/>
                         <controls:RSEntry Text="{Binding Name}" Placeholder="Password" IsPassword="True"/>
                         <controls:RSEntry Text="{Binding Name}" Placeholder="No binding"/>
@@ -43,6 +53,16 @@
                                 </helpers:RSEntryIcon>
                             </controls:RSEntry.LeftIcon>
                         </controls:RSEntry>
+
+                        <controls:RSNumericUpDown x:Name="upDown" Placeholder="Enter a Number" Minimum="0" IncrementValue="5" Helper="Increment Value is 5, minimum is 0">
+                            <controls:RSNumericUpDown.Behaviors>
+                                <validators:ValidationBehaviour PropertyName="Value">
+                                    <validators:ValidationBehaviour.Validators>
+                                        <validators:DifferentThanValidation x:TypeArguments="x:Int32" Value="40"/>
+                                    </validators:ValidationBehaviour.Validators>
+                                </validators:ValidationBehaviour>
+                            </controls:RSNumericUpDown.Behaviors>
+                        </controls:RSNumericUpDown>
 
                     </StackLayout>
                 </Frame>

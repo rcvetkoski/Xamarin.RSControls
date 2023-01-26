@@ -16,7 +16,7 @@ namespace Samples
 
             StatusBarColor = DependencyService.Get<IStatusBarColor>();
 
-            MainPage = new NavigationPage(new RSEntryPage());
+            MainPage = new NavigationPage(new MainPage());
             //MainPage = new MainPage();
         }
 
