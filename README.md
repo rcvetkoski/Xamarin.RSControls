@@ -19,8 +19,7 @@ RSDatePicker
 ![RSDatePickerYearMonth](https://user-images.githubusercontent.com/50323773/214847357-ddf5a937-1f69-47c6-b75d-4da97bd8e9b8.gif)
 ![RSDatePickerMonth](https://user-images.githubusercontent.com/50323773/214847600-67f6f0aa-fbc3-4c7e-be3b-1804950d756a.gif)
 ![RSDatePickerYear](https://user-images.githubusercontent.com/50323773/214847795-3f28e249-7405-485a-b4fe-638423974057.gif)
-![Simulator Screen Shot - iPhone 14 Pro - 2023-01-26 at 16 06 25](https://user-images.githubusercontent.com/50323773/214873649-448275ed-da4f-488d-b33d-f01e48d8ac10.png)
-![Simulator Screen Shot - iPhone 14 Pro - 2023-01-26 at 16 08 21](https://user-images.githubusercontent.com/50323773/214873659-719dc6bb-62ec-4519-b160-2585be3e48da.png)
+
 
 
 RSSvgImage Svg image and button with Bindable Command and click animation
